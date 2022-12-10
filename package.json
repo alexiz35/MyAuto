@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/webpack-config": "^0.17.2",
     "expo": "~47.0.8",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
@@ -20,7 +21,17 @@
     "@babel/core": "^7.12.9",
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.70.6",
-    "typescript": "^4.6.3"
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "eslint": "8.22.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "2.8.1",
+    "typescript": "^4.9.4"
   },
   "private": true
 }
