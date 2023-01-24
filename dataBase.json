@@ -1,0 +1,8 @@
+{
+  "mileage": 23456,
+  "renault": {
+    "car oil": 8000,
+    "gear oil": 50000,
+    "grm": 56000
+  }
+}

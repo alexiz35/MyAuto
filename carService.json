@@ -1,0 +1,8 @@
+{
+  "engineOil": 8000,
+  "gearOil": 8000,
+  "airFilter": 15000,
+  "fuelFilter": 20000,
+  "driveBelt": 60000,
+  "timingBelt": 60000
+}
