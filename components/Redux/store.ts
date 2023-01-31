@@ -1,7 +1,7 @@
-import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
+import { applyMiddleware, legacy_createStore as createStore } from 'redux'
 
 import thunk from 'redux-thunk'
-import { DispatchMiles, StateMiles, StateCar } from '../../type'
+import { StateCar } from '../../type'
 import { milesReducer } from './redusers'
 import { persistStore, persistReducer } from 'redux-persist'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'

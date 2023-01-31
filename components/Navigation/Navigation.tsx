@@ -89,7 +89,7 @@ export const Navigation = (): JSX.Element => {
             accuracy: Location.Accuracy.BestForNavigation,
             /* timeInterval: 2000, */
             /* deferredUpdatesDistance: 3, */
-            distanceInterval: 4
+            distanceInterval: 20
           })
         }
       }
@@ -131,7 +131,7 @@ export const Navigation = (): JSX.Element => {
         <Stack.Screen
           name='Second'
           component={SecondScreen}
-          options={{ title: 'Second' }} />
+          options={{ title: 'Edit Task' }} />
       </Stack.Navigator>
     </NavigationContainer>
   )

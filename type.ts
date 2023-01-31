@@ -1,4 +1,3 @@
-import { milesReducer } from './components/Redux/redusers'
 
 export enum ActionType {
   UPDATE_MILES = 'UPDATE_MILES',
@@ -18,21 +17,26 @@ export interface StateTask {
   endKm: number
   startDate: string
   endData: string
+  addition?: {
+    parts: [ part: { namePart: string, costPart: number }]
+    service: { nameService: string, costService: number }
+  }
+
 }
 
-export interface ActionTasks {
+/* export interface ActionTasks {
   type: string
   task: StateTask
-}
+} */
 
-export type DispatchTasks = (state: StateCar, action: ActionMiles) => ActionTasks
+/* export type DispatchTasks = (state: StateCar, action: ActionMiles) => ActionTasks */
 
 // -----------------------------------type for Miles state----------------------------------
 export type CurrentMiles = number
 
-export interface StateMiles {
+/* export interface StateMiles {
   currentMiles: number
-}
+} */
 
 export interface ActionMiles {
   type: ActionType.UPDATE_MILES

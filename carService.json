@@ -1,8 +1,11 @@
 {
-  "engineOil": 8000,
-  "gearOil": 8000,
-  "airFilter": 15000,
-  "fuelFilter": 20000,
-  "driveBelt": 60000,
-  "timingBelt": 60000
+  "carService" : [
+    {"label": "engineOil", "value": "engineOil"},
+    {"label": "gearOil", "value": "gearOil"},
+    {"label": "airFilter", "value": "airFilter"},
+    {"label": "fuelFilter", "value": "fuelFilter"},
+    {"label": "driveBelt", "value": "driveBelt"},
+    {"label": "timingBelt", "value": "timingBelt"}
+
+  ]
 }

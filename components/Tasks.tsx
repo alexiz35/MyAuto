@@ -1,55 +1,18 @@
 import { Button, LinearProgress, ListItem, ListItemProps } from '@rneui/themed'
 import React from 'react'
-import { FlatList, ListRenderItem } from 'react-native'
+import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
 import { delTask } from './Redux/actions'
-import { useDispatch } from 'react-redux'
-
-export interface typeTask {
-  id: number
-  title: string
-  startKm: number
-  endKm: number
-  startDate: string
-  endData: string
-  /* progress: number */
-}
-
-/* const listTask: typeTask[] = [
-  {
-    title: 'Замена масла',
-    startKm: 250000,
-    endKm: 260000,
-    startDate: '12.02.22',
-    endData: '20.02.23'
-    /!* progress: 10 *!/
-  },
-  {
-    title: 'Замена ремня',
-    startKm: 250000,
-    endKm: 260000,
-    startDate: '12.02.22',
-    endData: '20.02.23'
-    /!* progress: 20 *!/
-  },
-  {
-    title: 'Замена ремня ГРМ',
-    startKm: 250000,
-    endKm: 260000,
-    startDate: '12.02.22',
-    endData: '20.02.23'
-    /!* progress: 50 *!/
-  }
-
-] */
+import { StateTask } from '../type'
 
 type ListComponentProps = ListItemProps
 
 export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
-  const del = useDispatch()
+  const del = useAppDispatch()
 
-  const renderRow: ListRenderItem<typeTask> = ({ item }: { item: typeTask }) => {
+  const renderRow: ListRenderItem<StateTask> = ({ item }: { item: StateTask }) => {
     return (
+      <View style={styles.listItem}>
       <ListItem.Swipeable
         bottomDivider
         leftContent={ () => (
@@ -68,7 +31,9 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
           />
         )}
       >
-        <ListItem.Content>
+
+        <ListItem.Content >
+
           <ListItem.Title>
             {item.title}
           </ListItem.Title>
@@ -96,6 +61,7 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
         </ListItem.Content>
 
       </ListItem.Swipeable>
+      </View>
     )
   }
 
@@ -111,3 +77,12 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  listItem: {
+    marginVertical: 2,
+    marginHorizontal: 5,
+    elevation: 20,
+    shadowColor: 'black'
+  }
+})

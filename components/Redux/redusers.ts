@@ -1,4 +1,4 @@
-import { ActionType, Dispatch, DispatchMiles, StateCar } from '../../type'
+import { ActionType, Dispatch, StateCar } from '../../type'
 
 const initialState: StateCar = {
   currentMiles: 100,
