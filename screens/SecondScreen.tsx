@@ -1,14 +1,14 @@
-import { Text, View, StyleSheet, ScrollView, SafeAreaView, Modal } from 'react-native'
+import { Text, View, StyleSheet, SafeAreaView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { BottomSheet, Button, Dialog, Input, Overlay } from '@rneui/themed'
+import { Button, Dialog, Input } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 
 import { useEffect, useState } from 'react'
 import { StateTask } from '../type'
 import { addTask } from '../components/Redux/actions'
 import { RootStackParamList } from './HomeScreen'
-import { BottomSheetAddition } from '../components/BottomSheetAddition'
+import { BottomSheetAddition, PartList, ServiceList } from '../components/BottomSheetAddition'
 
 /* interface RootStackParamList {
   Home: undefined
@@ -40,6 +40,9 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
   const [endDateInput, setEndDateInput] = useState('')
   const [timeToService, setTimeToService] = useState(0)
   const [kmToService, setKmToService] = useState(0)
+
+  const [addParts, setAddParts] = useState<[PartList] | undefined>()
+  const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
 
   const [isVisible, setIsVisible] = useState(false)
 
@@ -100,13 +103,28 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
       endKm: endKmInput,
       startDate: startDateInput,
       endData: endDateInput,
-      title: String(valueDrop)
+      title: String(valueDrop),
+      addition:
+        {
+          parts: addParts,
+          services: addServices
+        }
     }
+    console.log('ok', tempNewTask)
+    console.log('ok2', tempNewTask.addition?.parts)
     setNewTask(addTask(tempNewTask))
     navigation.navigate('Home')
   }
 
-  const handleOkModal = (): void => {
+  const handleCancelModal = (): void => {
+    setIsVisible(false)
+  }
+
+  const handleOkModal = (parts: PartList[], services: ServiceList[]): void => {
+    // @ts-expect-error knknk
+    setAddParts(parts)
+    // @ts-expect-error kkkk
+    setAddServices(services)
     setIsVisible(false)
   }
 
@@ -181,7 +199,8 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
           overlayStyle={{ width: '100%' }}
         >
           <BottomSheetAddition
-            onPress = {() => { handleOkModal() }}
+            onPressCancel = {() => { handleCancelModal() }}
+            onPressOk={handleOkModal}
           />
         </Dialog>
       </SafeAreaView>

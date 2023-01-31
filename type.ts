@@ -18,8 +18,8 @@ export interface StateTask {
   startDate: string
   endData: string
   addition?: {
-    parts: [ part: { namePart: string, costPart: number }]
-    service: { nameService: string, costService: number }
+    parts?: [PartList]
+    services?: [ServiceList]
   }
 
 }
@@ -58,3 +58,21 @@ export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMile
 export type Dispatch = (state: StateCar, action: AppAction) => StateCar
 
 // -------------------------------------------------------------------------------------------
+// ----------------------------------BottomSheet----------------------------------------------
+export interface PartList {
+  id: number
+  namePart: string
+  costPart: number
+}
+export interface ServiceList {
+  id: number
+  nameService: string
+  costService: number
+}
+
+export interface PropsBottomSheet {
+  onPressOk: (parts: PartList[], services: ServiceList[]) => void
+  onPressCancel: () => void
+}
+
+// --------------------------------------------------------------------------------------------

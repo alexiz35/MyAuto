@@ -6,6 +6,7 @@ import { Tasks } from '../components/Tasks'
 import { addTask, updateMiles } from '../components/Redux/actions'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { StateTask } from '../type'
+import { useEffect } from 'react'
 
 export type RootStackParamList = {
   Home: undefined
@@ -25,6 +26,9 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
     startDate: '25.01.22',
     endData: '25.01.22'
   }
+  useEffect(() => {
+    console.log(miles.tasks)
+  }, [])
 
   return (
 

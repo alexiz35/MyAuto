@@ -7,23 +7,9 @@ import {
   View
 } from 'react-native'
 import { Button, Divider, Input } from '@rneui/themed'
+import { PartList, PropsBottomSheet, ServiceList } from '../type'
 
-interface PartList {
-  id: number
-  namePart: string
-  costPart: number
-}
-interface ServiceList {
-  id: number
-  nameService: string
-  costService: number
-}
-
-interface Props {
-  onPress: () => void
-}
-
-export const BottomSheetAddition = ({ onPress }: Props): JSX.Element => {
+export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomSheet): JSX.Element => {
   const [namePart, setNamePart] = useState('')
   const [costPart, setCostPart] = useState('')
   const [idPart, setIdPart] = useState(1)
@@ -91,20 +77,25 @@ export const BottomSheetAddition = ({ onPress }: Props): JSX.Element => {
 
   return (
     <SafeAreaView>
-      <Text style={{ textAlign: 'center', fontSize: 12, fontStyle: 'italic', marginBottom: 10 }} >Добавьте доп информацию по текущему ТО или ремонту</Text>
+      <Text style={styles.textTop} >
+        Добавьте доп информацию по текущему ТО или ремонту
+      </Text>
 
       <View style={styles.viewAdditional}>
-        <Text style={{ textAlign: 'center', fontSize: 12, fontStyle: 'italic' }} >Добавьте детали, которые вы использовали</Text>
 
-        <View style={{ flexDirection: 'row', marginTop: 10, marginHorizontal: 10 }}>
+        <Text style={styles.textPart} >
+          Добавьте детали, которые вы использовали
+        </Text>
+
+        <View style={styles.viewPart}>
           <Input
             ref={inputNamePart}
             placeholder={'артикул'}
             containerStyle={{ flex: 2 }}
-            inputStyle={{ textAlign: 'center', fontSize: 16 }}
+            inputStyle={styles.inputPartStyle}
             /* label={'артикул детали'}
-            labelStyle={{ textAlign: 'center' }} */
-            /* errorMessage={'введите артикул'} */
+            labelStyle={{ textAlign: 'center' }}
+            errorMessage={'введите артикул'} */
             onChangeText={(value) => setNamePart(String(value)) }
             onSubmitEditing={() => inputCostPart.current?.focus()}
             value={namePart}
@@ -114,10 +105,10 @@ export const BottomSheetAddition = ({ onPress }: Props): JSX.Element => {
             ref={inputCostPart}
             placeholder={'цена'}
             containerStyle={{ flex: 1 }}
-            inputStyle={{ textAlign: 'center', fontSize: 16 }}
+            inputStyle={styles.inputPartStyle}
             /* label={'цена'}
-            labelStyle={{ textAlign: 'center' }} */
-            /* errorMessage={'введите цену'} */
+            labelStyle={{ textAlign: 'center' }}
+            errorMessage={'введите цену'} */
             onChangeText={(value) => setCostPart(value) }
             value={String(costPart)}
             keyboardType={'numeric'}
@@ -131,20 +122,22 @@ export const BottomSheetAddition = ({ onPress }: Props): JSX.Element => {
         </View>
 
         <FlatList
-          style={{ borderStyle: 'solid', borderWidth: 1, borderColor: 'lightgrey', borderRadius: 10, marginVertical: 10, marginHorizontal: 10 }}
+          style={styles.flatList}
           renderItem={({ item }) => listParts(item)}
           data={parts}
           // @ts-expect-error initial state
           keyExtractor={item => item.id.toString()}
         />
-        <Text style={{ textAlign: 'center', fontSize: 12, fontStyle: 'italic' }} >Добавьте работы, которые были проведены</Text>
+        <Text style={styles.textPart} >
+          Добавьте работы, которые были проведены
+        </Text>
 
-        <View style={{ flexDirection: 'row', marginTop: 10, marginHorizontal: 10 }}>
+        <View style={styles.viewPart}>
           <Input
             ref={inputNameService}
             placeholder={'название сервиса'}
             containerStyle={{ flex: 2 }}
-            inputStyle={{ textAlign: 'center', fontSize: 12 }}
+            inputStyle={styles.inputServiceStyle}
             /* label={'название сервиса'}
             labelStyle={{ textAlign: 'center' }} */
             onChangeText={(value) => { setNameService(String(value)) }}
@@ -157,7 +150,7 @@ export const BottomSheetAddition = ({ onPress }: Props): JSX.Element => {
             ref={inputCostService}
             placeholder={'цена работы'}
             containerStyle={{ flex: 1 }}
-            inputStyle={{ textAlign: 'center', fontSize: 12 }}
+            inputStyle={styles.inputServiceStyle}
             /* label={'цена'}
             labelStyle={{ textAlign: 'center' }} */
             onChangeText={(value) => { setCostService(value) }}
@@ -172,26 +165,26 @@ export const BottomSheetAddition = ({ onPress }: Props): JSX.Element => {
           />
         </View>
         <FlatList
-          style={{ borderStyle: 'solid', borderWidth: 1, borderColor: 'lightgrey', borderRadius: 10, marginVertical: 10, marginHorizontal: 10 }}
+          style={styles.flatList}
           renderItem={({ item }) => listParts(item)}
           data={services}
           // @ts-expect-error initial state
           keyExtractor={item => item.id.toString()}
         />
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
+      <View style={styles.viewButton}>
 
       <Button
-        containerStyle={{ width: '40%', borderRadius: 5 }}
+        containerStyle={styles.buttonStyle}
         title={'Cancel'}
         color={'error'}
-        onPress={onPress}
+        onPress={onPressCancel}
       />
         <Button
-        containerStyle={{ width: '40%', borderRadius: 5 }}
+        containerStyle={styles.buttonStyle}
         title={'Ok'}
         color={'success'}
-        /* onPress={onPress} */
+        onPress={() => { onPressOk(parts, services) }}
       />
       </View>
     </SafeAreaView>
@@ -199,35 +192,6 @@ export const BottomSheetAddition = ({ onPress }: Props): JSX.Element => {
 }
 
 const styles = StyleSheet.create({
-  textKm: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 10
-  },
-  viewKm: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderStyle: 'solid',
-    borderRadius: 10,
-    borderColor: 'blue',
-    borderWidth: 1
-  },
-  textDate: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 10
-  },
-  viewDate: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-    borderStyle: 'solid',
-    borderRadius: 10,
-    borderColor: 'blue',
-    borderWidth: 1
-  },
   viewAdditional: {
     backgroundColor: 'white',
     borderStyle: 'solid',
@@ -235,8 +199,45 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderRadius: 10
   },
-  button: {
+  textTop: {
     textAlign: 'center',
-    color: 'red'
+    fontSize: 12,
+    fontStyle: 'italic',
+    marginBottom: 10
+  },
+  textPart: {
+    textAlign: 'center',
+    fontSize: 12,
+    fontStyle: 'italic'
+  },
+  viewPart: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginHorizontal: 10
+  },
+  flatList: {
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: 'lightgrey',
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal: 10
+  },
+  inputPartStyle: {
+    textAlign: 'center',
+    fontSize: 16
+  },
+  inputServiceStyle: {
+    textAlign: 'center',
+    fontSize: 12
+  },
+  viewButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20
+  },
+  buttonStyle: {
+    width: '40%',
+    borderRadius: 5
   }
 })
