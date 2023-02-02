@@ -9,11 +9,13 @@ import { useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
+import InfoScreen from '../../screens/InfoScreen'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-type RootStackParamList = {
+export type RootStackParamList = {
   Home: undefined
   Second: undefined
+  Info: { taskId: number }
 }
 
 function LogoTitle (): JSX.Element {
@@ -132,6 +134,12 @@ export const Navigation = (): JSX.Element => {
           name='Second'
           component={SecondScreen}
           options={{ title: 'Edit Task' }} />
+
+        <Stack.Screen
+          name='Info'
+          component={InfoScreen}
+          initialParams={{ taskId: 0 }}
+          options={{ title: 'Info task' }} />
       </Stack.Navigator>
     </NavigationContainer>
   )

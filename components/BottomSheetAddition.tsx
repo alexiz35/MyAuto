@@ -29,21 +29,6 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
   const listParts = (item: PartList | ServiceList): JSX.Element => {
     return (
       <View >
-        {/* <ListItem.Content>
-          <ListItem.Title>
-            {item.id}
-          </ListItem.Title>
-          </ListItem.Content>
-        <ListItem.Content>
-          <ListItem.Title>
-            {item.namePart}
-          </ListItem.Title>
-        </ListItem.Content>
-        <ListItem.Content>
-          <ListItem.Title>
-            {item.costPart}
-          </ListItem.Title>
-        </ListItem.Content> */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>
           <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{item.id}</Text>
           <Text style={{ flex: 2, textAlign: 'center', fontSize: 16 }}>{'namePart' in item ? item.namePart : item.nameService}</Text>

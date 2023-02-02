@@ -3,22 +3,16 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { Button, Dialog, Input } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
-
-import { useEffect, useState } from 'react'
-import { StateTask } from '../type'
+import React, { useEffect, useState } from 'react'
+import { PartList, ServiceList, StateTask } from '../type'
 import { addTask } from '../components/Redux/actions'
-import { RootStackParamList } from './HomeScreen'
-import { BottomSheetAddition, PartList, ServiceList } from '../components/BottomSheetAddition'
-
-/* interface RootStackParamList {
-  Home: undefined
-  Second: undefined
-} */
+import { BottomSheetAddition } from '../components/BottomSheetAddition'
+import { RootStackParamList } from '../components/Navigation/Navigation'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Second'>
 
 const SecondScreen = ({ navigation }: Props): JSX.Element => {
-  const stateSecond = useAppSelector((state) => state)
+  /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
   const listService = [
     { label: 'engineOil', value: 'engineOil' },
@@ -144,14 +138,15 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
         textStyle={{ color: 'blue', textAlign: 'center', fontSize: 18 }}
       />
 
-      <Text style={styles.textKm}>Пробег</Text>
+      <View style={styles.viewAllInput}>
+        <Text style={styles.textKm}>Пробег</Text>
 
-      <View style={styles.viewKm}>
+        <View style={styles.viewKm}>
           <Input
             placeholder={'Пробег текущий'}
             placeholderTextColor={'red'}
             containerStyle={{ flex: 1 }}
-            inputStyle={{ textAlign: 'center' }}
+            inputStyle={{ textAlign: 'center', fontSize: 12 }}
             label={'текущий'}
             labelStyle={{ textAlign: 'center' }}
             onChangeText={(value) => inputMile(Number(value))}
@@ -187,11 +182,14 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
               value = {endDateInput }
             />
         </View>
-
+      </View>
         <Button
-          title={'Дополнительная информация'}
-          color={'success'}
+          title={'>> Дополнительная информация <<'}
+          titleStyle={{ color: 'black' }}
           onPress={() => { setIsVisible(true) }}
+          type={'outline'}
+          radius={10}
+          buttonStyle={{ borderColor: 'black', marginHorizontal: 10 }}
         />
       <SafeAreaView>
         <Dialog
@@ -205,11 +203,27 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
         </Dialog>
       </SafeAreaView>
       <Text style={styles.button}>{errorMsg}</Text>
-      <Button
+      <View style={styles.viewButton}>
+
+        <Button
+          containerStyle={styles.buttonStyle}
+          title={'Cancel'}
+          color={'error'}
+          onPress={() => { navigation.goBack() }}
+          /* onPress={onPressCancel} */
+        />
+        <Button
+          containerStyle={styles.buttonStyle}
+          title={'Ok'}
+          color={'success'}
+          onPress={() => { handleOk() }}
+        />
+      </View>
+      {/* <Button
       title={'Ok'}
       color={'success'}
       onPress={() => { handleOk() }}
-      />
+      /> */}
     </View>
   )
 }
@@ -217,6 +231,14 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
 export default SecondScreen
 
 const styles = StyleSheet.create({
+  viewAllInput: {
+    margin: 10,
+    backgroundColor: 'white',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: 'grey',
+    borderRadius: 10
+  },
   textKm: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -225,11 +247,11 @@ const styles = StyleSheet.create({
   },
   viewKm: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderStyle: 'solid',
+    justifyContent: 'space-around'
+    /* borderStyle: 'solid',
     borderRadius: 10,
     borderColor: 'blue',
-    borderWidth: 1
+    borderWidth: 1 */
   },
   textDate: {
     fontSize: 16,
@@ -240,11 +262,11 @@ const styles = StyleSheet.create({
   viewDate: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 20,
-    borderStyle: 'solid',
+    marginBottom: 20
+    /* borderStyle: 'solid',
     borderRadius: 10,
     borderColor: 'blue',
-    borderWidth: 1
+    borderWidth: 1 */
   },
   viewAdditional: {
     backgroundColor: 'white',
@@ -256,5 +278,14 @@ const styles = StyleSheet.create({
   button: {
     textAlign: 'center',
     color: 'red'
+  },
+  viewButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20
+  },
+  buttonStyle: {
+    width: '40%',
+    borderRadius: 5
   }
 })

@@ -7,11 +7,14 @@ import { addTask, updateMiles } from '../components/Redux/actions'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { StateTask } from '../type'
 import { useEffect } from 'react'
+import { RootStackParamList } from '../components/Navigation/Navigation'
 
-export type RootStackParamList = {
+/* export type RootStackParamList = {
   Home: undefined
   Second: undefined
-}
+  Info: undefined
+
+} */
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>
 
@@ -26,6 +29,11 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
     startDate: '25.01.22',
     endData: '25.01.22'
   }
+
+  /*  const navigateInfo = (): void => {
+    navigation.navigate('Info')
+  } */
+
   useEffect(() => {
     console.log(miles.tasks)
   }, [])
@@ -34,7 +42,7 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
 
     <View style={styles.viewContainer}>
       <View style={styles.viewTasks}>
-        <Tasks/>
+        <Tasks />
       </View>
       <View style={styles.viewAddButton}>
         <Button

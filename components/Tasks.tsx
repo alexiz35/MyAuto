@@ -1,14 +1,22 @@
-import { Button, LinearProgress, ListItem, ListItemProps } from '@rneui/themed'
+import { Button, ListItem, ListItemProps } from '@rneui/themed'
 import React from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
 import { delTask } from './Redux/actions'
 import { StateTask } from '../type'
+import { useNavigation } from '@react-navigation/native'
+import { RootStackParamList } from './Navigation/Navigation'
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 type ListComponentProps = ListItemProps
+type ProfileScreenNavigationProp = NativeStackNavigationProp<
+RootStackParamList,
+'Info'
+>
 
 export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
   const del = useAppDispatch()
+  const nav = useNavigation<ProfileScreenNavigationProp>()
 
   const renderRow: ListRenderItem<StateTask> = ({ item }: { item: StateTask }) => {
     return (
@@ -20,6 +28,8 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
             title='info'
             icon={{ name: 'info', color: 'white' }}
             buttonStyle={{ minHeight: '100%' }}
+            onPress={() => nav.navigate('Info', { taskId: item.id })}
+            /* onPress={() => { nav() }} */
           />
         )}
         rightContent={ () => (
