@@ -22,6 +22,7 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
     return (
       <View style={styles.listItem}>
       <ListItem.Swipeable
+        onPress={() => nav.navigate('Info', { taskId: item.id })}
         bottomDivider
         leftContent={ () => (
           <Button

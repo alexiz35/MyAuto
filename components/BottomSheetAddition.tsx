@@ -34,31 +34,21 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
       ++newId
     })
     ;(newParts.length > 0)
-      ? setIdPart(newParts.length)
+      ? setIdPart(newParts.length + 1)
       : setIdPart(1)
     setParts(newParts)
   }
-
-  const listParts = (item: PartList | ServiceList): JSX.Element => {
-    return (
-      <View >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>
-          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{item.id}</Text>
-          <Text style={{ flex: 2, textAlign: 'center', fontSize: 16 }}>{'namePart' in item ? item.namePart : item.nameService}</Text>
-          <Text style={{ flex: 1, textAlign: 'center' }}>{'costPart' in item ? item.costPart : item.costService}</Text>
-          <View style={{ height: '80%' }}>
-            <Pressable>
-              <Text>
-                <Icon name={'delete'} onPress={() => delPart(item.id)}>
-                </Icon>
-              </Text>
-            </Pressable>
-
-          </View>
-        </View>
-      <Divider inset={true} insetType={'middle'}/>
-      </View>
-    )
+  const delService = (id: number): void => {
+    let newId = 0
+    const newServices = services.filter((item: ServiceList) => item.id !== id)
+    newServices.forEach((item: ServiceList) => {
+      item.id = newId + 1
+      ++newId
+    })
+    ;(newServices.length > 0)
+      ? setIdService(newServices.length + 1)
+      : setIdService(1)
+    setServices(newServices)
   }
 
   const addPart = (): void => {
@@ -80,6 +70,30 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
     setCostService('')
     inputNameService.current?.clear()
     inputCostService.current?.clear()
+  }
+
+  const listParts = (item: PartList | ServiceList): JSX.Element => {
+    return (
+      <View >
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>
+          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{item.id}</Text>
+          <Text style={{ flex: 2, textAlign: 'center', fontSize: 16 }}>{'namePart' in item ? item.namePart : item.nameService}</Text>
+          <Text style={{ flex: 1, textAlign: 'center' }}>{'costPart' in item ? item.costPart : item.costService}</Text>
+          <View style={{ height: '80%' }}>
+            <Pressable>
+              <Text>
+                <Icon name={'delete'} onPress={() =>
+                  'namePart' in item ? delPart(item.id) : delService(item.id)
+                }>
+                </Icon>
+              </Text>
+            </Pressable>
+
+          </View>
+        </View>
+      <Divider inset={true} insetType={'middle'}/>
+      </View>
+    )
   }
 
   return (
