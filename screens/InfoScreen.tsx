@@ -51,33 +51,25 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
               placeholder={'Пробег текущий'}
               placeholderTextColor={'black'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 14 }}
-             /*  label={'текущий'}
-              labelStyle={{ textAlign: 'center' }} */
-              /* onChangeText={(value) => inputMile(Number(value))} */
+              inputStyle={styles.inputStyle}
               errorMessage={'текущий пробег'}
-              errorStyle={{ color: 'grey', textAlign: 'center' }}
+              errorStyle={styles.inputErrorStyle}
               keyboardType={'numeric'}
               editable={isEdit}
               defaultValue={'200000'}
               value={String(currentTask.startKm)}
-
             />
             <Input
               placeholder={'Пробег до замены'}
               placeholderTextColor={'black'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 14 }}
-              /*  label={'текущий'}
-               labelStyle={{ textAlign: 'center' }} */
-              /* onChangeText={(value) => inputMile(Number(value))} */
+              inputStyle={styles.inputStyle}
               errorMessage={'пробег до замены'}
-              errorStyle={{ color: 'grey', textAlign: 'center' }}
+              errorStyle={styles.inputErrorStyle}
               keyboardType={'numeric'}
               editable={isEdit}
               defaultValue={'200000'}
               value={String(currentTask.endKm)}
-
             />
           </View>
 
@@ -88,32 +80,23 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
               placeholder={'дата проведения'}
               placeholderTextColor={'black'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 14 }}
-              /*  label={'текущий'}
-               labelStyle={{ textAlign: 'center' }} */
-              /* onChangeText={(value) => inputMile(Number(value))} */
+              inputStyle={styles.inputStyle}
               errorMessage={'дата проведения'}
-              errorStyle={{ color: 'grey', textAlign: 'center' }}
+              errorStyle={styles.inputErrorStyle}
               editable={isEdit}
               defaultValue={'20/12/23'}
               value={String(currentTask.startDate)}
-
-              /* value = {startDateInput} */
             />
             <Input
               placeholder={'дата предельная'}
               placeholderTextColor={'black'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 14 }}
-              /*  label={'текущий'}
-               labelStyle={{ textAlign: 'center' }} */
-              /* onChangeText={(value) => inputMile(Number(value))} */
+              inputStyle={styles.inputStyle}
               errorMessage={'дата предельная'}
-              errorStyle={{ color: 'grey', textAlign: 'center' }}
+              errorStyle={styles.inputErrorStyle}
               editable={isEdit}
               defaultValue={'20/12/23'}
               value={String(currentTask.endData)}
-
             />
           </View>
         </View>
@@ -152,6 +135,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'grey',
     borderRadius: 10
+  },
+  inputStyle: {
+    textAlign: 'center',
+    fontSize: 14
+  },
+  inputErrorStyle: {
+    color: 'grey',
+    textAlign: 'center'
   },
   textKm: {
     fontSize: 12,

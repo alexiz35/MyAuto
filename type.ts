@@ -1,4 +1,4 @@
-
+// --------------------------------type for redux --------------------------------------------
 export enum ActionType {
   UPDATE_MILES = 'UPDATE_MILES',
   ADD_TASK = 'ADD_TASK',
@@ -23,14 +23,7 @@ export interface StateTask {
   }
 
 }
-
-/* export interface ActionTasks {
-  type: string
-  task: StateTask
-} */
-
-/* export type DispatchTasks = (state: StateCar, action: ActionMiles) => ActionTasks */
-
+// -------------------------------------------------------------------------------------------
 // -----------------------------------type for Miles state----------------------------------
 export type CurrentMiles = number
 
@@ -53,7 +46,7 @@ export interface ActionDelTask {
 
 export type AppAction = ActionMiles | ActionAddTask | ActionDelTask
 
-export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles
+/* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 
 export type Dispatch = (state: StateCar, action: AppAction) => StateCar
 

@@ -1,12 +1,12 @@
 import React, { PropsWithChildren, useState } from 'react'
 import {
-  FlatList,
+  FlatList, Pressable,
   SafeAreaView,
   StyleSheet,
   Text, TextInput,
   View
 } from 'react-native'
-import { Button, Divider, Input } from '@rneui/themed'
+import { Button, Divider, Icon, Input } from '@rneui/themed'
 import { PartList, PropsBottomSheet, ServiceList } from '../type'
 
 export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomSheet): JSX.Element => {
@@ -26,6 +26,19 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
   const inputNameService = React.createRef<PropsWithChildren<TextInput>>()
   const inputCostService = React.createRef<PropsWithChildren<TextInput>>()
 
+  const delPart = (id: number): void => {
+    let newId = 0
+    const newParts = parts.filter((item: PartList) => item.id !== id)
+    newParts.forEach((item: PartList) => {
+      item.id = newId + 1
+      ++newId
+    })
+    ;(newParts.length > 0)
+      ? setIdPart(newParts.length)
+      : setIdPart(1)
+    setParts(newParts)
+  }
+
   const listParts = (item: PartList | ServiceList): JSX.Element => {
     return (
       <View >
@@ -33,6 +46,15 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
           <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{item.id}</Text>
           <Text style={{ flex: 2, textAlign: 'center', fontSize: 16 }}>{'namePart' in item ? item.namePart : item.nameService}</Text>
           <Text style={{ flex: 1, textAlign: 'center' }}>{'costPart' in item ? item.costPart : item.costService}</Text>
+          <View style={{ height: '80%' }}>
+            <Pressable>
+              <Text>
+                <Icon name={'delete'} onPress={() => delPart(item.id)}>
+                </Icon>
+              </Text>
+            </Pressable>
+
+          </View>
         </View>
       <Divider inset={true} insetType={'middle'}/>
       </View>

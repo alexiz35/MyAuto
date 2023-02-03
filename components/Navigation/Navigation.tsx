@@ -139,7 +139,22 @@ export const Navigation = (): JSX.Element => {
           name='Info'
           component={InfoScreen}
           initialParams={{ taskId: 0 }}
-          options={{ title: 'Info task' }} />
+          options={{
+            title: 'Info task',
+            headerRight: () => (
+              <Button
+                type='outline'
+                size='md'
+                icon={{
+                  name: 'gear',
+                  type: 'font-awesome',
+                  size: 20
+                }}
+                onPress={() => {
+                  alert('Hello')
+                }}
+              />)
+          }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
