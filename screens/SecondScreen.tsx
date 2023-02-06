@@ -1,13 +1,14 @@
-import { Text, View, StyleSheet, SafeAreaView } from 'react-native'
+import { Text, View, StyleSheet, SafeAreaView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { useAppDispatch } from '../components/Redux/hook'
 import { Button, Dialog, Input } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PartList, ServiceList, StateTask } from '../type'
 import { addTask } from '../components/Redux/actions'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
 import { RootStackParamList } from '../components/Navigation/Navigation'
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Second'>
 
@@ -29,11 +30,15 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
   const [itemsDrop, setItemsDrop] = useState(listService)
 
   const [startKmInput, setStartKmInput] = useState(0)
-  const [startDateInput, setStartDateInput] = useState(new Date().toLocaleDateString())
+  const [startDateInput, setStartDateInput] = useState(new Date())
   const [endKmInput, setEndKmInput] = useState(0)
   const [endDateInput, setEndDateInput] = useState('')
   const [timeToService, setTimeToService] = useState(0)
   const [kmToService, setKmToService] = useState(0)
+  const [costParts, setCostParts] = useState(0)
+  const [costService, setCostService] = useState(0)
+  const [amountPart, setAmountPart] = useState(0)
+  const [sumCost, setSumCost] = useState(0)
 
   const [addParts, setAddParts] = useState<[PartList] | undefined>()
   const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
@@ -46,13 +51,38 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
     return tempDate.toLocaleDateString()
   }
 
+  const inputDate = (): void => DateTimePickerAndroid.open({
+    value: new Date(),
+    /* display: 'spinner', */
+    // @ts-expect-error date undefined
+    onChange: (event, date) => setStartDateInput(date)
+  })
+
   useEffect(() => {
     setEndKmInput(startKmInput + kmToService)
   }, [startKmInput, kmToService])
 
   useEffect(() => {
-    setEndDateInput(editDate(startDateInput, timeToService))
+    setEndDateInput(editDate(startDateInput.toLocaleDateString(), timeToService))
   }, [startDateInput, timeToService])
+
+  useEffect(() => {
+    counter(addParts)
+  }, [addParts])
+
+  const counter = (parts: [PartList] | undefined): void => {
+    let amount = 0
+    let sum = 0
+    // eslint-disable-next-line array-callback-return
+    parts?.map((part) => {
+      amount = amount + part.amountPart
+      sum = sum + (part.costPart * part.amountPart)
+    })
+    setSumCost(sum)
+    setAmountPart(amount)
+    console.log('counter', amountPart)
+    console.log('counter2', costParts)
+  }
 
   const changeTask = (value: string | null): void => {
     setErrorMsg('')
@@ -95,7 +125,7 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
       id: Date.now(),
       startKm: startKmInput,
       endKm: endKmInput,
-      startDate: startDateInput,
+      startDate: startDateInput.toLocaleDateString(),
       endData: endDateInput,
       title: String(valueDrop),
       addition:
@@ -114,17 +144,18 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
     setIsVisible(false)
   }
 
-  const handleOkModal = (parts: PartList[], services: ServiceList[]): void => {
-    // @ts-expect-error knknk
+  const handleOkModal = (parts: PartList[]): void => {
+    // @ts-expect-error kjjkj
     setAddParts(parts)
-    // @ts-expect-error kkkk
-    setAddServices(services)
+    /* setAddServices(services) */
     setIsVisible(false)
   }
 
   return (
     <View>
       <DropDownPicker
+        style={styles.dropDownPicker}
+        disableBorderRadius={true}
         placeholder={'Выберите тип ТО'}
         placeholderStyle={{ color: 'red', fontWeight: 'bold' }}
         open={openDrop}
@@ -137,71 +168,112 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
         onChangeValue={(value) => changeTask(value)}
         textStyle={{ color: 'blue', textAlign: 'center', fontSize: 18 }}
       />
-
       <View style={styles.viewAllInput}>
-        <Text style={styles.textKm}>Пробег</Text>
 
-        <View style={styles.viewKm}>
-          <Input
-            placeholder={'Пробег текущий'}
-            placeholderTextColor={'red'}
-            containerStyle={{ flex: 1 }}
-            inputStyle={{ textAlign: 'center', fontSize: 12 }}
-            label={'текущий'}
-            labelStyle={{ textAlign: 'center' }}
-            onChangeText={(value) => inputMile(Number(value))}
-            keyboardType={'numeric'}
-          />
-          <Input
-            placeholder={'Пробег для замены'}
-            containerStyle={{ flex: 1 }}
-            inputStyle={{ textAlign: 'center' }}
-            label={'предельный'}
-            labelStyle={{ textAlign: 'center' }}
-            value = {String(endKmInput)}
-          />
+        <View style={styles.viewGroupInput}>
+          <View style={styles.input}>
+            <Input
+              placeholder={'введите пробег'}
+              placeholderTextColor={'red'}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              errorMessage={'текущий пробег'}
+              errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
+              onChangeText={(value) => inputMile(Number(value))}
+              keyboardType={'numeric'}
+            />
+          </View>
+          <View style={styles.input}>
+            <Input
+              placeholder={'Пробег для замены'}
+              containerStyle={{ flex: 1 }}
+              inputStyle={{ textAlign: 'center' }}
+              errorMessage={'пробег замены'}
+              errorStyle={styles.errorInput}
+              value = {String(endKmInput)}
+            />
+          </View>
       </View>
 
-      <Text style={styles.textDate}>Дата</Text>
-
-      <View style={styles.viewDate}>
+      <View style={styles.viewGroupInput}>
+            <View style={styles.input}>
+             <Input
+                placeholder={'Дата проведения'}
+                containerStyle={{ flex: 1 }}
+                inputStyle={{ textAlign: 'center' }}
+                value = {startDateInput.toLocaleDateString()}
+                onPressOut={inputDate}
+                errorMessage={'текущая дата'}
+                errorStyle={styles.errorInput}
+             />
+            </View>
+        <View style={styles.input}>
             <Input
               placeholder={'Дата проведения'}
-              containerStyle={{ flex: 1 }}
               inputStyle={{ textAlign: 'center' }}
-              label={'текущая'}
-              labelStyle={{ textAlign: 'center' }}
-              value = {startDateInput}
-            />
-            <Input
-              placeholder={'Дата проведения'}
-              containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center' }}
-              label={'предельная'}
-              labelStyle={{ textAlign: 'center' }}
+              errorMessage={'конечная дата'}
+              errorStyle={styles.errorInput}
               value = {endDateInput }
+              editable={false}
             />
         </View>
+        </View>
       </View>
-        <Button
-          title={'>> Дополнительная информация <<'}
+       {/*  <Button
+          title={ `Ввести комплектующие \n добавлено ${addParts?.length} шт`}
           titleStyle={{ color: 'black' }}
           onPress={() => { setIsVisible(true) }}
-          type={'outline'}
-          radius={10}
-          buttonStyle={{ borderColor: 'black', marginHorizontal: 10 }}
-        />
+          color= {'white'}
+          buttonStyle={ styles.buttonAddition }
+        /> */}
+      <Pressable style={styles.textCost} onPress={() => { setIsVisible(true) }}>
+      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Добавить комплектующие</Text>
+      <Text >{`Добавлено деталей: ${amountPart} шт`}</Text>
+      </Pressable>
+      <View style={styles.viewGroupInput}>
+        <View style={styles.input}>
+          <Input
+            placeholder={'цена деталей'}
+            /* placeholderTextColor={'red'} */
+            inputStyle={{ textAlign: 'center', fontSize: 12 }}
+            errorMessage={'цена деталей'}
+            errorStyle={styles.errorInput}
+            onChangeText={(value) => setCostParts(Number(value))}
+            keyboardType={'numeric'}
+            value={String(sumCost)}
+          />
+        </View>
+        <View style={styles.input}>
+          <Input
+            placeholder={'стоимость работы'}
+            containerStyle={{ flex: 1 }}
+            inputStyle={{ textAlign: 'center', fontSize: 12 }}
+            errorMessage={'стоимость работы'}
+            errorStyle={styles.errorInput}
+            onChangeText={(value) => setCostService(Number(value))}
+            keyboardType={'numeric'}
+          />
+        </View>
+      </View>
+
+      <View >
+        <Text style={styles.textCost}>{`Итого затраты: ${sumCost + costService} грн`}</Text>
+      </View>
+
       <SafeAreaView>
         <Dialog
           isVisible={isVisible}
           overlayStyle={{ width: '100%' }}
         >
           <BottomSheetAddition
+            // @ts-expect-error jbjbjb
+
+            initialParts={addParts}
             onPressCancel = {() => { handleCancelModal() }}
             onPressOk={handleOkModal}
           />
         </Dialog>
       </SafeAreaView>
+
       <Text style={styles.button}>{errorMsg}</Text>
       <View style={styles.viewButton}>
 
@@ -219,11 +291,7 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
           onPress={() => { handleOk() }}
         />
       </View>
-      {/* <Button
-      title={'Ok'}
-      color={'success'}
-      onPress={() => { handleOk() }}
-      /> */}
+
     </View>
   )
 }
@@ -231,43 +299,61 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
 export default SecondScreen
 
 const styles = StyleSheet.create({
+  dropDownPicker: {
+    margin: 5,
+    width: '97%',
+    borderWidth: 0,
+    borderRadius: 0,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2
+  },
   viewAllInput: {
-    margin: 10,
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'grey',
-    borderRadius: 10
+
   },
-  textKm: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 10
-  },
-  viewKm: {
+  viewGroupInput: {
     flexDirection: 'row',
     justifyContent: 'space-around'
-    /* borderStyle: 'solid',
-    borderRadius: 10,
-    borderColor: 'blue',
-    borderWidth: 1 */
   },
-  textDate: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 10
+  input: {
+    margin: 5,
+    backgroundColor: 'white',
+    flex: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2
   },
-  viewDate: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20
-    /* borderStyle: 'solid',
-    borderRadius: 10,
-    borderColor: 'blue',
-    borderWidth: 1 */
+  errorInput: {
+    color: 'gray',
+    marginTop: 1,
+    textAlign: 'center'
   },
+  buttonAddition: {
+    margin: 5,
+    height: 50,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2
+  },
+
   viewAdditional: {
     backgroundColor: 'white',
     borderStyle: 'solid',
@@ -279,6 +365,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'red'
   },
+
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -287,5 +374,22 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: '40%',
     borderRadius: 5
+  },
+  textCost: {
+    marginHorizontal: 50,
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: 'white',
+    textAlign: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2
   }
 })

@@ -56,6 +56,8 @@ export interface PartList {
   id: number
   namePart: string
   costPart: number
+  amountPart: number
+  numberPart: string
 }
 export interface ServiceList {
   id: number
@@ -64,8 +66,18 @@ export interface ServiceList {
 }
 
 export interface PropsBottomSheet {
-  onPressOk: (parts: PartList[], services: ServiceList[]) => void
+  initialParts: PartList[]
+  onPressOk: (parts: PartList[]) => void
   onPressCancel: () => void
 }
 
 // --------------------------------------------------------------------------------------------
+/* export interface PartModal {
+  partName: string
+  costName: number
+} */
+
+export interface PropsModalInput {
+  onPressOk: (partName: string, costName: string) => void
+  onPressCancel: () => void
+}

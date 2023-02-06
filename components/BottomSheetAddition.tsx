@@ -7,24 +7,28 @@ import {
   View
 } from 'react-native'
 import { Button, Divider, Icon, Input } from '@rneui/themed'
-import { PartList, PropsBottomSheet, ServiceList } from '../type'
+import { PartList, PropsBottomSheet } from '../type'
 
-export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomSheet): JSX.Element => {
+export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: PropsBottomSheet): JSX.Element => {
   const [namePart, setNamePart] = useState('')
-  const [costPart, setCostPart] = useState('')
-  const [idPart, setIdPart] = useState(1)
+  const [numberPart, setNumberPart] = useState('')
+  const [costPart, setCostPart] = useState(0)
+  const [amountPart, setAmountPart] = useState(1)
+  const [idPart, setIdPart] = useState(initialParts === undefined ? 1 : initialParts.length + 1)
 
-  const [nameService, setNameService] = useState('')
+  const [parts, setParts] = useState<PartList[]>(initialParts === undefined ? [] : initialParts)
+
+  /* const [isVisiblePart, setIsVisiblePart] = useState(false) */
+  /*  const [nameService, setNameService] = useState('')
   const [costService, setCostService] = useState('')
-  const [idService, setIdService] = useState(1)
-
-  const [parts, setParts] = useState([])
-  const [services, setServices] = useState([])
+  const [idService, setIdService] = useState(1) */
+  /*   const [services, setServices] = useState([]) */
+  /*  const [isVisibleService, setIsVisibleService] = useState(false) */
 
   const inputNamePart = React.createRef<PropsWithChildren<TextInput>>()
   const inputCostPart = React.createRef<PropsWithChildren<TextInput>>()
-  const inputNameService = React.createRef<PropsWithChildren<TextInput>>()
-  const inputCostService = React.createRef<PropsWithChildren<TextInput>>()
+  const inputAmountPart = React.createRef<PropsWithChildren<TextInput>>()
+  const inputNumberPart = React.createRef<PropsWithChildren<TextInput>>()
 
   const delPart = (id: number): void => {
     let newId = 0
@@ -38,7 +42,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
       : setIdPart(1)
     setParts(newParts)
   }
-  const delService = (id: number): void => {
+  /* const delService = (id: number): void => {
     let newId = 0
     const newServices = services.filter((item: ServiceList) => item.id !== id)
     newServices.forEach((item: ServiceList) => {
@@ -49,19 +53,22 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
       ? setIdService(newServices.length + 1)
       : setIdService(1)
     setServices(newServices)
-  }
+  } */
 
   const addPart = (): void => {
-    if (namePart === '' || costPart === '') return
+    if (namePart === '') return
     setIdPart(idPart + 1)
-    // @ts-expect-error initial state
-    setParts([...parts, { id: idPart, namePart, costPart }])
+    setParts([...parts, { id: idPart, namePart, costPart, amountPart, numberPart }])
     setNamePart('')
-    setCostPart('')
+    setCostPart(0)
+    setNumberPart('')
+    setAmountPart(1)
     inputNamePart.current?.clear()
     inputCostPart.current?.clear()
+    inputNumberPart.current?.clear()
+    console.log('add', parts)
   }
-  const addService = (): void => {
+  /*  const addService = (): void => {
     if (nameService === '' || costService === '') return
     setIdService(idService + 1)
     // @ts-expect-error initial state
@@ -70,20 +77,36 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
     setCostService('')
     inputNameService.current?.clear()
     inputCostService.current?.clear()
-  }
+  } */
 
-  const listParts = (item: PartList | ServiceList): JSX.Element => {
+  /* const handleOkModal = (partName: string, partCost: string): void => {
+    setIsVisiblePart(false)
+    setNamePart(partName)
+    setCostPart(partCost)
+  } */
+
+  /*   useEffect(() => {
+    addPart()
+  }, [namePart, costPart]) */
+
+  /* const handleCancelModal = (): void => {
+    setIsVisiblePart(false)
+  } */
+
+  const listParts = (item: PartList): JSX.Element => {
     return (
       <View >
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>
           <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{item.id}</Text>
-          <Text style={{ flex: 2, textAlign: 'center', fontSize: 16 }}>{'namePart' in item ? item.namePart : item.nameService}</Text>
-          <Text style={{ flex: 1, textAlign: 'center' }}>{'costPart' in item ? item.costPart : item.costService}</Text>
+          <Text style={{ flex: 2, textAlign: 'center', fontSize: 16 }}>{item.namePart}</Text>
+          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{`${item.amountPart} x`}</Text>
+          <Text style={{ flex: 1, textAlign: 'center' }}>{item.costPart}</Text>
           <View style={{ height: '80%' }}>
             <Pressable>
               <Text>
                 <Icon name={'delete'} onPress={() =>
-                  'namePart' in item ? delPart(item.id) : delService(item.id)
+                  /* 'namePart' in item ? delPart(item.id) : delService(item.id) */
+                  delPart(item.id)
                 }>
                 </Icon>
               </Text>
@@ -108,37 +131,70 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
           Добавьте детали, которые вы использовали
         </Text>
 
+        <View style={styles.viewGroupInput}>
+          <View style={styles.input}>
+            <Input
+              ref={inputNamePart}
+              placeholder={'наименование'}
+              placeholderTextColor={'red'}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              errorMessage={'наименование'}
+              errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
+              onChangeText={(value) => setNamePart(String(value))}
+            />
+          </View>
+          <View style={styles.input}>
+            <Input
+              ref={inputNumberPart}
+              placeholder={'введите номер'}
+              containerStyle={{ flex: 1 }}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              errorMessage={'номер детали'}
+              errorStyle={styles.errorInput}
+              onChangeText={(value) => setNumberPart(String(value))}
+            />
+          </View>
+        </View>
+
+        <View style={styles.viewGroupInput}>
+          <View style={styles.input}>
+            <Input
+              ref={inputAmountPart}
+              placeholder={'кол-во'}
+              containerStyle={{ flex: 1 }}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              onChangeText={(value) => setAmountPart(Number(value))}
+              errorMessage={'количество'}
+              errorStyle={styles.errorInput}
+              value={String(amountPart)}
+              defaultValue={String(1)}
+              keyboardType={'numeric'}
+            />
+          </View>
+          <View style={styles.input}>
+            <Input
+              ref={inputCostPart}
+              placeholder={'введите цену'}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              errorMessage={'цена деиали'}
+              errorStyle={styles.errorInput}
+              onChangeText={(value) => setCostPart(Number(value))}
+              keyboardType={'numeric'}
+            />
+          </View>
+        </View>
+
         <View style={styles.viewPart}>
-          <Input
-            ref={inputNamePart}
-            placeholder={'артикул'}
-            containerStyle={{ flex: 2 }}
-            inputStyle={styles.inputPartStyle}
-            /* label={'артикул детали'}
-            labelStyle={{ textAlign: 'center' }}
-            errorMessage={'введите артикул'} */
-            onChangeText={(value) => setNamePart(String(value)) }
-            onSubmitEditing={() => inputCostPart.current?.focus()}
-            value={namePart}
-            defaultValue={''}
-          />
-          <Input
-            ref={inputCostPart}
-            placeholder={'цена'}
-            containerStyle={{ flex: 1 }}
-            inputStyle={styles.inputPartStyle}
-            /* label={'цена'}
-            labelStyle={{ textAlign: 'center' }}
-            errorMessage={'введите цену'} */
-            onChangeText={(value) => setCostPart(value) }
-            value={String(costPart)}
-            keyboardType={'numeric'}
-            defaultValue={''}
-          />
           <Button
-            title={'+'}
-            containerStyle={{ flex: 0.5 }}
+            radius={'5'}
+            /* title={'+'} */
+            color={'secondary'}
+            buttonStyle={{ paddingHorizontal: 0 }}
+            /* type={'outline'} */
+            icon={{ name: 'plus', type: 'font-awesome', color: 'white' }}
+            containerStyle={{ flex: 1, padding: 0, margin: 0 }}
             onPress={addPart}
+            /* onPress={() => setIsVisiblePart(true)} */
           />
         </View>
 
@@ -146,42 +202,18 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
           style={styles.flatList}
           renderItem={({ item }) => listParts(item)}
           data={parts}
-          // @ts-expect-error initial state
           keyExtractor={item => item.id.toString()}
         />
-        <Text style={styles.textPart} >
+      {/*   <Text style={styles.textPart} >
           Добавьте работы, которые были проведены
         </Text>
 
         <View style={styles.viewPart}>
-          <Input
-            ref={inputNameService}
-            placeholder={'название сервиса'}
-            containerStyle={{ flex: 2 }}
-            inputStyle={styles.inputServiceStyle}
-            /* label={'название сервиса'}
-            labelStyle={{ textAlign: 'center' }} */
-            onChangeText={(value) => { setNameService(String(value)) }}
-            onSubmitEditing={() => inputCostService.current?.focus()}
-            value={nameService}
-            defaultValue={''}
-
-          />
-          <Input
-            ref={inputCostService}
-            placeholder={'цена работы'}
-            containerStyle={{ flex: 1 }}
-            inputStyle={styles.inputServiceStyle}
-            /* label={'цена'}
-            labelStyle={{ textAlign: 'center' }} */
-            onChangeText={(value) => { setCostService(value) }}
-            value={String(costService)}
-            keyboardType={'numeric'}
-            defaultValue={''}
-          />
           <Button
             title={'+'}
-            containerStyle={{ flex: 0.5 }}
+            radius={'5'}
+            color={'secondary'}
+            containerStyle={{ flex: 1 }}
             onPress={addService}
           />
         </View>
@@ -192,20 +224,25 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
           // @ts-expect-error initial state
           keyExtractor={item => item.id.toString()}
         />
+      </View> */}
       </View>
       <View style={styles.viewButton}>
 
       <Button
         containerStyle={styles.buttonStyle}
+        buttonStyle={{ borderColor: 'black' }}
+        titleStyle={{ color: 'black' }}
         title={'Cancel'}
-        color={'error'}
         onPress={onPressCancel}
+        type='outline'
       />
         <Button
         containerStyle={styles.buttonStyle}
-        title={'Ok'}
-        color={'success'}
-        onPress={() => { onPressOk(parts, services) }}
+        buttonStyle={{ borderColor: 'black' }}
+        titleStyle={{ color: 'black' }}
+        title={'Finish'}
+        onPress={() => { onPressOk(parts) }}
+        type={'outline'}
       />
       </View>
     </SafeAreaView>
@@ -214,12 +251,37 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel }: PropsBottomShe
 
 const styles = StyleSheet.create({
   viewAdditional: {
-    backgroundColor: 'white',
+    /* backgroundColor: 'white',
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: 'grey',
-    borderRadius: 10
+    borderRadius: 10 */
   },
+
+  viewGroupInput: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  input: {
+    margin: 5,
+    backgroundColor: 'white',
+    flex: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2
+  },
+  errorInput: {
+    color: 'gray',
+    marginTop: 1,
+    textAlign: 'center'
+  },
+
   textTop: {
     textAlign: 'center',
     fontSize: 12,
@@ -246,11 +308,11 @@ const styles = StyleSheet.create({
   },
   inputPartStyle: {
     textAlign: 'center',
-    fontSize: 16
+    fontSize: 14
   },
   inputServiceStyle: {
     textAlign: 'center',
-    fontSize: 12
+    fontSize: 14
   },
   viewButton: {
     flexDirection: 'row',
