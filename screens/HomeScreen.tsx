@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { Text, View, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Button } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Tasks } from '../components/Tasks'
@@ -8,13 +8,6 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { StateTask } from '../type'
 import { useEffect } from 'react'
 import { RootStackParamList } from '../components/Navigation/Navigation'
-
-/* export type RootStackParamList = {
-  Home: undefined
-  Second: undefined
-  Info: undefined
-
-} */
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>
 
@@ -35,8 +28,10 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
   } */
 
   useEffect(() => {
-    console.log(miles.tasks)
-  }, [])
+    /* setMiles(updateMiles(15)) */
+    /* setMiles(addTask(currentTask)) */
+    console.log('homelog', miles)
+  }, [miles.currentMiles])
 
   return (
 
@@ -50,7 +45,7 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
           type='solid'
           size={'lg'}
           onPress={() => {
-            navigation.navigate('Second')
+            navigation.navigate('InputTaskScreen', { editable: false })
           }}
           icon={{
             name: 'umbrella',

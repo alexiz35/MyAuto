@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import HomeScreen from '../../screens/HomeScreen'
-import SecondScreen from '../../screens/SecondScreen'
+import InputTaskScreen from '../../screens/InputTaskScreen'
 import { Image, Text, View } from 'react-native'
 import { Button } from '@rneui/themed'
 import { useEffect, useState } from 'react'
@@ -10,11 +10,12 @@ import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
 import InfoScreen from '../../screens/InfoScreen'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
   Home: undefined
-  Second: undefined
+  InputTaskScreen: { editable: boolean, taskId?: number }
   Info: { taskId: number }
 }
 
@@ -124,22 +125,24 @@ export const Navigation = (): JSX.Element => {
                   type: 'font-awesome',
                   size: 20
                 }}
-                onPress={() => {
-                  alert('Hello')
-                }}
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onPress={
+                  async () => {
+                    await AsyncStorage.clear()
+                  }}
               />)
           }
           } />
         <Stack.Screen
-          name='Second'
-          component={SecondScreen}
+          name='InputTaskScreen'
+          component={InputTaskScreen}
           options={{ title: 'Edit Task' }} />
 
         <Stack.Screen
           name='Info'
           component={InfoScreen}
           initialParams={{ taskId: 0 }}
-          options={{
+          options={({ navigation, route }) => ({
             title: 'Info task',
             headerRight: () => (
               <Button
@@ -151,10 +154,10 @@ export const Navigation = (): JSX.Element => {
                   size: 20
                 }}
                 onPress={() => {
-                  alert('Hello')
+                  navigation.navigate('InputTaskScreen', { editable: true, taskId: route.params.taskId })
                 }}
               />)
-          }} />
+          })} />
       </Stack.Navigator>
     </NavigationContainer>
   )

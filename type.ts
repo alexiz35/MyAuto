@@ -2,7 +2,8 @@
 export enum ActionType {
   UPDATE_MILES = 'UPDATE_MILES',
   ADD_TASK = 'ADD_TASK',
-  DEL_TASK = 'DEL_TASK'
+  DEL_TASK = 'DEL_TASK',
+  EDIT_TASK = 'EDIT_TASK'
 }
 
 export interface StateCar {
@@ -17,6 +18,8 @@ export interface StateTask {
   endKm: number
   startDate: string
   endData: string
+  sumCostParts?: number
+  sumCostService?: number
   addition?: {
     parts?: [PartList]
     services?: [ServiceList]
@@ -43,8 +46,15 @@ export interface ActionDelTask {
   type: ActionType.DEL_TASK
   id: number
 }
+export interface ActionEditTask {
+  type: ActionType.EDIT_TASK
+  payload: {
+    id: number | undefined
+    task: StateTask
+  }
+}
 
-export type AppAction = ActionMiles | ActionAddTask | ActionDelTask
+export type AppAction = ActionMiles | ActionAddTask | ActionDelTask | ActionEditTask
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

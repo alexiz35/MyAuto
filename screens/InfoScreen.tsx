@@ -1,4 +1,4 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { useEffect, useState } from 'react'
@@ -6,11 +6,17 @@ import { useAppSelector } from '../components/Redux/hook'
 import { StateTask } from '../type'
 import { listsInfo } from '../components/ListInfo'
 import { RootStackParamList } from '../components/Navigation/Navigation'
+import { useNavigation } from '@react-navigation/native'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Info'>
+type ProfileScreenNavigationProp = NativeStackNavigationProp<
+RootStackParamList,
+'InputTaskScreen'
+>
 
 const InfoScreen = ({ route }: Props): JSX.Element => {
   const Tasks = useAppSelector((state) => state)
+  const nav = useNavigation<ProfileScreenNavigationProp>()
 
   const [currentTask, setCurrentTask] = useState<StateTask>(
     {
@@ -21,12 +27,11 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
       startDate: '',
       endData: '',
       addition: {
-        parts: [{ id: 0, namePart: '', costPart: 0 }],
+        parts: [{ id: 0, namePart: '', costPart: 0, numberPart: '', amountPart: 0 }],
         services: [{ id: 0, nameService: '', costService: 0 }]
       }
     }
   )
-  const [isEdit, setIsEdit] = useState(false)
 
   const currentId = route.params.taskId
   const tempTask = (): StateTask => {
@@ -39,7 +44,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
 
   useEffect(() => {
     setCurrentTask(tempTask)
-  }, [currentId, isEdit])
+  }, [currentId])
 
   return (
       <View>
@@ -55,7 +60,6 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
               errorMessage={'текущий пробег'}
               errorStyle={styles.inputErrorStyle}
               keyboardType={'numeric'}
-              editable={isEdit}
               defaultValue={'200000'}
               value={String(currentTask.startKm)}
             />
@@ -67,7 +71,6 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
               errorMessage={'пробег до замены'}
               errorStyle={styles.inputErrorStyle}
               keyboardType={'numeric'}
-              editable={isEdit}
               defaultValue={'200000'}
               value={String(currentTask.endKm)}
             />
@@ -83,7 +86,6 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
               inputStyle={styles.inputStyle}
               errorMessage={'дата проведения'}
               errorStyle={styles.inputErrorStyle}
-              editable={isEdit}
               defaultValue={'20/12/23'}
               value={String(currentTask.startDate)}
             />
@@ -94,7 +96,6 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
               inputStyle={styles.inputStyle}
               errorMessage={'дата предельная'}
               errorStyle={styles.inputErrorStyle}
-              editable={isEdit}
               defaultValue={'20/12/23'}
               value={String(currentTask.endData)}
             />
@@ -104,7 +105,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
           <Text style={{ textAlign: 'center', marginBottom: 10 }}>Использованные материалы</Text>
           <FlatList
             data={currentTask.addition?.parts}
-            renderItem={({ item }) => listsInfo(item, isEdit)}
+            renderItem={({ item }) => listsInfo(item)}
             keyExtractor={item => item.id.toString()}
           />
         </View>
@@ -112,13 +113,15 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
           <Text style={{ textAlign: 'center', marginBottom: 10 }}>Проведенные работы</Text>
           <FlatList
             data={currentTask.addition?.services}
-            renderItem={({ item }) => listsInfo(item, isEdit)}
+            renderItem={({ item }) => listsInfo(item)}
             keyExtractor={item => item.id.toString()}
           />
         </View>
         <Button
           title={'Edit'}
-          onPress={() => setIsEdit(true)}
+          onPress={() => {
+            nav.navigate('InputTaskScreen', { editable: true, taskId: currentId })
+          }}
           color={'secondary'}
         />
       </View>

@@ -1,5 +1,5 @@
 import {
-  ActionAddTask, ActionDelTask,
+  ActionAddTask, ActionDelTask, ActionEditTask,
   ActionMiles,
   ActionType,
   CurrentMiles,
@@ -22,4 +22,13 @@ export const delTask = (id: number): ActionDelTask => (
   {
     type: ActionType.DEL_TASK,
     id
+  })
+
+export const editTask = (id: number | undefined, task: StateTask): ActionEditTask => (
+  {
+    type: ActionType.EDIT_TASK,
+    payload: {
+      id,
+      task
+    }
   })

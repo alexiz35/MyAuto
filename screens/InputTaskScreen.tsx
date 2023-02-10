@@ -1,20 +1,22 @@
 import { Text, View, StyleSheet, SafeAreaView, Pressable } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useAppDispatch } from '../components/Redux/hook'
+import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { Button, Dialog, Input } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { useEffect, useState } from 'react'
 import { PartList, ServiceList, StateTask } from '../type'
-import { addTask } from '../components/Redux/actions'
+import { addTask, editTask } from '../components/Redux/actions'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Second'>
+type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 
-const SecondScreen = ({ navigation }: Props): JSX.Element => {
+const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
+  const Tasks = useAppSelector((state) => state)
+
   const listService = [
     { label: 'engineOil', value: 'engineOil' },
     { label: 'gearOil', value: 'gearOil' },
@@ -23,6 +25,24 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
     { label: 'driveBelt', value: 'driveBelt' },
     { label: 'timingBelt', value: 'timingBelt' }
   ]
+
+  const editableTask: boolean = route.params.editable
+  const currentId: number | undefined = route.params.taskId
+
+  /* const [currentTask, setCurrentTask] = useState<StateTask>(
+    {
+      id: 0,
+      title: '',
+      startKm: 0,
+      endKm: 0,
+      startDate: '',
+      endData: '',
+      addition: {
+        parts: [{ id: 0, namePart: '', costPart: 0, amountPart: 0, numberPart: '' }],
+        services: [{ id: 0, nameService: '', costService: 0 }]
+      }
+    }
+  ) */
 
   const [errorMsg, setErrorMsg] = useState('')
   const [openDrop, setOpenDrop] = useState(false)
@@ -59,6 +79,19 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
   })
 
   useEffect(() => {
+    if (editableTask) {
+      const temp = Tasks.tasks.find((item) => (item.id === currentId))
+      if (temp !== undefined) {
+        setStartKmInput(temp.startKm)
+        setAddParts(temp.addition?.parts)
+        setStartDateInput(new Date(temp.startDate))
+        setCostService(temp.sumCostService !== undefined ? temp.sumCostService : 0)
+      }
+    }
+  }, [editableTask])
+
+  useEffect(() => {
+    console.log('edit', editableTask)
     setEndKmInput(startKmInput + kmToService)
   }, [startKmInput, kmToService])
 
@@ -80,8 +113,6 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
     })
     setSumCost(sum)
     setAmountPart(amount)
-    console.log('counter', amountPart)
-    console.log('counter2', costParts)
   }
 
   const changeTask = (value: string | null): void => {
@@ -128,15 +159,16 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
       startDate: startDateInput.toLocaleDateString(),
       endData: endDateInput,
       title: String(valueDrop),
+      sumCostService: costService,
+      sumCostParts: sumCost,
       addition:
         {
           parts: addParts,
           services: addServices
         }
     }
-    console.log('ok', tempNewTask)
-    console.log('ok2', tempNewTask.addition?.parts)
-    setNewTask(addTask(tempNewTask))
+
+    editableTask ? setNewTask(editTask(currentId, tempNewTask)) : setNewTask(addTask(tempNewTask))
     navigation.navigate('Home')
   }
 
@@ -180,6 +212,7 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
               errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
               onChangeText={(value) => inputMile(Number(value))}
               keyboardType={'numeric'}
+              value={String(startKmInput)}
             />
           </View>
           <View style={styles.input}>
@@ -251,6 +284,7 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
             errorStyle={styles.errorInput}
             onChangeText={(value) => setCostService(Number(value))}
             keyboardType={'numeric'}
+            value={String(costService)}
           />
         </View>
       </View>
@@ -296,7 +330,7 @@ const SecondScreen = ({ navigation }: Props): JSX.Element => {
   )
 }
 
-export default SecondScreen
+export default InputTaskScreen
 
 const styles = StyleSheet.create({
   dropDownPicker: {

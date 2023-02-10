@@ -2,7 +2,7 @@ import { PartList, ServiceList } from '../type'
 import { StyleSheet, TextInput, View } from 'react-native'
 import { Divider } from '@rneui/themed'
 
-export const listsInfo = (item: PartList | ServiceList, isEdit: boolean): JSX.Element => {
+export const listsInfo = (item: PartList | ServiceList): JSX.Element => {
   return (
     <View >
 
@@ -11,7 +11,6 @@ export const listsInfo = (item: PartList | ServiceList, isEdit: boolean): JSX.El
           placeholder={'Пробег текущий'}
           placeholderTextColor={'black'}
           keyboardType={'numeric'}
-          editable={isEdit}
           defaultValue={'200000'}
           value={String(item.id)}
           style={{ color: 'black', paddingHorizontal: 10 }}
@@ -20,7 +19,6 @@ export const listsInfo = (item: PartList | ServiceList, isEdit: boolean): JSX.El
           placeholder={'Пробег текущий'}
           placeholderTextColor={'black'}
           keyboardType={'numeric'}
-          editable={isEdit}
           defaultValue={'200000'}
           value={String('namePart' in item ? item.namePart : item.nameService)}
           style={{ color: 'black' }}
@@ -29,7 +27,6 @@ export const listsInfo = (item: PartList | ServiceList, isEdit: boolean): JSX.El
           placeholder={'Пробег текущий'}
           placeholderTextColor={'black'}
           keyboardType={'numeric'}
-          editable={isEdit}
           defaultValue={'200000'}
           value={String('costPart' in item ? item.costPart : item.costService)}
           style={{ color: 'black' }}
