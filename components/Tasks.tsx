@@ -1,4 +1,4 @@
-import { Button, ListItem, ListItemProps } from '@rneui/themed'
+import { Button, LinearProgress, ListItem, ListItemProps } from '@rneui/themed'
 import React from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
@@ -19,6 +19,30 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
   const nav = useNavigation<ProfileScreenNavigationProp>()
 
   const renderRow: ListRenderItem<StateTask> = ({ item }: { item: StateTask }) => {
+    // ------------------------- заменить
+    const currentMile = 203000
+    // ----------------------------------------------
+    const progress = {
+      value: 0,
+      color: 'red',
+      left: 0
+    }
+
+    const value: number = (currentMile - item.startKm) / (item.endKm - item.startKm)
+
+    if (value < 0) {
+      progress.value = 1
+      progress.color = 'red'
+      progress.left = 0
+    } else {
+      progress.value = value
+      progress.left = item.endKm - currentMile
+      if (value > 0.7) {
+        progress.color = 'red'
+      } else {
+        progress.color = 'green'
+      }
+    }
     return (
       <View style={styles.listItem}>
       <ListItem.Swipeable
@@ -43,16 +67,19 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
         )}
       >
 
-        <ListItem.Content >
+        <ListItem.Content style={{ flex: 1.4 }}>
 
           <ListItem.Title>
             {item.title}
           </ListItem.Title>
-          {/*  <LinearProgress
-          value={item.progress / 100}
-          color='red'
-          trackColor='grey'
-        /> */}
+           <LinearProgress
+          value={progress.value}
+          color={progress.color}
+          trackColor='lightgrey'
+        />
+          <ListItem.Subtitle style={{ fontSize: 12 }}>
+            {(progress.left !== 0) ? `осталось ${progress.left} км` : 'просрочено'}
+          </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Content>
           <ListItem.Title >
@@ -72,6 +99,7 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
         </ListItem.Content>
 
       </ListItem.Swipeable>
+
       </View>
     )
   }

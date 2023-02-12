@@ -1,36 +1,16 @@
-import { PartList, ServiceList } from '../type'
-import { StyleSheet, TextInput, View } from 'react-native'
+import { PartList } from '../type'
+import { StyleSheet, Text, View } from 'react-native'
 import { Divider } from '@rneui/themed'
 
-export const listsInfo = (item: PartList | ServiceList): JSX.Element => {
+export const listsInfo = (item: PartList): JSX.Element => {
   return (
     <View >
 
-      <View style={styles.allInput}>
-        <TextInput
-          placeholder={'Пробег текущий'}
-          placeholderTextColor={'black'}
-          keyboardType={'numeric'}
-          defaultValue={'200000'}
-          value={String(item.id)}
-          style={{ color: 'black', paddingHorizontal: 10 }}
-        />
-        <TextInput
-          placeholder={'Пробег текущий'}
-          placeholderTextColor={'black'}
-          keyboardType={'numeric'}
-          defaultValue={'200000'}
-          value={String('namePart' in item ? item.namePart : item.nameService)}
-          style={{ color: 'black' }}
-        />
-        <TextInput
-          placeholder={'Пробег текущий'}
-          placeholderTextColor={'black'}
-          keyboardType={'numeric'}
-          defaultValue={'200000'}
-          value={String('costPart' in item ? item.costPart : item.costService)}
-          style={{ color: 'black' }}
-        />
+      <View style={styles.viewTop}>
+        <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 14 }}>{item.id}</Text>
+        <Text style={{ flex: 2, textAlign: 'center', fontSize: 14 }}>{item.namePart}</Text>
+        <Text style={{ flex: 0.5, textAlign: 'left', fontSize: 14 }}>{`${item.amountPart} x`}</Text>
+        <Text style={{ flex: 1, textAlign: 'left', fontSize: 14 }}>{item.costPart}</Text>
       </View>
       <View>
         <Divider inset={true} insetType={'middle'}/>
@@ -40,13 +20,10 @@ export const listsInfo = (item: PartList | ServiceList): JSX.Element => {
 }
 
 const styles = StyleSheet.create({
-  allInput: {
+  viewTop: {
     flexDirection: 'row',
-    justifyContent: 'space-around'
-    /* borderStyle: 'solid',
-    borderRadius: 10,
-    borderColor: 'blue',
-    borderWidth: 1 */
+    justifyContent: 'space-around',
+    marginTop: 2,
+    padding: 10
   }
-
 })

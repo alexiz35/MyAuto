@@ -10,8 +10,7 @@ import { BottomSheetAddition } from '../components/BottomSheetAddition'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
-
+  type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
@@ -46,7 +45,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
   const [errorMsg, setErrorMsg] = useState('')
   const [openDrop, setOpenDrop] = useState(false)
-  const [valueDrop, setValueDrop] = useState(null)
+  const [valueDrop, setValueDrop] = useState<null | string>(null)
   const [itemsDrop, setItemsDrop] = useState(listService)
 
   const [startKmInput, setStartKmInput] = useState(0)
@@ -86,6 +85,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
         setAddParts(temp.addition?.parts)
         setStartDateInput(new Date(temp.startDate))
         setCostService(temp.sumCostService !== undefined ? temp.sumCostService : 0)
+        setValueDrop(temp.title)
       }
     }
   }, [editableTask])

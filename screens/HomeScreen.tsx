@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { View, StyleSheet } from 'react-native'
-import { Button } from '@rneui/themed'
+import { Button, FAB } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Tasks } from '../components/Tasks'
 import { addTask, updateMiles } from '../components/Redux/actions'
@@ -36,10 +36,11 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
   return (
 
     <View style={styles.viewContainer}>
+
       <View style={styles.viewTasks}>
         <Tasks />
       </View>
-      <View style={styles.viewAddButton}>
+     {/*  <View style={styles.viewAddButton}>
         <Button
           title={'Добавить обслуживание'}
           type='solid'
@@ -54,6 +55,23 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
             color: 'red'
           }}
           iconRight
+        />
+      </View> */}
+      <View style={{
+        position: 'absolute',
+        right: 0,
+        bottom: 30,
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+      }}>
+        <FAB
+          style={{ marginRight: 10, marginBottom: 5 }}
+          placement={'right'}
+          /* title={'+'} */
+          icon={{ name: 'add', color: 'white' }}
+          onPress={() => {
+            navigation.navigate('InputTaskScreen', { editable: false })
+          }}
         />
       </View>
       {/* <MapView

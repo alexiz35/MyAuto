@@ -26,6 +26,8 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
       endKm: 0,
       startDate: '',
       endData: '',
+      sumCostParts: 0,
+      sumCostService: 0,
       addition: {
         parts: [{ id: 0, namePart: '', costPart: 0, numberPart: '', amountPart: 0 }],
         services: [{ id: 0, nameService: '', costService: 0 }]
@@ -110,12 +112,11 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
           />
         </View>
         <View style={styles.viewAllInput}>
-          <Text style={{ textAlign: 'center', marginBottom: 10 }}>Проведенные работы</Text>
-          <FlatList
-            data={currentTask.addition?.services}
-            renderItem={({ item }) => listsInfo(item)}
-            keyExtractor={item => item.id.toString()}
-          />
+          <Text style={{ textAlign: 'center', marginBottom: 10 }}>Затраты</Text>
+          <Text style={{ textAlign: 'center', marginBottom: 3 }}>{`материалы: ${currentTask.sumCostParts ?? 0} грн`}</Text>
+          <Text style={{ textAlign: 'center', marginBottom: 3 }}>{`работа: ${currentTask.sumCostService ?? 0} грн`}</Text>
+          <Text style={{ textAlign: 'center', marginVertical: 7 }}>{`ВСЕГО: ${(currentTask.sumCostService ?? 0) + (currentTask.sumCostParts ?? 0)} грн`}</Text>
+
         </View>
         <Button
           title={'Edit'}

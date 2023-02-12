@@ -105,7 +105,6 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
             <Pressable>
               <Text>
                 <Icon name={'delete'} onPress={() =>
-                  /* 'namePart' in item ? delPart(item.id) : delService(item.id) */
                   delPart(item.id)
                 }>
                 </Icon>
