@@ -1,5 +1,5 @@
 import {
-  ActionAddTask, ActionDelTask, ActionEditTask,
+  ActionAddTask, ActionDelTask, ActionEditTask, ActionFinishTask,
   ActionMiles,
   ActionType,
   CurrentMiles,
@@ -23,6 +23,16 @@ export const delTask = (id: number): ActionDelTask => (
     type: ActionType.DEL_TASK,
     id
   })
+
+export const finishTask = (id: number, isFinished: boolean): ActionFinishTask => (
+  {
+    type: ActionType.FINISH_TASK,
+    payload: {
+      id,
+      isFinished
+    }
+  }
+)
 
 export const editTask = (id: number | undefined, task: StateTask): ActionEditTask => (
   {

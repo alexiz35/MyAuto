@@ -3,7 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { Button, Dialog, Input } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { PartList, ServiceList, StateTask } from '../type'
 import { addTask, editTask } from '../components/Redux/actions'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
@@ -91,7 +91,6 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   }, [editableTask])
 
   useEffect(() => {
-    console.log('edit', editableTask)
     setEndKmInput(startKmInput + kmToService)
   }, [startKmInput, kmToService])
 
@@ -161,6 +160,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
       title: String(valueDrop),
       sumCostService: costService,
       sumCostParts: sumCost,
+      isFinished: false,
       addition:
         {
           parts: addParts,

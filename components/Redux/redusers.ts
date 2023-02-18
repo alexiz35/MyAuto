@@ -32,6 +32,20 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
         tasks: newTasks
       }
     }
+
+    case ActionType.FINISH_TASK:
+      return {
+        ...state,
+        tasks: state.tasks.map(
+          task => task.id === action.payload.id
+            ? {
+                ...task,
+                isFinished: action.payload.isFinished
+              }
+            : task
+        )
+      }
+
     default:
       return state
   }
