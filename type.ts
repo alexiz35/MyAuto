@@ -1,3 +1,16 @@
+// --------------------------------constant Color --------------------------------------------
+
+export const BACKGROUND = '#13171A'
+export const BACK_CARD = '#3d3d3d'
+export const TEXT_CARD = '#191a1e'
+export const BACK_INPUT = 'rgba(61,61,61,0.35)'
+export const TEXT = '#F7F8FB'
+export const TEXT_WHITE = '#ffffff'
+export const HEADER_TINT_COLOR = '#a2a2a2'
+export const BACK_TAB_BOTTOM = 'rgba(0,0,0,0.94)'
+export const BACK_TAB_TOP = 'rgba(0,0,0,0.94)'
+export const COLOR_GREEN = '#23c50a'
+
 // --------------------------------type for redux --------------------------------------------
 export enum ActionType {
   UPDATE_MILES = 'UPDATE_MILES',

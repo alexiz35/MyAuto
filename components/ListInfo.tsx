@@ -4,13 +4,13 @@ import { Divider } from '@rneui/themed'
 
 export const listsInfo = (item: PartList): JSX.Element => {
   return (
-    <View >
+    <View>
 
       <View style={styles.viewTop}>
-        <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 14 }}>{item.id}</Text>
-        <Text style={{ flex: 2, textAlign: 'center', fontSize: 14 }}>{item.namePart}</Text>
-        <Text style={{ flex: 0.5, textAlign: 'left', fontSize: 14 }}>{`${item.amountPart} x`}</Text>
-        <Text style={{ flex: 1, textAlign: 'left', fontSize: 14 }}>{item.costPart}</Text>
+        <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 14, color: 'white' }}>{item.id}</Text>
+        <Text style={{ flex: 2, textAlign: 'center', fontSize: 14, color: 'white' }}>{item.namePart}</Text>
+        <Text style={{ flex: 0.5, textAlign: 'left', fontSize: 14, color: 'white' }}>{`${item.amountPart} x`}</Text>
+        <Text style={{ flex: 1, textAlign: 'left', fontSize: 14, color: 'white' }}>{item.costPart}</Text>
       </View>
       <View>
         <Divider inset={true} insetType={'middle'}/>

@@ -1,35 +1,56 @@
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { CompositeScreenProps, NavigationContainer, NavigatorScreenParams } from '@react-navigation/native'
+import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import HomeScreen from '../../screens/HomeScreen'
 import InputTaskScreen from '../../screens/InputTaskScreen'
 import { Image, Text, View } from 'react-native'
-import { Button } from '@rneui/themed'
+import { Button, FAB, Icon } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
 import InfoScreen from '../../screens/InfoScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { BackgroundImage, color } from '@rneui/base'
+import { BACK_CARD, BACK_TAB_BOTTOM, BACK_TAB_TOP, COLOR_GREEN, HEADER_TINT_COLOR, TEXT, TEXT_CARD } from '../../type'
+import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import StatScreen from '../../screens/StatScreen'
+import PaperScreen from '../../screens/PaperScreen'
+/* import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs' */
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors'
+import FuelScreen from '../../screens/FuelScreen'
+import { Shadow } from 'react-native-shadow-2'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
-  Home: undefined
+  BottomTabNav: NavigatorScreenParams<RootTabParamList>
   InputTaskScreen: { editable: boolean, taskId?: number }
   Info: { taskId: number }
+}
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type RootTabParamList = {
+  Home: undefined
+  Fuel: undefined
+  Null: undefined
+  Paper: undefined
+  StatScreen: undefined
+  InputTaskScreen: { editable: boolean, taskId?: number }
 }
 
 function LogoTitle (): JSX.Element {
   return (
+    <Shadow stretch={true}>
     <Image
       style={{
         width: 50,
         height: 50
       }}
       source={
-        require('../../assets/renault_logo.jpg')
+        require('../../assets/renaultLogo2.png')
       }
     />
+    </Shadow>
   )
 }
 
@@ -42,8 +63,10 @@ function LogoTitle (): JSX.Element {
 } */
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
+const Tab = createBottomTabNavigator<RootTabParamList>()
+type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
-export const Navigation = (): JSX.Element => {
+export const Navigation = ({ navigation, route }: Props): JSX.Element => {
   const [initial, setInitial] = useState(true)
   const [location, setLocation] = useState(0)
   const [prevCoords, setPrevCoords] = useState({ latitude: 0, longitude: 0 })
@@ -100,13 +123,19 @@ export const Navigation = (): JSX.Element => {
   }, [])
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
+    <NavigationContainer >
+
+      <Stack.Navigator screenOptions={ {
+        headerStyle: { backgroundColor: BACK_TAB_TOP },
+        headerTransparent: false,
+        statusBarStyle: 'dark'
+      }}>
+        {/* <Stack.Screen
           name='Home'
           component={HomeScreen}
           options={{
             headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: BACK_CARD },
             headerTitle: () => (
               <LogoTitle />
             ),
@@ -132,18 +161,24 @@ export const Navigation = (): JSX.Element => {
                   }}
               />)
           }
-          } />
+          } /> */}
         <Stack.Screen
-          name='InputTaskScreen'
-          component={InputTaskScreen}
-          options={{ title: 'Edit Task' }} />
+          name='BottomTabNav'
+          // @ts-expect-error jjj
 
-        <Stack.Screen
-          name='Info'
-          component={InfoScreen}
-          initialParams={{ taskId: 0 }}
-          options={({ navigation, route }) => ({
-            title: 'Info task',
+          component={BottomTabNav}
+          options={{
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: BACK_TAB_TOP },
+            headerTitle: () => (
+              <LogoTitle />
+            ),
+            headerLeft: () => (
+              <View>
+                <Text style={{ color: TEXT }}>Today: {Math.trunc(distance)} m</Text>
+              </View>
+            ),
+            title: 'title',
             headerRight: () => (
               <Button
                 type='outline'
@@ -153,12 +188,152 @@ export const Navigation = (): JSX.Element => {
                   type: 'font-awesome',
                   size: 20
                 }}
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onPress={
+                  async () => {
+                    await AsyncStorage.clear()
+                  }}
+              />)
+          }
+          }
+        />
+        <Stack.Screen
+          name='InputTaskScreen'
+          component={InputTaskScreen}
+          options={{
+            title: 'Edit Task',
+            headerTintColor: HEADER_TINT_COLOR
+          }} />
+
+        <Stack.Screen
+          name='Info'
+          component={InfoScreen}
+          initialParams={{ taskId: 0 }}
+          options={({ navigation, route }) => ({
+            title: 'Info task',
+            headerTintColor: HEADER_TINT_COLOR,
+            headerRight: () => (
+              <Button
+                type='outline'
+                size='md'
+                color={'#a2a2a2'}
+                buttonStyle={{ borderColor: COLOR_GREEN }}
+                icon={{
+                  name: 'pencil',
+                  type: 'material-community',
+                  color: '#a2a2a2',
+                  size: 20
+                }}
                 onPress={() => {
                   navigation.navigate('InputTaskScreen', { editable: true, taskId: route.params.taskId })
                 }}
               />)
           })} />
       </Stack.Navigator>
+
     </NavigationContainer>
+  )
+}
+
+/* type PropsTab = NativeStackScreenProps<RootTabParamList, 'Home'> */
+type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
+
+const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
+  const FabTab = (): any => null
+
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: 'white',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: { backgroundColor: BACK_TAB_BOTTOM, paddingVertical: 5 },
+        tabBarIconStyle: { paddingVertical: 0 },
+        tabBarLabelStyle: { fontSize: 14 }
+      }}
+    >
+      <Tab.Screen name={'Home'} component={HomeScreen}
+                  options={{
+                    tabBarLabel: 'Home',
+                    tabBarIcon: ({ color, focused }) => (
+                      <MaterialCommunityIcons
+                        name={focused ? 'home' : 'home-outline'}
+                        /* type='material-community' */
+                        color={color}
+                        size={focused ? 20 : 16}
+                      />
+                    )
+                  }}
+      />
+      <Tab.Screen name={'Fuel'} component={FuelScreen}
+                  options={{
+                    tabBarLabel: 'Fuel',
+                    tabBarIcon: ({ color, focused }) => (
+                      <MaterialCommunityIcons
+                        name={focused ? 'gas-station' : 'gas-station-outline'}
+                        /* type='material-community' */
+                        color={color}
+                        size={focused ? 22 : 20}
+                      />
+                    )
+                  }}
+      />
+      <Tab.Screen name={'Null'} component={FabTab}
+                  options={{
+                    tabBarLabel: 'Fuel',
+                    /* tabBarIcon: ({ color, focused }) => (
+                      <MaterialCommunityIcons
+                        name={focused ? 'gas-station' : 'gas-station-outline'}
+                        /!* type='material-community' *!/
+                        color={color}
+                        size={focused ? 22 : 20}
+                      />
+                    ), */
+                    tabBarButton: () => (
+
+                       <FAB
+                      color={'black'}
+                      style={{ marginBottom: 30, elevation: 5 }}
+                      containerStyle={{
+                        borderWidth: 1,
+                        borderColor: 'rgba(68,67,67,0.49)'
+                      }}
+                      icon={{ name: 'add', color: 'white' }}
+                      onPress={() => {
+                        navigation.navigate('InputTaskScreen', { editable: false })
+                      }}
+                    />
+
+                    )
+                  }}
+      />
+      <Tab.Screen name={'Paper'} component={PaperScreen}
+                  options={{
+                    tabBarLabel: 'Paper',
+                    tabBarIcon: ({ color, focused }) => (
+                      <MaterialCommunityIcons
+                        name='cash'
+                        /* type='material-community' */
+                        color={color}
+                        size={focused ? 26 : 22}
+                      />
+                    )
+                  }}
+      />
+      <Tab.Screen name={'StatScreen'} component={StatScreen}
+                  options={{
+                    tabBarLabel: 'Statistic',
+                    tabBarIcon: ({ color, focused }) => (
+                          <Icon
+                            name={focused ? 'chart-box' : 'chart-box-outline'}
+                            type='material-community'
+                            color={color}
+                            size={focused ? 22 : 20}
+                          />
+                    )
+                    /* tabBarButton: () => (<FAB style={{ marginBottom: 30 }}/>) */
+                  }}
+      />
+    </Tab.Navigator>
   )
 }

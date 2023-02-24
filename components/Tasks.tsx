@@ -1,12 +1,17 @@
 import { Button, CheckBox, LinearProgress, ListItem, ListItemProps } from '@rneui/themed'
-import React, { useEffect, useState } from 'react'
-import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
+import React, { Component, useEffect, useState } from 'react'
+import { FlatList, ImageBackground, ListRenderItem, StyleSheet, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
 import { delTask, finishTask } from './Redux/actions'
-import { StateTask } from '../type'
+import { BACK_CARD, StateTask } from '../type'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from './Navigation/Navigation'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { Shadow } from 'react-native-shadow-2'
+
+const BACKGROUND = '#13171A'
+const FAB = '#151A1D'
+const TEXT_CARD = '#F7F8FB'
 
 type ListComponentProps = ListItemProps
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
@@ -48,10 +53,14 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
       }
     }
     return (
+
       <View style={styles.listItem}>
-      <ListItem.Swipeable
+       {/*  <Shadow stretch={true} > */}
+
+        <ListItem.Swipeable
+        containerStyle={{ backgroundColor: BACK_CARD }}
         onPress={() => nav.navigate('Info', { taskId: item.id })}
-        bottomDivider
+        /* bottomDivider */
         leftContent={ () => (
           <Button
             title='info'
@@ -71,9 +80,9 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
         )}
       >
 
-        <ListItem.Content style={{ flex: 1.4 }}>
+              <ListItem.Content style={{ flex: 1.4, backgroundColor: BACK_CARD }} >
 
-          <ListItem.Title >
+          <ListItem.Title style={{ color: TEXT_CARD }} >
             {item.title}
 
           </ListItem.Title>
@@ -82,35 +91,38 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
           color={progress.color}
           trackColor='lightgrey'
         />
-          <ListItem.Subtitle style={{ fontSize: 12 }}>
+          <ListItem.Subtitle style={{ fontSize: 12, color: TEXT_CARD }}>
             {(progress.left !== 0) ? `осталось ${progress.left} км` : 'просрочено'}
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Content>
-          <ListItem.Title >
+          <ListItem.Title style={{ color: TEXT_CARD }}>
             {item.startDate}
           </ListItem.Title>
-          <ListItem.Subtitle >
+          <ListItem.Subtitle style={{ color: TEXT_CARD }}>
             {`${item.startKm} km`}
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Content >
-          <ListItem.Title >
+          <ListItem.Title style={{ color: TEXT_CARD }}>
             {item.endData}
           </ListItem.Title>
-          <ListItem.Subtitle >
+          <ListItem.Subtitle style={{ color: TEXT_CARD }}>
             {`${item.endKm} km`}
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.CheckBox
           checkedColor={'green'}
-          containerStyle={{ flex: 0.1 }}
+          containerStyle={{ flex: 0.1, backgroundColor: '#2f2f2f' }}
           checked={item.isFinished}
           onPress={pressCheck}
         />
+
       </ListItem.Swipeable>
 
+        {/* </Shadow> */}
       </View>
+
     )
   }
 
@@ -138,9 +150,20 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
 
 const styles = StyleSheet.create({
   listItem: {
-    marginVertical: 2,
+    paddingRight: 0,
     marginHorizontal: 5,
-    elevation: 20,
-    shadowColor: 'black'
+    marginVertical: 5,
+    color: 'red',
+    flex: 1
+    /* borderRadius: 5 */
+    /* shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2 */
   }
 })

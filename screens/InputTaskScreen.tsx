@@ -1,10 +1,10 @@
-import { Text, View, StyleSheet, SafeAreaView, Pressable } from 'react-native'
+import { Text, View, StyleSheet, SafeAreaView, Pressable, ImageBackground } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { Button, Dialog, Input } from '@rneui/themed'
+import { Button, Dialog, Icon, Input } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { useEffect, useMemo, useState } from 'react'
-import { PartList, ServiceList, StateTask } from '../type'
+import { BACK_INPUT, COLOR_GREEN, PartList, ServiceList, StateTask, TEXT } from '../type'
 import { addTask, editTask } from '../components/Redux/actions'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
 import { RootStackParamList } from '../components/Navigation/Navigation'
@@ -169,7 +169,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
     }
 
     editableTask ? setNewTask(editTask(currentId, tempNewTask)) : setNewTask(addTask(tempNewTask))
-    navigation.navigate('Home')
+    navigation.navigate('BottomTabNav', { screen: 'Home' })
   }
 
   const handleCancelModal = (): void => {
@@ -185,8 +185,13 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
   return (
     <View>
+      <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
+
       <DropDownPicker
         style={styles.dropDownPicker}
+        dropDownContainerStyle={{
+          backgroundColor: 'rgba(61,61,61,0.94)'
+        }}
         disableBorderRadius={true}
         placeholder={'Выберите тип ТО'}
         placeholderStyle={{ color: 'red', fontWeight: 'bold' }}
@@ -196,9 +201,15 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
         setOpen={setOpenDrop}
         setValue={setValueDrop}
         setItems={setItemsDrop}
-        selectedItemLabelStyle={{ color: 'green', fontWeight: 'bold' }}
+        selectedItemLabelStyle={{ color: COLOR_GREEN, fontWeight: 'bold' }}
         onChangeValue={(value) => changeTask(value)}
-        textStyle={{ color: 'blue', textAlign: 'center', fontSize: 18 }}
+        textStyle={{ color: TEXT, textAlign: 'center', fontSize: 18 }}
+        arrowIconStyle={{
+          width: 30,
+          height: 30
+
+        }}
+        ArrowDownIconComponent={() => <Icon type={'material-community'} name={'chevron-down'} color={'grey'} size={30}/>}
       />
       <View style={styles.viewAllInput}>
 
@@ -207,7 +218,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
             <Input
               placeholder={'введите пробег'}
               placeholderTextColor={'red'}
-              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              inputStyle={styles.inputText}
               errorMessage={'текущий пробег'}
               errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
               onChangeText={(value) => inputMile(Number(value))}
@@ -219,7 +230,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
             <Input
               placeholder={'Пробег для замены'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center' }}
+              inputStyle={styles.inputText}
               errorMessage={'пробег замены'}
               errorStyle={styles.errorInput}
               value = {String(endKmInput)}
@@ -232,7 +243,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
              <Input
                 placeholder={'Дата проведения'}
                 containerStyle={{ flex: 1 }}
-                inputStyle={{ textAlign: 'center' }}
+                inputStyle={styles.inputText}
                 value = {startDateInput.toLocaleDateString()}
                 onPressOut={inputDate}
                 errorMessage={'текущая дата'}
@@ -242,7 +253,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
         <View style={styles.input}>
             <Input
               placeholder={'Дата проведения'}
-              inputStyle={{ textAlign: 'center' }}
+              inputStyle={styles.inputText}
               errorMessage={'конечная дата'}
               errorStyle={styles.errorInput}
               value = {endDateInput }
@@ -259,15 +270,15 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
           buttonStyle={ styles.buttonAddition }
         /> */}
       <Pressable style={styles.textCost} onPress={() => { setIsVisible(true) }}>
-      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Добавить комплектующие</Text>
-      <Text >{`Добавлено деталей: ${amountPart} шт`}</Text>
+      <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'white' }}>Добавить комплектующие</Text>
+      <Text style={{ color: 'white' }}>{`Добавлено деталей: ${amountPart} шт`}</Text>
       </Pressable>
       <View style={styles.viewGroupInput}>
         <View style={styles.input}>
           <Input
             placeholder={'цена деталей'}
             /* placeholderTextColor={'red'} */
-            inputStyle={{ textAlign: 'center', fontSize: 12 }}
+            inputStyle={styles.inputText}
             errorMessage={'цена деталей'}
             errorStyle={styles.errorInput}
             onChangeText={(value) => setCostParts(Number(value))}
@@ -279,7 +290,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
           <Input
             placeholder={'стоимость работы'}
             containerStyle={{ flex: 1 }}
-            inputStyle={{ textAlign: 'center', fontSize: 12 }}
+            inputStyle={styles.inputText}
             errorMessage={'стоимость работы'}
             errorStyle={styles.errorInput}
             onChangeText={(value) => setCostService(Number(value))}
@@ -294,10 +305,13 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
       </View>
 
       <SafeAreaView>
+
         <Dialog
           isVisible={isVisible}
-          overlayStyle={{ width: '100%' }}
+          overlayStyle={{ width: '100%', padding: 0 }}
+          backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
         >
+
           <BottomSheetAddition
             // @ts-expect-error jbjbjb
 
@@ -305,6 +319,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
             onPressCancel = {() => { handleCancelModal() }}
             onPressOk={handleOkModal}
           />
+
         </Dialog>
       </SafeAreaView>
 
@@ -313,19 +328,25 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
         <Button
           containerStyle={styles.buttonStyle}
+          buttonStyle={{ borderColor: 'red' }}
+          titleStyle={{ color: 'red' }}
           title={'Cancel'}
-          color={'error'}
+          color={'warning'}
+          type={'outline'}
           onPress={() => { navigation.goBack() }}
           /* onPress={onPressCancel} */
         />
         <Button
           containerStyle={styles.buttonStyle}
+          buttonStyle={{ borderColor: COLOR_GREEN }}
+          titleStyle={{ color: COLOR_GREEN }}
           title={'Ok'}
           color={'success'}
+          type={'outline'}
           onPress={() => { handleOk() }}
         />
       </View>
-
+      </ImageBackground>
     </View>
   )
 }
@@ -334,6 +355,7 @@ export default InputTaskScreen
 
 const styles = StyleSheet.create({
   dropDownPicker: {
+    backgroundColor: BACK_INPUT,
     margin: 5,
     width: '97%',
     borderWidth: 0,
@@ -357,7 +379,7 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 5,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(61,61,61,0.35)',
     flex: 1,
     shadowColor: '#000',
     shadowOffset: {
@@ -368,6 +390,11 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
 
     elevation: 2
+  },
+  inputText: {
+    textAlign: 'center',
+    fontSize: 14,
+    color: 'white'
   },
   errorInput: {
     color: 'gray',
@@ -413,7 +440,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
     marginVertical: 10,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: BACK_INPUT,
+    color: 'white',
     textAlign: 'center',
     alignItems: 'center',
     shadowColor: '#000',

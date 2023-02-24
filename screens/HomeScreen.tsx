@@ -1,20 +1,29 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { View, StyleSheet, Platform, PermissionsAndroid, Alert } from 'react-native'
-import { Button, FAB } from '@rneui/themed'
+import { View, StyleSheet, Platform, PermissionsAndroid, Alert, Text, ImageBackground } from 'react-native'
+import { Button, Card, Divider, FAB, Icon } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Tasks } from '../components/Tasks'
 import { addTask, updateMiles } from '../components/Redux/actions'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { StateTask } from '../type'
+import { BACK_CARD, StateTask } from '../type'
 import { useEffect, useState } from 'react'
-import { RootStackParamList } from '../components/Navigation/Navigation'
+import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import * as Print from 'expo-print'
 
 import { shareAsync } from 'expo-sharing'
+import { Shadow } from 'react-native-shadow-2'
+import { MainCard } from '../components/MainCard'
+import InfoScreen from './InfoScreen'
+import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import InputTaskScreen from './InputTaskScreen'
+import StatScreen from './StatScreen'
+import PaperScreen from './PaperScreen'
+import { CompositeScreenProps } from '@react-navigation/native'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Home'>
+/* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
+type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
-const HomeScreen = ({ navigation }: Props): JSX.Element => {
+const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const setMiles = useAppDispatch()
   const miles = useAppSelector((state) => state)
   const currentTask: StateTask = {
@@ -134,11 +143,21 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
   return (
 
     <View style={styles.viewContainer}>
-
+      <ImageBackground source={require('../assets/Back2.png')}>
+      <Shadow stretch={true}
+              /* startColor={'#2C2F34'}
+              endColor={'#383C42'}
+              distance={5}
+              /!* offset={[-2, -2]} *!/
+              corners={{ bottomStart: false, bottomEnd: true, topStart: true, topEnd: true }} */
+              containerStyle={{ margin: 20, alignSelf: 'center', width: '90%' }}
+      >
+        <MainCard/>
+      </Shadow>
       <View style={styles.viewTasks}>
         <Tasks />
       </View>
-      <View style={styles.viewFab}>
+     {/*  <View style={styles.viewFab}>
         <FAB
           style={styles.fab}
           placement={'right'}
@@ -153,7 +172,7 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
           icon={{ name: 'save', color: 'white' }}
           onPress={() => { void printToFile() }}
         />
-      </View>
+      </View> */}
       {/* <MapView
         style={{ width: '100%', height: '50%' }}
         provider={PROVIDER_GOOGLE}
@@ -165,7 +184,9 @@ const HomeScreen = ({ navigation }: Props): JSX.Element => {
         }}
         showsUserLocation={true}
       /> */}
+      </ImageBackground>
       </View>
+
   )
 }
 
@@ -173,17 +194,19 @@ export default HomeScreen
 
 const styles = StyleSheet.create({
   viewContainer: {
-    flex: 1
+    flex: 1,
+    backgroundColor: BACK_CARD
+
   },
   viewTasks: {
-    height: '90%'
+    height: '80%'
   },
   viewFab: {
     position: 'absolute',
     right: 0,
     bottom: 30,
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'center'
   },
   fab: {
     marginRight: 10,

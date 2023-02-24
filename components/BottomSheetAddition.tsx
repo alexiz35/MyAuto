@@ -1,13 +1,13 @@
 import React, { PropsWithChildren, useState } from 'react'
 import {
-  FlatList, Pressable,
+  FlatList, ImageBackground, Pressable,
   SafeAreaView,
   StyleSheet,
   Text, TextInput,
   View
 } from 'react-native'
 import { Button, Divider, Icon, Input } from '@rneui/themed'
-import { PartList, PropsBottomSheet } from '../type'
+import { COLOR_GREEN, PartList, PropsBottomSheet, TEXT_WHITE } from '../type'
 
 export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: PropsBottomSheet): JSX.Element => {
   const [namePart, setNamePart] = useState('')
@@ -97,16 +97,19 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
     return (
       <View >
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>
-          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{item.id}</Text>
-          <Text style={{ flex: 2, textAlign: 'center', fontSize: 16 }}>{item.namePart}</Text>
-          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{`${item.amountPart} x`}</Text>
-          <Text style={{ flex: 1, textAlign: 'center' }}>{item.costPart}</Text>
+          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{item.id}</Text>
+          <Text style={{ flex: 2, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{item.namePart}</Text>
+          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{`${item.amountPart} x`}</Text>
+          <Text style={{ flex: 1, textAlign: 'center', color: TEXT_WHITE }}>{item.costPart}</Text>
           <View style={{ height: '80%' }}>
             <Pressable>
-              <Text>
-                <Icon name={'delete'} onPress={() =>
-                  delPart(item.id)
-                }>
+              <Text style={{ paddingBottom: 2 }}>
+                <Icon
+                  name={'delete'}
+                  color={TEXT_WHITE}
+                  onPress={() =>
+                    delPart(item.id)
+                  }>
                 </Icon>
               </Text>
             </Pressable>
@@ -119,8 +122,9 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
   }
 
   return (
-    <SafeAreaView>
-      <Text style={styles.textTop} >
+    <ImageBackground source={require('../assets/Back2.png')} style={{ padding: 10 }} >
+
+    <Text style={styles.textTop} >
         Добавьте доп информацию по текущему ТО или ремонту
       </Text>
 
@@ -136,7 +140,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
               ref={inputNamePart}
               placeholder={'наименование'}
               placeholderTextColor={'red'}
-              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
               errorMessage={'наименование'}
               errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
               onChangeText={(value) => setNamePart(String(value))}
@@ -147,7 +151,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
               ref={inputNumberPart}
               placeholder={'введите номер'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
               errorMessage={'номер детали'}
               errorStyle={styles.errorInput}
               onChangeText={(value) => setNumberPart(String(value))}
@@ -161,7 +165,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
               ref={inputAmountPart}
               placeholder={'кол-во'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 12 }}
+              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
               onChangeText={(value) => setAmountPart(Number(value))}
               errorMessage={'количество'}
               errorStyle={styles.errorInput}
@@ -174,8 +178,8 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
             <Input
               ref={inputCostPart}
               placeholder={'введите цену'}
-              inputStyle={{ textAlign: 'center', fontSize: 12 }}
-              errorMessage={'цена деиали'}
+              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+              errorMessage={'цена детали'}
               errorStyle={styles.errorInput}
               onChangeText={(value) => setCostPart(Number(value))}
               keyboardType={'numeric'}
@@ -229,22 +233,23 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
 
       <Button
         containerStyle={styles.buttonStyle}
-        buttonStyle={{ borderColor: 'black' }}
-        titleStyle={{ color: 'black' }}
+        buttonStyle={{ borderColor: 'red' }}
+        titleStyle={{ color: 'red' }}
         title={'Cancel'}
         onPress={onPressCancel}
         type='outline'
       />
         <Button
         containerStyle={styles.buttonStyle}
-        buttonStyle={{ borderColor: 'black' }}
-        titleStyle={{ color: 'black' }}
+        buttonStyle={{ borderColor: COLOR_GREEN }}
+        titleStyle={{ color: COLOR_GREEN }}
         title={'Finish'}
         onPress={() => { onPressOk(parts) }}
         type={'outline'}
       />
       </View>
-    </SafeAreaView>
+    </ImageBackground>
+
   )
 }
 
@@ -263,7 +268,7 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 5,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(61,61,61,0.35)',
     flex: 1,
     shadowColor: '#000',
     shadowOffset: {
@@ -285,12 +290,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
     fontStyle: 'italic',
-    marginBottom: 10
+    marginBottom: 10,
+    color: TEXT_WHITE
   },
   textPart: {
     textAlign: 'center',
     fontSize: 12,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
+    color: TEXT_WHITE
+
   },
   viewPart: {
     flexDirection: 'row',

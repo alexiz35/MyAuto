@@ -1,9 +1,10 @@
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { View, Text, StyleSheet, FlatList } from 'react-native'
-import { Button, Input } from '@rneui/themed'
+import { View, Text, StyleSheet, FlatList, ImageBackground, SafeAreaView } from 'react-native'
+import { ScrollView } from 'react-native-virtualized-view'
+import { Button, Icon, Input } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../components/Redux/hook'
-import { StateTask } from '../type'
+import { BACK_CARD, BACK_INPUT, COLOR_GREEN, StateTask } from '../type'
 import { listsInfo } from '../components/ListInfo'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
@@ -50,10 +51,15 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
   }, [currentId])
 
   return (
-      <View>
-        <View style={styles.viewAllInput}>
-          <Text style={styles.textKm}>Осталось {rangeKm} км</Text>
+      <View >
+          <ScrollView nestedScrollEnabled={true}>
+        <ImageBackground source={require('../assets/Back2.png')} >
 
+        <View style={styles.viewAllInput}>
+          <View style={{ flexDirection: 'row' }}>
+            <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
+          <Text style={styles.textKm}>Осталось {rangeKm} км</Text>
+          </View>
           <View style={styles.viewKm}>
             <Input
               placeholder={'Пробег текущий'}
@@ -79,8 +85,10 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
             />
           </View>
 
+          <View style={{ flexDirection: 'row' }}>
+            <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
           <Text style={styles.textDate}>Осталось времени</Text>
-
+          </View>
           <View style={styles.viewDate}>
             <Input
               placeholder={'дата проведения'}
@@ -105,27 +113,37 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
           </View>
         </View>
         <View style={styles.viewAllInput}>
-          <Text style={{ textAlign: 'center', marginBottom: 10 }}>Использованные материалы</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
+          <Text style={styles.textPart}>Использованные материалы</Text>
+          </View>
           <FlatList
+            scrollEnabled={false}
+            nestedScrollEnabled={true}
             data={currentTask.addition?.parts}
             renderItem={({ item }) => listsInfo(item)}
             keyExtractor={item => item.id.toString()}
           />
         </View>
         <View style={styles.viewAllInput}>
-          <Text style={{ textAlign: 'center', marginBottom: 10 }}>Затраты</Text>
-          <Text style={{ textAlign: 'center', marginBottom: 3 }}>{`материалы: ${currentTask.sumCostParts ?? 0} грн`}</Text>
-          <Text style={{ textAlign: 'center', marginBottom: 3 }}>{`работа: ${currentTask.sumCostService ?? 0} грн`}</Text>
-          <Text style={{ textAlign: 'center', marginVertical: 7 }}>{`ВСЕГО: ${(currentTask.sumCostService ?? 0) + (currentTask.sumCostParts ?? 0)} грн`}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
+          <Text style={styles.textPart}>Затраты</Text>
+          </View>
+          <Text style={{ textAlign: 'center', marginBottom: 3, color: 'white' }}>{`материалы: ${currentTask.sumCostParts ?? 0} грн`}</Text>
+          <Text style={{ textAlign: 'center', marginBottom: 3, color: 'white' }}>{`работа: ${currentTask.sumCostService ?? 0} грн`}</Text>
+          <Text style={{ textAlign: 'center', marginVertical: 7, color: 'white' }}>{`ВСЕГО: ${(currentTask.sumCostService ?? 0) + (currentTask.sumCostParts ?? 0)} грн`}</Text>
 
         </View>
-        <Button
+       {/*  <Button
           title={'Edit'}
           onPress={() => {
             nav.navigate('InputTaskScreen', { editable: true, taskId: currentId })
           }}
           color={'secondary'}
-        />
+        /> */}
+        </ImageBackground>
+          </ScrollView>
       </View>
   )
 }
@@ -135,21 +153,24 @@ export default InfoScreen
 const styles = StyleSheet.create({
   viewAllInput: {
     margin: 10,
-    backgroundColor: 'white',
-    borderStyle: 'solid',
+    backgroundColor: BACK_INPUT,
+    /* borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: 'grey',
-    borderRadius: 10
+    borderColor: 'grey', */
+    borderRadius: 10,
+    paddingBottom: 5
   },
   inputStyle: {
     textAlign: 'center',
-    fontSize: 14
+    fontSize: 14,
+    color: '#ffffff'
   },
   inputErrorStyle: {
     color: 'grey',
     textAlign: 'center'
   },
   textKm: {
+    color: 'white',
     fontSize: 12,
     fontStyle: 'italic',
     textAlign: 'left',
@@ -165,6 +186,7 @@ const styles = StyleSheet.create({
     borderWidth: 1 */
   },
   textDate: {
+    color: 'white',
     fontSize: 12,
     fontStyle: 'italic',
     textAlign: 'left',
@@ -179,5 +201,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'blue',
     borderWidth: 1 */
+  },
+  textPart: {
+    color: 'white',
+    fontSize: 12,
+    fontStyle: 'italic',
+    textAlign: 'left',
+    marginVertical: 5,
+    marginHorizontal: 10
   }
+
 })
