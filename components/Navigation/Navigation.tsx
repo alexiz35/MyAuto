@@ -3,7 +3,7 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 
 import HomeScreen from '../../screens/HomeScreen'
 import InputTaskScreen from '../../screens/InputTaskScreen'
-import { Image, Text, View } from 'react-native'
+import { Alert, Image, Text, View } from 'react-native'
 import { Button, FAB, Icon } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
@@ -12,7 +12,16 @@ import * as Location from 'expo-location'
 import InfoScreen from '../../screens/InfoScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BackgroundImage, color } from '@rneui/base'
-import { BACK_CARD, BACK_TAB_BOTTOM, BACK_TAB_TOP, COLOR_GREEN, HEADER_TINT_COLOR, TEXT, TEXT_CARD } from '../../type'
+import {
+  BACK_CARD,
+  BACK_TAB_BOTTOM,
+  BACK_TAB_TOP,
+  COLOR_GREEN,
+  HEADER_TINT_COLOR,
+  TEXT,
+  TEXT_CARD,
+  TEXT_WHITE
+} from '../../type'
 import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
 import PaperScreen from '../../screens/PaperScreen'
@@ -21,6 +30,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors'
 import FuelScreen from '../../screens/FuelScreen'
 import { Shadow } from 'react-native-shadow-2'
+import * as Print from 'expo-print'
+import { shareAsync } from 'expo-sharing'
+import { printToFile } from '../Print/Print'
+import { current } from '@reduxjs/toolkit'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
@@ -104,6 +117,18 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
     }
   })
 
+  /*  const printToFile = async (): Promise<void> => {
+    // On iOS/android prints the given html. On web prints the HTML from the current page.
+    try {
+      const { uri } = await Print.printToFileAsync({ html })
+      Alert.alert('file has created')
+      // sending file somewere
+      await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' })
+    } catch (err) {
+      console.log('ErrorPrintPDF')
+    }
+  } */
+
   useEffect(() => {
     void (async () => {
       const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync()
@@ -165,7 +190,6 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
         <Stack.Screen
           name='BottomTabNav'
           // @ts-expect-error jjj
-
           component={BottomTabNav}
           options={{
             headerTitleAlign: 'center',
@@ -180,20 +204,26 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
             ),
             title: 'title',
             headerRight: () => (
+              <View style={{ flexDirection: 'row' }}>
               <Button
                 type='outline'
+                buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: TEXT_WHITE }}
                 size='md'
                 icon={{
                   name: 'gear',
                   type: 'font-awesome',
-                  size: 20
+                  size: 20,
+                  color: TEXT_WHITE
                 }}
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 onPress={
                   async () => {
                     await AsyncStorage.clear()
                   }}
-              />)
+              />
+
+              </View>
+            )
           }
           }
         />
@@ -213,10 +243,10 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
             title: 'Info task',
             headerTintColor: HEADER_TINT_COLOR,
             headerRight: () => (
-              <Button
+
+                <Button
                 type='outline'
                 size='md'
-                color={'#a2a2a2'}
                 buttonStyle={{ borderColor: COLOR_GREEN }}
                 icon={{
                   name: 'pencil',
@@ -227,7 +257,8 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
                 onPress={() => {
                   navigation.navigate('InputTaskScreen', { editable: true, taskId: route.params.taskId })
                 }}
-              />)
+              />
+            )
           })} />
       </Stack.Navigator>
 

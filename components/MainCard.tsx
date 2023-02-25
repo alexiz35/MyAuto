@@ -1,6 +1,6 @@
-import { Text, View, StyleSheet, ImageBackground, Image } from 'react-native'
+import { Text, View, StyleSheet, ImageBackground } from 'react-native'
 import { Divider, Icon } from '@rneui/themed'
-import { BACK_CARD, TEXT_CARD } from '../type'
+import { COLOR_GREEN, TEXT_CARD } from '../type'
 
 export const MainCard = (): JSX.Element => {
   return (
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: TEXT_CARD,
     textAlign: 'center',
-    textShadowColor: '#23c50a',
+    textShadowColor: COLOR_GREEN,
     /* textShadowOffset: { height: 2, width: 2 }, */
     textShadowRadius: 10
   },

@@ -1,13 +1,14 @@
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { View, Text, StyleSheet, FlatList, ImageBackground, SafeAreaView } from 'react-native'
+import { View, Text, StyleSheet, FlatList, ImageBackground, SafeAreaView, Alert } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
-import { Button, Icon, Input } from '@rneui/themed'
+import { Button, FAB, Icon, Input } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../components/Redux/hook'
 import { BACK_CARD, BACK_INPUT, COLOR_GREEN, StateTask } from '../type'
 import { listsInfo } from '../components/ListInfo'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
+import { printToFile } from '../components/Print/Print'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Info'>
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
@@ -15,7 +16,7 @@ RootStackParamList,
 'InputTaskScreen'
 >
 
-const InfoScreen = ({ route }: Props): JSX.Element => {
+const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
   const Tasks = useAppSelector((state) => state)
   const nav = useNavigation<ProfileScreenNavigationProp>()
 
@@ -51,9 +52,9 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
   }, [currentId])
 
   return (
-      <View >
-          <ScrollView nestedScrollEnabled={true}>
-        <ImageBackground source={require('../assets/Back2.png')} >
+    <ImageBackground source={require('../assets/Back2.png')} resizeMode={'cover'}>
+
+        <ScrollView nestedScrollEnabled={true} style={{ height: '100%' }}>
 
         <View style={styles.viewAllInput}>
           <View style={{ flexDirection: 'row' }}>
@@ -142,9 +143,19 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
           }}
           color={'secondary'}
         /> */}
-        </ImageBackground>
+
           </ScrollView>
-      </View>
+
+        <FAB
+                    style={{ marginBottom: 15, borderColor: 'grey', borderWidth: 1 }}
+                    color={'#000'}
+                    placement={'right'}
+                    icon={{ type: 'material-community', name: 'printer', color: 'white' }}
+                    onPress={() => { void printToFile(currentTask) }}
+                  />
+
+</ImageBackground>
+
   )
 }
 

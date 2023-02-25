@@ -1,9 +1,9 @@
 import { Button, CheckBox, LinearProgress, ListItem, ListItemProps } from '@rneui/themed'
 import React, { Component, useEffect, useState } from 'react'
-import { FlatList, ImageBackground, ListRenderItem, StyleSheet, View } from 'react-native'
+import { FlatList, ImageBackground, ListRenderItem, StyleSheet, Text, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
 import { delTask, finishTask } from './Redux/actions'
-import { BACK_CARD, StateTask } from '../type'
+import { BACK_CARD, COLOR_GREEN, StateTask } from '../type'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from './Navigation/Navigation'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -49,7 +49,7 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
       if (value > 0.7) {
         progress.color = 'red'
       } else {
-        progress.color = 'green'
+        progress.color = COLOR_GREEN
       }
     }
     return (
@@ -91,8 +91,10 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
           color={progress.color}
           trackColor='lightgrey'
         />
-          <ListItem.Subtitle style={{ fontSize: 12, color: TEXT_CARD }}>
+          <ListItem.Subtitle style={{ fontSize: 11, color: TEXT_CARD }} numberOfLines={1}>
+            <Text style={{ overflow: 'hidden', flexWrap: 'nowrap' }}>
             {(progress.left !== 0) ? `осталось ${progress.left} км` : 'просрочено'}
+            </Text>
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Content>
@@ -112,7 +114,7 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.CheckBox
-          checkedColor={'green'}
+          checkedColor={COLOR_GREEN}
           containerStyle={{ flex: 0.1, backgroundColor: '#2f2f2f' }}
           checked={item.isFinished}
           onPress={pressCheck}
@@ -150,11 +152,13 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
 
 const styles = StyleSheet.create({
   listItem: {
+    height: 73,
     paddingRight: 0,
     marginHorizontal: 5,
     marginVertical: 5,
     color: 'red',
     flex: 1
+    /* backgroundColor: 'red' */
     /* borderRadius: 5 */
     /* shadowColor: '#000',
     shadowOffset: {
