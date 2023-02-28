@@ -88,7 +88,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
         setValueDrop(temp.title)
       }
     }
-  }, [editableTask])
+  }, [])
 
   useEffect(() => {
     setEndKmInput(startKmInput + kmToService)
@@ -269,7 +269,9 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
           color= {'white'}
           buttonStyle={ styles.buttonAddition }
         /> */}
-      <Pressable style={styles.textCost} onPress={() => { setIsVisible(true) }}>
+      <Pressable style={styles.textCost} onPress={() => {
+        setIsVisible(true)
+      }}>
       <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'white' }}>Добавить комплектующие</Text>
       <Text style={{ color: 'white' }}>{`Добавлено деталей: ${amountPart} шт`}</Text>
       </Pressable>
@@ -304,24 +306,18 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
         <Text style={styles.textCost}>{`Итого затраты: ${sumCost + costService} грн`}</Text>
       </View>
 
-      <SafeAreaView>
-
         <Dialog
           isVisible={isVisible}
           overlayStyle={{ width: '100%', padding: 0 }}
           backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
         >
-
           <BottomSheetAddition
-            // @ts-expect-error jbjbjb
-
-            initialParts={addParts}
-            onPressCancel = {() => { handleCancelModal() }}
+            initialParts = {addParts}
+            onPressCancel = {handleCancelModal}
             onPressOk={handleOkModal}
           />
 
         </Dialog>
-      </SafeAreaView>
 
       <Text style={styles.button}>{errorMsg}</Text>
       <View style={styles.viewButton}>

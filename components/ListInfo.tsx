@@ -3,12 +3,12 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Divider, Icon } from '@rneui/themed'
 import React from 'react'
 
-export const listsInfo = (item: PartList): JSX.Element => {
+export const listsInfo = (item: PartList, index: number): JSX.Element => {
   return (
     <View>
 
       <View style={styles.viewTop}>
-        <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 14, color: 'white' }}>{item.id}</Text>
+        <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 14, color: 'white' }}>{index + 1}</Text>
         <Text style={{ flex: 2, textAlign: 'center', fontSize: 14, color: 'white' }}>{item.namePart}</Text>
         <Text style={{ flex: 0.5, textAlign: 'left', fontSize: 14, color: 'white' }}>{`${item.amountPart} x`}</Text>
         <Text style={{ flex: 1, textAlign: 'left', fontSize: 14, color: 'white' }}>{item.costPart}</Text>

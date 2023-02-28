@@ -1,7 +1,6 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import {
-  FlatList, ImageBackground, Pressable,
-  SafeAreaView,
+  ImageBackground, Pressable,
   StyleSheet,
   Text, TextInput,
   View, ScrollView
@@ -9,9 +8,8 @@ import {
 import { Button, Divider, Icon, Input } from '@rneui/themed'
 import { BACK_INPUT, COLOR_GREEN, PartList, PropsBottomSheet, Seller, TEXT_WHITE } from '../type'
 import { SimpleAccordion } from 'react-native-simple-accordion'
-import { FlashList } from '@shopify/flash-list'
 
-export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: PropsBottomSheet): JSX.Element => {
+export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [] }: PropsBottomSheet): JSX.Element => {
   const [namePart, setNamePart] = useState('')
   const [numberPart, setNumberPart] = useState('')
   const [costPart, setCostPart] = useState(0)
@@ -21,16 +19,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
   const [sellerLink, setSellerLink] = useState('')
   const [seller, setSeller] = useState<Seller>()
 
-  const [idPart, setIdPart] = useState(initialParts === undefined ? 1 : initialParts.length + 1)
-
-  const [parts, setParts] = useState<PartList[]>(initialParts === undefined ? [] : initialParts)
-
-  /* const [isVisiblePart, setIsVisiblePart] = useState(false) */
-  /*  const [nameService, setNameService] = useState('')
-  const [costService, setCostService] = useState('')
-  const [idService, setIdService] = useState(1) */
-  /*   const [services, setServices] = useState([]) */
-  /*  const [isVisibleService, setIsVisibleService] = useState(false) */
+  const [parts, setParts] = useState<PartList[]>(initialParts)
 
   const inputNamePart = React.createRef<PropsWithChildren<TextInput>>()
   const inputCostPart = React.createRef<PropsWithChildren<TextInput>>()
@@ -41,38 +30,14 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
   const inputSellerLink = React.createRef<PropsWithChildren<TextInput>>()
 
   const delPart = (id: number): void => {
-    let newId = 0
     const newParts = parts.filter((item: PartList) => item.id !== id)
-    newParts.forEach((item: PartList) => {
-      item.id = newId + 1
-      ++newId
-    })
-    newParts.length > 0
-      ? setIdPart(newParts.length + 1)
-      : setIdPart(1)
-    /* setParts(newParts) */
-  }
-  /* const delService = (id: number): void => {
-    let newId = 0
-    const newServices = services.filter((item: ServiceList) => item.id !== id)
-    newServices.forEach((item: ServiceList) => {
-      item.id = newId + 1
-      ++newId
-    })
-    ;(newServices.length > 0)
-      ? setIdService(newServices.length + 1)
-      : setIdService(1)
-    setServices(newServices)
-  } */
-  const handleCancel = () => {
-    onPressCancel()
+    setParts(newParts)
   }
 
   const addPart = (): void => {
     if (namePart === '') return
-    setIdPart(idPart + 1)
     setSeller({ name: sellerName, phone: sellerPhone, link: sellerLink })
-    setParts([...parts, { id: idPart, namePart, costPart, amountPart, numberPart, seller }])
+    setParts([...parts, { id: Date.now(), namePart, costPart, amountPart, numberPart, seller }])
     setNamePart('')
     setCostPart(0)
     setNumberPart('')
@@ -82,36 +47,11 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
     inputNumberPart.current?.clear()
   }
 
-  /*  const addService = (): void => {
-    if (nameService === '' || costService === '') return
-    setIdService(idService + 1)
-    // @ts-expect-error initial state
-    setServices([...services, { id: idService, nameService, costService }])
-    setNameService('')
-    setCostService('')
-    inputNameService.current?.clear()
-    inputCostService.current?.clear()
-  } */
-
-  /* const handleOkModal = (partName: string, partCost: string): void => {
-    setIsVisiblePart(false)
-    setNamePart(partName)
-    setCostPart(partCost)
-  } */
-
-  /*   useEffect(() => {
-    addPart()
-  }, [namePart, costPart]) */
-
-  /* const handleCancelModal = (): void => {
-    setIsVisiblePart(false)
-  } */
-
-  const listParts = (item: PartList): JSX.Element => {
+  const listParts = (item: PartList, key: number): JSX.Element => {
     return (
       <View >
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>
-          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{item.id}</Text>
+          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{key + 1}</Text>
           <Text style={{ flex: 2, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{item.namePart}</Text>
           <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{`${item.amountPart} x`}</Text>
           <Text style={{ flex: 1, textAlign: 'center', color: TEXT_WHITE }}>{item.costPart}</Text>
@@ -273,7 +213,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
           {
             parts.map((item, index) => (
               <View key ={index}>
-                {listParts(item)}
+                {listParts(item, index)}
               </View>
             ))
           }
@@ -307,9 +247,9 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
         buttonStyle={{ borderColor: 'red' }}
         titleStyle={{ color: 'red' }}
         title={'Cancel'}
-        onPress={
-          handleCancel
-        }
+        onPress={() => {
+          onPressCancel()
+        }}
         type='outline'
       />
         <Button

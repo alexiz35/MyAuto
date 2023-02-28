@@ -123,7 +123,7 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
             scrollEnabled={false}
             nestedScrollEnabled={true}
             data={currentTask.addition?.parts}
-            renderItem={({ item }) => listsInfo(item)}
+            renderItem={({ item, index }) => listsInfo(item, index)}
             keyExtractor={item => item.id.toString()}
           />
         </View>
@@ -144,25 +144,6 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
           }}
           color={'secondary'}
         /> */}
-          <Dialog
-            isVisible={isVisible}
-            overlayStyle={{ width: '100%', padding: 0 }}
-            backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
-          >
-            <View style={styles.viewKm}>
-              <Input
-                placeholder={'Пробег текущий'}
-                placeholderTextColor={'black'}
-                containerStyle={{ flex: 1 }}
-                inputStyle={styles.inputStyle}
-                errorMessage={'текущий пробег'}
-                errorStyle={styles.inputErrorStyle}
-                keyboardType={'numeric'}
-                defaultValue={'200000'}
-                value={String(currentTask.startKm)}
-              />
-            </View>
-          </Dialog>
 
           </ScrollView>
 

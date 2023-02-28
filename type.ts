@@ -107,7 +107,7 @@ export interface ServiceList {
 }
 
 export interface PropsBottomSheet {
-  initialParts: PartList[]
+  initialParts: PartList[] | undefined
   onPressOk: (parts: PartList[]) => void
   onPressCancel: () => void
 }
