@@ -1,19 +1,26 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
 import {
   FlatList, ImageBackground, Pressable,
   SafeAreaView,
   StyleSheet,
   Text, TextInput,
-  View
+  View, ScrollView
 } from 'react-native'
 import { Button, Divider, Icon, Input } from '@rneui/themed'
-import { COLOR_GREEN, PartList, PropsBottomSheet, TEXT_WHITE } from '../type'
+import { BACK_INPUT, COLOR_GREEN, PartList, PropsBottomSheet, Seller, TEXT_WHITE } from '../type'
+import { SimpleAccordion } from 'react-native-simple-accordion'
+import { FlashList } from '@shopify/flash-list'
 
 export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: PropsBottomSheet): JSX.Element => {
   const [namePart, setNamePart] = useState('')
   const [numberPart, setNumberPart] = useState('')
   const [costPart, setCostPart] = useState(0)
   const [amountPart, setAmountPart] = useState(1)
+  const [sellerName, setSellerName] = useState('')
+  const [sellerPhone, setSellerPhone] = useState('')
+  const [sellerLink, setSellerLink] = useState('')
+  const [seller, setSeller] = useState<Seller>()
+
   const [idPart, setIdPart] = useState(initialParts === undefined ? 1 : initialParts.length + 1)
 
   const [parts, setParts] = useState<PartList[]>(initialParts === undefined ? [] : initialParts)
@@ -29,6 +36,9 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
   const inputCostPart = React.createRef<PropsWithChildren<TextInput>>()
   const inputAmountPart = React.createRef<PropsWithChildren<TextInput>>()
   const inputNumberPart = React.createRef<PropsWithChildren<TextInput>>()
+  const inputSellerName = React.createRef<PropsWithChildren<TextInput>>()
+  const inputSellerPhone = React.createRef<PropsWithChildren<TextInput>>()
+  const inputSellerLink = React.createRef<PropsWithChildren<TextInput>>()
 
   const delPart = (id: number): void => {
     let newId = 0
@@ -37,10 +47,10 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
       item.id = newId + 1
       ++newId
     })
-    ;(newParts.length > 0)
+    newParts.length > 0
       ? setIdPart(newParts.length + 1)
       : setIdPart(1)
-    setParts(newParts)
+    /* setParts(newParts) */
   }
   /* const delService = (id: number): void => {
     let newId = 0
@@ -54,11 +64,15 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
       : setIdService(1)
     setServices(newServices)
   } */
+  const handleCancel = () => {
+    onPressCancel()
+  }
 
   const addPart = (): void => {
     if (namePart === '') return
     setIdPart(idPart + 1)
-    setParts([...parts, { id: idPart, namePart, costPart, amountPart, numberPart }])
+    setSeller({ name: sellerName, phone: sellerPhone, link: sellerLink })
+    setParts([...parts, { id: idPart, namePart, costPart, amountPart, numberPart, seller }])
     setNamePart('')
     setCostPart(0)
     setNumberPart('')
@@ -66,8 +80,8 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
     inputNamePart.current?.clear()
     inputCostPart.current?.clear()
     inputNumberPart.current?.clear()
-    console.log('add', parts)
   }
+
   /*  const addService = (): void => {
     if (nameService === '' || costService === '') return
     setIdService(idService + 1)
@@ -123,10 +137,10 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
 
   return (
     <ImageBackground source={require('../assets/Back2.png')} style={{ padding: 10 }} >
-
-    <Text style={styles.textTop} >
+      <ScrollView >
+    {/* <Text style={styles.textTop} >
         Добавьте доп информацию по текущему ТО или ремонту
-      </Text>
+      </Text> */}
 
       <View style={styles.viewAdditional}>
 
@@ -186,6 +200,52 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
             />
           </View>
         </View>
+        <SimpleAccordion
+          viewInside={
+          <View style={{ height: '100%' }}>
+          <View style={styles.viewGroupInput}>
+            <View style={styles.input}>
+              <Input
+                ref={inputSellerName}
+                placeholder={'продавец'}
+                placeholderTextColor={'red'}
+                inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+                errorMessage={'магазин или имя продавца'}
+                errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
+                onChangeText={(value) => setSellerName(String(value))}
+              />
+            </View>
+            <View style={styles.input}>
+              <Input
+                ref={inputSellerPhone}
+                placeholder={'телефон'}
+                containerStyle={{ flex: 1 }}
+                inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+                errorMessage={'номер телефона'}
+                errorStyle={styles.errorInput}
+                onChangeText={(value) => setSellerPhone(String(value))}
+              />
+            </View>
+          </View>
+            <View style={styles.input}>
+              <Input
+                ref={inputSellerLink}
+                placeholder={'данные продавцв'}
+                multiline={true}
+                containerStyle={{ flex: 1 }}
+                inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+                errorMessage={'данные продавца'}
+                errorStyle={styles.errorInput}
+                onChangeText={(value) => setSellerLink(String(value))}
+              />
+            </View>
+          </View>
+        }
+          title={'Информация о покупке'}
+          bannerStyle={{ backgroundColor: BACK_INPUT, height: 30, padding: 5 }}
+          titleStyle={{ color: TEXT_WHITE, textAlign: 'center', fontWeight: 'normal', fontSize: 16 }}
+          viewContainerStyle={{ backgroundColor: BACK_INPUT }}
+        />
 
         <View style={styles.viewPart}>
           <Button
@@ -200,13 +260,24 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
             /* onPress={() => setIsVisiblePart(true)} */
           />
         </View>
-
-        <FlatList
-          style={styles.flatList}
+        <View style={styles.flatList}>
+        {/* <FlashList
+          scrollEnabled={false}
+          nestedScrollEnabled={true}
           renderItem={({ item }) => listParts(item)}
           data={parts}
           keyExtractor={item => item.id.toString()}
-        />
+          estimatedItemSize={20}
+          ListEmptyComponent={<View style={{ height: 25 }}></View>}
+        /> */}
+          {
+            parts.map((item, index) => (
+              <View key ={index}>
+                {listParts(item)}
+              </View>
+            ))
+          }
+        </View>
       {/*   <Text style={styles.textPart} >
           Добавьте работы, которые были проведены
         </Text>
@@ -236,7 +307,9 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
         buttonStyle={{ borderColor: 'red' }}
         titleStyle={{ color: 'red' }}
         title={'Cancel'}
-        onPress={onPressCancel}
+        onPress={
+          handleCancel
+        }
         type='outline'
       />
         <Button
@@ -248,6 +321,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts }: 
         type={'outline'}
       />
       </View>
+      </ScrollView>
     </ImageBackground>
 
   )
@@ -268,7 +342,7 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 5,
-    backgroundColor: 'rgba(61,61,61,0.35)',
+    backgroundColor: BACK_INPUT,
     flex: 1,
     shadowColor: '#000',
     shadowOffset: {
@@ -306,6 +380,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   flatList: {
+    flex: 1,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: 'lightgrey',

@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { View, Text, StyleSheet, FlatList, ImageBackground, SafeAreaView, Alert } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
-import { Button, FAB, Icon, Input } from '@rneui/themed'
+import { Button, Dialog, FAB, Icon, Input } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../components/Redux/hook'
 import { BACK_CARD, BACK_INPUT, COLOR_GREEN, StateTask } from '../type'
@@ -20,6 +20,7 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
   const Tasks = useAppSelector((state) => state)
   const nav = useNavigation<ProfileScreenNavigationProp>()
 
+  const [isVisible, setIsVisible] = useState(false)
   const [currentTask, setCurrentTask] = useState<StateTask>(
     {
       id: 0,
@@ -143,6 +144,25 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
           }}
           color={'secondary'}
         /> */}
+          <Dialog
+            isVisible={isVisible}
+            overlayStyle={{ width: '100%', padding: 0 }}
+            backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
+          >
+            <View style={styles.viewKm}>
+              <Input
+                placeholder={'Пробег текущий'}
+                placeholderTextColor={'black'}
+                containerStyle={{ flex: 1 }}
+                inputStyle={styles.inputStyle}
+                errorMessage={'текущий пробег'}
+                errorStyle={styles.inputErrorStyle}
+                keyboardType={'numeric'}
+                defaultValue={'200000'}
+                value={String(currentTask.startKm)}
+              />
+            </View>
+          </Dialog>
 
           </ScrollView>
 

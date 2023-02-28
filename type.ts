@@ -10,6 +10,7 @@ export const HEADER_TINT_COLOR = '#a2a2a2'
 export const BACK_TAB_BOTTOM = 'rgba(0,0,0,0.94)'
 export const BACK_TAB_TOP = 'rgba(0,0,0,0.94)'
 export const COLOR_GREEN = '#23c50a'
+export const INPUT_BACK = 'rgba(61,61,61,0.35)'
 
 // --------------------------------type for redux --------------------------------------------
 export enum ActionType {
@@ -92,6 +93,12 @@ export interface PartList {
   costPart: number
   amountPart: number
   numberPart: string
+  seller?: Seller
+}
+export interface Seller {
+  name: string
+  phone?: string
+  link?: string
 }
 export interface ServiceList {
   id: number

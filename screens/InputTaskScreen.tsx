@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, SafeAreaView, Pressable, ImageBackground } from 'react-native'
+import { Text, View, StyleSheet, SafeAreaView, Pressable, ImageBackground, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { Button, Dialog, Icon, Input } from '@rneui/themed'
@@ -184,11 +184,11 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   }
 
   return (
-    <View>
-      <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
-
+    <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
+      <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}>
       <DropDownPicker
         style={styles.dropDownPicker}
+        listMode={'SCROLLVIEW'}
         dropDownContainerStyle={{
           backgroundColor: 'rgba(61,61,61,0.94)'
         }}
@@ -346,8 +346,10 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
           onPress={() => { handleOk() }}
         />
       </View>
-      </ImageBackground>
-    </View>
+    </ScrollView>
+
+</ImageBackground>
+
   )
 }
 
