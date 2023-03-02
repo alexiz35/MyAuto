@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 5,
-    backgroundColor: 'rgba(61,61,61,0.35)',
+    backgroundColor: BACK_INPUT,
     flex: 1,
     shadowColor: '#000',
     shadowOffset: {

@@ -86,7 +86,7 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
   const [newCoords, setNewCoords] = useState({ latitude: 0, longitude: 0 })
   const [distance, setDistance] = useState(0)
 
-  // @ts-expect-error temp
+  /* // @ts-expect-error temp
   TaskManager.defineTask('TRACKING', (data, error) => {
     if (error != null) {
       console.log('err', error)
@@ -115,7 +115,7 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
         console.log('distance', distance)
       }
     }
-  })
+  }) */
 
   /*  const printToFile = async (): Promise<void> => {
     // On iOS/android prints the given html. On web prints the HTML from the current page.

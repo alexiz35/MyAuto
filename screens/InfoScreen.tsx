@@ -1,26 +1,28 @@
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { View, Text, StyleSheet, FlatList, ImageBackground, SafeAreaView, Alert } from 'react-native'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { View, Text, StyleSheet, FlatList, ImageBackground } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
-import { Button, Dialog, FAB, Icon, Input } from '@rneui/themed'
+import { Dialog, FAB, Icon, Input } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../components/Redux/hook'
-import { BACK_CARD, BACK_INPUT, COLOR_GREEN, StateTask } from '../type'
+import { BACK_INPUT, COLOR_GREEN, PartList, StateTask } from '../type'
 import { listsInfo } from '../components/ListInfo'
 import { RootStackParamList } from '../components/Navigation/Navigation'
-import { useNavigation } from '@react-navigation/native'
+/* import { useNavigation } from '@react-navigation/native' */
 import { printToFile } from '../components/Print/Print'
+import { ModalInfoPart } from '../components/ModalInfoPart'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Info'>
-type ProfileScreenNavigationProp = NativeStackNavigationProp<
+/* type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
 'InputTaskScreen'
->
+> */
 
-const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
+const InfoScreen = ({ route }: Props): JSX.Element => {
   const Tasks = useAppSelector((state) => state)
-  const nav = useNavigation<ProfileScreenNavigationProp>()
+  /* const nav = useNavigation<ProfileScreenNavigationProp>() */
 
   const [isVisible, setIsVisible] = useState(false)
+  const [currentPart, setCurrentPart] = useState<PartList>()
   const [currentTask, setCurrentTask] = useState<StateTask>(
     {
       id: 0,
@@ -48,9 +50,18 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
 
   const rangeKm = currentTask.endKm - currentTask.startKm
 
+  const onInfo = (id: number): void => {
+    const temp = currentTask.addition?.parts?.find((item) => (item.id === id))
+    setCurrentPart(temp)
+    setIsVisible(true)
+  }
+  const modalCancel = (): void => {
+    setIsVisible(false)
+  }
+
   useEffect(() => {
     setCurrentTask(tempTask)
-  }, [currentId])
+  }, [])
 
   return (
     <ImageBackground source={require('../assets/Back2.png')} resizeMode={'cover'}>
@@ -64,6 +75,7 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
           </View>
           <View style={styles.viewKm}>
             <Input
+              editable={false}
               placeholder={'Пробег текущий'}
               placeholderTextColor={'black'}
               containerStyle={{ flex: 1 }}
@@ -75,6 +87,7 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
               value={String(currentTask.startKm)}
             />
             <Input
+              editable={false}
               placeholder={'Пробег до замены'}
               placeholderTextColor={'black'}
               containerStyle={{ flex: 1 }}
@@ -93,6 +106,7 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
           </View>
           <View style={styles.viewDate}>
             <Input
+              editable={false}
               placeholder={'дата проведения'}
               placeholderTextColor={'black'}
               containerStyle={{ flex: 1 }}
@@ -103,6 +117,7 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
               value={String(currentTask.startDate)}
             />
             <Input
+              editable={false}
               placeholder={'дата предельная'}
               placeholderTextColor={'black'}
               containerStyle={{ flex: 1 }}
@@ -123,7 +138,7 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
             scrollEnabled={false}
             nestedScrollEnabled={true}
             data={currentTask.addition?.parts}
-            renderItem={({ item, index }) => listsInfo(item, index)}
+            renderItem={({ item, index }) => listsInfo(item, index, onInfo)}
             keyExtractor={item => item.id.toString()}
           />
         </View>
@@ -144,7 +159,23 @@ const InfoScreen = ({ navigation, route }: Props): JSX.Element => {
           }}
           color={'secondary'}
         /> */}
+          <Dialog
+            isVisible={isVisible}
+            overlayStyle={{ width: '100%', padding: 0 }}
+            backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
+          >
+            <ModalInfoPart
+              /* initialParts = {addParts}
+              onPressCancel = {handleCancelModal}
+              onPressOk={handleOkModal} */
+              // @ts-expect-error nnn
+              currentPart={currentPart}
+              currentTask={currentTask}
+              onPressCancel = {modalCancel}
 
+            />
+
+          </Dialog>
           </ScrollView>
 
         <FAB
