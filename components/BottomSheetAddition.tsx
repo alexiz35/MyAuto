@@ -36,7 +36,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
 
   const addPart = (): void => {
     if (namePart === '') return
-    setSeller({ name: sellerName, phone: sellerPhone, link: sellerLink })
+    setSeller({ ...seller, name: sellerName, phone: sellerPhone, link: sellerLink })
     setParts([...parts, { id: Date.now(), namePart, costPart, amountPart, numberPart, seller }])
     setNamePart('')
     setCostPart(0)
@@ -78,9 +78,6 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
   return (
     <ImageBackground source={require('../assets/Back2.png')} style={{ padding: 10 }} >
       <ScrollView >
-    {/* <Text style={styles.textTop} >
-        Добавьте доп информацию по текущему ТО или ремонту
-      </Text> */}
 
       <View style={styles.viewAdditional}>
 
@@ -190,26 +187,15 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
         <View style={styles.viewPart}>
           <Button
             radius={'5'}
-            /* title={'+'} */
             color={'secondary'}
             buttonStyle={{ paddingHorizontal: 0 }}
-            /* type={'outline'} */
             icon={{ name: 'plus', type: 'font-awesome', color: 'white' }}
             containerStyle={{ flex: 1, padding: 0, margin: 0 }}
             onPress={addPart}
-            /* onPress={() => setIsVisiblePart(true)} */
           />
         </View>
         <View style={styles.flatList}>
-        {/* <FlashList
-          scrollEnabled={false}
-          nestedScrollEnabled={true}
-          renderItem={({ item }) => listParts(item)}
-          data={parts}
-          keyExtractor={item => item.id.toString()}
-          estimatedItemSize={20}
-          ListEmptyComponent={<View style={{ height: 25 }}></View>}
-        /> */}
+
           {
             parts.map((item, index) => (
               <View key ={index}>
@@ -218,27 +204,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
             ))
           }
         </View>
-      {/*   <Text style={styles.textPart} >
-          Добавьте работы, которые были проведены
-        </Text>
 
-        <View style={styles.viewPart}>
-          <Button
-            title={'+'}
-            radius={'5'}
-            color={'secondary'}
-            containerStyle={{ flex: 1 }}
-            onPress={addService}
-          />
-        </View>
-        <FlatList
-          style={styles.flatList}
-          renderItem={({ item }) => listParts(item)}
-          data={services}
-          // @ts-expect-error initial state
-          keyExtractor={item => item.id.toString()}
-        />
-      </View> */}
       </View>
       <View style={styles.viewButton}>
 
@@ -299,14 +265,6 @@ const styles = StyleSheet.create({
     marginTop: 1,
     textAlign: 'center'
   },
-
-  textTop: {
-    textAlign: 'center',
-    fontSize: 12,
-    fontStyle: 'italic',
-    marginBottom: 10,
-    color: TEXT_WHITE
-  },
   textPart: {
     textAlign: 'center',
     fontSize: 12,
@@ -329,10 +287,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   inputPartStyle: {
-    textAlign: 'center',
-    fontSize: 14
-  },
-  inputServiceStyle: {
     textAlign: 'center',
     fontSize: 14
   },

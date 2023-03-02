@@ -97,8 +97,8 @@ export interface PartList {
 }
 export interface Seller {
   name: string
-  phone?: string
-  link?: string
+  phone: string
+  link: string
 }
 export interface ServiceList {
   id: number
