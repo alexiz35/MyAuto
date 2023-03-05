@@ -1,15 +1,24 @@
-import { Text, View, StyleSheet, ImageBackground } from 'react-native'
+import { Text, View, StyleSheet, ImageBackground, Pressable } from 'react-native'
 import { Divider, Icon } from '@rneui/themed'
 import { COLOR_GREEN, TEXT_CARD } from '../type'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from './Navigation/Navigation'
+import { useNavigation } from '@react-navigation/native'
+
+type ProfileScreenNavigationProp = NativeStackNavigationProp<
+RootStackParamList,
+'CarInfoScreen'
+>
 
 export const MainCard = (): JSX.Element => {
+  const nav = useNavigation<ProfileScreenNavigationProp>()
   return (
     <ImageBackground source={require('../assets/darkBack.jpg')} resizeMethod={'auto'} resizeMode={'cover'} >
   <View style={styles.containerView}>
-
+    <Pressable onPress={() => nav.navigate('CarInfoScreen')}>
     <Text style={styles.carText}>RENAULT MEGANE 3</Text>
     <Divider inset={true} insetType="middle" />
-
+    </Pressable>
     <View style={styles.infoView}>
       <View style={styles.kmView}>
         <Icon

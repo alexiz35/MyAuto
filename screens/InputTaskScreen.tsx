@@ -244,6 +244,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
                 placeholder={'Дата проведения'}
                 containerStyle={{ flex: 1 }}
                 inputStyle={styles.inputText}
+                showSoftInputOnFocus={false}
                 value = {startDateInput.toLocaleDateString()}
                 onPressOut={inputDate}
                 errorMessage={'текущая дата'}

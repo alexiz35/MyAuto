@@ -34,12 +34,14 @@ import * as Print from 'expo-print'
 import { shareAsync } from 'expo-sharing'
 import { printToFile } from '../Print/Print'
 import { current } from '@reduxjs/toolkit'
+import CarInfoScreen from '../../screens/CarInfoScreen'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
   BottomTabNav: NavigatorScreenParams<RootTabParamList>
   InputTaskScreen: { editable: boolean, taskId?: number }
   Info: { taskId: number }
+  CarInfoScreen: undefined
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootTabParamList = {
@@ -86,7 +88,10 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
   const [newCoords, setNewCoords] = useState({ latitude: 0, longitude: 0 })
   const [distance, setDistance] = useState(0)
 
-  /* // @ts-expect-error temp
+  /*
+
+ // --------------------------------backgroundTracking ---------------------------
+ // @ts-expect-error temp
   TaskManager.defineTask('TRACKING', (data, error) => {
     if (error != null) {
       console.log('err', error)
@@ -117,19 +122,7 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
     }
   }) */
 
-  /*  const printToFile = async (): Promise<void> => {
-    // On iOS/android prints the given html. On web prints the HTML from the current page.
-    try {
-      const { uri } = await Print.printToFileAsync({ html })
-      Alert.alert('file has created')
-      // sending file somewere
-      await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' })
-    } catch (err) {
-      console.log('ErrorPrintPDF')
-    }
-  } */
-
-  useEffect(() => {
+  /* useEffect(() => {
     void (async () => {
       const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync()
       if (foregroundStatus === 'granted') {
@@ -138,14 +131,14 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
           console.log('permission allowed')
           await Location.startLocationUpdatesAsync('TRACKING', {
             accuracy: Location.Accuracy.BestForNavigation,
-            /* timeInterval: 2000, */
-            /* deferredUpdatesDistance: 3, */
+            /!* timeInterval: 2000, *!/
+            /!* deferredUpdatesDistance: 3, *!/
             distanceInterval: 20
           })
         }
       }
     })()
-  }, [])
+  }, []) */
 
   return (
     <NavigationContainer >
@@ -232,6 +225,14 @@ export const Navigation = ({ navigation, route }: Props): JSX.Element => {
           component={InputTaskScreen}
           options={{
             title: 'Edit Task',
+            headerTintColor: HEADER_TINT_COLOR
+          }} />
+
+        <Stack.Screen
+          name='CarInfoScreen'
+          component={CarInfoScreen}
+          options={{
+            title: 'Car Info',
             headerTintColor: HEADER_TINT_COLOR
           }} />
 
