@@ -4,6 +4,7 @@ import { COLOR_GREEN, TEXT_CARD } from '../type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from './Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
+import { useAppSelector } from './Redux/hook'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -12,6 +13,8 @@ RootStackParamList,
 
 export const MainCard = (): JSX.Element => {
   const nav = useNavigation<ProfileScreenNavigationProp>()
+  const state = useAppSelector(state => state)
+
   return (
     <ImageBackground source={require('../assets/darkBack.jpg')} resizeMethod={'auto'} resizeMode={'cover'} >
   <View style={styles.containerView}>
@@ -27,7 +30,7 @@ export const MainCard = (): JSX.Element => {
           type='font-awesome'
           color={TEXT_CARD}
         />
-        <Text style={styles.kmText}>200000 km</Text>
+        <Text style={styles.kmText}>{String(state.cars[state.numberCar].currentMiles)}</Text>
       </View>
 
       <View style={styles.costView}>

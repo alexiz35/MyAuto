@@ -1,4 +1,4 @@
-import { ActionType, Dispatch, initialStateInfo, StateMain } from '../../type'
+import { ActionType, Dispatch, initialStateInfo, StateCar, StateMain } from '../../type'
 
 export const initialState: StateMain = {
   numberCar: 0,
@@ -13,6 +13,7 @@ export const initialState: StateMain = {
 }
 
 export const milesReducer: Dispatch = (state = initialState, action) => {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const selectCar = (numberCar: number) => ({
     indexArray: state.cars.findIndex(item => numberCar === item.carId),
     newArray: [...state.cars]
@@ -23,6 +24,22 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
       return {
         ...state,
         numberCar: action.numberCar
+      }
+    }
+
+    case ActionType.ADD_CAR: {
+      return {
+        ...state,
+        cars: state.cars.concat(action.payload.car)
+      }
+    }
+
+    case ActionType.UPDATE_CAR: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
+      newArray[indexArray].info = action.payload.carInfo
+      return {
+        ...state,
+        cars: newArray
       }
     }
 
@@ -80,7 +97,6 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
           return false
         }
       )
-      console.log('finish', newArray)
 
       return {
         ...state,

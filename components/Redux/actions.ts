@@ -1,8 +1,9 @@
 import {
-  ActionAddTask, ActionDelTask, ActionEditTask, ActionFinishTask,
+  ActionAddCar,
+  ActionAddTask, ActionDelTask, ActionEditCar, ActionEditTask, ActionFinishTask,
   ActionMiles,
   ActionType,
-  CurrentMiles,
+  CurrentMiles, StateCar, StateInfo,
   StateTask
 } from '../../type'
 
@@ -51,5 +52,22 @@ export const editTask = (carId: number, id: number | undefined, task: StateTask)
       carId,
       id,
       task
+    }
+  })
+
+export const addCar = (car: StateCar): ActionAddCar => (
+  {
+    type: ActionType.ADD_CAR,
+    payload: {
+      car
+    }
+  })
+
+export const editCar = (carId: number, carInfo: StateInfo): ActionEditCar => (
+  {
+    type: ActionType.UPDATE_CAR,
+    payload: {
+      carId,
+      carInfo
     }
   })

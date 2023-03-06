@@ -19,7 +19,10 @@ export enum ActionType {
   ADD_TASK = 'ADD_TASK',
   DEL_TASK = 'DEL_TASK',
   EDIT_TASK = 'EDIT_TASK',
-  FINISH_TASK = 'FINISH_TASK'
+  FINISH_TASK = 'FINISH_TASK',
+  ADD_CAR = 'ADD_CAR',
+  UPDATE_CAR = 'UPDATE_CAR',
+  DEL_CAR = 'DEL_CAR'
 }
 
 export interface StateMain {
@@ -40,11 +43,11 @@ export interface StateInfo {
   fuel: string
   body: string
   year: string
-  engine: string
-  capacity: string
-  gear: string
+  engine?: string
+  capacity?: string
+  gear?: string
   vin: string
-  dateBuy: string
+  dateBuy: Date
   buyMileage: number
 }
 export const initialStateInfo = {
@@ -57,7 +60,7 @@ export const initialStateInfo = {
   capacity: '',
   gear: '',
   vin: '',
-  dateBuy: '',
+  dateBuy: new Date(),
   buyMileage: 0
 }
 
@@ -111,15 +114,6 @@ export interface ActionDelTask {
   }
 }
 
-export interface ActionFinishTask {
-  type: ActionType.FINISH_TASK
-  payload: {
-    carId: number
-    id: number
-    isFinished: boolean
-  }
-}
-
 export interface ActionEditTask {
   type: ActionType.EDIT_TASK
   payload: {
@@ -129,7 +123,39 @@ export interface ActionEditTask {
   }
 }
 
-export type AppAction = ActionMiles | ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask | ActionChangeCar
+export interface ActionFinishTask {
+  type: ActionType.FINISH_TASK
+  payload: {
+    carId: number
+    id: number
+    isFinished: boolean
+  }
+}
+
+export interface ActionAddCar {
+  type: ActionType.ADD_CAR
+  payload: {
+    car: StateCar
+  }
+}
+export interface ActionDelCar {
+  type: ActionType.DEL_CAR
+  payload: {
+    carId: number
+  }
+}
+
+export interface ActionEditCar {
+  type: ActionType.UPDATE_CAR
+  payload: {
+    carId: number
+    carInfo: StateInfo
+  }
+}
+
+export type AppAction = ActionMiles | ActionChangeCar |
+ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask |
+ActionAddCar | ActionEditCar | ActionDelCar
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

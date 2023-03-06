@@ -3,7 +3,7 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 
 import HomeScreen from '../../screens/HomeScreen'
 import InputTaskScreen from '../../screens/InputTaskScreen'
-import { Alert, Image, Text, View } from 'react-native'
+import { Alert, Image, Pressable, Text, View } from 'react-native'
 import { Button, FAB, Icon } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
@@ -35,6 +35,7 @@ import { shareAsync } from 'expo-sharing'
 import { printToFile } from '../Print/Print'
 import { current } from '@reduxjs/toolkit'
 import CarInfoScreen from '../../screens/CarInfoScreen'
+import SettingScreen from '../../screens/SettingScreen'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
@@ -42,6 +43,7 @@ export type RootStackParamList = {
   InputTaskScreen: { editable: boolean, taskId?: number }
   Info: { taskId: number }
   CarInfoScreen: undefined
+  SettingScreen: undefined
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootTabParamList = {
@@ -184,11 +186,14 @@ export const Navigation = (): JSX.Element => {
           name='BottomTabNav'
           // @ts-expect-error jjj
           component={BottomTabNav}
-          options={{
+          options={({ navigation }) => ({
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: BACK_TAB_TOP },
             headerTitle: () => (
+              <Pressable onPress={() => navigation.navigate('SettingScreen')}>
               <LogoTitle />
+              </Pressable>
+
             ),
             headerLeft: () => (
               <View>
@@ -218,7 +223,7 @@ export const Navigation = (): JSX.Element => {
               </View>
             )
           }
-          }
+          )}
         />
         <Stack.Screen
           name='InputTaskScreen'
@@ -233,6 +238,14 @@ export const Navigation = (): JSX.Element => {
           component={CarInfoScreen}
           options={{
             title: 'Car Info',
+            headerTintColor: HEADER_TINT_COLOR
+          }} />
+
+        <Stack.Screen
+          name='SettingScreen'
+          component={SettingScreen}
+          options={{
+            title: 'Setting',
             headerTintColor: HEADER_TINT_COLOR
           }} />
 

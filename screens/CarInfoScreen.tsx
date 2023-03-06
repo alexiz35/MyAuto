@@ -19,13 +19,13 @@ import {
   BACKGROUND,
   COLOR_GREEN,
   PartList,
-  ServiceList,
+  ServiceList, StateCar, StateInfo,
   StateTask,
   TEXT,
   TEXT_CARD,
   TEXT_WHITE
 } from '../type'
-import { addTask, editTask } from '../components/Redux/actions'
+import { addTask, editCar, editTask, updateMiles } from '../components/Redux/actions'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
@@ -41,6 +41,10 @@ interface ListCar {
 type Props = NativeStackScreenProps<RootStackParamList, 'CarInfoScreen'>
 
 const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
+  const setCar = useAppDispatch()
+  const numberCar = useAppSelector(state => state.numberCar)
+  const car = useAppSelector(state => state.cars)
+
   const itemsFuel = [
     { label: 'Дизель', value: 'Дизель' },
     { label: 'Бензин', value: 'Бензин' },
@@ -82,6 +86,22 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     // @ts-expect-error undefined
     onChange: (event, date) => setValueDateBuy(date)
   })
+  // ----------------------button Ok handler-------------------------------
+  const handleOkCarInfo = (): void => {
+    const carInfo: StateInfo = {
+      brand: valueBrand,
+      model: valueModel,
+      fuel: valueFuel,
+      body: valueBody,
+      year: valueYear,
+      vin: valueVin,
+      dateBuy: valueDateBuy,
+      buyMileage: valueBuyMileage
+    }
+    setCar(editCar(numberCar, carInfo))
+    setCar(updateMiles(numberCar, valueCurrentMileage))
+    navigation.goBack()
+  }
 
   // --------------------DropListCreate------------------------------------
   const listBrand = (): ListCar[] => {
@@ -121,7 +141,19 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   useEffect(() => {
     setItemsModel(listModel())
   }, [valueBrand])
-  // ----------------------------------------------------------------------
+  // --------------------InitialSateScreen-------------------------------------
+  useEffect(() => {
+    const temp = car[numberCar].info
+    setValueBrand(temp.brand)
+    setValueModel(temp.model)
+    setValueFuel(temp.fuel)
+    setValueBody(temp.body)
+    setValueYear(temp.year)
+    setValueVin(temp.vin)
+    setValueDateBuy(new Date(temp.dateBuy))
+    setValueBuyMileage(temp.buyMileage)
+  }, [])
+
   return (
     <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
       <ScrollView nestedScrollEnabled={true} style={{ flex: 1, paddingHorizontal: 10 }}>
@@ -283,6 +315,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               errorMessage={'VIN код автомобиля'}
               errorStyle={styles.errorInput}
               onChangeText={(value) => setValueVin(String(value))}
+              value={valueVin}
             />
           </View>
           <View style={styles.viewGroupEngine}>
@@ -341,6 +374,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             titleStyle={{ color: COLOR_GREEN }}
             title={'Finish'}
             type={'outline'}
+            onPress={() => { handleOkCarInfo() }}
           />
         </View>
     </ScrollView>
