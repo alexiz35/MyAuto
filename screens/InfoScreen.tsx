@@ -18,7 +18,7 @@ RootStackParamList,
 > */
 
 const InfoScreen = ({ route }: Props): JSX.Element => {
-  const Tasks = useAppSelector((state) => state)
+  const Tasks = useAppSelector((state) => state.cars[state.numberCar])
   /* const nav = useNavigation<ProfileScreenNavigationProp>() */
 
   const [isVisible, setIsVisible] = useState(false)

@@ -14,6 +14,7 @@ export const INPUT_BACK = 'rgba(61,61,61,0.35)'
 
 // --------------------------------type for redux --------------------------------------------
 export enum ActionType {
+  CHANGE_CAR = 'CHANGE_CAR',
   UPDATE_MILES = 'UPDATE_MILES',
   ADD_TASK = 'ADD_TASK',
   DEL_TASK = 'DEL_TASK',
@@ -21,9 +22,43 @@ export enum ActionType {
   FINISH_TASK = 'FINISH_TASK'
 }
 
+export interface StateMain {
+  cars: StateCar[]
+  numberCar: number
+}
+
 export interface StateCar {
+  carId: number
+  info: StateInfo
   currentMiles: CurrentMiles
   tasks: StateTask[]
+}
+
+export interface StateInfo {
+  brand: string
+  model: string
+  fuel: string
+  body: string
+  year: string
+  engine: string
+  capacity: string
+  gear: string
+  vin: string
+  dateBuy: string
+  buyMileage: number
+}
+export const initialStateInfo = {
+  brand: '',
+  model: '',
+  fuel: '',
+  body: '',
+  year: '',
+  engine: '',
+  capacity: '',
+  gear: '',
+  vin: '',
+  dateBuy: '',
+  buyMileage: 0
 }
 
 export interface StateTask {
@@ -49,23 +84,37 @@ export type CurrentMiles = number
 /* export interface StateMiles {
   currentMiles: number
 } */
+export interface ActionChangeCar {
+  type: ActionType.CHANGE_CAR
+  numberCar: number
+}
 
 export interface ActionMiles {
   type: ActionType.UPDATE_MILES
-  currentMiles: CurrentMiles
+  payload: {
+    carId: number
+    currentMiles: CurrentMiles
+  }
 }
 export interface ActionAddTask {
   type: ActionType.ADD_TASK
-  task: StateTask
+  payload: {
+    carId: number
+    task: StateTask
+  }
 }
 export interface ActionDelTask {
   type: ActionType.DEL_TASK
-  id: number
+  payload: {
+    carId: number
+    id: number
+  }
 }
 
 export interface ActionFinishTask {
   type: ActionType.FINISH_TASK
   payload: {
+    carId: number
     id: number
     isFinished: boolean
   }
@@ -74,16 +123,17 @@ export interface ActionFinishTask {
 export interface ActionEditTask {
   type: ActionType.EDIT_TASK
   payload: {
+    carId: number
     id: number | undefined
     task: StateTask
   }
 }
 
-export type AppAction = ActionMiles | ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask
+export type AppAction = ActionMiles | ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask | ActionChangeCar
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 
-export type Dispatch = (state: StateCar, action: AppAction) => StateCar
+export type Dispatch = (state: StateMain, action: AppAction) => StateMain
 
 // -------------------------------------------------------------------------------------------
 // ----------------------------------BottomSheet----------------------------------------------

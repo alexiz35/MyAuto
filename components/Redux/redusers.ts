@@ -1,51 +1,92 @@
-import { ActionType, Dispatch, StateCar } from '../../type'
+import { ActionType, Dispatch, initialStateInfo, StateMain } from '../../type'
 
-export const initialState: StateCar = {
-  currentMiles: 0,
-  tasks: []
+export const initialState: StateMain = {
+  numberCar: 0,
+  cars: [
+    {
+      info: initialStateInfo,
+      carId: 0,
+      currentMiles: 0,
+      tasks: []
+    }
+  ]
 }
 
 export const milesReducer: Dispatch = (state = initialState, action) => {
+  const selectCar = (numberCar: number) => ({
+    indexArray: state.cars.findIndex(item => numberCar === item.carId),
+    newArray: [...state.cars]
+  })
+
   switch (action.type) {
-    case ActionType.UPDATE_MILES:
-      return { ...state, currentMiles: action.currentMiles }
-
-    case ActionType.ADD_TASK:
-      console.log('reduceAdd', state)
+    case ActionType.CHANGE_CAR: {
       return {
         ...state,
-        tasks: state.tasks.concat(action.task)
-        /* [...state.tasks, action.task] */
-      }
-
-    case ActionType.DEL_TASK:
-      return {
-        ...state,
-        tasks: state.tasks.filter(item => item.id !== action.id)
-      }
-
-    case ActionType.EDIT_TASK: {
-      const tempTasks = state.tasks.filter(item => item.id !== action.payload.id)
-      const newTasks = tempTasks.concat(action.payload.task)
-      return {
-        ...state,
-        tasks: newTasks
+        numberCar: action.numberCar
       }
     }
 
-    case ActionType.FINISH_TASK:
+    case ActionType.UPDATE_MILES: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
+      /* const indexArray = state.cars.findIndex(item => action.payload.carId === item.carId)
+      const newArray = [...state.cars] */
+      newArray[indexArray].currentMiles = action.payload.currentMiles
       return {
         ...state,
-        tasks: state.tasks.map(
-          task => task.id === action.payload.id
-            ? {
-                ...task,
-                isFinished: action.payload.isFinished
-              }
-            : task
-        )
+        cars: newArray
       }
+    }
+    case ActionType.ADD_TASK: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
 
+      newArray[indexArray].tasks.push(action.payload.task)
+      return {
+        ...state,
+        cars: newArray
+      }
+    }
+
+    case ActionType.DEL_TASK: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
+
+      newArray[indexArray].tasks = newArray[indexArray].tasks.filter(item => item.id !== action.payload.id)
+      return {
+        ...state,
+        cars: newArray
+      }
+    }
+
+    case ActionType.EDIT_TASK: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
+
+      const tempTasks = newArray[indexArray].tasks.filter(item => item.id !== action.payload.id)
+      newArray[indexArray].tasks = tempTasks.concat(action.payload.task)
+      return {
+        ...state,
+        cars: newArray
+      }
+    }
+
+    case ActionType.FINISH_TASK: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
+      newArray[indexArray].tasks.find(
+        (task, index) => {
+          if (task.id === action.payload.id) {
+            newArray[indexArray].tasks[index].isFinished = action.payload.isFinished
+            console.log('finish', newArray)
+
+            return true
+          }
+          return false
+        }
+      )
+      console.log('finish', newArray)
+
+      return {
+        ...state,
+        cars: newArray
+      }
+    }
     default:
       return state
   }

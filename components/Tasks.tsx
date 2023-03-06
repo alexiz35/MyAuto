@@ -22,10 +22,11 @@ RootStackParamList,
 export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
   const del = useAppDispatch()
   const nav = useNavigation<ProfileScreenNavigationProp>()
+  const numberCar = useAppSelector((state) => state.numberCar)
 
   const renderRow: ListRenderItem<StateTask> = ({ item }: { item: StateTask }) => {
     const pressCheck = (): void => {
-      del(finishTask(item.id, !item.isFinished))
+      del(finishTask(numberCar, item.id, !item.isFinished))
     }
 
     // ------------------------- заменить
@@ -75,7 +76,7 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
             title='delete'
             icon={{ name: 'delete', color: 'white' }}
             buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-            onPress={() => del(delTask(item.id))}
+            onPress={() => del(delTask(numberCar, item.id))}
           />
         )}
       >
@@ -128,14 +129,17 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
     )
   }
 
-  const listTask = useAppSelector(state => state.tasks)
+  const listTask = useAppSelector(state => state.cars[0].tasks)
+
   const [isSort, setIsSort] = useState(false)
+  console.log('task', useAppSelector(state => state))
 
   useEffect(() => {
     listTask.sort(function (a, b) {
       return a.endKm - b.endKm
     })
     setIsSort(!isSort)
+    console.log('tasks', listTask)
   }, [listTask])
 
   return (

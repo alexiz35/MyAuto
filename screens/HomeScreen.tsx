@@ -19,7 +19,7 @@ type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Hom
 
 const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const setMiles = useAppDispatch()
-  const miles = useAppSelector((state) => state)
+  const cars = useAppSelector((state) => state)
 
   // -----------------------------block orientation screen--------------------------
   const [orientation, setOrientation] = useState(0)
@@ -45,8 +45,8 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
 
   useEffect(() => {
     /* setMiles(updateMiles(15)) */
-    console.log('homelog', miles)
-  }, [miles.currentMiles])
+    console.log('homelog', cars)
+  }, [])
 
   return (
     <ImageBackground source={require('../assets/Back2.png')} style={{ flex: 1 }} >

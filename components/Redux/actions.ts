@@ -6,38 +6,49 @@ import {
   StateTask
 } from '../../type'
 
-export const updateMiles = (currentMiles: CurrentMiles): ActionMiles => (
+export const updateMiles = (carId: number, currentMiles: CurrentMiles): ActionMiles => (
   {
     type: ActionType.UPDATE_MILES,
-    currentMiles
+    payload: {
+      carId,
+      currentMiles
+    }
   })
 
-export const addTask = (task: StateTask): ActionAddTask => (
+export const addTask = (carId: number, task: StateTask): ActionAddTask => (
   {
     type: ActionType.ADD_TASK,
-    task
+    payload: {
+      carId,
+      task
+    }
   })
 
-export const delTask = (id: number): ActionDelTask => (
+export const delTask = (carId: number, id: number): ActionDelTask => (
   {
     type: ActionType.DEL_TASK,
-    id
+    payload: {
+      carId,
+      id
+    }
   })
 
-export const finishTask = (id: number, isFinished: boolean): ActionFinishTask => (
+export const finishTask = (carId: number, id: number, isFinished: boolean): ActionFinishTask => (
   {
     type: ActionType.FINISH_TASK,
     payload: {
+      carId,
       id,
       isFinished
     }
   }
 )
 
-export const editTask = (id: number | undefined, task: StateTask): ActionEditTask => (
+export const editTask = (carId: number, id: number | undefined, task: StateTask): ActionEditTask => (
   {
     type: ActionType.EDIT_TASK,
     payload: {
+      carId,
       id,
       task
     }

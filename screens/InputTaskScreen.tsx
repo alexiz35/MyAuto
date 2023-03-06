@@ -14,7 +14,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
-  const Tasks = useAppSelector((state) => state)
+  const state = useAppSelector((state) => state)
 
   const listService = [
     { label: 'engineOil', value: 'engineOil' },
@@ -79,7 +79,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
   useEffect(() => {
     if (editableTask) {
-      const temp = Tasks.tasks.find((item) => (item.id === currentId))
+      const temp = state.cars[state.numberCar].tasks.find((item) => (item.id === currentId))
       if (temp !== undefined) {
         setStartKmInput(temp.startKm)
         setAddParts(temp.addition?.parts)
@@ -168,7 +168,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
         }
     }
 
-    editableTask ? setNewTask(editTask(currentId, tempNewTask)) : setNewTask(addTask(tempNewTask))
+    editableTask ? setNewTask(editTask(state.numberCar, currentId, tempNewTask)) : setNewTask(addTask(state.numberCar, tempNewTask))
     navigation.navigate('BottomTabNav', { screen: 'Home' })
   }
 
