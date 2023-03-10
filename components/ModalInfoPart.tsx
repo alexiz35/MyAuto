@@ -3,7 +3,7 @@ import { Button, Icon, Input } from '@rneui/themed'
 import { BACK_INPUT, COLOR_GREEN, PartList, Seller, StateTask, TEXT_WHITE } from '../type'
 import { useState } from 'react'
 import { editTask } from './Redux/actions'
-import { useAppDispatch } from './Redux/hook'
+import { useAppDispatch, useAppSelector } from './Redux/hook'
 
 interface ModalInfoPartProps {
   currentTask: StateTask
@@ -23,6 +23,7 @@ export const ModalInfoPart = ({ currentTask, currentPart, onPressCancel }: Modal
     link: ''
   }
   const setEditTask = useAppDispatch()
+  const numberCar = useAppSelector(state => state.numberCar)
 
   // -----------------------State Input------------------------------
   const [namePart, setNamePart] = useState(currentPart.namePart)
@@ -55,7 +56,7 @@ export const ModalInfoPart = ({ currentTask, currentPart, onPressCancel }: Modal
       amountPart,
       seller
     })
-    setEditTask(editTask(currentTask.id, currentTask))
+    setEditTask(editTask(numberCar, currentTask.id, currentTask))
   }
 
   // ----------------------------------------------------------------
