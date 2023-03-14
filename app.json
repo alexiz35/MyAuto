@@ -3,9 +3,9 @@
     "name": "MyAuto",
     "slug": "MyAuto",
     "version": "1.0.0",
-
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "scheme": "myauto",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -25,6 +25,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "package": "host.exp.exponent",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
@@ -36,6 +37,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "872349f7-1492-4da4-b5ec-4b501afa5508"
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 import {
   ActionAddCar,
-  ActionAddTask, ActionDelTask, ActionEditCar, ActionEditTask, ActionFinishTask,
+  ActionAddTask, ActionAddToken, ActionDelTask, ActionDelToken, ActionEditCar, ActionEditTask, ActionFinishTask,
   ActionMiles,
   ActionType,
   CurrentMiles, StateCar, StateInfo,
@@ -70,4 +70,16 @@ export const editCar = (carId: number, carInfo: StateInfo): ActionEditCar => (
       carId,
       carInfo
     }
+  })
+
+export const addToken = (token: string): ActionAddToken => (
+  {
+    type: ActionType.ADD_TOKEN,
+    token
+  })
+
+export const daelToken = (token: string): ActionDelToken => (
+  {
+    type: ActionType.DEL_TOKEN,
+    token
   })

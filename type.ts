@@ -22,12 +22,15 @@ export enum ActionType {
   FINISH_TASK = 'FINISH_TASK',
   ADD_CAR = 'ADD_CAR',
   UPDATE_CAR = 'UPDATE_CAR',
-  DEL_CAR = 'DEL_CAR'
+  DEL_CAR = 'DEL_CAR',
+  ADD_TOKEN = 'ADD_TOKEN',
+  DEL_TOKEN = 'DEL_TOKEN',
 }
 
 export interface StateMain {
   cars: StateCar[]
   numberCar: number
+  token: string
 }
 
 export interface StateCar {
@@ -87,6 +90,14 @@ export type CurrentMiles = number
 /* export interface StateMiles {
   currentMiles: number
 } */
+export interface ActionAddToken {
+  type: ActionType.ADD_TOKEN
+  token: string
+}
+export interface ActionDelToken {
+  type: ActionType.DEL_TOKEN
+  token: string
+}
 export interface ActionChangeCar {
   type: ActionType.CHANGE_CAR
   numberCar: number
@@ -155,7 +166,7 @@ export interface ActionEditCar {
 
 export type AppAction = ActionMiles | ActionChangeCar |
 ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask |
-ActionAddCar | ActionEditCar | ActionDelCar
+ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

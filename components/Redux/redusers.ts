@@ -1,7 +1,8 @@
-import { ActionType, Dispatch, initialStateInfo, StateCar, StateMain } from '../../type'
+import { ActionType, Dispatch, initialStateInfo, StateMain } from '../../type'
 
 export const initialState: StateMain = {
   numberCar: 0,
+  token: '',
   cars: [
     {
       info: initialStateInfo,
@@ -20,6 +21,13 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
   })
 
   switch (action.type) {
+    case ActionType.ADD_TOKEN:{
+      return {
+        ...state,
+        token: action.token
+      }
+    }
+
     case ActionType.CHANGE_CAR: {
       return {
         ...state,
