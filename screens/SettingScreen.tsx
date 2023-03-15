@@ -9,6 +9,7 @@ import { COLOR_GREEN, TEXT_WHITE } from '../type'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
 import { addToken } from '../components/Redux/actions'
+import { deleteGoogleAuth, GDCreateFolder, getRefreshToken } from '../components/GoogleAPI'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -31,6 +32,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       'profile',
       'email',
       'https://www.googleapis.com/auth/drive.appdata',
+      /* 'https://www.googleapis.com/auth/drive', */
       'https://www.googleapis.com/auth/drive.file'
     ],
     clientSecret: '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',
@@ -60,7 +62,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   useEffect(() => {
     if (auth) {
       try {
-        void getRefreshToken()
+        void getRefreshToken(state.token)
+          .then((res) => setToken(res))
       } catch (error) {
         console.log('ERROR', error)
       }
@@ -91,42 +94,65 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     }
   }
 
-  const getRefreshToken = async (): Promise<void> => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        client_id: '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
-        client_secret: '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',
-        refresh_token: state.token,
-        grant_type: 'refresh_token'
-      })
+  const handleDeleteGoogleAuth = async (): Promise<void> => {
+    const del = await deleteGoogleAuth(state.token)
+    if (del) {
+      setUserInfo(null)
+      setAuth(false)
+      dispatch(addToken(''))
+    } else {
+      console.log('Повторите удаление')
     }
-
-    void fetch('https://oauth2.googleapis.com/token', requestOptions)
-      .then(async response => await response.json())
-      .then(data => {
-        setToken(data.access_token)
-      })
   }
 
-  const deleteGoogleAuth = async (): Promise<void> => {
-    const requestOptions = {
+  const GDCreateFileWithFolder = async (folderName: string, token: string): Promise<void> => {
+    /*  const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+        /!* 'Upload-Type': 'media' *!/
+      },
       body: JSON.stringify({
-        token: state.token
+        name: 'MyFile.json',
+        media: { hello: 'world' }
       })
     }
+    const response = await fetch(
+      'https://www.googleapis.com/drive/v3/files',
+      requestOptions
+    ) */
 
-    void fetch('https://oauth2.googleapis.com/revoke', requestOptions)
-      .then((response) => {
-        if (response.ok) {
-          setUserInfo(null)
-          setAuth(false)
-          dispatch(addToken(''))
-        }
-      })
+    const fileContent = JSON.stringify(state)// As a sample, upload a text file.
+    const file = new Blob([fileContent], { type: 'application/json' })
+    const metadata = {
+      name: 'myAutoJson', // Filename at Google Drive
+      mimeType: 'text/plain', // mimeType at Google Drive
+      parents: ['1W9dNxbciIAChBzH-di0v4RmNJqVflhq3'] // Folder ID at Google Drive
+    }
+
+    const form = new FormData()
+    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }))
+    form.append('file', file)
+
+    const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
+      method: 'POST',
+      headers: new Headers({ Authorization: 'Bearer ' + token }),
+      body: form
+    })
+
+    const user = await response.json()
+    console.log('createFile', user)
+  }
+  const GDgetList = async (token: string): Promise<void> => {
+    const response = await fetch(
+      'https://www.googleapis.com/drive/v3/files',
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+    const user = await response.json()
+    console.log('list', user)
   }
 
   return (
@@ -175,13 +201,32 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           title="Refresh Token"
           disabled={request == null}
           onPress={() => {
-            void getRefreshToken()
+            void getRefreshToken(state.token)
+              .then((res) => setToken(res))
           }}
         />
         <Button
           title="Cancel Google"
           onPress={() => {
-            void deleteGoogleAuth()
+            void handleDeleteGoogleAuth()
+          }}
+        />
+        <Button
+          title="Create Folder"
+          onPress={() => {
+            GDCreateFolder('myAuto', token)
+          }}
+          />
+        <Button
+          title="Get List"
+          onPress={() => {
+            GDgetList(token)
+          }}
+        />
+        <Button
+          title="Create File"
+          onPress={() => {
+            GDCreateFileWithFolder('', token)
           }}
         />
         <Divider inset insetType={'middle'}/>
