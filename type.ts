@@ -1,6 +1,7 @@
 // --------------------------------constant Color --------------------------------------------
 
 export const BACKGROUND = '#13171A'
+export const BACK_OPACITY = 'rgba(0,0,0,0)'
 export const BACK_CARD = '#3d3d3d'
 export const TEXT_CARD = '#191a1e'
 export const BACK_INPUT = 'rgba(61,61,61,0.35)'
@@ -14,6 +15,7 @@ export const INPUT_BACK = 'rgba(61,61,61,0.35)'
 
 // --------------------------------type for redux --------------------------------------------
 export enum ActionType {
+  UPDATE_STATE = 'UPDATE_STATE',
   CHANGE_CAR = 'CHANGE_CAR',
   UPDATE_MILES = 'UPDATE_MILES',
   ADD_TASK = 'ADD_TASK',
@@ -90,6 +92,10 @@ export type CurrentMiles = number
 /* export interface StateMiles {
   currentMiles: number
 } */
+export interface ActionUpdateState {
+  type: ActionType.UPDATE_STATE
+  newState: StateMain
+}
 export interface ActionAddToken {
   type: ActionType.ADD_TOKEN
   token: string
@@ -166,7 +172,8 @@ export interface ActionEditCar {
 
 export type AppAction = ActionMiles | ActionChangeCar |
 ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask |
-ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken
+ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken |
+ActionUpdateState
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

@@ -3,7 +3,7 @@ import React, { Component, useEffect, useState } from 'react'
 import { FlatList, ImageBackground, ListRenderItem, StyleSheet, Text, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
 import { delTask, finishTask } from './Redux/actions'
-import { BACK_CARD, COLOR_GREEN, StateTask } from '../type'
+import { BACK_CARD, BACK_OPACITY, COLOR_GREEN, StateTask } from '../type'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from './Navigation/Navigation'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -116,7 +116,7 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
         </ListItem.Content>
         <ListItem.CheckBox
           checkedColor={COLOR_GREEN}
-          containerStyle={{ flex: 0.1, backgroundColor: '#2f2f2f' }}
+          containerStyle={{ flex: 0.1, backgroundColor: BACK_OPACITY }}
           checked={item.isFinished}
           onPress={pressCheck}
         />

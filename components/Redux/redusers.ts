@@ -21,13 +21,19 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
   })
 
   switch (action.type) {
+    case ActionType.UPDATE_STATE:{
+      return {
+        ...state, ...action.newState
+      }
+    }
+    // ------------------------------------------------------------------
     case ActionType.ADD_TOKEN:{
       return {
         ...state,
         token: action.token
       }
     }
-
+    // -------------------------------------------------------------------
     case ActionType.CHANGE_CAR: {
       return {
         ...state,
@@ -50,7 +56,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
         cars: newArray
       }
     }
-
+    // -------------------------------------------------------------------
     case ActionType.UPDATE_MILES: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
       /* const indexArray = state.cars.findIndex(item => action.payload.carId === item.carId)
@@ -61,6 +67,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
         cars: newArray
       }
     }
+    // -------------------------------------------------------------------
     case ActionType.ADD_TASK: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
 
@@ -111,6 +118,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
         cars: newArray
       }
     }
+    // -------------------------------------------------------------------
     default:
       return state
   }

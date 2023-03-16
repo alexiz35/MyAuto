@@ -2,10 +2,16 @@ import {
   ActionAddCar,
   ActionAddTask, ActionAddToken, ActionDelTask, ActionDelToken, ActionEditCar, ActionEditTask, ActionFinishTask,
   ActionMiles,
-  ActionType,
-  CurrentMiles, StateCar, StateInfo,
+  ActionType, ActionUpdateState,
+  CurrentMiles, StateCar, StateInfo, StateMain,
   StateTask
 } from '../../type'
+
+export const updateState = (newState: StateMain): ActionUpdateState => (
+  {
+    type: ActionType.UPDATE_STATE,
+    newState
+  })
 
 export const updateMiles = (carId: number, currentMiles: CurrentMiles): ActionMiles => (
   {
