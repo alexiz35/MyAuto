@@ -81,17 +81,17 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
         )}
       >
 
-              <ListItem.Content style={{ flex: 1.4, backgroundColor: BACK_CARD }} >
+      <ListItem.Content style={{ flex: 1.4, backgroundColor: BACK_CARD }} >
 
           <ListItem.Title style={{ color: TEXT_CARD }} >
             {item.title}
 
           </ListItem.Title>
-           <LinearProgress
+          {/*  <LinearProgress
           value={progress.value}
           color={progress.color}
           trackColor='lightgrey'
-        />
+        /> */}
           <ListItem.Subtitle style={{ fontSize: 11, color: TEXT_CARD }} numberOfLines={1}>
             <Text style={{ overflow: 'hidden', flexWrap: 'nowrap' }}>
             {(progress.left !== 0) ? `осталось ${progress.left} км` : 'просрочено'}

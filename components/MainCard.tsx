@@ -1,11 +1,11 @@
-import { Text, View, StyleSheet, ImageBackground, Pressable, Alert } from 'react-native'
+import { Text, View, StyleSheet, ImageBackground, Pressable, Alert, Vibration, ActivityIndicator } from 'react-native'
 import { Dialog, Divider, Icon, Input } from '@rneui/themed'
-import { COLOR_GREEN, TEXT_CARD } from '../type'
+import { BACK_CARD, COLOR_GREEN, CurrentMiles, TEXT_CARD, TEXT_WHITE } from '../type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from './Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { updateMiles } from './Redux/actions'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
@@ -24,95 +24,124 @@ export const MainCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
 
   const [visibleMileage, setVisibleMileage] = useState(false)
-  const [valueMileage, setValueMileage] = useState<number>(state.cars[state.numberCar].currentMiles)
+  const [isNeedUpdate, setIsNeedUpdate] = useState(false)
+  const [valueMileage, setValueMileage] = useState<number>(state.cars[state.numberCar].currentMiles.currentMileage)
   const toggleMileage = (): void => {
     setVisibleMileage(!visibleMileage)
   }
 
+  useEffect(() => {
+    periodTimeMileage()
+  }, [state.cars[state.numberCar].currentMiles])
+
+  const periodTimeMileage = (): void => {
+    const tempState = new Date(state.cars[state.numberCar].currentMiles.dateMileage)
+    if (tempState !== undefined) {
+      const currentDate = new Date()
+      if (currentDate.getFullYear() === (tempState.getFullYear())) {
+        if (currentDate.getMonth() === tempState.getMonth()) {
+          if ((currentDate.getDate() - tempState.getDate()) > 7) {
+            setIsNeedUpdate(true)
+          } else setIsNeedUpdate(false)
+        } else setIsNeedUpdate(true)
+      } else setIsNeedUpdate(true)
+    }
+  }
+
   return (
     <ImageBackground source={require('../assets/darkBack.jpg')} resizeMethod={'auto'} resizeMode={'cover'} >
-  <Pressable style={styles.containerView} onPress={() => navStack.navigate('CarInfoScreen')}>
-    <Text style={styles.carText}>RENAULT MEGANE 3</Text>
-    <Divider inset={true} insetType="middle" />
-    <View style={styles.infoView}>
-      <Pressable style={styles.kmView} onPress={() => {
-        setValueMileage(state.cars[state.numberCar].currentMiles)
-        setVisibleMileage(true)
-      }}>
-        <Icon
-          style={{ marginHorizontal: 10 }}
-          name='location-arrow'
-          type='font-awesome'
-          color={TEXT_CARD}
-        />
-        <Text style={styles.kmText}>{String(state.cars[state.numberCar].currentMiles)}</Text>
-      </Pressable>
+      <Pressable style={styles.containerView} android_ripple={{ color: 'grey' }}
+                 onPress={() => {
+                   Vibration.vibrate(100)
+                   navStack.navigate('CarInfoScreen')
+                 }}>
+        <Text style={styles.carText}>{state.cars[state.numberCar].info.brand} {state.cars[state.numberCar].info.model}</Text>
+        <Divider inset={true} insetType="middle" />
+        <View style={styles.infoView}>
+          <Pressable style={styles.kmView} onPress={() => {
+            setValueMileage(state.cars[state.numberCar].currentMiles.currentMileage)
+            setVisibleMileage(true)
+          }}>
+            <Icon
+              style={{ marginHorizontal: 10 }}
+              name='location-arrow'
+              type='font-awesome'
+              color={TEXT_CARD}
+            />
+            <Text style={[styles.kmText, isNeedUpdate ? { textShadowColor: 'red' } : { textShadowColor: COLOR_GREEN }]}>
+              {String(state.cars[state.numberCar].currentMiles.currentMileage)}
+            </Text>
+          </Pressable>
 
-      <Pressable style={styles.costView} onPress={() => navTab.navigate('StatScreen')}>
-        <View style={styles.costTOView}>
-        <Icon
-          style={{ marginHorizontal: 10 }}
-          name='car-wrench'
-          type='material-community'
-          color={TEXT_CARD}
-        />
-        <Text style={{
-          fontSize: 16,
-          color: TEXT_CARD
-        }}>
-          22000 грн
-        </Text>
+          <Pressable style={styles.costView} onPress={() => navTab.navigate('StatScreen')}>
+            <View style={styles.costTOView}>
+            <Icon
+              style={{ marginHorizontal: 10 }}
+              name='car-wrench'
+              type='material-community'
+              color={TEXT_CARD}
+            />
+            <Text style={{
+              fontSize: 16,
+              color: TEXT_CARD
+            }}>
+              22000 грн
+            </Text>
+            </View>
+            <View style={styles.costFuelView}>
+            <Icon
+              style={{ marginHorizontal: 10 }}
+              name='gas-station'
+              type='material-community'
+              color={TEXT_CARD}
+            />
+            <Text style={{
+              fontSize: 16,
+              color: TEXT_CARD
+            }}>
+              22000 грн
+            </Text>
+            </View>
+          </Pressable>
+
+          {/* <View style={{ position: 'relative', left: 0, flex: 0.5 }}>
+            <Image source={require('../assets/renaultLogo2.png')} resizeMethod={'scale'} resizeMode={'cover'} style={{ height: 70, width: 70 }}/>
+          </View> */}
+          {/*  <Text style={{ fontSize: 16, color: TEXT_CARD }}>
+                  Заправка: 22000 грн
+                </Text> */}
+
         </View>
-        <View style={styles.costFuelView}>
-        <Icon
-          style={{ marginHorizontal: 10 }}
-          name='gas-station'
-          type='material-community'
-          color={TEXT_CARD}
-        />
-        <Text style={{
-          fontSize: 16,
-          color: TEXT_CARD
-        }}>
-          22000 грн
-        </Text>
-        </View>
       </Pressable>
+          <Dialog
+            isVisible={visibleMileage}
+            onBackdropPress={toggleMileage}
+          >
+            <Dialog.Title title="Input Mileage"/>
 
-      {/* <View style={{ position: 'relative', left: 0, flex: 0.5 }}>
-        <Image source={require('../assets/renaultLogo2.png')} resizeMethod={'scale'} resizeMode={'cover'} style={{ height: 70, width: 70 }}/>
-      </View> */}
-      {/*  <Text style={{ fontSize: 16, color: TEXT_CARD }}>
-              Заправка: 22000 грн
-            </Text> */}
-
-    </View>
-  </Pressable>
-      <Dialog
-        isVisible={visibleMileage}
-        onBackdropPress={toggleMileage}
-      >
-        <Dialog.Title title="Input Mileage"/>
-
-        <Dialog.Actions>
-          <Input
-            placeholder={'введите пробег'}
-            placeholderTextColor={'gray'}
-            /* inputStyle={styles.inputText} */
-            errorMessage={'пробег, km'}
-            errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
-            onChangeText={(value) => setValueMileage(Number(value))}
-            keyboardType={'numeric'}
-            value={String(valueMileage)}
-          />
-          <Dialog.Button title="CONFIRM" onPress={() => {
-            dispatch(updateMiles(state.numberCar, valueMileage))
-            toggleMileage()
-          }}
-          />
-          <Dialog.Button title="CANCEL" onPress={toggleMileage} />
-        </Dialog.Actions>
-      </Dialog>
+            <Dialog.Actions>
+              <Input
+                placeholder={'введите пробег'}
+                placeholderTextColor={'gray'}
+                /* inputStyle={styles.inputText} */
+                errorMessage={'пробег, km'}
+                errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
+                onChangeText={(value) => setValueMileage(Number(value))}
+                keyboardType={'numeric'}
+                value={String(valueMileage)}
+              />
+              <Dialog.Button title="CONFIRM" onPress={() => {
+                const tempMileage: CurrentMiles = {
+                  currentMileage: valueMileage,
+                  dateMileage: new Date()
+                }
+                dispatch(updateMiles(state.numberCar, tempMileage))
+                toggleMileage()
+              }}
+              />
+              <Dialog.Button title="CANCEL" onPress={toggleMileage} />
+            </Dialog.Actions>
+          </Dialog>
     </ImageBackground>
 
   )

@@ -7,7 +7,13 @@ import {
   ImageBackground,
   ScrollView,
   TextInput,
-  NativeSyntheticEvent, NativeTouchEvent, TextInputFocusEventData, GestureResponderEvent, Keyboard
+  NativeSyntheticEvent,
+  NativeTouchEvent,
+  TextInputFocusEventData,
+  GestureResponderEvent,
+  Keyboard,
+  ActivityIndicator,
+  InteractionManager
 } from 'react-native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
@@ -33,6 +39,7 @@ import { cars } from '../cars.json'
 import { Dropdown } from 'react-native-element-dropdown'
 import { SimpleAccordion } from 'react-native-simple-accordion'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import { BusyIndicator, useIsReady } from '../components/useIsReadyHook'
 
 interface ListCar {
   label: string
@@ -44,6 +51,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const setCar = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
   const car = useAppSelector(state => state.cars)
+  const state = useAppSelector(state => state)
 
   const itemsFuel = [
     { label: 'Дизель', value: 'Дизель' },
@@ -99,7 +107,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       buyMileage: valueBuyMileage
     }
     setCar(editCar(numberCar, carInfo))
-    setCar(updateMiles(numberCar, valueCurrentMileage))
+    const tempCurrentMileage = { currentMileage: valueCurrentMileage, dateMileage: new Date() }
+    setCar(updateMiles(numberCar, tempCurrentMileage))
     navigation.goBack()
   }
 
@@ -137,6 +146,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   // --------------------DropEffect----------------------------------------
   useEffect(() => {
     setItemsBrand(listBrand())
+    console.log('fuel', state.cars[state.numberCar].fuel)
   }, [])
   useEffect(() => {
     setItemsModel(listModel())
@@ -152,12 +162,15 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     setValueVin(temp.vin)
     setValueDateBuy(new Date(temp.dateBuy))
     setValueBuyMileage(temp.buyMileage)
+    setValueCurrentMileage(car[numberCar].currentMiles.currentMileage)
   }, [])
 
-  return (
+  const isReady = useIsReady()
+
+  if (!isReady) { return <BusyIndicator/> } else {
+    return (
     <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
       <ScrollView nestedScrollEnabled={true} style={{ flex: 1, paddingHorizontal: 10 }}>
-
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', flex: 1, marginVertical: 20 }}>
           <View style={{ flex: 1, paddingRight: 5 }}>
             <Dropdown
@@ -381,7 +394,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
 </ImageBackground>
 
-  )
+    )
+  }
 }
 
 export default CarInfoScreen

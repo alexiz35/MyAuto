@@ -1,4 +1,6 @@
+import 'react-native-gesture-handler'
 import { CompositeScreenProps, NavigationContainer, NavigatorScreenParams } from '@react-navigation/native'
+
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import HomeScreen from '../../screens/HomeScreen'
@@ -36,6 +38,7 @@ import { printToFile } from '../Print/Print'
 import { current } from '@reduxjs/toolkit'
 import CarInfoScreen from '../../screens/CarInfoScreen'
 import SettingScreen from '../../screens/SettingScreen'
+import createStackNavigator, { StackScreenProps } from '@react-navigation/stack'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
@@ -50,7 +53,8 @@ export type RootTabParamList = {
   Home: undefined
   Fuel: undefined
   Null: undefined
-  Paper: undefined
+  CarInfoScreen: undefined
+  PaperScreen: undefined
   StatScreen: undefined
   InputTaskScreen: { editable: boolean, taskId?: number }
 }
@@ -84,11 +88,11 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
-  const [initial, setInitial] = useState(true)
+  /*  const [initial, setInitial] = useState(true)
   const [location, setLocation] = useState(0)
   const [prevCoords, setPrevCoords] = useState({ latitude: 0, longitude: 0 })
   const [newCoords, setNewCoords] = useState({ latitude: 0, longitude: 0 })
-  const [distance, setDistance] = useState(0)
+  const [distance, setDistance] = useState(0) */
 
   /*
 
@@ -144,7 +148,6 @@ export const Navigation = (): JSX.Element => {
 
   return (
     <NavigationContainer >
-
       <Stack.Navigator screenOptions={ {
         headerStyle: { backgroundColor: BACK_TAB_TOP },
         headerTransparent: false,
@@ -197,7 +200,7 @@ export const Navigation = (): JSX.Element => {
             ),
             headerLeft: () => (
               <View>
-                <Text style={{ color: TEXT }}>Today: {Math.trunc(distance)} m</Text>
+                <Text style={{ color: TEXT }}>Today: {/* {Math.trunc(distance)} */} m</Text>
               </View>
             ),
             title: 'title',
@@ -352,7 +355,7 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                     )
                   }}
       />
-      <Tab.Screen name={'Paper'} component={PaperScreen}
+      <Tab.Screen name={'PaperScreen'} component={PaperScreen}
                   options={{
                     tabBarLabel: 'Paper',
                     tabBarIcon: ({ color, focused }) => (

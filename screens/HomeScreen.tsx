@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { View, StyleSheet, ImageBackground } from 'react-native'
+import { View, StyleSheet, ImageBackground, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Tasks } from '../components/Tasks'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
@@ -13,9 +13,10 @@ import { MainCard } from '../components/MainCard'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { Orientation } from 'expo-screen-orientation'
+import { Button } from '@rneui/themed'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
-type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
+export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const setMiles = useAppDispatch()
@@ -53,13 +54,12 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
       <View style={(orientation < 3) ? styles.viewContainerVertical : styles.viewContainerHorizontal}>
 
         <Shadow stretch={true} containerStyle={styles.containerMainCard}>
-          <MainCard/>
+          <MainCard />
         </Shadow>
 
         <View style={(orientation < 3) ? { flex: 3 } : { flex: 1.5 }}>
           <Tasks />
         </View>
-
       </View>
     </ImageBackground>
 

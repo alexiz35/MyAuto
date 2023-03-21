@@ -27,6 +27,9 @@ export enum ActionType {
   DEL_CAR = 'DEL_CAR',
   ADD_TOKEN = 'ADD_TOKEN',
   DEL_TOKEN = 'DEL_TOKEN',
+  ADD_FUEL = 'ADD_FUEL',
+  DEL_FUEL = 'DEL_FUEL',
+  EDIT_FUEL = 'EDIT_FUEL'
 }
 
 export interface StateMain {
@@ -39,7 +42,19 @@ export interface StateCar {
   carId: number
   info: StateInfo
   currentMiles: CurrentMiles
+  fuel: StateFuel[]
   tasks: StateTask[]
+}
+
+export interface StateFuel {
+  id: number
+  dateFuel: Date
+  mileageFuel: number
+  volumeFuel: number
+  CostFuel: number
+  AmountFuel: number
+  StationFuel: string
+  typeFuel?: string
 }
 
 export interface StateInfo {
@@ -87,8 +102,10 @@ export interface StateTask {
 }
 // -------------------------------------------------------------------------------------------
 // -----------------------------------type for Miles state----------------------------------
-export type CurrentMiles = number
-
+export interface CurrentMiles {
+  currentMileage: number
+  dateMileage: Date
+}
 /* export interface StateMiles {
   currentMiles: number
 } */
@@ -170,10 +187,34 @@ export interface ActionEditCar {
   }
 }
 
+export interface ActionAddFuel {
+  type: ActionType.ADD_FUEL
+  payload: {
+    carId: number
+    fuel: StateFuel
+  }
+}
+export interface ActionDelFuel {
+  type: ActionType.DEL_FUEL
+  payload: {
+    carId: number
+    id: number
+  }
+}
+
+export interface ActionEditFuel {
+  type: ActionType.EDIT_FUEL
+  payload: {
+    carId: number
+    id: number | undefined
+    fuel: StateFuel
+  }
+}
+
 export type AppAction = ActionMiles | ActionChangeCar |
 ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask |
 ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken |
-ActionUpdateState
+ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

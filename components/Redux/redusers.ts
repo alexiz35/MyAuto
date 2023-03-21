@@ -7,7 +7,11 @@ export const initialState: StateMain = {
     {
       info: initialStateInfo,
       carId: 0,
-      currentMiles: 0,
+      currentMiles: {
+        currentMileage: 0,
+        dateMileage: new Date()
+      },
+      fuel: [],
       tasks: []
     }
   ]
@@ -118,6 +122,39 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
         cars: newArray
       }
     }
+    // -------------------------------------------------------------------
+    case ActionType.ADD_FUEL: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
+      console.log('reduce', newArray[indexArray])
+      newArray[indexArray].fuel.push(action.payload.fuel)
+      return {
+        ...state,
+        cars: newArray
+      }
+    }
+
+    case ActionType.DEL_FUEL: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
+
+      newArray[indexArray].fuel = newArray[indexArray].fuel.filter(item => item.id !== action.payload.id)
+
+      return {
+        ...state,
+        cars: newArray
+      }
+    }
+
+    case ActionType.EDIT_FUEL: {
+      const { newArray, indexArray } = selectCar(action.payload.carId)
+
+      const tempFuel = newArray[indexArray].fuel.filter(item => item.id !== action.payload.id)
+      newArray[indexArray].fuel = tempFuel.concat(action.payload.fuel)
+      return {
+        ...state,
+        cars: newArray
+      }
+    }
+
     // -------------------------------------------------------------------
     default:
       return state
