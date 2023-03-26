@@ -9,7 +9,7 @@ import spring = Animated.spring
 
 type ListComponentProps = ListItemProps
 
-export const FuelList: React.FunctionComponent<ListComponentProps> = () => {
+export const FuelList = ({ handlePress }) => {
   const listFuel = useAppSelector(state => state.cars[0].fuel)
   const carId = useAppSelector(state => state.numberCar)
   const dispatch = useAppDispatch()
@@ -24,8 +24,9 @@ export const FuelList: React.FunctionComponent<ListComponentProps> = () => {
         <ListItem.Swipeable
           animation={{ type: 'spring' }}
           containerStyle={{ backgroundColor: BACK_CARD }}
-          onPress={() => {
-          }}
+          onPress={() =>
+            handlePress(item)
+          }
           /* bottomDivider */
           leftContent={() => (
             <Button

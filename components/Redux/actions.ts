@@ -99,7 +99,7 @@ export const addToken = (token: string): ActionAddToken => (
     token
   })
 
-export const daelToken = (token: string): ActionDelToken => (
+export const delToken = (token: string): ActionDelToken => (
   {
     type: ActionType.DEL_TOKEN,
     token

@@ -23,7 +23,7 @@ import {
   TEXT_WHITE
 } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { addFuel, addTask, delTask, editTask, finishTask } from '../components/Redux/actions'
+import { addFuel, addTask, delTask, editFuel, editTask, finishTask } from '../components/Redux/actions'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { Button, Dialog, Icon, Input, LinearProgress, ListItem } from '@rneui/themed'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
@@ -34,6 +34,7 @@ import { Dropdown } from 'react-native-element-dropdown'
 import { useFocusEffect } from '@react-navigation/native'
 import { SimpleAccordion } from 'react-native-simple-accordion'
 import { FuelList } from '../components/FuelList'
+import Accordion from '../components/Accordion'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Fuel'>
 
@@ -62,6 +63,12 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   const [fuelCost, setFuelCost] = useState(0)
   const [fuelAmount, setFuelAmount] = useState(0)
   const [fuelStation, setFuelStation] = useState('')
+
+  const [openAccordion, setOpenAccordion] = useState(false)
+  const [isOpenAccordion, setIsOpenAccordion] = useState(false)
+  const [isEditFuel, setIsEditFuel] = useState(false)
+  const [itemFuel, setItemFuel] = useState<StateFuel | null>(null)
+  const [sumFuel, setSumFuel] = useState(0)
 
   const inputFuelCost = React.createRef<PropsWithChildren<TextInput>>()
   const inputFuelAmount = React.createRef<PropsWithChildren<TextInput>>()
@@ -92,13 +99,31 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
     // @ts-expect-error date undefined
     onChange: (event, date) => setFuelDate(date)
   })
-
+  const clearInput = (): void => {
+    setFuelCost(0)
+    setFuelDate(new Date())
+    setFuelAmount(0)
+    setFuelVolume(0)
+    setFuelMileage(0)
+    setFuelStation('')
+  }
+  // ---------------------------------------------------------------------------
   useFocusEffect(
     useCallback(() => {
       setValueDrop(state.cars[state.numberCar].info.fuel)
       console.log('fuel', state.cars[state.numberCar].fuel)
     }, [valueDrop]))
 
+  useEffect(() => {
+    const tempFuel = state.cars[state.numberCar].fuel.filter((item) => (new Date(item.dateFuel).getMonth() === new Date().getMonth()))
+    const sumFuel = tempFuel.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.AmountFuel,
+      0
+    )
+    setSumFuel(sumFuel)
+  }, [state.cars[state.numberCar].fuel.length])
+
+  // ------------------------- function calc input -----------------------------
   const handleOnSubmitCost = (): void => {
     setFuelAmount(fuelVolume * fuelCost)
     inputFuelAmount.current?.focus()
@@ -107,71 +132,31 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
     setFuelCost(fuelAmount / fuelVolume)
     /* inputFuelAmount.current?.focus() */
   }
-
-  /* useEffect(() => {
-    setEndKmInput(startKmInput + kmToService)
-  }, [startKmInput, kmToService])
-
-  useEffect(() => {
-    setEndDateInput(editDate(fuelDate.toLocaleDateString(), timeToService))
-  }, [fuelDate, timeToService])
-
-  useEffect(() => {
-    counter(addParts)
-  }, [addParts]) */
-
-  /* const counter = (parts: [PartList] | undefined): void => {
-    let amount = 0
-    let sum = 0
-    // eslint-disable-next-line array-callback-return
-    parts?.map((part) => {
-      amount = amount + part.amountPart
-      sum = sum + (part.costPart * part.amountPart)
-    })
-    setSumCost(sum)
-    setAmountPart(amount)
-  } */
-
-  /* const changeTask = (value: string | null): void => {
-    setErrorMsg('')
-    switch (value) {
-      case 'engineOil':
-        setKmToService(8000)
-        setTimeToService(12)
-        break
-      case 'airFilter':
-        setKmToService(8000)
-        setTimeToService(12)
-        break
-      case 'fuelFilter':
-        setKmToService(20000)
-        setTimeToService(12)
-        break
-      case 'driveBelt':
-        setKmToService(50000)
-        setTimeToService(48)
-        break
-      case 'timingBelt':
-        setKmToService(50000)
-        setTimeToService(60)
-        break
-      default:
-        break
+  // ------------------------- control according -------------------------------
+  const handleOpen = (item: StateFuel): void => {
+    if (!isOpenAccordion) {
+      setFuelDate(item.dateFuel)
+      setFuelMileage(item.mileageFuel)
+      setFuelVolume(item.volumeFuel)
+      setFuelAmount(item.AmountFuel)
+      setFuelCost(item.CostFuel)
+      setFuelStation(item.StationFuel)
+      setIsEditFuel(true)
+      setItemFuel(item)
+      setOpenAccordion(true)
     }
-  } */
-  /*  const inputMile = (value: number): void => {
-    setErrorMsg('')
-    setStartKmInput(value)
-  } */
-
-  const handleCancel = (): void => {
-    setFuelCost(0)
-    setFuelAmount(0)
-    setFuelVolume(0)
-    setFuelMileage(0)
-    navigation.goBack()
   }
-
+  const isOpen = (open: boolean): void => {
+    setIsOpenAccordion(open)
+    if (!open) setOpenAccordion(false)
+    else setOpenAccordion(true)
+  }
+  // ------------------------- button result -----------------------------------
+  const handleCancel = (): void => {
+    clearInput()
+    setOpenAccordion(false)
+    /* navigation.goBack() */
+  }
   const handleOk = (): void => {
     /* if (valueDrop === null || startKmInput === 0) {
       setErrorMsg('Введите необходимые данные')
@@ -187,175 +172,167 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
       StationFuel: fuelStation
     }
 
-    dispatch(addFuel(state.numberCar, tempNewFuel))
-    navigation.navigate('Home')
+    isEditFuel
+      ? dispatch(editFuel(state.numberCar, itemFuel?.id, tempNewFuel))
+      : dispatch(addFuel(state.numberCar, tempNewFuel))
+    clearInput()
+    setOpenAccordion(!openAccordion)
+    /* navigation.navigate('Home') */
   }
-
-  /* const handleCancelModal = (): void => {
-    setIsVisible(false)
-  }
-
-  const handleOkModal = (parts: PartList[]): void => {
-    // @ts-expect-error kjjkj
-    setAddParts(parts)
-    /!* setAddServices(services) *!/
-    setIsVisible(false)
-  } */
 
   return (
     <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
       <View style={{ flex: 1 }}>
-        <View>
+        <Text style={{ color: TEXT_WHITE, textAlign: 'center', paddingVertical: 10, fontStyle: 'italic' }}>
+          Cумма заправок в текущем месяце {sumFuel}
+        </Text>
+        <View style={{ marginTop: 5 }}>
           <ScrollView>
-        <SimpleAccordion
+            <Accordion
+              bannerStyle={{ backgroundColor: BACK_INPUT }}
+              textBannerStyle={{ color: TEXT_WHITE }}
+              insideView={
+                <View style={{ backgroundColor: BACK_INPUT }}>
+                <Dropdown
+                  style={[styles.dropDownPicker, { paddingVertical: 3 }]}
+                  selectedTextStyle={{ color: TEXT_WHITE, paddingHorizontal: 10, fontSize: 16, textAlign: 'center' }}
+                  activeColor={'black'}
+                  itemContainerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
+                  itemTextStyle={{ color: TEXT_WHITE, textAlign: 'center' }}
+                  inputSearchStyle={{ backgroundColor: 'rgba(61,61,61,1)' }}
+                  containerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
+                  data={typeFuel}
+                  labelField={'label'}
+                  valueField={'value'}
+                  placeholder={'Тип'}
+                  value={valueDrop}
+                  onChange={item => {
+                    setValueDrop(item.value)
+                  }}
+                />
+                <View style={styles.viewAllInput}>
 
-          startCollapsed={true}
-          viewInside={
-            <View>
-              <Dropdown
-                style={[styles.dropDownPicker, { paddingVertical: 3 }]}
-                selectedTextStyle={{ color: TEXT_WHITE, paddingHorizontal: 10, fontSize: 16, textAlign: 'center' }}
-                activeColor={'black'}
-                itemContainerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-                itemTextStyle={{ color: TEXT_WHITE, textAlign: 'center' }}
-                inputSearchStyle={{ backgroundColor: 'rgba(61,61,61,1)' }}
-                containerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-                data={typeFuel}
-                labelField={'label'}
-                valueField={'value'}
-                placeholder={'Тип'}
-                value={valueDrop}
-                onChange={item => {
-                  setValueDrop(item.value)
-                }}
-              />
-              <View style={styles.viewAllInput}>
+                  <View style={styles.viewGroupInput}>
+                    <View style={styles.input}>
+                      <Input
+                        placeholder={'Дата проведения'}
+                        containerStyle={{ flex: 1 }}
+                        inputStyle={styles.inputText}
+                        showSoftInputOnFocus={false}
+                        value = {new Date(fuelDate).toLocaleDateString()}
+                        onPressOut={inputDate}
+                        errorMessage={'текущая дата'}
+                        errorStyle={styles.errorInput}
+                      />
+                    </View>
+                    <View style={styles.input}>
+                      <Input
+                        placeholder={'текущий пробег'}
+                        inputStyle={styles.inputText}
+                        errorMessage={'текущий пробег'}
+                        errorStyle={styles.errorInput}
+                        onChangeText={(value) => setFuelMileage(Number(value))}
+                        keyboardType={'numeric'}
+                        value={String(fuelMileage)}
+                      />
+                    </View>
+                  </View>
+                </View>
 
                 <View style={styles.viewGroupInput}>
                   <View style={styles.input}>
                     <Input
-                      placeholder={'Дата проведения'}
-                      containerStyle={{ flex: 1 }}
+                      placeholder={'кол-во топлива'}
+                      /* placeholderTextColor={'red'} */
                       inputStyle={styles.inputText}
-                      showSoftInputOnFocus={false}
-                      value = {fuelDate.toLocaleDateString()}
-                      onPressOut={inputDate}
-                      errorMessage={'текущая дата'}
+                      errorMessage={'кол-во топлива'}
                       errorStyle={styles.errorInput}
+                      onChangeText={(value) => setFuelVolume(Number(value))}
+                      keyboardType={'numeric'}
+                      value={String(fuelVolume)}
+                      onSubmitEditing={() => inputFuelCost.current?.focus()}
                     />
                   </View>
                   <View style={styles.input}>
                     <Input
-                      placeholder={'текущий пробег'}
+                      ref={inputFuelCost}
+                      placeholder={'цена топлива'}
+                      containerStyle={{ flex: 1 }}
                       inputStyle={styles.inputText}
-                      errorMessage={'текущий пробег'}
+                      errorMessage={'цена топлива'}
                       errorStyle={styles.errorInput}
-                      onChangeText={(value) => setFuelMileage(Number(value))}
+                      onChangeText={(value) => setFuelCost(Number(value))}
                       keyboardType={'numeric'}
-                      value={String(fuelMileage)}
+                      value={String(fuelCost)}
+                      onSubmitEditing={() => handleOnSubmitCost()}
+                      onBlur={() => handleOnSubmitCost()}
+                    />
+                  </View>
+                  <View style={styles.input}>
+                    <Input
+                      ref={inputFuelAmount}
+                      placeholder={'сумма заправки'}
+                      containerStyle={{ flex: 1 }}
+                      inputStyle={styles.inputText}
+                      errorMessage={'сумма заправки'}
+                      errorStyle={styles.errorInput}
+                      onChangeText={(value) => setFuelAmount(Number(value))}
+                      keyboardType={'numeric'}
+                      value={String(fuelAmount)}
+                      onSubmitEditing={() => handleOnSubmitAmount()}
+                      onBlur={() => handleOnSubmitAmount()}
+
                     />
                   </View>
                 </View>
-              </View>
-
-              <View style={styles.viewGroupInput}>
-                <View style={styles.input}>
-                  <Input
-                    placeholder={'кол-во топлива'}
-                    /* placeholderTextColor={'red'} */
-                    inputStyle={styles.inputText}
-                    errorMessage={'кол-во топлива'}
-                    errorStyle={styles.errorInput}
-                    onChangeText={(value) => setFuelVolume(Number(value))}
-                    keyboardType={'numeric'}
-                    value={String(fuelVolume)}
-                    onSubmitEditing={() => inputFuelCost.current?.focus()}
-                  />
+                <View style={styles.viewGroupInput}>
+                  <View style={styles.input}>
+                    <Input
+                      placeholder={'название запраки'}
+                      /* placeholderTextColor={'red'} */
+                      inputStyle={styles.inputText}
+                      errorMessage={'название запрвки'}
+                      errorStyle={styles.errorInput}
+                      onChangeText={(value) => setFuelStation(String(value))}
+                      value={String(fuelStation)}
+                    />
+                  </View>
                 </View>
-                <View style={styles.input}>
-                  <Input
-                    ref={inputFuelCost}
-                    placeholder={'цена топлива'}
-                    containerStyle={{ flex: 1 }}
-                    inputStyle={styles.inputText}
-                    errorMessage={'цена топлива'}
-                    errorStyle={styles.errorInput}
-                    onChangeText={(value) => setFuelCost(Number(value))}
-                    keyboardType={'numeric'}
-                    value={String(fuelCost)}
-                    onSubmitEditing={() => handleOnSubmitCost()}
-                    onBlur={() => handleOnSubmitCost()}
+                <Text style={styles.button}>{errorMsg}</Text>
+                <View style={styles.viewButton}>
+                  <Button
+                    containerStyle={styles.buttonStyle}
+                    buttonStyle={{ borderColor: 'red' }}
+                    titleStyle={{ color: 'red' }}
+                    title={'Cancel'}
+                    color={'warning'}
+                    type={'outline'}
+                    onPress={() => handleCancel() }
+                    /* onPress={onPressCancel} */
                   />
-                </View>
-                <View style={styles.input}>
-                  <Input
-                    ref={inputFuelAmount}
-                    placeholder={'сумма заправки'}
-                    containerStyle={{ flex: 1 }}
-                    inputStyle={styles.inputText}
-                    errorMessage={'сумма заправки'}
-                    errorStyle={styles.errorInput}
-                    onChangeText={(value) => setFuelAmount(Number(value))}
-                    keyboardType={'numeric'}
-                    value={String(fuelAmount)}
-                    onSubmitEditing={() => handleOnSubmitAmount()}
-                    onBlur={() => handleOnSubmitAmount()}
-
+                  <Button
+                    containerStyle={styles.buttonStyle}
+                    buttonStyle={{ borderColor: COLOR_GREEN }}
+                    titleStyle={{ color: COLOR_GREEN }}
+                    title={'Ok'}
+                    color={'success'}
+                    type={'outline'}
+                    onPress={() => { handleOk() }}
                   />
                 </View>
               </View>
-              <View style={styles.viewGroupInput}>
-                <View style={styles.input}>
-                  <Input
-                    placeholder={'название запраки'}
-                    /* placeholderTextColor={'red'} */
-                    inputStyle={styles.inputText}
-                    errorMessage={'название запрвки'}
-                    errorStyle={styles.errorInput}
-                    onChangeText={(value) => setFuelStation(String(value))}
-                    value={String(fuelStation)}
-                  />
-                </View>
-              </View>
-              <Text style={styles.button}>{errorMsg}</Text>
-              <View style={styles.viewButton}>
-
-                <Button
-                  containerStyle={styles.buttonStyle}
-                  buttonStyle={{ borderColor: 'red' }}
-                  titleStyle={{ color: 'red' }}
-                  title={'Cancel'}
-                  color={'warning'}
-                  type={'outline'}
-                  onPress={() => handleCancel() }
-                  /* onPress={onPressCancel} */
-                />
-                <Button
-                  containerStyle={styles.buttonStyle}
-                  buttonStyle={{ borderColor: COLOR_GREEN }}
-                  titleStyle={{ color: COLOR_GREEN }}
-                  title={'Ok'}
-                  color={'success'}
-                  type={'outline'}
-                  onPress={() => { handleOk() }}
-                />
-              </View>
-            </View>
-          }
-          title={'Добавить заправку'}
-          bannerStyle={{ backgroundColor: BACK_INPUT, height: 30, padding: 5 }}
-          titleStyle={{ color: TEXT_WHITE, textAlign: 'center', fontWeight: 'normal', fontSize: 16 }}
-          viewContainerStyle={{ backgroundColor: BACK_INPUT }}
-          showContentInsideOfCard={false}
-        />
+              }
+              title={'Добавьте заправку'}
+              open={openAccordion}
+              isOpen={isOpen}
+            />
           </ScrollView>
         </View>
         <View >
-            <FuelList/>
+            <FuelList handlePress={handleOpen}/>
         </View>
 
       </View>
-
     </ImageBackground>
 
   )
@@ -440,7 +417,8 @@ const styles = StyleSheet.create({
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 20
+    marginTop: 5,
+    marginBottom: 20
   },
   buttonStyle: {
     width: '40%',
