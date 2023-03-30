@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, ImageBackground, Pressable, Alert, Vibration, ActivityIndicator } from 'react-native'
 import { Dialog, Divider, Icon, Input } from '@rneui/themed'
-import { BACK_CARD, COLOR_GREEN, CurrentMiles, TEXT_CARD, TEXT_WHITE } from '../type'
+import { BACK_CARD, COLOR_GREEN, CurrentMiles, initialStateInfo, StateInfo, TEXT_CARD, TEXT_WHITE } from '../type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from './Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
@@ -21,21 +21,31 @@ export const MainCard = (): JSX.Element => {
   const navStack = useNavigation<ProfileScreenNavigationProp>()
   const navTab = useNavigation<ProfileTabNavigationProp>()
   const state = useAppSelector(state => state)
+  const infoCar: StateInfo = useAppSelector(state => (
+    state.cars[state.numberCar].info === undefined
+      ? initialStateInfo
+      : state.cars[state.numberCar].info
+  ))
+  const currentMiles: CurrentMiles = useAppSelector(state => (
+    state.cars[state.numberCar].currentMiles === undefined
+      ? { currentMileage: 0, dateMileage: new Date() }
+      : state.cars[state.numberCar].currentMiles
+  ))
   const dispatch = useAppDispatch()
 
   const [visibleMileage, setVisibleMileage] = useState(false)
   const [isNeedUpdate, setIsNeedUpdate] = useState(false)
-  const [valueMileage, setValueMileage] = useState<number>(state.cars[state.numberCar].currentMiles.currentMileage)
+  const [valueMileage, setValueMileage] = useState<number>(0)
   const toggleMileage = (): void => {
     setVisibleMileage(!visibleMileage)
   }
 
   useEffect(() => {
     periodTimeMileage()
-  }, [state.cars[state.numberCar].currentMiles])
+  }, [currentMiles])
 
   const periodTimeMileage = (): void => {
-    const tempState = new Date(state.cars[state.numberCar].currentMiles.dateMileage)
+    const tempState = new Date(currentMiles.dateMileage)
     if (tempState !== undefined) {
       const currentDate = new Date()
       if (currentDate.getFullYear() === (tempState.getFullYear())) {
@@ -55,11 +65,11 @@ export const MainCard = (): JSX.Element => {
                    Vibration.vibrate(100)
                    navStack.navigate('CarInfoScreen')
                  }}>
-        <Text style={styles.carText}>{state.cars[state.numberCar].info.brand} {state.cars[state.numberCar].info.model}</Text>
+        <Text style={styles.carText}>{`${infoCar.brand} ${infoCar.model}`}</Text>
         <Divider inset={true} insetType="middle" />
         <View style={styles.infoView}>
           <Pressable style={styles.kmView} onPress={() => {
-            setValueMileage(state.cars[state.numberCar].currentMiles.currentMileage)
+            setValueMileage(currentMiles.currentMileage)
             setVisibleMileage(true)
           }}>
             <Icon
@@ -69,7 +79,7 @@ export const MainCard = (): JSX.Element => {
               color={TEXT_CARD}
             />
             <Text style={[styles.kmText, isNeedUpdate ? { textShadowColor: 'red' } : { textShadowColor: COLOR_GREEN }]}>
-              {String(state.cars[state.numberCar].currentMiles.currentMileage)}
+              {String(currentMiles.currentMileage)}
             </Text>
           </Pressable>
 

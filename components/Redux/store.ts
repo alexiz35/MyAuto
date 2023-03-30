@@ -8,8 +8,8 @@ import hardSet from 'redux-persist/es/stateReconciler/hardSet'
 
 const persistConfig = {
   key: 'root',
-  storage: AsyncStorage,
-  stateReconciler: hardSet
+  storage: AsyncStorage
+  /* stateReconciler: hardSet */
 }
 
 /* const rootReducer = combineReducers<MilesState>({

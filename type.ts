@@ -44,6 +44,7 @@ export interface StateCar {
   currentMiles: CurrentMiles
   fuel: StateFuel[]
   tasks: StateTask[]
+  mileage: CurrentMiles[]
 }
 
 export interface StateFuel {
@@ -106,6 +107,7 @@ export interface CurrentMiles {
   currentMileage: number
   dateMileage: Date
 }
+// ------------------------------------------------------------------------------------------
 /* export interface StateMiles {
   currentMiles: number
 } */

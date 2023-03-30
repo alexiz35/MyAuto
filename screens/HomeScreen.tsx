@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { View, StyleSheet, ImageBackground, ScrollView } from 'react-native'
+import { View, StyleSheet, ImageBackground, ScrollView, Text } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Tasks } from '../components/Tasks'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { StateTask } from '../type'
+import { StateTask, TEXT_WHITE } from '../type'
 import { useCallback, useEffect, useState } from 'react'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import * as ScreenOrientation from 'expo-screen-orientation'
@@ -56,7 +56,8 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
         <Shadow stretch={true} containerStyle={styles.containerMainCard}>
           <MainCard />
         </Shadow>
-
+        <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].mileage)}</Text>
+        <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].currentMiles)}</Text>
         <View style={(orientation < 3) ? { flex: 3 } : { flex: 1.5 }}>
           <Tasks />
         </View>

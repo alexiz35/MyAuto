@@ -12,7 +12,8 @@ export const initialState: StateMain = {
         dateMileage: new Date()
       },
       fuel: [],
-      tasks: []
+      tasks: [],
+      mileage: []
     }
   ]
 }
@@ -66,6 +67,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
       /* const indexArray = state.cars.findIndex(item => action.payload.carId === item.carId)
       const newArray = [...state.cars] */
       newArray[indexArray].currentMiles = action.payload.currentMiles
+      newArray[indexArray].mileage.push(action.payload.currentMiles)
       return {
         ...state,
         cars: newArray
