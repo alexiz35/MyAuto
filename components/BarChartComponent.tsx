@@ -1,71 +1,101 @@
-import { Dimensions } from 'react-native'
+import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from './Redux/hook'
+import { Button, Text } from '@rneui/themed'
+import { COLOR_GREEN, StateCar, TEXT_WHITE } from '../type'
 
 interface PropsBarChat {
-  selectData: string
+  selectDate: number
+  dataProps: StateCar
 }
 
-const BarChartComponent = ({ selectData }: PropsBarChat): JSX.Element => {
-  const state = useAppSelector((state) => state.cars[state.numberCar])
+const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
+  /* const state = useAppSelector((state) => state.cars[state.numberCar]) */
 
   const GREEN_BAR = '0,255,0'
-  const RED_BAR = '0,255,255'
+  const CYAN_BAR = '0,255,255'
   const YELLOW_BAR = '255,255,0'
 
   const [dataChartFuel, setDataChartFuel] = useState<number[]>([])
   const [dataChartParts, setDataChartParts] = useState<number[]>([])
+  const [dataChartOther, setDataChartOther] = useState<number[]>([])
+  const [dataChartAll, setDataChartAll] = useState<number[]>([])
   const [colorBar, setColorBar] = useState('255,255,255')
-  const [dataChart, setDataChart] = useState<number[]>([])
+  const [dataChart, setDataChart] = useState<number[]>([1, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+  const [selectData, setSelectData] = useState('fuel')
+  /* const [isActivity, setIsActivity] = useState(true) */
 
-  const yearDataFuelChart = (searchYear = new Date().getFullYear()): void => {
-    const selectYear = state.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
+  const yearDataFuelChart = (searchYear = new Date().getFullYear()): number[] => {
+    const selectYear = dataProps.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
     const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     selectYear.forEach((item) => {
       tempData[new Date(item.dateFuel).getMonth()] += item.AmountFuel
     })
-    setColorBar(RED_BAR)
-    setDataChartFuel(tempData)
-    setDataChart(tempData)
+    console.log('fuel', tempData)
+    return tempData
   }
-  const yearDataPartsChart = (searchYear = new Date().getFullYear()): void => {
-    const selectYear = state.tasks.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
+  const yearDataPartsChart = (searchYear = new Date().getFullYear()): number[] => {
+    const selectYear = dataProps.tasks.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
     const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     selectYear.forEach((item) => {
       if (item.sumCostParts === undefined)item.sumCostParts = 0
       if (item.sumCostService === undefined)item.sumCostService = 0
       tempData[new Date(item.startDate).getMonth()] += (item.sumCostParts + item.sumCostService)
     })
-    setColorBar(YELLOW_BAR)
-    setDataChartParts(tempData)
-    setDataChart(tempData)
+    console.log('parts', tempData)
+    return tempData
   }
-  const formDataAllChart = (): void => {
-    const tempAllData = dataChartFuel.map((value, index) => (value + dataChartParts[index]))
-    setColorBar(GREEN_BAR)
-    setDataChart(tempAllData)
+  const yearDataAllChart = (): number[] => {
+    const fuel = yearDataFuelChart()
+    const parts = yearDataPartsChart()
+    const tempAllData = fuel.map((value, index) => (value + parts[index]))
+    console.log('all', tempAllData)
+    setDataChartFuel(fuel)
+    setDataChartParts(parts)
+    return tempAllData
   }
 
   useEffect(() => {
-    yearDataFuelChart()
-    yearDataPartsChart()
-    formDataAllChart()
+    setDataChartAll(yearDataAllChart())
   }, [])
 
   useEffect(() => {
+    console.log('eff', dataChart, selectData)
     switch (selectData) {
-      case 'all': formDataAllChart()
+      case 'all':
+        setColorBar(GREEN_BAR)
+        setDataChart(dataChartAll)
         break
-      case 'fuel': yearDataFuelChart()
+      case 'fuel':
+        setColorBar(CYAN_BAR)
+        setDataChart(dataChartFuel)
+        console.log('selectfuel')
         break
-      case 'parts': yearDataPartsChart()
+      case 'parts':
+        setColorBar(YELLOW_BAR)
+        setDataChart(dataChartParts)
         break
       default: break
     }
+    console.log('effect')
   }, [selectData])
 
   return (
+    <View>
+      <View style={styles.viewButtons}>
+        <Button type={'outline'} title={'Всего'} titleStyle={{ color: COLOR_GREEN }} buttonStyle={[styles.button, { borderColor: GREEN_BAR }]}
+                onPress={() => {
+                  setSelectData('all')
+                }}/>
+        <Button type={'outline'} title={'Заправка'} titleStyle={{ color: 'cyan' }} buttonStyle={[styles.button, { borderColor: CYAN_BAR }]}
+                onPress={() => setSelectData('fuel')}/>
+        <Button type={'outline'} title={'Ремонт'} titleStyle={{ color: 'yellow' }} buttonStyle={[styles.button, { borderColor: YELLOW_BAR }]}
+                onPress={() => setSelectData('parts')}/>
+        <Button type={'outline'} title={'Другое'} titleStyle={{ color: 'blue' }} buttonStyle={[styles.button, { borderColor: 'blue' }]}
+                onPress={() => setSelectData('other')}/>
+      </View>
+      <Text style={{ color: TEXT_WHITE }}>Hello {String(dataChart)}</Text>
   <BarChart
     yAxisLabel={''}
     yAxisSuffix={'$'}
@@ -100,13 +130,35 @@ const BarChartComponent = ({ selectData }: PropsBarChat): JSX.Element => {
         } */
       }}
     style={{
-      marginTop: 20,
+      marginTop: 10,
       borderRadius: 10
     }}
     yLabelsOffset={20}
 
   />
+     {/*  {isActivity ? <ActivityIndicator style={{ position: 'absolute', zIndex: 1, alignSelf: 'center', paddingTop: 130 }}/> : null} */}
+    </View>
   )
 }
 
 export default BarChartComponent
+
+const styles = StyleSheet.create({
+  viewTitleStat: {},
+  titleStat: {
+    color: TEXT_WHITE,
+    textAlign: 'center',
+    paddingVertical: 10,
+    fontStyle: 'italic'
+  },
+  viewButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  button: {
+    borderRadius: 10,
+    paddingVertical: 2
+  },
+  viewBarChart: {
+  }
+})
