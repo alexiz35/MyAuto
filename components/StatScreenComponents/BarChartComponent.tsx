@@ -1,9 +1,9 @@
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
 import { useEffect, useState } from 'react'
-import { useAppSelector } from './Redux/hook'
+import { useAppSelector } from '../Redux/hook'
 import { Button, Text } from '@rneui/themed'
-import { COLOR_GREEN, StateCar, TEXT_WHITE } from '../type'
+import { COLOR_GREEN, StateCar, TEXT_WHITE } from '../../type'
 
 interface PropsBarChat {
   selectDate: number
@@ -23,7 +23,7 @@ const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
   const [dataChartAll, setDataChartAll] = useState<number[]>([])
   const [colorBar, setColorBar] = useState('255,255,255')
   const [dataChart, setDataChart] = useState<number[]>([1, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-  const [selectData, setSelectData] = useState('fuel')
+  const [selectData, setSelectData] = useState('all')
   /* const [isActivity, setIsActivity] = useState(true) */
 
   const yearDataFuelChart = (searchYear = new Date().getFullYear()): number[] => {
@@ -61,7 +61,7 @@ const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
   }, [])
 
   useEffect(() => {
-    console.log('eff', dataChart, selectData)
+    console.log('eff', dataChart, dataChartAll)
     switch (selectData) {
       case 'all':
         setColorBar(GREEN_BAR)
@@ -70,7 +70,7 @@ const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
       case 'fuel':
         setColorBar(CYAN_BAR)
         setDataChart(dataChartFuel)
-        console.log('selectfuel')
+        console.log('selectfuel', dataChart)
         break
       case 'parts':
         setColorBar(YELLOW_BAR)
@@ -78,8 +78,8 @@ const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
         break
       default: break
     }
-    console.log('effect')
-  }, [selectData])
+    console.log('effect', dataChart)
+  }, [selectData, dataChart])
 
   return (
     <View>

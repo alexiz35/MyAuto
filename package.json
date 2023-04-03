@@ -54,13 +54,14 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-virtualized-view": "^1.0.0",
     "react-native-web": "~0.18.9",
-    "react-native-wheel-picker-expo": "^0.5.2",
+    "react-native-wheel-picker-expo": "^0.5.4",
     "react-redux": "^8.0.5",
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
+    "@redux-devtools/core": "^3.13.1",
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.71.2",
     "@types/react-native-datepicker": "^1.7.1",

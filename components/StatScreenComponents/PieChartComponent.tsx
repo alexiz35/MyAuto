@@ -1,78 +1,83 @@
 import { Dimensions } from 'react-native'
 import { BarChart, PieChart } from 'react-native-chart-kit'
 import { useEffect, useState } from 'react'
-import { useAppSelector } from './Redux/hook'
+import { useAppSelector } from '../Redux/hook'
+import { StateCar } from '../../type'
+import { TypeSelect } from '../../screens/StatScreen'
 
 interface PropsBarChat {
-  selectDate: string
+  selectDate: TypeSelect
+  dataProps: StateCar
 }
 
-const PieChartComponent = ({ selectDate }: PropsBarChat): JSX.Element => {
-  const state = useAppSelector((state) => state.cars[state.numberCar])
-
+const PieChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
   const GREEN_BAR = 'rgb(0,255,0)'
   const CYAN_BAR = 'rgb(0,255,255)'
   const YELLOW_BAR = 'rgb(255,255,0)'
 
+  const [dataChartFuel, setDataChartFuel] = useState<number>(50)
+  const [dataChartParts, setDataChartParts] = useState<number>(30)
+  const [dataChartOther, setDataChartOther] = useState<number>(70)
+  const [colorBar, setColorBar] = useState('255,255,255')
+  const [dataChart, setDataChart] = useState(0)
+
   const dataPieChart = [
     {
       name: 'fuel',
-      amount: 20,
+      amount: dataChartFuel,
       color: CYAN_BAR,
       legendFontColor: CYAN_BAR
     },
     {
       name: 'parts',
-      amount: 50,
+      amount: dataChartParts,
       color: YELLOW_BAR,
       legendFontColor: YELLOW_BAR
     },
     {
       name: 'other',
-      amount: 40,
+      amount: dataChartOther,
       color: GREEN_BAR,
       legendFontColor: GREEN_BAR
     }
   ]
 
-  const [dataChartFuel, setDataChartFuel] = useState<number[]>([])
-  const [dataChartParts, setDataChartParts] = useState<number[]>([])
-  const [colorBar, setColorBar] = useState('255,255,255')
-  const [dataChart, setDataChart] = useState<number[]>([])
+  const calcSum = (targetArray: number[]): number => {
+    if (targetArray.length !== 0) {
+      return targetArray.reduce((accumulator, currentValue) => accumulator + currentValue)
+    } else { return 0 }
+  }
 
   const yearDataFuelChart = (searchYear = new Date().getFullYear()): void => {
-    const selectYear = state.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
-    const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    selectYear.forEach((item) => {
-      tempData[new Date(item.dateFuel).getMonth()] += item.AmountFuel
-    })
-    setColorBar(CYAN_BAR)
+    const selectYear = dataProps.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
+    const tempData = selectYear.reduce((accumulator, currentValue) => accumulator + currentValue.AmountFuel, 0)
     setDataChartFuel(tempData)
-    setDataChart(tempData)
   }
+
   const yearDataPartsChart = (searchYear = new Date().getFullYear()): void => {
-    const selectYear = state.tasks.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
-    const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    selectYear.forEach((item) => {
+    const selectYear = dataProps.tasks.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
+    const temp: number[] = []
+    selectYear.forEach((item, index) => {
       if (item.sumCostParts === undefined)item.sumCostParts = 0
       if (item.sumCostService === undefined)item.sumCostService = 0
-      tempData[new Date(item.startDate).getMonth()] += (item.sumCostParts + item.sumCostService)
+      temp[index] = item.sumCostParts + item.sumCostService
     })
-    setColorBar(YELLOW_BAR)
+    const tempData = temp.reduce((accumulator, currentValue) => (
+      accumulator + currentValue
+    ), 0)
     setDataChartParts(tempData)
-    setDataChart(tempData)
-  }
-  const formDataAllChart = (): void => {
-    const tempAllData = dataChartFuel.map((value, index) => (value + dataChartParts[index]))
-    setColorBar(GREEN_BAR)
-    setDataChart(tempAllData)
   }
 
   useEffect(() => {
-    yearDataFuelChart()
-    yearDataPartsChart()
-    formDataAllChart()
-  }, [])
+    switch (selectDate.type) {
+      case 'year':
+        yearDataFuelChart(Number(selectDate.valueYear))
+        yearDataPartsChart(Number(selectDate.valueYear))
+        break
+      default: break
+    }
+    console.log('effPie')
+  }, [selectDate])
 
   /* useEffect(() => {
     switch (selectData) {
