@@ -56,8 +56,8 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
         <Shadow stretch={true} containerStyle={styles.containerMainCard}>
           <MainCard />
         </Shadow>
-        <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].mileage)}</Text>
-        <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].currentMiles)}</Text>
+        {/* <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].mileage)}</Text>
+        <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].currentMiles)}</Text> */}
         <View style={(orientation < 3) ? { flex: 3 } : { flex: 1.5 }}>
           <Tasks />
         </View>

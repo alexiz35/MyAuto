@@ -338,7 +338,6 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                       />
                     ), */
                     tabBarButton: () => (
-
                        <FAB
                       color={'black'}
                       style={{ marginBottom: 30, elevation: 5 }}

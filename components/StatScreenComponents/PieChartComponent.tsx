@@ -2,8 +2,15 @@ import { Dimensions } from 'react-native'
 import { BarChart, PieChart } from 'react-native-chart-kit'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../Redux/hook'
-import { StateCar } from '../../type'
+import { StateCar, StateFuel, StateTask } from '../../type'
 import { TypeSelect } from '../../screens/StatScreen'
+import {
+  monthDataFuelChart,
+  monthDataPartsChart,
+  periodDataFuelChart, periodDataPartsChart,
+  yearDataFuelChart,
+  yearDataPartsChart
+} from './FunctionStatistic'
 
 interface PropsBarChat {
   selectDate: TypeSelect
@@ -42,37 +49,20 @@ const PieChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
     }
   ]
 
-  const calcSum = (targetArray: number[]): number => {
-    if (targetArray.length !== 0) {
-      return targetArray.reduce((accumulator, currentValue) => accumulator + currentValue)
-    } else { return 0 }
-  }
-
-  const yearDataFuelChart = (searchYear = new Date().getFullYear()): void => {
-    const selectYear = dataProps.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
-    const tempData = selectYear.reduce((accumulator, currentValue) => accumulator + currentValue.AmountFuel, 0)
-    setDataChartFuel(tempData)
-  }
-
-  const yearDataPartsChart = (searchYear = new Date().getFullYear()): void => {
-    const selectYear = dataProps.tasks.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
-    const temp: number[] = []
-    selectYear.forEach((item, index) => {
-      if (item.sumCostParts === undefined)item.sumCostParts = 0
-      if (item.sumCostService === undefined)item.sumCostService = 0
-      temp[index] = item.sumCostParts + item.sumCostService
-    })
-    const tempData = temp.reduce((accumulator, currentValue) => (
-      accumulator + currentValue
-    ), 0)
-    setDataChartParts(tempData)
-  }
-
+  // --------------------------------------------------------------------------------------------------
   useEffect(() => {
     switch (selectDate.type) {
       case 'year':
-        yearDataFuelChart(Number(selectDate.valueYear))
-        yearDataPartsChart(Number(selectDate.valueYear))
+        setDataChartFuel(yearDataFuelChart(Number(selectDate.valueYear), dataProps))
+        setDataChartParts(yearDataPartsChart(Number(selectDate.valueYear), dataProps))
+        break
+      case 'month':
+        setDataChartFuel(monthDataFuelChart(selectDate, dataProps))
+        setDataChartParts(monthDataPartsChart(selectDate, dataProps))
+        break
+      case 'period':
+        setDataChartFuel(periodDataFuelChart(selectDate, dataProps))
+        setDataChartParts(periodDataPartsChart(selectDate, dataProps))
         break
       default: break
     }

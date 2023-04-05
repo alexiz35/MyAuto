@@ -172,19 +172,17 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
               currentPart={currentPart}
               currentTask={currentTask}
               onPressCancel = {modalCancel}
-
             />
-
           </Dialog>
           </ScrollView>
 
         <FAB
-                    style={{ marginBottom: 15, borderColor: 'grey', borderWidth: 1 }}
-                    color={'#000'}
-                    placement={'right'}
-                    icon={{ type: 'material-community', name: 'printer', color: 'white' }}
-                    onPress={() => { void printToFile(currentTask) }}
-                  />
+          style={{ marginBottom: 15, borderColor: 'grey', borderWidth: 1 }}
+          color={'#000'}
+          placement={'right'}
+          icon={{ type: 'material-community', name: 'printer', color: 'white' }}
+          onPress={() => { void printToFile(currentTask) }}
+        />
 
 </ImageBackground>
 

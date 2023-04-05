@@ -1,5 +1,5 @@
 import { Dimensions, ImageBackground, ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
-import { COLOR_GREEN, StateFuel, TEXT_WHITE } from '../type'
+import { BACK_INPUT, COLOR_GREEN, StateFuel, TEXT_WHITE } from '../type'
 import { Button, ButtonGroup, Icon } from '@rneui/themed'
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit'
 import { useAppSelector } from '../components/Redux/hook'
@@ -9,16 +9,17 @@ import BarChartComponent from '../components/StatScreenComponents/BarChartCompon
 import PieChartComponent from '../components/StatScreenComponents/PieChartComponent'
 import WheelPickerExpo from 'react-native-wheel-picker-expo'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
+import { yearDataFuelChart, yearDataPartsChart } from '../components/StatScreenComponents/FunctionStatistic'
 
 export interface TypeSelect {
   type: string
-  valueYear: string
-  valueMonth?: string
+  valueYear?: string
+  valueMonth?: number
   period?: {
     valueStartYear: string
-    valueStartMonth: string
+    valueStartMonth: number
     valueEndYear: string
-    valueEndMonth: string
+    valueEndMonth: number
   }
 }
 
@@ -28,13 +29,15 @@ const StatScreen = (): JSX.Element => {
   const GREEN_BAR = '0,255,0'
   const RED_BAR = '0,255,255'
   const YELLOW_BAR = '255,255,0'
+  const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
 
   const [dataChartFuel, setDataChartFuel] = useState<number[]>([])
   const [dataChartParts, setDataChartParts] = useState<number[]>([])
-  const [dataChartOther, setDataChartOther] = useState(0)
-  const [dataChart, setDataChart] = useState<number[]>([])
-  const [labelChart, setLabelChart] = useState<string[]>([])
+  const [sumParts, setSumParts] = useState(0)
+  const [sumFuel, setSumFuel] = useState<number>(0)
+  const [sumMileage, setSumMileage] = useState<number>(0)
   const [selectedDate, setSelectedDate] = useState<TypeSelect>({ type: 'year', valueYear: String(new Date().getFullYear()) })
+  const [textButtonDate, setButtonDate] = useState<string | undefined>('выберите')
 
   const [checked, setChecked] = useState(true)
   const [checkedSelected, setCheckedSelected] = useState(false)
@@ -44,17 +47,40 @@ const StatScreen = (): JSX.Element => {
       return targetArray.reduce((accumulator, currentValue) => accumulator + currentValue)
     } else { return 0 }
   }
+
+  const calcMileage = () => {
+
+  }
+
   const handleCancel = (): void => {
     setCheckedSelected(false)
   }
   const handleOk = (selectModal: TypeSelect): void => {
     setCheckedSelected(false)
     setSelectedDate(selectModal)
+    switch (selectModal.type) {
+      case 'year':
+        setButtonDate(selectModal.valueYear)
+        setSumFuel(yearDataFuelChart(Number(selectModal.valueYear), state))
+        setSumParts(yearDataPartsChart(Number(selectModal.valueYear), state))
+        break
+      case 'month':
+        if (selectModal.valueMonth !== undefined) {
+          setButtonDate(`${String(NAME_MONTH[selectModal.valueMonth])} ${String(selectModal.valueYear)}`)
+        }
+        break
+      case 'period':
+        if (selectModal.period?.valueStartMonth !== undefined) {
+          setButtonDate(`${String(NAME_MONTH[selectModal.period?.valueStartMonth])} ${String(selectModal.period?.valueStartYear)}-
+${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.period?.valueEndYear)}`)
+        }
+        break
+      default: break
+    }
   }
 
   useFocusEffect(
     useCallback(() => {
-      /* setChecked(true) */
     }, []))
 
   return (
@@ -62,10 +88,10 @@ const StatScreen = (): JSX.Element => {
       <ScrollView>
       <View style={styles.viewTitleStat}>
         <Text style={styles.titleStat}>
-          Стастика за {}
+          Статистика за {}
           {/* {calcSum(dataChartFuel)}{calcSum(dataChartParts)} */}
         </Text>
-        <Button type={'outline'} title={String(selectedDate.valueYear)} titleStyle={{ color: COLOR_GREEN }}
+        <Button type={'outline'} title={textButtonDate} titleStyle={{ color: COLOR_GREEN }}
                 buttonStyle={[styles.button, { borderColor: COLOR_GREEN }]}
                 onPress={() => {
                   setCheckedSelected(!checkedSelected)
@@ -89,6 +115,16 @@ const StatScreen = (): JSX.Element => {
           ? <PieChartComponent dataProps={state} selectDate={selectedDate}/>
           : <BarChartComponent selectDate={Number(selectedDate.valueYear)} dataProps={state} />}
       </View>
+        <View style={styles.viewAllInput}>
+          <View style={{ flexDirection: 'row' }}>
+            <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
+            <Text style={styles.textKm}>Пробег за {textButtonDate}</Text>
+            <Text style={styles.textKm}>{sumMileage} km</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.textKm}>Использовано топлива {sumFuel}</Text>
+          </View>
+        </View>
       </ScrollView>
     </ImageBackground>
   )
@@ -105,6 +141,7 @@ const styles = StyleSheet.create({
   titleStat: {
     color: TEXT_WHITE,
     textAlign: 'center',
+    alignSelf: 'center',
     paddingVertical: 10,
     fontStyle: 'italic'
   },
@@ -118,5 +155,22 @@ const styles = StyleSheet.create({
     marginVertical: 6
   },
   viewBarChart: {
+  },
+  viewAllInput: {
+    margin: 10,
+    backgroundColor: BACK_INPUT,
+    /* borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: 'grey', */
+    borderRadius: 10,
+    paddingBottom: 5
+  },
+  textKm: {
+    color: 'white',
+    fontSize: 12,
+    fontStyle: 'italic',
+    textAlign: 'left',
+    marginVertical: 5,
+    marginHorizontal: 10
   }
 })

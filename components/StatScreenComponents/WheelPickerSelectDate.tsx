@@ -12,7 +12,8 @@ const WheelPickerSelectDate = ({ list, handlerEnterPicker }: PropsPicker): JSX.E
   const [checked, setChecked] = useState('')
 
   return (
-    <View style={{ backgroundColor: 'grey' }}><WheelPickerExpo
+    <View style={{ backgroundColor: 'grey' }}>
+      <WheelPickerExpo
       backgroundColor={'#8f8b8b'}
       height={300}
       width={150}
