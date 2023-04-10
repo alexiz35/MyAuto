@@ -11,7 +11,7 @@ export const listsInfo = (item: PartList, index: number, onInfo: (id: number) =>
 
         <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 14, color: 'white' }}>{index + 1}</Text>
         <Text style={{ flex: 2, textAlign: 'center', fontSize: 14, color: 'white' }}>{item.namePart}</Text>
-        <Text style={{ flex: 0.5, textAlign: 'left', fontSize: 14, color: 'white' }}>{`${item.amountPart} x`}</Text>
+        <Text style={{ flex: 0.5, textAlign: 'left', fontSize: 14, color: 'white' }}>{`${item.quantityPart} x`}</Text>
         <Text style={{ flex: 1, textAlign: 'left', fontSize: 14, color: 'white' }}>{item.costPart}</Text>
         <View style={{ height: '80%' }}>
 

@@ -29,7 +29,7 @@ export const ModalInfoPart = ({ currentTask, currentPart, onPressCancel }: Modal
   const [namePart, setNamePart] = useState(currentPart.namePart)
   const [numberPart, setNumberPart] = useState(currentPart.numberPart)
   const [costPart, setCostPart] = useState(currentPart.costPart)
-  const [amountPart, setAmountPart] = useState(currentPart.amountPart)
+  const [amountPart, setAmountPart] = useState(currentPart.quantityPart)
   const [seller, setSeller] = useState<Seller>((currentPart.seller !== undefined) ? currentPart.seller : initSeller)
 
   // ----------------------------------------------------------------

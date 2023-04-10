@@ -227,9 +227,13 @@ export type Dispatch = (state: StateMain, action: AppAction) => StateMain
 export interface PartList {
   id: number
   namePart: string
+  dateBuy?: Date
   costPart: number
-  amountPart: number
+  quantityPart: number
+  amountPart?: number
   numberPart: string
+  numberPart1?: string
+  numberPart2?: string
   seller?: Seller
 }
 export interface Seller {

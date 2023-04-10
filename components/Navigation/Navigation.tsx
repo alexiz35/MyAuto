@@ -43,8 +43,8 @@ import createStackNavigator, { StackScreenProps } from '@react-navigation/stack'
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
   BottomTabNav: NavigatorScreenParams<RootTabParamList>
-  InputTaskScreen: { editable: boolean, taskId?: number }
-  Info: { taskId: number }
+  InputTaskScreen: { editable: boolean, taskId?: number, typeTask: number }
+  Info: { taskId: number, typeTask: number }
   CarInfoScreen: undefined
   SettingScreen: undefined
 }
@@ -56,7 +56,7 @@ export type RootTabParamList = {
   CarInfoScreen: undefined
   PaperScreen: undefined
   StatScreen: undefined
-  InputTaskScreen: { editable: boolean, taskId?: number }
+  InputTaskScreen: { editable: boolean, taskId?: number, typeTask: number }
 }
 
 function LogoTitle (): JSX.Element {
@@ -347,7 +347,7 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                       }}
                       icon={{ name: 'add', color: 'white' }}
                       onPress={() => {
-                        navigation.navigate('InputTaskScreen', { editable: false })
+                        navigation.navigate('InputTaskScreen', { editable: false, typeTask: 1 })
                       }}
                     />
 

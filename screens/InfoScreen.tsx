@@ -35,7 +35,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
       sumCostService: 0,
       isFinished: false,
       addition: {
-        parts: [{ id: 0, namePart: '', costPart: 0, numberPart: '', amountPart: 0 }],
+        parts: [{ id: 0, namePart: '', costPart: 0, numberPart: '', quantityPart: 0 }],
         services: [{ id: 0, nameService: '', costService: 0 }]
       }
     }

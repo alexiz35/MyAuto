@@ -1,24 +1,29 @@
 import { Text, View, StyleSheet, SafeAreaView, Pressable, ImageBackground, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { Button, Dialog, Icon, Input } from '@rneui/themed'
+import { Button, Dialog, Icon, Input, Tab, TabView } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { useEffect, useMemo, useState } from 'react'
-import { BACK_INPUT, COLOR_GREEN, PartList, ServiceList, StateTask, TEXT } from '../type'
+import { BACK_INPUT, COLOR_GREEN, PartList, ServiceList, StateTask, TEXT, TEXT_WHITE } from '../type'
 import { addTask, editTask } from '../components/Redux/actions'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import InputService from '../components/InputTaskScreenComponents/InputService'
+import InputTask from '../components/InputTaskScreenComponents/InputTask'
 
   type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
   const state = useAppSelector((state) => state)
+  const [index, setIndex] = useState(0)
 
   /* const editableTask: boolean = route.params.editable
   const currentId: number | undefined = route.params.taskId */
+  useEffect(() => {
+    setIndex(route.params.typeTask)
+  }, [])
 
   /* const [currentTask, setCurrentTask] = useState<StateTask>(
     {
@@ -37,9 +42,56 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
   return (
     <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
-      <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}>
-        <InputService navigation={navigation} route={route}/>
-    </ScrollView>
+      {/* <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}> */}
+        <Tab
+          value={index}
+          onChange={(e) => setIndex(e)}
+          indicatorStyle={{
+            backgroundColor: 'white',
+            height: 3
+          }}
+          buttonStyle={{
+
+          }}
+          variant="default"
+        >
+          <Tab.Item
+            title='Запчасти'
+            titleStyle={{ fontSize: 12, color: TEXT_WHITE }}
+            icon={{ name: 'cog', type: 'material-community', color: 'white', size: 20 }}
+
+          />
+          <Tab.Item
+            title="сервис"
+            titleStyle={{ fontSize: 12, color: TEXT_WHITE }}
+            icon={{ name: 'car-wrench', type: 'material-community', color: 'white', size: 20 }}
+          />
+          <Tab.Item
+            title="другое"
+            titleStyle={{ fontSize: 12, color: TEXT_WHITE }}
+            icon={{ name: 'account-cash', type: 'material-community', color: 'white', size: 20 }}
+          />
+        </Tab>
+
+        <TabView value={index} onChange={setIndex} animationType='spring'>
+          <TabView.Item style={{ width: '100%' }}>
+            <View>
+            <InputTask navigation={navigation} route={route}/>
+            </View>
+          </TabView.Item>
+          <TabView.Item style={{ width: '100%' }}>
+            <View>
+              <ScrollView>
+            <InputService navigation={navigation} route={route}/>
+              </ScrollView>
+            </View>
+          </TabView.Item>
+          <TabView.Item style={{ backgroundColor: 'green', width: '100%' }}>
+            <Text >Cart</Text>
+          </TabView.Item>
+        </TabView>
+        {/* <InputService navigation={navigation} route={route}/> */}
+    {/* </ScrollView> */}
 
 </ImageBackground>
 

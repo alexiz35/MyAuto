@@ -13,7 +13,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
   const [namePart, setNamePart] = useState('')
   const [numberPart, setNumberPart] = useState('')
   const [costPart, setCostPart] = useState(0)
-  const [amountPart, setAmountPart] = useState(1)
+  const [quantityPart, setQuantityPart] = useState(1)
   const [sellerName, setSellerName] = useState('')
   const [sellerPhone, setSellerPhone] = useState('')
   const [sellerLink, setSellerLink] = useState('')
@@ -37,11 +37,11 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
   const addPart = (): void => {
     if (namePart === '') return
     setSeller({ ...seller, name: sellerName, phone: sellerPhone, link: sellerLink })
-    setParts([...parts, { id: Date.now(), namePart, costPart, amountPart, numberPart, seller }])
+    setParts([...parts, { id: Date.now(), namePart, costPart, quantityPart, numberPart, seller }])
     setNamePart('')
     setCostPart(0)
     setNumberPart('')
-    setAmountPart(1)
+    setQuantityPart(1)
     inputNamePart.current?.clear()
     inputCostPart.current?.clear()
     inputNumberPart.current?.clear()
@@ -53,7 +53,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>
           <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{key + 1}</Text>
           <Text style={{ flex: 2, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{item.namePart}</Text>
-          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{`${item.amountPart} x`}</Text>
+          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{`${item.quantityPart} x`}</Text>
           <Text style={{ flex: 1, textAlign: 'center', color: TEXT_WHITE }}>{item.costPart}</Text>
           <View style={{ height: '80%' }}>
             <Pressable>
@@ -117,10 +117,10 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
               placeholder={'кол-во'}
               containerStyle={{ flex: 1 }}
               inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-              onChangeText={(value) => setAmountPart(Number(value))}
+              onChangeText={(value) => setQuantityPart(Number(value))}
               errorMessage={'количество'}
               errorStyle={styles.errorInput}
-              value={String(amountPart)}
+              value={String(quantityPart)}
               defaultValue={String(1)}
               keyboardType={'numeric'}
             />

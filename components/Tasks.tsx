@@ -60,14 +60,14 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
 
         <ListItem.Swipeable
         containerStyle={{ backgroundColor: BACK_CARD }}
-        onPress={() => nav.navigate('Info', { taskId: item.id })}
+        onPress={() => nav.navigate('Info', { taskId: item.id, typeTask: 1 })}
         /* bottomDivider */
         leftContent={ () => (
           <Button
             title='info'
             icon={{ name: 'info', color: 'white' }}
             buttonStyle={{ minHeight: '100%' }}
-            onPress={() => nav.navigate('Info', { taskId: item.id })}
+            onPress={() => nav.navigate('Info', { taskId: item.id, typeTask: 1 })}
             /* onPress={() => { nav() }} */
           />
         )}
