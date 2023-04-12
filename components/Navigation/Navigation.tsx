@@ -6,7 +6,7 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 import HomeScreen from '../../screens/HomeScreen'
 import InputTaskScreen from '../../screens/InputTaskScreen'
 import { Alert, Image, Pressable, Text, View } from 'react-native'
-import { Button, FAB, Icon } from '@rneui/themed'
+import { Button, FAB, Icon, Switch, useThemeMode } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
@@ -29,7 +29,6 @@ import StatScreen from '../../screens/StatScreen'
 import PaperScreen from '../../screens/PaperScreen'
 /* import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs' */
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors'
 import FuelScreen from '../../screens/FuelScreen'
 import { Shadow } from 'react-native-shadow-2'
 import * as Print from 'expo-print'
@@ -88,6 +87,11 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
+  const { mode, setMode } = useThemeMode()
+  const toggle = () => {
+    if (mode === 'dark') setMode('light')
+    else setMode('dark')
+  }
   /*  const [initial, setInitial] = useState(true)
   const [location, setLocation] = useState(0)
   const [prevCoords, setPrevCoords] = useState({ latitude: 0, longitude: 0 })
@@ -193,8 +197,11 @@ export const Navigation = (): JSX.Element => {
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: BACK_TAB_TOP },
             headerTitle: () => (
-              <Pressable onPress={() => navigation.navigate('SettingScreen')}>
+              /* <Pressable onPress={() => navigation.navigate('SettingScreen')}>
               <LogoTitle />
+              </Pressable> */
+              <Pressable onPress={() => toggle()}>
+                <LogoTitle />
               </Pressable>
 
             ),

@@ -5,7 +5,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View
 } from 'react-native'
@@ -25,7 +24,7 @@ import {
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, addTask, delTask, editFuel, editTask, finishTask } from '../components/Redux/actions'
 import DropDownPicker from 'react-native-dropdown-picker'
-import { Button, Dialog, Icon, Input, LinearProgress, ListItem } from '@rneui/themed'
+import { Button, Dialog, Icon, Text, Input, LinearProgress, ListItem, useTheme } from '@rneui/themed'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
@@ -33,29 +32,21 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { Dropdown } from 'react-native-element-dropdown'
 import { useFocusEffect } from '@react-navigation/native'
 import { SimpleAccordion } from 'react-native-simple-accordion'
-import { FuelList } from '../components/FuelList'
+import { FuelList } from '../components/FuelScreenComponents/FuelList'
 import Accordion from '../components/Accordion'
+import BackgroundView from '../CommonComponents/BackgroundView'
+import { Surface } from 'react-native-paper'
+import ShadowBox from '../CommonComponents/ShadowBox'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Fuel'>
 
 const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
-
-  const typeFuel = [
-    { label: 'Дизель', value: 'Дизель' },
-    { label: 'Бензин', value: 'Бензин' },
-    { label: 'Газ', value: 'Газ' },
-    { label: 'Электро', value: 'Электро' },
-    { label: 'Газ-бензин', value: 'Газ-бензин' }
-  ]
+  const { theme } = useTheme()
 
   const [errorMsg, setErrorMsg] = useState('')
-  const [openDrop, setOpenDrop] = useState(false)
   const [valueDrop, setValueDrop] = useState<null | string>(null)
-  const [itemsDrop, setItemsDrop] = useState(typeFuel)
-
-  const [startKmInput, setStartKmInput] = useState(0)
 
   const [fuelDate, setFuelDate] = useState(new Date())
   const [fuelMileage, setFuelMileage] = useState(0)
@@ -73,29 +64,8 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   const inputFuelCost = React.createRef<PropsWithChildren<TextInput>>()
   const inputFuelAmount = React.createRef<PropsWithChildren<TextInput>>()
 
-  /* const [endKmInput, setEndKmInput] = useState(0)
-  const [endDateInput, setEndDateInput] = useState('')
-  const [timeToService, setTimeToService] = useState(0)
-  const [kmToService, setKmToService] = useState(0)
-  const [costParts, setCostParts] = useState(0)
-  const [costService, setCostService] = useState(0)
-  const [amountPart, setAmountPart] = useState(0)
-  const [sumCost, setSumCost] = useState(0)
-
-  const [addParts, setAddParts] = useState<[PartList] | undefined>()
-  const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
-
-  const [isVisible, setIsVisible] = useState(false) */
-
-  /* const editDate = (date: string, increment: number): string => {
-    const tempDate = new Date(date)
-    tempDate.setMonth(tempDate.getMonth() + increment)
-    return tempDate.toLocaleDateString()
-  } */
-
   const inputDate = (): void => DateTimePickerAndroid.open({
     value: new Date(),
-    /* display: 'spinner', */
     // @ts-expect-error date undefined
     onChange: (event, date) => setFuelDate(date)
   })
@@ -181,70 +151,57 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   }
 
   return (
-    <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
-      <View style={{ flex: 1 }}>
-        <Text style={{ color: TEXT_WHITE, textAlign: 'center', paddingVertical: 10, fontStyle: 'italic' }}>
+    <BackgroundView>
+      <View style={{ flex: 1 }} >
+        <Text style={{ textAlign: 'center', paddingVertical: 10, fontStyle: 'italic' }}>
           Cумма заправок в текущем месяце {sumFuel}
         </Text>
         <View style={{ marginTop: 5 }}>
           <ScrollView>
             <Accordion
               bannerStyle={{ backgroundColor: BACK_INPUT }}
-              textBannerStyle={{ color: TEXT_WHITE }}
               insideView={
-                <View style={{ backgroundColor: BACK_INPUT }}>
-                <Dropdown
-                  style={[styles.dropDownPicker, { paddingVertical: 3 }]}
-                  selectedTextStyle={{ color: TEXT_WHITE, paddingHorizontal: 10, fontSize: 16, textAlign: 'center' }}
-                  activeColor={'black'}
-                  itemContainerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-                  itemTextStyle={{ color: TEXT_WHITE, textAlign: 'center' }}
-                  inputSearchStyle={{ backgroundColor: 'rgba(61,61,61,1)' }}
-                  containerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-                  data={typeFuel}
-                  labelField={'label'}
-                  valueField={'value'}
-                  placeholder={'Тип'}
-                  value={valueDrop}
-                  onChange={item => {
-                    setValueDrop(item.value)
-                  }}
-                />
-                <View style={styles.viewAllInput}>
+                <View style={{ backgroundColor: 'rgba(61,61,61,0.35)' }}>
+                  <ShadowBox style={{ margin: 5, flex: 1 }}>
+
+                  <Text style={{ textAlign: 'center', paddingVertical: 7 }}>{valueDrop}</Text>
+                  </ShadowBox>
 
                   <View style={styles.viewGroupInput}>
-                    <View style={styles.input}>
-                      <Input
+                    <ShadowBox style={{ margin: 5, flex: 1 }}>
+                    <Input
                         placeholder={'Дата проведения'}
                         containerStyle={{ flex: 1 }}
-                        inputStyle={styles.inputText}
+                        inputStyle={[styles.inputText, { color: theme.colors.black }]}
+
                         showSoftInputOnFocus={false}
                         value = {new Date(fuelDate).toLocaleDateString()}
                         onPressOut={inputDate}
                         errorMessage={'текущая дата'}
                         errorStyle={styles.errorInput}
                       />
-                    </View>
-                    <View style={styles.input}>
-                      <Input
+                    </ShadowBox>
+                    <ShadowBox style={{ margin: 5, flex: 1 }}>
+                    <Input
                         placeholder={'текущий пробег'}
-                        inputStyle={styles.inputText}
+                        inputStyle={[styles.inputText, { color: theme.colors.black }]}
+
                         errorMessage={'текущий пробег'}
                         errorStyle={styles.errorInput}
                         onChangeText={(value) => setFuelMileage(Number(value))}
                         keyboardType={'numeric'}
                         value={String(fuelMileage)}
                       />
-                    </View>
+                    </ShadowBox>
                   </View>
-                </View>
 
                 <View style={styles.viewGroupInput}>
-                  <View style={styles.input}>
-                    <Input
+                  <ShadowBox style={{ margin: 5, flex: 1 }}>
+                  <Input
                       placeholder={'кол-во топлива'}
                       /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
+                      inputStyle={[styles.inputText, { color: theme.colors.black }]}
+
                       errorMessage={'кол-во топлива'}
                       errorStyle={styles.errorInput}
                       onChangeText={(value) => setFuelVolume(Number(value))}
@@ -252,13 +209,14 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
                       value={String(fuelVolume)}
                       onSubmitEditing={() => inputFuelCost.current?.focus()}
                     />
-                  </View>
-                  <View style={styles.input}>
-                    <Input
+                  </ShadowBox>
+
+                  <ShadowBox style={{ margin: 5, flex: 1 }}>
+                  <Input
                       ref={inputFuelCost}
                       placeholder={'цена топлива'}
                       containerStyle={{ flex: 1 }}
-                      inputStyle={styles.inputText}
+                      inputStyle={[styles.inputText, { color: theme.colors.black }]}
                       errorMessage={'цена топлива'}
                       errorStyle={styles.errorInput}
                       onChangeText={(value) => setFuelCost(Number(value))}
@@ -267,13 +225,15 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
                       onSubmitEditing={() => handleOnSubmitCost()}
                       onBlur={() => handleOnSubmitCost()}
                     />
-                  </View>
-                  <View style={styles.input}>
+                  </ShadowBox>
+
+                  <ShadowBox style={{ margin: 5, flex: 1 }}>
                     <Input
                       ref={inputFuelAmount}
                       placeholder={'сумма заправки'}
                       containerStyle={{ flex: 1 }}
-                      inputStyle={styles.inputText}
+                      /* inputStyle={styles.inputText} */
+                      inputStyle={[styles.inputText, { color: theme.colors.black }]}
                       errorMessage={'сумма заправки'}
                       errorStyle={styles.errorInput}
                       onChangeText={(value) => setFuelAmount(Number(value))}
@@ -281,43 +241,42 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
                       value={String(fuelAmount)}
                       onSubmitEditing={() => handleOnSubmitAmount()}
                       onBlur={() => handleOnSubmitAmount()}
-
                     />
-                  </View>
+                  </ShadowBox>
                 </View>
-                <View style={styles.viewGroupInput}>
-                  <View style={styles.input}>
+                  <ShadowBox style={{ margin: 5 }}>
                     <Input
-                      placeholder={'название запраки'}
-                      /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
+                      placeholder={'название заправки'}
+                      placeholderTextColor={theme.colors.error}
+                      inputStyle={[styles.inputText, { color: theme.colors.black }]}
                       errorMessage={'название запрвки'}
                       errorStyle={styles.errorInput}
                       onChangeText={(value) => setFuelStation(String(value))}
                       value={String(fuelStation)}
                     />
-                  </View>
-                </View>
+                  </ShadowBox>
                 <Text style={styles.button}>{errorMsg}</Text>
                 <View style={styles.viewButton}>
                   <Button
                     containerStyle={styles.buttonStyle}
-                    buttonStyle={{ borderColor: 'red' }}
-                    titleStyle={{ color: 'red' }}
+                    /* buttonStyle={{ borderColor: theme.colors.error }} */
+                    /* titleStyle={{ color: theme.colors.error }} */
                     title={'Cancel'}
-                    color={'warning'}
-                    type={'outline'}
+                    color={'error'}
+                    type={'solid'}
                     onPress={() => handleCancel() }
                     /* onPress={onPressCancel} */
+                    raised
                   />
                   <Button
                     containerStyle={styles.buttonStyle}
-                    buttonStyle={{ borderColor: COLOR_GREEN }}
-                    titleStyle={{ color: COLOR_GREEN }}
+                    /* buttonStyle={{ borderColor: 'green' }}
+                    titleStyle={{ color: 'green' }} */
                     title={'Ok'}
                     color={'success'}
-                    type={'outline'}
+                    type={'solid'}
                     onPress={() => { handleOk() }}
+                    raised
                   />
                 </View>
               </View>
@@ -333,87 +292,32 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
         </View>
 
       </View>
-    </ImageBackground>
-
+    </BackgroundView>
   )
 }
 
 export default FuelScreen
 
 const styles = StyleSheet.create({
-  dropDownPicker: {
-    backgroundColor: BACK_INPUT,
-    margin: 5,
-    width: '97%',
-    borderWidth: 0,
-    borderRadius: 0,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
 
-    elevation: 2
-  },
-  viewAllInput: {
-
-  },
   viewGroupInput: {
     flexDirection: 'row',
     justifyContent: 'space-around'
   },
-  input: {
-    margin: 5,
-    backgroundColor: BACK_INPUT,
-    flex: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
-  },
   inputText: {
     textAlign: 'center',
-    fontSize: 14,
-    color: 'white'
+    fontSize: 14
   },
   errorInput: {
     color: 'gray',
     marginTop: 1,
     textAlign: 'center'
   },
-  buttonAddition: {
-    margin: 5,
-    height: 50,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
 
-    elevation: 2
-  },
-
-  viewAdditional: {
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'grey',
-    borderRadius: 10
-  },
   button: {
     textAlign: 'center',
     color: 'red'
   },
-
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -423,51 +327,5 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: '40%',
     borderRadius: 5
-  },
-  textCost: {
-    marginHorizontal: 50,
-    marginVertical: 10,
-    padding: 10,
-    backgroundColor: BACK_INPUT,
-    color: 'white',
-    textAlign: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
-  },
-  listItem: {
-    height: 73,
-    paddingRight: 0,
-    marginHorizontal: 5,
-    marginVertical: 5,
-    color: 'red',
-    flex: 1
-    /* backgroundColor: 'red' */
-    /* borderRadius: 5 */
-    /* shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2 */
-  },
-  viewBackList: {
-    margin: 10,
-    backgroundColor: BACK_INPUT,
-    /* borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'grey', */
-    borderRadius: 10,
-    paddingBottom: 5
   }
 })

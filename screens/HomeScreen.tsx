@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { View, StyleSheet, ImageBackground, ScrollView, Text } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Tasks } from '../components/Tasks'
+import { Tasks } from '../components/HomeScreenComponents/Tasks'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { StateTask, TEXT_WHITE } from '../type'
 import { useCallback, useEffect, useState } from 'react'
@@ -9,7 +9,7 @@ import { RootStackParamList, RootTabParamList } from '../components/Navigation/N
 import * as ScreenOrientation from 'expo-screen-orientation'
 
 import { Shadow } from 'react-native-shadow-2'
-import { MainCard } from '../components/MainCard'
+import { MainCard } from '../components/HomeScreenComponents/MainCard'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { Orientation } from 'expo-screen-orientation'

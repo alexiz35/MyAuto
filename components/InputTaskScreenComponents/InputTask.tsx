@@ -10,7 +10,7 @@ import { RootStackParamList } from '../Navigation/Navigation'
 import { addTask, editTask } from '../Redux/actions'
 import { BottomSheetAddition } from '../BottomSheetAddition'
 import Accordion from '../Accordion'
-import { FuelList } from '../FuelList'
+import { FuelList } from '../FuelScreenComponents/FuelList'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputTask = ({ navigation, route }: Props): JSX.Element => {

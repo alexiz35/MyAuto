@@ -1,11 +1,12 @@
 import { Animated, FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
-import { BACK_CARD, COLOR_GREEN, StateFuel, TEXT_CARD, TEXT_WHITE } from '../type'
+import { BACK_CARD, COLOR_GREEN, StateFuel, TEXT_CARD, TEXT_WHITE } from '../../type'
 import { Button, ListItem, ListItemProps } from '@rneui/themed'
 import React, { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from './Redux/hook'
+import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { delFuel } from './Redux/actions'
+import { delFuel } from '../Redux/actions'
 import spring = Animated.spring
+import ShadowBox from '../../CommonComponents/ShadowBox'
 
 type ListComponentProps = ListItemProps
 
@@ -17,7 +18,6 @@ export const FuelList = ({ handlePress }) => {
 
   const renderRow: ListRenderItem<StateFuel> = ({ item }: { item: StateFuel }) => {
     return (
-
       <View style={styles.listItem}>
         {/*  <Shadow stretch={true} > */}
 
@@ -93,7 +93,6 @@ export const FuelList = ({ handlePress }) => {
 
         {/* </Shadow> */}
       </View>
-
     )
   }
 

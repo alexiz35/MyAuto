@@ -1,7 +1,7 @@
-import { Pressable, StyleProp, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from 'react-native'
+import { Pressable, StyleProp, StyleSheet, TextInput, TextStyle, View, ViewStyle } from 'react-native'
 import { BACK_INPUT, COLOR_GREEN, TEXT_WHITE } from '../type'
 import { Dropdown } from 'react-native-element-dropdown'
-import { Button, Icon, Input } from '@rneui/themed'
+import { Button, Icon, Input, Text } from '@rneui/themed'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 
 interface Props {

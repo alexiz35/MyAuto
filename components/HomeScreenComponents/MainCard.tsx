@@ -1,12 +1,12 @@
 import { Text, View, StyleSheet, ImageBackground, Pressable, Alert, Vibration, ActivityIndicator } from 'react-native'
 import { Dialog, Divider, Icon, Input } from '@rneui/themed'
-import { BACK_CARD, COLOR_GREEN, CurrentMiles, initialStateInfo, StateInfo, TEXT_CARD, TEXT_WHITE } from '../type'
+import { BACK_CARD, COLOR_GREEN, CurrentMiles, initialStateInfo, StateInfo, TEXT_CARD, TEXT_WHITE } from '../../type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamList, RootTabParamList } from './Navigation/Navigation'
+import { RootStackParamList, RootTabParamList } from '../Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, useAppSelector } from './Redux/hook'
+import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useEffect, useState } from 'react'
-import { updateMiles } from './Redux/actions'
+import { updateMiles } from '../Redux/actions'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -59,7 +59,7 @@ export const MainCard = (): JSX.Element => {
   }
 
   return (
-    <ImageBackground source={require('../assets/darkBack.jpg')} resizeMethod={'auto'} resizeMode={'cover'} >
+    <ImageBackground source={require('../../assets/darkBack.jpg')} resizeMethod={'auto'} resizeMode={'cover'} >
       <Pressable style={styles.containerView} android_ripple={{ color: 'grey' }}
                  onPress={() => {
                    Vibration.vibrate(100)
