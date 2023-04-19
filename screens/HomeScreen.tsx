@@ -14,6 +14,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { Orientation } from 'expo-screen-orientation'
 import { Button } from '@rneui/themed'
+import BackgroundView from '../CommonComponents/BackgroundView'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
@@ -50,10 +51,10 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   }, [])
 
   return (
-    <ImageBackground source={require('../assets/Back2.png')} style={{ flex: 1 }} >
+    <BackgroundView>
       <View style={(orientation < 3) ? styles.viewContainerVertical : styles.viewContainerHorizontal}>
 
-        <Shadow stretch={true} containerStyle={styles.containerMainCard}>
+        <Shadow stretch={true} distance={10} containerStyle={styles.containerMainCard}>
           <MainCard />
         </Shadow>
         {/* <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].mileage)}</Text>
@@ -62,7 +63,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
           <Tasks />
         </View>
       </View>
-    </ImageBackground>
+    </BackgroundView>
 
   )
 }

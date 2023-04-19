@@ -1,6 +1,6 @@
-import { Dimensions, ImageBackground, ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
+import { Dimensions, ImageBackground, ScrollView, StyleSheet, Switch, View } from 'react-native'
 import { BACK_INPUT, COLOR_GREEN, StateFuel, TEXT_WHITE } from '../type'
-import { Button, ButtonGroup, Icon } from '@rneui/themed'
+import { Button, ButtonGroup, Icon, Text, useTheme } from '@rneui/themed'
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit'
 import { useAppSelector } from '../components/Redux/hook'
 import { useCallback, useEffect, useReducer, useState } from 'react'
@@ -10,6 +10,7 @@ import PieChartComponent from '../components/StatScreenComponents/PieChartCompon
 import WheelPickerExpo from 'react-native-wheel-picker-expo'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import { yearDataFuelChart, yearDataPartsChart } from '../components/StatScreenComponents/FunctionStatistic'
+import BackgroundView from '../CommonComponents/BackgroundView'
 
 export interface TypeSelect {
   type: string
@@ -25,6 +26,7 @@ export interface TypeSelect {
 
 const StatScreen = (): JSX.Element => {
   const state = useAppSelector((state) => state.cars[state.numberCar])
+  const { theme } = useTheme()
 
   const GREEN_BAR = '0,255,0'
   const RED_BAR = '0,255,255'
@@ -84,15 +86,15 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
     }, []))
 
   return (
-    <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
+    <BackgroundView>
       <ScrollView>
       <View style={styles.viewTitleStat}>
         <Text style={styles.titleStat}>
           Статистика за {}
           {/* {calcSum(dataChartFuel)}{calcSum(dataChartParts)} */}
         </Text>
-        <Button type={'outline'} title={textButtonDate} titleStyle={{ color: COLOR_GREEN }}
-                buttonStyle={[styles.button, { borderColor: COLOR_GREEN }]}
+        <Button type={'outline'} title={textButtonDate} titleStyle={{ color: theme.colors.success }}
+                buttonStyle={[styles.button, { borderColor: theme.colors.success }]}
                 onPress={() => {
                   setCheckedSelected(!checkedSelected)
                 }} />
@@ -110,7 +112,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           <Icon type={'material-community'} name={'chart-bar'} color={checked ? 'grey' : TEXT_WHITE} size={28}
                 onPress={() => setChecked(!checked)}/>
         </View>
-      <View style={styles.viewBarChart}>
+      <View style={styles.viewAllInput}>
         {checked
           ? <PieChartComponent dataProps={state} selectDate={selectedDate}/>
           : <BarChartComponent selectDate={Number(selectedDate.valueYear)} dataProps={state} />}
@@ -126,7 +128,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           </View>
         </View>
       </ScrollView>
-    </ImageBackground>
+    </BackgroundView>
   )
 }
 
@@ -139,7 +141,6 @@ const styles = StyleSheet.create({
     alignContent: 'center'
   },
   titleStat: {
-    color: TEXT_WHITE,
     textAlign: 'center',
     alignSelf: 'center',
     paddingVertical: 10,
@@ -166,7 +167,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5
   },
   textKm: {
-    color: 'white',
     fontSize: 12,
     fontStyle: 'italic',
     textAlign: 'left',

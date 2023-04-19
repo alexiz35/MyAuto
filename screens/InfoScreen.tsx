@@ -1,15 +1,16 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { View, Text, StyleSheet, FlatList, ImageBackground } from 'react-native'
+import { View, StyleSheet, FlatList, ImageBackground } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
-import { Dialog, FAB, Icon, Input } from '@rneui/themed'
+import { Dialog, FAB, Icon, Input, Text } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../components/Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, PartList, StateTask } from '../type'
+import { BACK_INPUT, COLOR_GREEN, StatePart, StateTask } from '../type'
 import { listsInfo } from '../components/ListInfo'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 /* import { useNavigation } from '@react-navigation/native' */
 import { printToFile } from '../components/Print/Print'
 import { ModalInfoPart } from '../components/ModalInfoPart'
+import BackgroundView from '../CommonComponents/BackgroundView'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Info'>
 /* type ProfileScreenNavigationProp = NativeStackNavigationProp<
@@ -22,7 +23,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
   /* const nav = useNavigation<ProfileScreenNavigationProp>() */
 
   const [isVisible, setIsVisible] = useState(false)
-  const [currentPart, setCurrentPart] = useState<PartList>()
+  const [currentPart, setCurrentPart] = useState<StatePart>()
   const [currentTask, setCurrentTask] = useState<StateTask>(
     {
       id: 0,
@@ -64,7 +65,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
   }, [])
 
   return (
-    <ImageBackground source={require('../assets/Back2.png')} resizeMode={'cover'}>
+    <BackgroundView>
 
         <ScrollView nestedScrollEnabled={true} style={{ height: '100%' }}>
 
@@ -147,9 +148,9 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
             <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
           <Text style={styles.textPart}>Затраты</Text>
           </View>
-          <Text style={{ textAlign: 'center', marginBottom: 3, color: 'white' }}>{`материалы: ${currentTask.sumCostParts ?? 0} грн`}</Text>
-          <Text style={{ textAlign: 'center', marginBottom: 3, color: 'white' }}>{`работа: ${currentTask.sumCostService ?? 0} грн`}</Text>
-          <Text style={{ textAlign: 'center', marginVertical: 7, color: 'white' }}>{`ВСЕГО: ${(currentTask.sumCostService ?? 0) + (currentTask.sumCostParts ?? 0)} грн`}</Text>
+          <Text style={{ textAlign: 'center', marginBottom: 3 }}>{`материалы: ${currentTask.sumCostParts ?? 0} грн`}</Text>
+          <Text style={{ textAlign: 'center', marginBottom: 3 }}>{`работа: ${currentTask.sumCostService ?? 0} грн`}</Text>
+          <Text style={{ textAlign: 'center', marginVertical: 7 }}>{`ВСЕГО: ${(currentTask.sumCostService ?? 0) + (currentTask.sumCostParts ?? 0)} грн`}</Text>
 
         </View>
        {/*  <Button
@@ -184,7 +185,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
           onPress={() => { void printToFile(currentTask) }}
         />
 
-</ImageBackground>
+</BackgroundView>
 
   )
 }
@@ -203,15 +204,12 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     textAlign: 'center',
-    fontSize: 14,
-    color: '#ffffff'
+    fontSize: 14
   },
   inputErrorStyle: {
-    color: 'grey',
     textAlign: 'center'
   },
   textKm: {
-    color: 'white',
     fontSize: 12,
     fontStyle: 'italic',
     textAlign: 'left',
@@ -227,7 +225,6 @@ const styles = StyleSheet.create({
     borderWidth: 1 */
   },
   textDate: {
-    color: 'white',
     fontSize: 12,
     fontStyle: 'italic',
     textAlign: 'left',
@@ -244,7 +241,6 @@ const styles = StyleSheet.create({
     borderWidth: 1 */
   },
   textPart: {
-    color: 'white',
     fontSize: 12,
     fontStyle: 'italic',
     textAlign: 'left',

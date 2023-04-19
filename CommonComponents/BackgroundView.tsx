@@ -2,6 +2,7 @@
 import { ImageBackground } from 'react-native'
 import { useThemeMode } from '@rneui/themed'
 import React, { useEffect, useState } from 'react'
+export const LightBack = require('../assets/whiteBack.jpg')
 
 const BackgroundView = ({ children }: React.PropsWithChildren<any>): JSX.Element => {
   const { mode } = useThemeMode()

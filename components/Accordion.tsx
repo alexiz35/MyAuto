@@ -44,7 +44,6 @@ const Accordion = ({ insideView, title, open, isOpen, bannerStyle, textBannerSty
           style={styles.arrow}
           type={'material-community'}
           name={isVisible ? 'chevron-up' : 'chevron-down'}
-          color={TEXT_WHITE}
         />
       </Pressable>
       {isVisible

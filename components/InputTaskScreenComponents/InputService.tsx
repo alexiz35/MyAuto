@@ -1,20 +1,32 @@
-import { Text, View, StyleSheet, SafeAreaView, Pressable, ImageBackground, ScrollView } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Pressable,
+  ImageBackground,
+  ScrollView,
+  KeyboardAvoidingView, Platform
+} from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Button, Dialog, Icon, Input } from '@rneui/themed'
+import { Button, Dialog, Divider, Icon, Input, Text, useTheme } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, PartList, ServiceList, StateTask, TEXT } from '../../type'
+import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateTask, TEXT } from '../../type'
 import { RootStackParamList } from '../Navigation/Navigation'
 import { addTask, editTask } from '../Redux/actions'
 import { BottomSheetAddition } from '../BottomSheetAddition'
+import ShadowBox from '../../CommonComponents/ShadowBox'
+import Accordion from '../Accordion'
+import { Tasks } from '../HomeScreenComponents/Tasks'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputService = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
   const state = useAppSelector((state) => state)
+  const { theme } = useTheme()
 
   const listService = [
     { label: 'engineOil', value: 'engineOil' },
@@ -59,7 +71,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
   const [amountPart, setAmountPart] = useState(0)
   const [sumCost, setSumCost] = useState(0)
 
-  const [addParts, setAddParts] = useState<[PartList] | undefined>()
+  const [addParts, setAddParts] = useState<[StatePart] | undefined>()
   const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
 
   const [isVisible, setIsVisible] = useState(false)
@@ -102,7 +114,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
     counter(addParts)
   }, [addParts])
 
-  const counter = (parts: [PartList] | undefined): void => {
+  const counter = (parts: [StatePart] | undefined): void => {
     let amount = 0
     let sum = 0
     // eslint-disable-next-line array-callback-return
@@ -176,7 +188,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
     setIsVisible(false)
   }
 
-  const handleOkModal = (parts: PartList[]): void => {
+  const handleOkModal = (parts: StatePart[]): void => {
     // @ts-expect-error kjjkj
     setAddParts(parts)
     /* setAddServices(services) */
@@ -184,168 +196,190 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
   }
 
   return (
-    <View>
-      {/* <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}> */}
-        <DropDownPicker
-          style={styles.dropDownPicker}
-          listMode={'SCROLLVIEW'}
-          dropDownContainerStyle={{
-            backgroundColor: 'rgba(61,61,61,0.94)'
-          }}
-          disableBorderRadius={true}
-          placeholder={'Выберите тип ТО'}
-          placeholderStyle={{ color: 'red', fontWeight: 'bold' }}
-          open={openDrop}
-          value={valueDrop}
-          items={itemsDrop}
-          setOpen={setOpenDrop}
-          setValue={setValueDrop}
-          setItems={setItemsDrop}
-          selectedItemLabelStyle={{ color: COLOR_GREEN, fontWeight: 'bold' }}
-          onChangeValue={(value) => changeTask(value)}
-          textStyle={{ color: TEXT, textAlign: 'center', fontSize: 18 }}
-          arrowIconStyle={{
-            width: 30,
-            height: 30
+  <View>
+    <ScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
+      <Accordion
+        insideView={
+          <View>
+            {/* <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}> */}
+            <DropDownPicker
+              style={styles.dropDownPicker}
+              listMode={'SCROLLVIEW'}
+              dropDownContainerStyle={{
+                backgroundColor: theme.colors.background, // 'rgba(61,61,61,0.94)'
+                marginHorizontal: 5,
+                width: '97%',
+                borderColor: theme.colors.greyOutline
+              }}
+              disableBorderRadius={true}
+              placeholder={'Выберите тип ТО'}
+              placeholderStyle={{ color: theme.colors.error, fontWeight: 'bold' }}
+              open={openDrop}
+              value={valueDrop}
+              items={itemsDrop}
+              setOpen={setOpenDrop}
+              setValue={setValueDrop}
+              setItems={setItemsDrop}
+              selectedItemLabelStyle={{ color: theme.colors.success, fontWeight: 'bold' }}
+              onChangeValue={(value) => changeTask(value)}
+              textStyle={{ color: theme.colors.black, textAlign: 'center', fontSize: 18 }}
+              arrowIconStyle={{
+                width: 30,
+                height: 30
 
-          }}
-          ArrowDownIconComponent={() => <Icon type={'material-community'} name={'chevron-down'} color={'grey'} size={30}/>}
-        />
-        <View style={styles.viewAllInput}>
+              }}
+              ArrowDownIconComponent={() => <Icon type={'material-community'} name={'chevron-down'} color={'grey'} size={30}/>}
+            />
+            <View style={styles.viewAllInput}>
 
-          <View style={styles.viewGroupInput}>
-            <View style={styles.input}>
-              <Input
-                placeholder={'введите пробег'}
-                placeholderTextColor={'red'}
-                inputStyle={styles.inputText}
-                errorMessage={'текущий пробег'}
-                errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
-                onChangeText={(value) => inputMile(Number(value))}
-                keyboardType={'numeric'}
-                value={String(startKmInput)}
-              />
-            </View>
-            <View style={styles.input}>
-              <Input
-                placeholder={'Пробег для замены'}
-                containerStyle={{ flex: 1 }}
-                inputStyle={styles.inputText}
-                errorMessage={'пробег замены'}
-                errorStyle={styles.errorInput}
-                value = {String(endKmInput)}
-              />
-            </View>
-          </View>
+              <View style={styles.viewGroupInput}>
+                <ShadowBox style={{ margin: 5, flex: 1 }}>
+                  <Input
+                    placeholder={'введите пробег'}
+                    placeholderTextColor={'red'}
+                    inputStyle={styles.inputText}
+                    errorMessage={'текущий пробег'}
+                    errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
+                    onChangeText={(value) => inputMile(Number(value))}
+                    keyboardType={'numeric'}
+                    value={String(startKmInput)}
+                  />
+                </ShadowBox>
+                <ShadowBox style={{ margin: 5, flex: 1 }}>
+                  <Input
+                    placeholder={'Пробег для замены'}
+                    containerStyle={{ flex: 1 }}
+                    inputStyle={styles.inputText}
+                    errorMessage={'пробег замены'}
+                    errorStyle={styles.errorInput}
+                    value = {String(endKmInput)}
+                  />
+                </ShadowBox>
+              </View>
 
-          <View style={styles.viewGroupInput}>
-            <View style={styles.input}>
-              <Input
-                placeholder={'Дата проведения'}
-                containerStyle={{ flex: 1 }}
-                inputStyle={styles.inputText}
-                showSoftInputOnFocus={false}
-                value = {startDateInput.toLocaleDateString()}
-                onPressOut={inputDate}
-                errorMessage={'текущая дата'}
-                errorStyle={styles.errorInput}
-              />
+              <View style={styles.viewGroupInput}>
+                <ShadowBox style={{ margin: 5, flex: 1 }}>
+                  <Input
+                    placeholder={'Дата проведения'}
+                    containerStyle={{ flex: 1 }}
+                    inputStyle={styles.inputText}
+                    showSoftInputOnFocus={false}
+                    value = {startDateInput.toLocaleDateString()}
+                    onPressOut={inputDate}
+                    errorMessage={'текущая дата'}
+                    errorStyle={styles.errorInput}
+                  />
+                </ShadowBox>
+                <ShadowBox style={{ margin: 5, flex: 1 }}>
+                  <Input
+                    placeholder={'Дата проведения'}
+                    inputStyle={styles.inputText}
+                    errorMessage={'конечная дата'}
+                    errorStyle={styles.errorInput}
+                    value = {endDateInput }
+                    editable={false}
+                  />
+                </ShadowBox>
+              </View>
             </View>
-            <View style={styles.input}>
-              <Input
-                placeholder={'Дата проведения'}
-                inputStyle={styles.inputText}
-                errorMessage={'конечная дата'}
-                errorStyle={styles.errorInput}
-                value = {endDateInput }
-                editable={false}
-              />
-            </View>
-          </View>
-        </View>
-        {/*  <Button
+            {/*  <Button
           title={ `Ввести комплектующие \n добавлено ${addParts?.length} шт`}
           titleStyle={{ color: 'black' }}
           onPress={() => { setIsVisible(true) }}
           color= {'white'}
           buttonStyle={ styles.buttonAddition }
         /> */}
-        <Pressable style={styles.textCost} onPress={() => {
-          setIsVisible(true)
-        }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 16, color: 'white' }}>Добавить комплектующие</Text>
-          <Text style={{ color: 'white' }}>{`Добавлено деталей: ${amountPart} шт`}</Text>
-        </Pressable>
-        <View style={styles.viewGroupInput}>
-          <View style={styles.input}>
-            <Input
-              placeholder={'цена деталей'}
-              /* placeholderTextColor={'red'} */
-              inputStyle={styles.inputText}
-              errorMessage={'цена деталей'}
-              errorStyle={styles.errorInput}
-              onChangeText={(value) => setCostParts(Number(value))}
-              keyboardType={'numeric'}
-              value={String(sumCost)}
-            />
+            <ShadowBox style={{ margin: 5, flex: 1 }}>
+              <Pressable style={styles.textCost} onPress={() => {
+                setIsVisible(true)
+              }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Добавить комплектующие</Text>
+                <Text >{`Добавлено деталей: ${amountPart} шт`}</Text>
+              </Pressable>
+            </ShadowBox>
+            <View style={styles.viewGroupInput}>
+              <ShadowBox style={{ margin: 5, flex: 1 }}>
+                <Input
+                  placeholder={'цена деталей'}
+                  /* placeholderTextColor={'red'} */
+                  inputStyle={styles.inputText}
+                  errorMessage={'цена деталей'}
+                  errorStyle={styles.errorInput}
+                  onChangeText={(value) => setCostParts(Number(value))}
+                  keyboardType={'numeric'}
+                  value={String(sumCost)}
+                />
+              </ShadowBox>
+              <ShadowBox style={{ margin: 5, flex: 1 }}>
+                <Input
+                  placeholder={'стоимость работы'}
+                  containerStyle={{ flex: 1 }}
+                  inputStyle={styles.inputText}
+                  errorMessage={'стоимость работы'}
+                  errorStyle={styles.errorInput}
+                  onChangeText={(value) => setCostService(Number(value))}
+                  keyboardType={'numeric'}
+                  value={String(costService)}
+                />
+              </ShadowBox>
+            </View>
+
+            <ShadowBox style={{ margin: 5, flex: 1 }}>
+              <Text style={styles.textCost}>{`Итого затраты: ${sumCost + costService} грн`}</Text>
+            </ShadowBox>
+
+            <Dialog
+              isVisible={isVisible}
+              overlayStyle={{ width: '100%', padding: 0 }}
+              backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
+            >
+              <BottomSheetAddition
+                initialParts = {addParts}
+                onPressCancel = {handleCancelModal}
+                onPressOk={handleOkModal}
+              />
+
+            </Dialog>
+
+            <Text style={styles.button}>{errorMsg}</Text>
+            <View style={styles.viewButton}>
+
+              <Button
+                containerStyle={styles.buttonStyle}
+                /* buttonStyle={{ borderColor: 'red' }}
+                titleStyle={{ color: 'red' }} */
+                title={'Cancel'}
+                color={'error'}
+                type={'solid'}
+                onPress={() => { navigation.goBack() }}
+                raised
+                /* onPress={onPressCancel} */
+              />
+              <Button
+                containerStyle={styles.buttonStyle}
+                /* buttonStyle={{ borderColor: COLOR_GREEN }}
+                titleStyle={{ color: COLOR_GREEN }} */
+                title={'Ok'}
+                color={'success'}
+                type={'solid'}
+                onPress={() => { handleOk() }}
+                raised
+              />
+            </View>
+            {/* </ScrollView> */}
           </View>
-          <View style={styles.input}>
-            <Input
-              placeholder={'стоимость работы'}
-              containerStyle={{ flex: 1 }}
-              inputStyle={styles.inputText}
-              errorMessage={'стоимость работы'}
-              errorStyle={styles.errorInput}
-              onChangeText={(value) => setCostService(Number(value))}
-              keyboardType={'numeric'}
-              value={String(costService)}
-            />
-          </View>
-        </View>
-
-        <View >
-          <Text style={styles.textCost}>{`Итого затраты: ${sumCost + costService} грн`}</Text>
-        </View>
-
-        <Dialog
-          isVisible={isVisible}
-          overlayStyle={{ width: '100%', padding: 0 }}
-          backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
-        >
-          <BottomSheetAddition
-            initialParts = {addParts}
-            onPressCancel = {handleCancelModal}
-            onPressOk={handleOkModal}
-          />
-
-        </Dialog>
-
-        <Text style={styles.button}>{errorMsg}</Text>
-        <View style={styles.viewButton}>
-
-          <Button
-            containerStyle={styles.buttonStyle}
-            buttonStyle={{ borderColor: 'red' }}
-            titleStyle={{ color: 'red' }}
-            title={'Cancel'}
-            color={'warning'}
-            type={'outline'}
-            onPress={() => { navigation.goBack() }}
-            /* onPress={onPressCancel} */
-          />
-          <Button
-            containerStyle={styles.buttonStyle}
-            buttonStyle={{ borderColor: COLOR_GREEN }}
-            titleStyle={{ color: COLOR_GREEN }}
-            title={'Ok'}
-            color={'success'}
-            type={'outline'}
-            onPress={() => { handleOk() }}
-          />
-        </View>
-      {/* </ScrollView> */}
+      }
+        title={'Добавьте сервис'}
+        bannerStyle={{ backgroundColor: BACK_INPUT }}
+        /* open={openAccordion}
+        isOpen={isOpen} */
+        /* textBannerStyle={{ color: TEXT_WHITE }} */
+      />
+    </ScrollView>
+    <View style={{ marginTop: 10 }}>
+    <Tasks />
     </View>
-
+  </View>
   )
 }
 
@@ -357,16 +391,8 @@ const styles = StyleSheet.create({
     margin: 5,
     width: '97%',
     borderWidth: 0,
-    borderRadius: 0,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
+    borderRadius: 0
 
-    elevation: 2
   },
   viewAllInput: {
 
@@ -391,8 +417,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     textAlign: 'center',
-    fontSize: 14,
-    color: 'white'
+    fontSize: 14
   },
   errorInput: {
     color: 'gray',
@@ -435,21 +460,8 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   textCost: {
-    marginHorizontal: 50,
-    marginVertical: 10,
     padding: 10,
-    backgroundColor: BACK_INPUT,
-    color: 'white',
     textAlign: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
+    alignItems: 'center'
   }
 })

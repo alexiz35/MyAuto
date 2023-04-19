@@ -9,7 +9,7 @@ interface PropsShadow {
   style: StyleProp<ViewStyle>
 }
 
-const ShadowBox = ({ children, style }: PropsShadow) => {
+const ShadowBox = ({ children, style }: PropsShadow): JSX.Element => {
   const { mode } = useThemeMode()
 
   const BlackBack = BACK_INPUT

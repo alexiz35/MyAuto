@@ -1,8 +1,4 @@
 import {
-  FlatList,
-  ImageBackground,
-  ListRenderItem,
-  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -11,31 +7,18 @@ import {
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import {
-  BACK_CARD,
-  BACK_INPUT, BACK_OPACITY,
-  COLOR_GREEN,
-  PartList,
-  ServiceList,
-  StateFuel,
-  StateTask,
-  TEXT, TEXT_CARD,
-  TEXT_WHITE
+  BACK_INPUT,
+  StateFuel
 } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { addFuel, addTask, delTask, editFuel, editTask, finishTask } from '../components/Redux/actions'
-import DropDownPicker from 'react-native-dropdown-picker'
+import { addFuel, editFuel } from '../components/Redux/actions'
 import { Button, Dialog, Icon, Text, Input, LinearProgress, ListItem, useTheme } from '@rneui/themed'
-import { BottomSheetAddition } from '../components/BottomSheetAddition'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { Dropdown } from 'react-native-element-dropdown'
 import { useFocusEffect } from '@react-navigation/native'
-import { SimpleAccordion } from 'react-native-simple-accordion'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
 import Accordion from '../components/Accordion'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { Surface } from 'react-native-paper'
 import ShadowBox from '../CommonComponents/ShadowBox'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Fuel'>
@@ -81,7 +64,6 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   useFocusEffect(
     useCallback(() => {
       setValueDrop(state.cars[state.numberCar].info.fuel)
-      console.log('fuel', state.cars[state.numberCar].fuel)
     }, [valueDrop]))
 
   useEffect(() => {
@@ -287,7 +269,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
             />
           </ScrollView>
         </View>
-        <View >
+        <View style={{ marginTop: 10 }}>
             <FuelList handlePress={handleOpen}/>
         </View>
 

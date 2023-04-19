@@ -6,7 +6,7 @@ import {
   View, ScrollView
 } from 'react-native'
 import { Button, Divider, Icon, Input } from '@rneui/themed'
-import { BACK_INPUT, COLOR_GREEN, PartList, PropsBottomSheet, Seller, TEXT_WHITE } from '../type'
+import { BACK_INPUT, COLOR_GREEN, StatePart, PropsBottomSheet, Seller, TEXT_WHITE } from '../type'
 import { SimpleAccordion } from 'react-native-simple-accordion'
 
 export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [] }: PropsBottomSheet): JSX.Element => {
@@ -19,7 +19,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
   const [sellerLink, setSellerLink] = useState('')
   const [seller, setSeller] = useState<Seller>()
 
-  const [parts, setParts] = useState<PartList[]>(initialParts)
+  const [parts, setParts] = useState<StatePart[]>(initialParts)
 
   const inputNamePart = React.createRef<PropsWithChildren<TextInput>>()
   const inputCostPart = React.createRef<PropsWithChildren<TextInput>>()
@@ -30,7 +30,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
   const inputSellerLink = React.createRef<PropsWithChildren<TextInput>>()
 
   const delPart = (id: number): void => {
-    const newParts = parts.filter((item: PartList) => item.id !== id)
+    const newParts = parts.filter((item: StatePart) => item.id !== id)
     setParts(newParts)
   }
 
@@ -47,7 +47,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
     inputNumberPart.current?.clear()
   }
 
-  const listParts = (item: PartList, key: number): JSX.Element => {
+  const listParts = (item: StatePart, key: number): JSX.Element => {
     return (
       <View >
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>

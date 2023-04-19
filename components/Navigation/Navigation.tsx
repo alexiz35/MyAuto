@@ -5,8 +5,8 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 
 import HomeScreen from '../../screens/HomeScreen'
 import InputTaskScreen from '../../screens/InputTaskScreen'
-import { Alert, Image, Pressable, Text, View } from 'react-native'
-import { Button, FAB, Icon, Switch, useThemeMode } from '@rneui/themed'
+import { Alert, Image, Pressable, View } from 'react-native'
+import { Button, FAB, Icon, Switch, Text, useTheme, useThemeMode } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
@@ -88,7 +88,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
   const { mode, setMode } = useThemeMode()
-  const toggle = () => {
+  const { theme } = useTheme()
+  const toggle = (): void => {
     if (mode === 'dark') setMode('light')
     else setMode('dark')
   }
@@ -153,7 +154,7 @@ export const Navigation = (): JSX.Element => {
   return (
     <NavigationContainer >
       <Stack.Navigator screenOptions={ {
-        headerStyle: { backgroundColor: BACK_TAB_TOP },
+        headerStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_TOP
         headerTransparent: false,
         statusBarStyle: 'dark'
       }}>
@@ -195,7 +196,7 @@ export const Navigation = (): JSX.Element => {
           component={BottomTabNav}
           options={({ navigation }) => ({
             headerTitleAlign: 'center',
-            headerStyle: { backgroundColor: BACK_TAB_TOP },
+            headerStyle: { backgroundColor: theme.colors.background },
             headerTitle: () => (
               /* <Pressable onPress={() => navigation.navigate('SettingScreen')}>
               <LogoTitle />
@@ -207,7 +208,7 @@ export const Navigation = (): JSX.Element => {
             ),
             headerLeft: () => (
               <View>
-                <Text style={{ color: TEXT }}>Today: {/* {Math.trunc(distance)} */} m</Text>
+                <Text >Today: {/* {Math.trunc(distance)} */} m</Text>
               </View>
             ),
             title: 'title',
@@ -215,13 +216,13 @@ export const Navigation = (): JSX.Element => {
               <View style={{ flexDirection: 'row' }}>
               <Button
                 type='outline'
-                buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: TEXT_WHITE }}
+                buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.black }}
                 size='md'
                 icon={{
                   name: 'gear',
                   type: 'font-awesome',
                   size: 20,
-                  color: TEXT_WHITE
+                  color: theme.colors.black
                 }}
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 onPress={
@@ -240,7 +241,7 @@ export const Navigation = (): JSX.Element => {
           component={InputTaskScreen}
           options={{
             title: 'Edit Task',
-            headerTintColor: HEADER_TINT_COLOR
+            headerTintColor: theme.colors.black
           }} />
 
         <Stack.Screen
@@ -248,7 +249,7 @@ export const Navigation = (): JSX.Element => {
           component={CarInfoScreen}
           options={{
             title: 'Car Info',
-            headerTintColor: HEADER_TINT_COLOR
+            headerTintColor: theme.colors.black
           }} />
 
         <Stack.Screen
@@ -256,7 +257,7 @@ export const Navigation = (): JSX.Element => {
           component={SettingScreen}
           options={{
             title: 'Setting',
-            headerTintColor: HEADER_TINT_COLOR
+            headerTintColor: theme.colors.black
           }} />
 
         <Stack.Screen
@@ -265,17 +266,17 @@ export const Navigation = (): JSX.Element => {
           initialParams={{ taskId: 0 }}
           options={({ navigation, route }) => ({
             title: 'Info task',
-            headerTintColor: HEADER_TINT_COLOR,
+            headerTintColor: theme.colors.black,
             headerRight: () => (
 
                 <Button
                 type='outline'
                 size='md'
-                buttonStyle={{ borderColor: COLOR_GREEN }}
+                buttonStyle={{ borderColor: theme.colors.black }}
                 icon={{
                   name: 'pencil',
                   type: 'material-community',
-                  color: '#a2a2a2',
+                  color: theme.colors.black,
                   size: 20
                 }}
                 onPress={() => {
@@ -294,15 +295,16 @@ export const Navigation = (): JSX.Element => {
 type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
+  const { theme } = useTheme()
   const FabTab = (): any => null
 
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: 'white',
-        tabBarInactiveTintColor: 'gray',
-        tabBarStyle: { backgroundColor: BACK_TAB_BOTTOM, paddingVertical: 5 },
+        tabBarActiveTintColor: theme.colors.black, // 'white',
+        tabBarInactiveTintColor: theme.colors.grey1, // 'gray',
+        tabBarStyle: { backgroundColor: theme.colors.background, paddingVertical: 5 }, // BACK_TAB_BOTTOM
         tabBarIconStyle: { paddingVertical: 0 },
         tabBarLabelStyle: { fontSize: 14 }
       }}
@@ -346,15 +348,15 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                     ), */
                     tabBarButton: () => (
                        <FAB
-                      color={'black'}
+                      color= {theme.colors.background} // {'black'}
                       style={{ marginBottom: 30, elevation: 5 }}
                       containerStyle={{
                         borderWidth: 1,
                         borderColor: 'rgba(68,67,67,0.49)'
                       }}
-                      icon={{ name: 'add', color: 'white' }}
+                      icon={{ name: 'add', color: theme.colors.black }}
                       onPress={() => {
-                        navigation.navigate('InputTaskScreen', { editable: false, typeTask: 1 })
+                        navigation.navigate('InputTaskScreen', { editable: false, typeTask: 0 })
                       }}
                     />
 

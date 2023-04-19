@@ -1,20 +1,22 @@
-import { Text, View, StyleSheet, SafeAreaView, Pressable, ImageBackground, ScrollView } from 'react-native'
+import { View, StyleSheet, SafeAreaView, Pressable, ImageBackground, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { Button, Dialog, Icon, Input, Tab, TabView } from '@rneui/themed'
+import { Button, Dialog, Icon, Input, Tab, TabView, Text, useTheme } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { useEffect, useMemo, useState } from 'react'
-import { BACK_INPUT, COLOR_GREEN, PartList, ServiceList, StateTask, TEXT, TEXT_WHITE } from '../type'
+import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateTask, TEXT, TEXT_WHITE } from '../type'
 import { addTask, editTask } from '../components/Redux/actions'
 import { BottomSheetAddition } from '../components/BottomSheetAddition'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import InputService from '../components/InputTaskScreenComponents/InputService'
-import InputTask from '../components/InputTaskScreenComponents/InputTask'
+import InputPart from '../components/InputTaskScreenComponents/InputPart'
+import BackgroundView from '../CommonComponents/BackgroundView'
 
   type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
+  const { theme } = useTheme()
   const setNewTask = useAppDispatch()
   const state = useAppSelector((state) => state)
   const [index, setIndex] = useState(0)
@@ -41,13 +43,13 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   ) */
 
   return (
-    <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
+    <BackgroundView>
       {/* <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}> */}
         <Tab
           value={index}
           onChange={(e) => setIndex(e)}
           indicatorStyle={{
-            backgroundColor: 'white',
+            backgroundColor: theme.colors.black,
             height: 3
           }}
           buttonStyle={{
@@ -57,33 +59,32 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
         >
           <Tab.Item
             title='Запчасти'
-            titleStyle={{ fontSize: 12, color: TEXT_WHITE }}
-            icon={{ name: 'cog', type: 'material-community', color: 'white', size: 20 }}
-
+            titleStyle={{ fontSize: 12, color: theme.colors.black }}
+            icon={{ name: 'cog', type: 'material-community', size: 20, color: theme.colors.black }}
           />
           <Tab.Item
             title="сервис"
-            titleStyle={{ fontSize: 12, color: TEXT_WHITE }}
-            icon={{ name: 'car-wrench', type: 'material-community', color: 'white', size: 20 }}
+            titleStyle={{ fontSize: 12, color: theme.colors.black }}
+            icon={{ name: 'car-wrench', type: 'material-community', size: 20, color: theme.colors.black }}
           />
           <Tab.Item
             title="другое"
-            titleStyle={{ fontSize: 12, color: TEXT_WHITE }}
-            icon={{ name: 'account-cash', type: 'material-community', color: 'white', size: 20 }}
+            titleStyle={{ fontSize: 12, color: theme.colors.black }}
+            icon={{ name: 'account-cash', type: 'material-community', size: 20, color: theme.colors.black }}
           />
         </Tab>
 
-        <TabView value={index} onChange={setIndex} animationType='spring'>
+        <TabView value={index} onChange={setIndex} animationType='spring' disableSwipe>
           <TabView.Item style={{ width: '100%' }}>
-            <View>
-            <InputTask navigation={navigation} route={route}/>
+            <View >
+            <InputPart navigation={navigation} route={route}/>
             </View>
           </TabView.Item>
           <TabView.Item style={{ width: '100%' }}>
             <View>
-              <ScrollView>
+              <View>
             <InputService navigation={navigation} route={route}/>
-              </ScrollView>
+              </View>
             </View>
           </TabView.Item>
           <TabView.Item style={{ backgroundColor: 'green', width: '100%' }}>
@@ -93,7 +94,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
         {/* <InputService navigation={navigation} route={route}/> */}
     {/* </ScrollView> */}
 
-</ImageBackground>
+</BackgroundView>
 
   )
 }

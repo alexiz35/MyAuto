@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, ImageBackground, Pressable, Alert, Vibration, ActivityIndicator } from 'react-native'
-import { Dialog, Divider, Icon, Input } from '@rneui/themed'
+import { Badge, Dialog, Divider, Icon, Input } from '@rneui/themed'
 import { BACK_CARD, COLOR_GREEN, CurrentMiles, initialStateInfo, StateInfo, TEXT_CARD, TEXT_WHITE } from '../../type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from '../Navigation/Navigation'
@@ -65,7 +65,16 @@ export const MainCard = (): JSX.Element => {
                    Vibration.vibrate(100)
                    navStack.navigate('CarInfoScreen')
                  }}>
-        <Text style={styles.carText}>{`${infoCar.brand} ${infoCar.model}`}</Text>
+        <Text style={styles.carText} >
+          {`${infoCar.brand} ${infoCar.model}`}
+          {<Icon
+            style={{ marginHorizontal: 10 }}
+            name='information-outline'
+            size={17}
+            type='material-community'
+            color={'grey'}
+          />}
+        </Text>
         <Divider inset={true} insetType="middle" />
         <View style={styles.infoView}>
           <Pressable style={styles.kmView} onPress={() => {
@@ -76,11 +85,17 @@ export const MainCard = (): JSX.Element => {
               style={{ marginHorizontal: 10 }}
               name='location-arrow'
               type='font-awesome'
-              color={TEXT_CARD}
+              color={'grey'}
             />
-            <Text style={[styles.kmText, isNeedUpdate ? { textShadowColor: 'red' } : { textShadowColor: COLOR_GREEN }]}>
+            <View>
+            <Text style={styles.kmText}>
               {String(currentMiles.currentMileage)}
             </Text>
+              <Badge
+                containerStyle={{ position: 'absolute', top: 2, left: 30 }}
+                status={isNeedUpdate ? 'error' : 'success'}
+              />
+            </View>
           </Pressable>
 
           <Pressable style={styles.costView} onPress={() => navTab.navigate('StatScreen')}>
@@ -89,11 +104,11 @@ export const MainCard = (): JSX.Element => {
               style={{ marginHorizontal: 10 }}
               name='car-wrench'
               type='material-community'
-              color={TEXT_CARD}
+              color={'grey'}
             />
             <Text style={{
               fontSize: 16,
-              color: TEXT_CARD
+              color: 'grey'
             }}>
               22000 грн
             </Text>
@@ -103,11 +118,11 @@ export const MainCard = (): JSX.Element => {
               style={{ marginHorizontal: 10 }}
               name='gas-station'
               type='material-community'
-              color={TEXT_CARD}
+              color={'grey'}
             />
             <Text style={{
               fontSize: 16,
-              color: TEXT_CARD
+              color: 'grey'
             }}>
               22000 грн
             </Text>
@@ -170,9 +185,10 @@ const styles = StyleSheet.create({
 
   },
   carText: {
-    color: TEXT_CARD,
-    textAlign: 'center',
-    fontWeight: 'bold'
+    fontSize: 17,
+    color: 'grey',
+    textAlign: 'center'
+    /* fontWeight: 'bold' */
   },
   infoView: {
     justifyContent: 'space-between',
@@ -185,11 +201,11 @@ const styles = StyleSheet.create({
   },
   kmText: {
     fontSize: 16,
-    color: TEXT_CARD,
-    textAlign: 'center',
-    textShadowColor: COLOR_GREEN,
+    color: 'grey',
+    textAlign: 'center'
+    /* textShadowColor: COLOR_GREEN, */
     /* textShadowOffset: { height: 2, width: 2 }, */
-    textShadowRadius: 10
+    /* textShadowRadius: 10 */
   },
   costView: {
     flex: 1

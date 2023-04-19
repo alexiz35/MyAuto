@@ -56,10 +56,10 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
     return (
 
       <View style={styles.listItem}>
-       {/*  <Shadow stretch={true} > */}
+        <Shadow stretch={true} >
 
         <ListItem.Swipeable
-        containerStyle={{ backgroundColor: BACK_CARD }}
+        containerStyle={{ padding: 5, height: 70 }}
         onPress={() => nav.navigate('Info', { taskId: item.id, typeTask: 1 })}
         /* bottomDivider */
         leftContent={ () => (
@@ -81,9 +81,9 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
         )}
       >
 
-      <ListItem.Content style={{ flex: 1.4, backgroundColor: BACK_CARD }} >
+      <ListItem.Content style={{ flex: 1.4 }} >
 
-          <ListItem.Title style={{ color: TEXT_CARD }} >
+          <ListItem.Title style={{ }} >
             {item.title}
 
           </ListItem.Title>
@@ -92,38 +92,36 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
           color={progress.color}
           trackColor='lightgrey'
         /> */}
-          <ListItem.Subtitle style={{ fontSize: 11, color: TEXT_CARD }} numberOfLines={1}>
-            <Text style={{ overflow: 'hidden', flexWrap: 'nowrap' }}>
+          <ListItem.Subtitle style={{ fontSize: 11 }} numberOfLines={1} lineBreakMode={'tail'}>
             {(progress.left !== 0) ? `осталось ${progress.left} км` : 'просрочено'}
-            </Text>
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Content>
-          <ListItem.Title style={{ color: TEXT_CARD }}>
+          <ListItem.Title style={{ }}>
             {item.startDate}
           </ListItem.Title>
-          <ListItem.Subtitle style={{ color: TEXT_CARD }}>
+          <ListItem.Subtitle style={{ fontSize: 11 }} numberOfLines={1} lineBreakMode={'tail'}>
             {`${item.startKm} km`}
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Content >
-          <ListItem.Title style={{ color: TEXT_CARD }}>
+          <ListItem.Title style={{ }}>
             {item.endData}
           </ListItem.Title>
-          <ListItem.Subtitle style={{ color: TEXT_CARD }}>
+          <ListItem.Subtitle style={{ fontSize: 11 }} numberOfLines={1} lineBreakMode={'tail'}>
             {`${item.endKm} km`}
           </ListItem.Subtitle>
         </ListItem.Content>
-        <ListItem.CheckBox
+        {/* <ListItem.CheckBox
           checkedColor={COLOR_GREEN}
           containerStyle={{ flex: 0.1, backgroundColor: BACK_OPACITY }}
           checked={item.isFinished}
           onPress={pressCheck}
-        />
+        /> */}
 
       </ListItem.Swipeable>
 
-        {/* </Shadow> */}
+        </Shadow>
       </View>
 
     )

@@ -24,7 +24,7 @@ import {
   BACK_INPUT,
   BACKGROUND,
   COLOR_GREEN,
-  PartList,
+  StatePart,
   ServiceList, StateCar, StateInfo,
   StateTask,
   TEXT,

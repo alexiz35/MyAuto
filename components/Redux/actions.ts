@@ -1,12 +1,12 @@
 import {
   ActionAddCar,
-  ActionAddFuel,
+  ActionAddFuel, ActionAddParts,
   ActionAddTask,
   ActionAddToken,
-  ActionDelFuel,
+  ActionDelFuel, ActionDelParts,
   ActionDelTask,
   ActionDelToken,
-  ActionEditCar, ActionEditFuel,
+  ActionEditCar, ActionEditFuel, ActionEditParts,
   ActionEditTask,
   ActionFinishTask,
   ActionMiles,
@@ -16,7 +16,7 @@ import {
   StateCar,
   StateFuel,
   StateInfo,
-  StateMain,
+  StateMain, StatePart,
   StateTask
 } from '../../type'
 // -------------------------- Action State -------------------------------------
@@ -105,7 +105,7 @@ export const delToken = (token: string): ActionDelToken => (
     token
   })
 // -----------------------------------------------------------------------------
-// ----------------------------- Action Task -----------------------------------
+// ----------------------------- Action Fuel -----------------------------------
 export const addFuel = (carId: number, fuel: StateFuel): ActionAddFuel => (
   {
     type: ActionType.ADD_FUEL,
@@ -131,6 +131,35 @@ export const editFuel = (carId: number, id: number | undefined, fuel: StateFuel)
       carId,
       id,
       fuel
+    }
+  })
+// -----------------------------------------------------------------------------
+// ----------------------------- Action Parts -----------------------------------
+export const addPart = (carId: number, part: StatePart): ActionAddParts => (
+  {
+    type: ActionType.ADD_PARTS,
+    payload: {
+      carId,
+      part
+    }
+  })
+
+export const delPart = (carId: number, id: number): ActionDelParts => (
+  {
+    type: ActionType.DEL_PARTS,
+    payload: {
+      carId,
+      id
+    }
+  })
+
+export const editPart = (carId: number, id: number | undefined, part: StatePart): ActionEditParts => (
+  {
+    type: ActionType.EDIT_PARTS,
+    payload: {
+      carId,
+      id,
+      part
     }
   })
 // -----------------------------------------------------------------------------

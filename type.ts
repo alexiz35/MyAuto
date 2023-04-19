@@ -29,7 +29,10 @@ export enum ActionType {
   DEL_TOKEN = 'DEL_TOKEN',
   ADD_FUEL = 'ADD_FUEL',
   DEL_FUEL = 'DEL_FUEL',
-  EDIT_FUEL = 'EDIT_FUEL'
+  EDIT_FUEL = 'EDIT_FUEL',
+  ADD_PARTS = 'ADD_PARTS',
+  DEL_PARTS = 'DEL_PARTS',
+  EDIT_PARTS = 'EDIT_PARTS'
 }
 
 export interface StateMain {
@@ -44,6 +47,7 @@ export interface StateCar {
   currentMiles: CurrentMiles
   fuel: StateFuel[]
   tasks: StateTask[]
+  parts: StatePart[]
   mileage: CurrentMiles[]
 }
 
@@ -95,11 +99,29 @@ export interface StateTask {
   isFinished: boolean
   sumCostParts?: number
   sumCostService?: number
-  addition?: {
-    parts?: [PartList]
+  addition?:
+  {
+    parts?: [StatePart]
     services?: [ServiceList]
   }
+}
 
+export interface StatePart {
+  id: number
+  namePart: string
+  dateBuy: Date
+  costPart: number
+  quantityPart: number
+  amountCostPart: number
+  numberPart: string
+  numberPart1?: string
+  numberPart2?: string
+  seller?: Seller
+}
+export interface Seller {
+  name: string
+  phone?: string
+  link?: string
 }
 // -------------------------------------------------------------------------------------------
 // -----------------------------------type for Miles state----------------------------------
@@ -115,6 +137,8 @@ export interface ActionUpdateState {
   type: ActionType.UPDATE_STATE
   newState: StateMain
 }
+// ----------------------------- interface ActionToken -------------------------
+
 export interface ActionAddToken {
   type: ActionType.ADD_TOKEN
   token: string
@@ -123,6 +147,8 @@ export interface ActionDelToken {
   type: ActionType.DEL_TOKEN
   token: string
 }
+// ----------------------------- interface Action ------------------------------
+
 export interface ActionChangeCar {
   type: ActionType.CHANGE_CAR
   numberCar: number
@@ -135,6 +161,8 @@ export interface ActionMiles {
     currentMiles: CurrentMiles
   }
 }
+// ----------------------------- interface ActionTask -------------------------
+
 export interface ActionAddTask {
   type: ActionType.ADD_TASK
   payload: {
@@ -167,6 +195,7 @@ export interface ActionFinishTask {
     isFinished: boolean
   }
 }
+// ----------------------------- interface ActionCar -------------------------
 
 export interface ActionAddCar {
   type: ActionType.ADD_CAR
@@ -188,6 +217,7 @@ export interface ActionEditCar {
     carInfo: StateInfo
   }
 }
+// ----------------------------- interface ActionFuel -------------------------
 
 export interface ActionAddFuel {
   type: ActionType.ADD_FUEL
@@ -212,11 +242,36 @@ export interface ActionEditFuel {
     fuel: StateFuel
   }
 }
+// ----------------------------- interface ActionParts -------------------------
+export interface ActionAddParts {
+  type: ActionType.ADD_PARTS
+  payload: {
+    carId: number
+    part: StatePart
+  }
+}
+export interface ActionDelParts {
+  type: ActionType.DEL_PARTS
+  payload: {
+    carId: number
+    id: number
+  }
+}
+
+export interface ActionEditParts {
+  type: ActionType.EDIT_PARTS
+  payload: {
+    carId: number
+    id: number | undefined
+    part: StatePart
+  }
+}
 
 export type AppAction = ActionMiles | ActionChangeCar |
 ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask |
 ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken |
-ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel
+ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel |
+ActionAddParts | ActionDelParts | ActionEditParts
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 
@@ -224,23 +279,7 @@ export type Dispatch = (state: StateMain, action: AppAction) => StateMain
 
 // -------------------------------------------------------------------------------------------
 // ----------------------------------BottomSheet----------------------------------------------
-export interface PartList {
-  id: number
-  namePart: string
-  dateBuy?: Date
-  costPart: number
-  quantityPart: number
-  amountPart?: number
-  numberPart: string
-  numberPart1?: string
-  numberPart2?: string
-  seller?: Seller
-}
-export interface Seller {
-  name: string
-  phone: string
-  link: string
-}
+
 export interface ServiceList {
   id: number
   nameService: string
@@ -248,8 +287,8 @@ export interface ServiceList {
 }
 
 export interface PropsBottomSheet {
-  initialParts: PartList[] | undefined
-  onPressOk: (parts: PartList[]) => void
+  initialParts: StatePart[] | undefined
+  onPressOk: (parts: StatePart[]) => void
   onPressCancel: () => void
 }
 

@@ -1,13 +1,13 @@
 import { ImageBackground, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { Button, Icon, Input } from '@rneui/themed'
-import { BACK_INPUT, COLOR_GREEN, PartList, Seller, StateTask, TEXT_WHITE } from '../type'
+import { BACK_INPUT, COLOR_GREEN, StatePart, Seller, StateTask, TEXT_WHITE } from '../type'
 import { useState } from 'react'
 import { editTask } from './Redux/actions'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
 
 interface ModalInfoPartProps {
   currentTask: StateTask
-  currentPart: PartList
+  currentPart: StatePart
   onPressCancel: () => void
 }
 enum ButtonEditType {
@@ -46,7 +46,7 @@ export const ModalInfoPart = ({ currentTask, currentPart, onPressCancel }: Modal
   const [toggleEdit, setToggleEdit] = useState<ButtonEditType>(ButtonEditType.read)
 
   const handlerSave = (): void => {
-    const tempParts: PartList[] | undefined = currentTask.addition?.parts?.filter((item) => (item.id !== currentPart.id))
+    const tempParts: StatePart[] | undefined = currentTask.addition?.parts?.filter((item) => (item.id !== currentPart.id))
     // @ts-expect-error undefined
     currentTask.addition.parts = tempParts.concat({
       id: currentPart.id,

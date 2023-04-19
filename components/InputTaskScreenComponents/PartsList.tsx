@@ -1,23 +1,23 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
-import { BACK_CARD, COLOR_GREEN, StateFuel, TEXT_WHITE } from '../../type'
-import { Button, ListItem } from '@rneui/themed'
+import { COLOR_GREEN, StatePart } from '../../type'
+import { Button, ListItem, useTheme } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { delFuel } from '../Redux/actions'
+import { delPart } from '../Redux/actions'
 import { Shadow } from 'react-native-shadow-2'
 
 interface handleProp {
-  handlePress: (item: StateFuel) => void
+  handlePress: (item: StatePart) => void
 }
 
-export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
-  const listFuel = useAppSelector(state => state.cars[0].fuel)
+export const PartsList = ({ handlePress }: handleProp): JSX.Element => {
+  const listParts = useAppSelector(state => state.cars[0].parts)
   const carId = useAppSelector(state => state.numberCar)
+  const { theme } = useTheme()
   const dispatch = useAppDispatch()
-  const [isSortFuel, setIsSortFuel] = useState(false)
-
-  const renderRow: ListRenderItem<StateFuel> = ({ item }: { item: StateFuel }) => {
+  const [isSortParts, setIsSortParts] = useState(false)
+  const renderRow: ListRenderItem<StatePart> = ({ item }: { item: StatePart }) => {
     return (
       <View style={styles.listItem}>
          <Shadow stretch={true} >
@@ -25,11 +25,10 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
         <ListItem.Swipeable
           animation={{ type: 'spring' }}
           containerStyle={{ padding: 5, height: 70 }}
+          style={{ }}
           onPress={() =>
             handlePress(item)
           }
-          bottomDivider
-          topDivider
           leftContent={() => (
             <Button
               title='info'
@@ -41,7 +40,6 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
               onPress={() => {
                 handlePress(item)
               }}
-              /* onPress={() => { nav() }} */
             />
           )}
           rightContent={() => (
@@ -56,41 +54,43 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
                 backgroundColor: 'red'
               }}
               onPress={() => {
-                dispatch(delFuel(carId, item.id))
+                dispatch(delPart(carId, item.id))
               }}
             />
           )}
+          bottomDivider
+          topDivider
         >
-          <MaterialCommunityIcons name={'gas-station'} size={24} color={COLOR_GREEN}/>
-          <ListItem.Content style={{
-            flex: 1.7
-          }}>
-            <ListItem.Title style={{ fontSize: 14 }}>
-              {String(new Date(item.dateFuel).toLocaleDateString())}
+
+          <MaterialCommunityIcons name={'cog'} size={24} color={theme.colors.success}/>
+          <ListItem.Content style={{ flex: 3 }}>
+            <ListItem.Title style={{ fontSize: 14 }} >
+              {String(new Date(item.dateBuy).toLocaleDateString())}
             </ListItem.Title>
-            <ListItem.Subtitle style={{ fontSize: 14 }}>
-              {item.StationFuel}
+            <ListItem.Subtitle style={{ fontSize: 14 }} lineBreakMode={'tail'} numberOfLines={1} >
+              {String(item.namePart)}
             </ListItem.Subtitle>
           </ListItem.Content>
 
           <ListItem.Content style={{ flex: 1.5 }}>
             <ListItem.Title style={{ fontSize: 14 }}>
-              {item.typeFuel}standart
+              {item.seller?.name}
             </ListItem.Title>
             <ListItem.Subtitle style={{ fontSize: 14 }}>
-              {item.CostFuel} грн/л
+              {item.costPart} грн
             </ListItem.Subtitle>
           </ListItem.Content>
-          <ListItem.Content>
+          <ListItem.Content style={{ flex: 0.7 }}>
             <ListItem.Title style={{ fontSize: 14 }}>
-              {item.volumeFuel} л
+              {item.quantityPart} шт
             </ListItem.Title>
           </ListItem.Content>
-          <ListItem.Content>
+          <ListItem.Content style={{ flex: 0.7 }}>
             <ListItem.Title style={{ fontSize: 14 }}>
-              {item.AmountFuel} грн
+              {item.amountCostPart} грн
             </ListItem.Title>
           </ListItem.Content>
+
         </ListItem.Swipeable>
 
         </Shadow>
@@ -99,17 +99,19 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
   }
 
   useEffect(() => {
-    listFuel.sort(function (a, b) {
-      // @ts-expect-error data
-      return Date.parse(a.dateFuel) - Date.parse(b.dateFuel)
-    })
-    setIsSortFuel(!isSortFuel)
-  }, [listFuel])
+    if (listParts.length > 1) {
+      listParts.sort(function (a, b) {
+        // @ts-expect-error date
+        return Date.parse(a.dateBuy) - Date.parse(b.dateBuy)
+      })
+      setIsSortParts(!isSortParts)
+    }
+  }, [listParts])
 
   return (
     <FlatList
-      data={listFuel}
-      extraData={isSortFuel}
+      data={listParts}
+      extraData={isSortParts}
       renderItem={renderRow}
       keyExtractor={(item, index) => index.toString()}
     />
@@ -122,18 +124,6 @@ const styles = StyleSheet.create({
     paddingRight: 0,
     marginHorizontal: 5,
     marginVertical: 5,
-    color: 'red',
     flex: 1
-    /* backgroundColor: 'red' */
-    /* borderRadius: 5 */
-    /* shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2 */
   }
 })
