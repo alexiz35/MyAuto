@@ -22,7 +22,7 @@ import ShadowBox from '../../CommonComponents/ShadowBox'
 import { PartsList } from './PartsList'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
-const InputPart = ({ navigation, route }: Props): JSX.Element => {
+const InputDoc = ({ navigation, route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { theme } = useTheme()
@@ -175,6 +175,8 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
     <View>
       <ScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
       <Accordion
+        title={'Добавьте другие затраты'}
+
         insideView={
         <View>
         <View style={styles.viewAllInput}>
@@ -210,72 +212,11 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
               />
             </ShadowBox>
           </View>
-          <View style={styles.viewGroupInput}>
-  {
-    // ----------------------- Number part -------------------------------------
-  }
-            <ShadowBox style={{ margin: 5, flex: 1 }}>
-              <Input
-                ref={refNumberPart}
-                placeholder={'артикул'}
-                /* placeholderTextColor={'red'} */
-                inputStyle={styles.inputText}
-                errorMessage={'артикул'}
-                errorStyle={styles.errorInput}
-                onChangeText={(value) => setNumberPart(String(value))}
-                value={numberPart}
-                onFocus={() => handleFocus(refNumberPart)}
-                onBlur={() => handleBlur(refNumberPart)}
-                onSubmitEditing={() => refSellerName.current?.focus()}
-              />
-            </ShadowBox>
-          </View>
-          <ShadowBox style={{ flex: 1, marginHorizontal: 5 }}>
-            <Accordion
-              /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
-              title={'Аналоги'}
-              textBannerStyle={{ fontSize: 14, color: theme.colors.grey3 }}
-              insideView={
-                <View style={styles.viewGroupInput}>
-                  <ShadowBox style={{ margin: 5, flex: 1 }}>
-                    <Input
-                      ref={refNumber1Part}
-                      renderErrorMessage={false}
-                      placeholder={'аналог 1'}
-                      /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      onChangeText={(value) => setNumberPart1(String(value))}
-                      value={numberPart1}
-                      onFocus={() => handleFocus(refNumber1Part)}
-                      onBlur={() => handleBlur(refNumber1Part)}
-                    />
-                  </ShadowBox>
-                  <ShadowBox style={{ margin: 5, flex: 1 }}>
-                    <Input
-                      ref={refNumber2Part}
-                      renderErrorMessage={false}
-                      placeholder={'аналог 2'}
-                      /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      onChangeText={(value) => setNumberPart2(String(value))}
-                      value={numberPart2}
-                      onFocus={() => handleFocus(refNumber2Part)}
-                      onBlur={() => handleBlur(refNumber2Part)}
-                    />
-                  </ShadowBox>
-                </View>
-              }
-            />
-          </ShadowBox>
+
         </View>
   {
      // ---------------------- Seller ------------------------------------------
   }
-
         <View style={styles.viewAllInput}>
           <View style={styles.viewGroupInput}>
               <ShadowBox style={{ margin: 5, flex: 1 }}>
@@ -348,10 +289,10 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
           <ShadowBox style={{ margin: 5, flex: 1 }}>
             <Input
               ref={refCostPart}
-              placeholder={'цена'}
+              placeholder={'стоимость'}
               /* placeholderTextColor={'red'} */
               inputStyle={styles.inputText}
-              errorMessage={'цена'}
+              errorMessage={'стоимость'}
               errorStyle={styles.errorInput}
               keyboardType={'numeric'}
               onChangeText={(value) => setCostPart(Number(value))}
@@ -359,40 +300,6 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
               onFocus={() => handleFocus(refCostPart)}
               onBlur={() => handleBlur(refCostPart)}
               onSubmitEditing={() => refQuantityPart.current?.focus()}
-            />
-          </ShadowBox>
-          <ShadowBox style={{ margin: 5, flex: 1 }}>
-            <Input
-              ref={refQuantityPart}
-              placeholder={'кол-во'}
-              containerStyle={{ flex: 1 }}
-              inputStyle={styles.inputText}
-              errorMessage={'кол-во'}
-              errorStyle={styles.errorInput}
-              keyboardType={'numeric'}
-              onChangeText={(value) => setQuantityPart(Number(value))}
-              value={String(quantityPart)}
-              onFocus={() => handleFocus(refQuantityPart)}
-              onBlur={() => handleBlur(refQuantityPart)}
-              onSubmitEditing={() => handleOnSubmitQuantity()}
-              /* onBlur={() => handleOnSubmitCost()} */
-            />
-          </ShadowBox>
-          <ShadowBox style={{ margin: 5, flex: 1 }}>
-            <Input
-              ref={refAmountCostPart}
-              placeholder={'сумма'}
-              containerStyle={{ flex: 1 }}
-              inputStyle={styles.inputText}
-              errorMessage={'сумма'}
-              errorStyle={styles.errorInput}
-              keyboardType={'numeric'}
-              onChangeText={(value) => setAmountCostPart(Number(value))}
-              value={String(amountCostPart)}
-              onFocus={() => handleFocus(refAmountCostPart)}
-              onBlur={() => handleBlur(refAmountCostPart)}
-              onSubmitEditing={() => handleOnSubmitAmount()}
-              /* onBlur={() => handleOnSubmitAmount()} */
             />
           </ShadowBox>
         </View>
@@ -423,7 +330,6 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
         </View>
           <Divider insetType={'middle'} width={2}/>
       </View>}
-        title={'Добавьте покупку'}
         bannerStyle={{ backgroundColor: BACK_INPUT }}
         open={openAccordion}
         isOpen={isOpen}
@@ -440,7 +346,7 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
   )
 }
 
-export default InputPart
+export default InputDoc
 
 const styles = StyleSheet.create({
   viewAllInput: {

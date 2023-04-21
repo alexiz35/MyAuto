@@ -61,7 +61,8 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
         <ListItem.Swipeable
         containerStyle={{ padding: 5, height: 70 }}
         onPress={() => nav.navigate('Info', { taskId: item.id, typeTask: 1 })}
-        /* bottomDivider */
+        bottomDivider
+        topDivider
         leftContent={ () => (
           <Button
             title='info'
@@ -85,7 +86,6 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
 
           <ListItem.Title style={{ }} >
             {item.title}
-
           </ListItem.Title>
           {/*  <LinearProgress
           value={progress.value}

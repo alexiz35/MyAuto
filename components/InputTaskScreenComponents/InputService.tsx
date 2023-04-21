@@ -341,9 +341,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
 
             </Dialog>
 
-            <Text style={styles.button}>{errorMsg}</Text>
             <View style={styles.viewButton}>
-
               <Button
                 containerStyle={styles.buttonStyle}
                 /* buttonStyle={{ borderColor: 'red' }}

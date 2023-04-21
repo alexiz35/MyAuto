@@ -12,6 +12,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import InputService from '../components/InputTaskScreenComponents/InputService'
 import InputPart from '../components/InputTaskScreenComponents/InputPart'
 import BackgroundView from '../CommonComponents/BackgroundView'
+import InputDoc from '../components/InputTaskScreenComponents/InputDoc'
 
   type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
@@ -87,8 +88,10 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
               </View>
             </View>
           </TabView.Item>
-          <TabView.Item style={{ backgroundColor: 'green', width: '100%' }}>
-            <Text >Cart</Text>
+          <TabView.Item style={{ width: '100%' }}>
+            <View>
+              <InputDoc navigation={navigation} route={route}/>
+            </View>
           </TabView.Item>
         </TabView>
         {/* <InputService navigation={navigation} route={route}/> */}
