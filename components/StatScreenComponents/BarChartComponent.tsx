@@ -36,7 +36,7 @@ const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
     return tempData
   }
   const yearDataPartsChart = (searchYear = new Date().getFullYear()): number[] => {
-    const selectYear = dataProps.tasks.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
+    const selectYear = dataProps.services.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
     const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     selectYear.forEach((item) => {
       if (item.sumCostParts === undefined)item.sumCostParts = 0

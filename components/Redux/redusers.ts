@@ -12,7 +12,7 @@ export const initialState: StateMain = {
         dateMileage: new Date()
       },
       fuel: [],
-      tasks: [],
+      services: [],
       mileage: [],
       parts: []
     }
@@ -75,31 +75,31 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
       }
     }
     // -------------------------------------------------------------------
-    case ActionType.ADD_TASK: {
+    case ActionType.ADD_SERVICE: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
 
-      newArray[indexArray].tasks.push(action.payload.task)
+      newArray[indexArray].services.push(action.payload.task)
       return {
         ...state,
         cars: newArray
       }
     }
 
-    case ActionType.DEL_TASK: {
+    case ActionType.DEL_SERVICE: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
 
-      newArray[indexArray].tasks = newArray[indexArray].tasks.filter(item => item.id !== action.payload.id)
+      newArray[indexArray].services = newArray[indexArray].services.filter(item => item.id !== action.payload.id)
       return {
         ...state,
         cars: newArray
       }
     }
 
-    case ActionType.EDIT_TASK: {
+    case ActionType.EDIT_SERVICE: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
 
-      const tempTasks = newArray[indexArray].tasks.filter(item => item.id !== action.payload.id)
-      newArray[indexArray].tasks = tempTasks.concat(action.payload.task)
+      const tempTasks = newArray[indexArray].services.filter(item => item.id !== action.payload.id)
+      newArray[indexArray].services = tempTasks.concat(action.payload.task)
       return {
         ...state,
         cars: newArray
@@ -108,10 +108,10 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
 
     case ActionType.FINISH_TASK: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-      newArray[indexArray].tasks.find(
+      newArray[indexArray].services.find(
         (task, index) => {
           if (task.id === action.payload.id) {
-            newArray[indexArray].tasks[index].isFinished = action.payload.isFinished
+            newArray[indexArray].services[index].isFinished = action.payload.isFinished
             console.log('finish', newArray)
 
             return true

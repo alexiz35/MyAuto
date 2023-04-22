@@ -201,7 +201,13 @@ export const Navigation = (): JSX.Element => {
               /* <Pressable onPress={() => navigation.navigate('SettingScreen')}>
               <LogoTitle />
               </Pressable> */
-              <Pressable onPress={() => toggle()}>
+
+              <Pressable
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onPress={
+                async () => {
+                  await AsyncStorage.clear()
+                }}>
                 <LogoTitle />
               </Pressable>
 
@@ -219,15 +225,14 @@ export const Navigation = (): JSX.Element => {
                 buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.black }}
                 size='md'
                 icon={{
-                  name: 'gear',
-                  type: 'font-awesome',
+                  name: 'theme-light-dark',
+                  type: 'material-community',
                   size: 20,
                   color: theme.colors.black
                 }}
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 onPress={
-                  async () => {
-                    await AsyncStorage.clear()
+                  () => {
+                    toggle()
                   }}
               />
 
@@ -241,7 +246,27 @@ export const Navigation = (): JSX.Element => {
           component={InputTaskScreen}
           options={{
             title: 'Edit Task',
-            headerTintColor: theme.colors.black
+            headerTintColor: theme.colors.black,
+            headerRight: () => (
+              <View style={{ flexDirection: 'row' }}>
+                <Button
+                  type='outline'
+                  buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.black }}
+                  size='md'
+                  icon={{
+                    name: 'theme-light-dark',
+                    type: 'material-community',
+                    size: 20,
+                    color: theme.colors.black
+                  }}
+                  onPress={
+                    () => {
+                      toggle()
+                    }}
+                />
+
+              </View>
+            )
           }} />
 
         <Stack.Screen

@@ -2,7 +2,7 @@ import { Dimensions } from 'react-native'
 import { BarChart, PieChart } from 'react-native-chart-kit'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../Redux/hook'
-import { StateCar, StateFuel, StateTask } from '../../type'
+import { StateCar, StateFuel, StateService } from '../../type'
 import { TypeSelect } from '../../screens/StatScreen'
 import {
   monthDataFuelChart,

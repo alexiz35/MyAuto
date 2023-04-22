@@ -1,12 +1,12 @@
 import { ImageBackground, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { Button, Icon, Input } from '@rneui/themed'
-import { BACK_INPUT, COLOR_GREEN, StatePart, Seller, StateTask, TEXT_WHITE } from '../type'
+import { BACK_INPUT, COLOR_GREEN, StatePart, Seller, StateService, TEXT_WHITE } from '../type'
 import { useState } from 'react'
 import { editTask } from './Redux/actions'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
 
 interface ModalInfoPartProps {
-  currentTask: StateTask
+  currentTask: StateService
   currentPart: StatePart
   onPressCancel: () => void
 }

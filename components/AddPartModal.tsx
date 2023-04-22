@@ -1,15 +1,21 @@
 import React, { PropsWithChildren, useState } from 'react'
 import {
-  ImageBackground, Pressable,
+  Pressable,
   StyleSheet,
-  Text, TextInput,
+  TextInput,
   View, ScrollView
 } from 'react-native'
-import { Button, Divider, Icon, Input } from '@rneui/themed'
-import { BACK_INPUT, COLOR_GREEN, StatePart, PropsBottomSheet, Seller, TEXT_WHITE } from '../type'
-import { SimpleAccordion } from 'react-native-simple-accordion'
+import { Button, Text, Divider, Icon, Input, useTheme } from '@rneui/themed'
+import { BACK_INPUT, StatePart, PropsBottomSheet, Seller, ModalPart } from '../type'
+import { useAppSelector } from './Redux/hook'
+import BackgroundView from '../CommonComponents/BackgroundView'
+import ShadowBox from '../CommonComponents/ShadowBox'
+import Accordion from './Accordion'
 
-export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [] }: PropsBottomSheet): JSX.Element => {
+export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: PropsBottomSheet): JSX.Element => {
+  const state = useAppSelector(state => state.cars[0].parts)
+  const { theme } = useTheme()
+
   const [namePart, setNamePart] = useState('')
   const [numberPart, setNumberPart] = useState('')
   const [costPart, setCostPart] = useState(0)
@@ -19,7 +25,10 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
   const [sellerLink, setSellerLink] = useState('')
   const [seller, setSeller] = useState<Seller>()
 
-  const [parts, setParts] = useState<StatePart[]>(initialParts)
+  const [searchPart, setSearchPart] = useState('')
+  const [visibleSearchList, setVisibleSearchList] = useState(false)
+
+  const [parts, setParts] = useState<ModalPart[]>(initialParts)
 
   const inputNamePart = React.createRef<PropsWithChildren<TextInput>>()
   const inputCostPart = React.createRef<PropsWithChildren<TextInput>>()
@@ -30,7 +39,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
   const inputSellerLink = React.createRef<PropsWithChildren<TextInput>>()
 
   const delPart = (id: number): void => {
-    const newParts = parts.filter((item: StatePart) => item.id !== id)
+    const newParts = parts.filter((item: ModalPart) => item.id !== id)
     setParts(newParts)
   }
 
@@ -47,20 +56,42 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
     inputNumberPart.current?.clear()
   }
 
-  const listParts = (item: StatePart, key: number): JSX.Element => {
+  const selectSearch = (id: number): void => {
+    const selectPart = state.filter((item: StatePart) => item.id === id)
+    setNamePart(selectPart[0].namePart)
+    setNumberPart(selectPart[0].numberPart)
+    setCostPart(selectPart[0].costPart)
+    setVisibleSearchList(false)
+  }
+
+  const listSearch = (item: StatePart): JSX.Element => {
+    return (
+      <Pressable onPress={() => selectSearch(item.id)}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2, padding: 10 }}>
+          <Text style={{ flex: 2, textAlign: 'left', fontSize: 16 }}>{item.namePart}</Text>
+          <Text style={{ flex: 1, textAlign: 'center', fontSize: 16 }}>
+            {String(new Date(item.dateBuy).toLocaleDateString())}
+          </Text>
+
+        </View>
+        <Divider style={{ padding: 5 }}/>
+      </Pressable>
+    )
+  }
+
+  const listParts = (item: ModalPart, key: number): JSX.Element => {
     return (
       <View >
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2 }}>
-          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{key + 1}</Text>
-          <Text style={{ flex: 2, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{item.namePart}</Text>
-          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16, color: TEXT_WHITE }}>{`${item.quantityPart} x`}</Text>
-          <Text style={{ flex: 1, textAlign: 'center', color: TEXT_WHITE }}>{item.costPart}</Text>
+          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{key + 1}</Text>
+          <Text style={{ flex: 2, textAlign: 'center', fontSize: 16 }}>{item.namePart}</Text>
+          <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{`${item.quantityPart} x`}</Text>
+          <Text style={{ flex: 1, textAlign: 'center' }}>{item.costPart}</Text>
           <View style={{ height: '80%' }}>
             <Pressable>
               <Text style={{ paddingBottom: 2 }}>
                 <Icon
                   name={'delete'}
-                  color={TEXT_WHITE}
                   onPress={() =>
                     delPart(item.id)
                   }>
@@ -76,7 +107,7 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
   }
 
   return (
-    <ImageBackground source={require('../assets/Back2.png')} style={{ padding: 10 }} >
+  <BackgroundView props={{ padding: 10 }}>
       <ScrollView >
 
       <View style={styles.viewAdditional}>
@@ -85,38 +116,91 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
           Добавьте детали, которые вы использовали
         </Text>
 
+        <View style={{ zIndex: 2 }}>
+          <ShadowBox style={{ margin: 5, flex: 1 }}>
+            <Input
+              renderErrorMessage={false}
+              inputStyle={styles.inputText}
+              placeholder={'введите название'}
+              value={searchPart}
+              onChangeText={(search) => setSearchPart(String(search))}
+              onFocus={() => setVisibleSearchList(true)}
+              /* onBlur={() => setVisibleSearchList(false)} */
+              /* cancelIcon={{ name: 'account-cash', type: 'material-community', size: 20 }} */
+              rightIcon={
+                <Icon
+                  name={!visibleSearchList ? 'magnify' : 'close-box-outline'}
+                  type={'material-community'}
+                  size={22}
+                  onPress={() => setVisibleSearchList(false)}
+                />
+              }
+            />
+          </ShadowBox>
+          {visibleSearchList &&
+            <View style={{
+              marginHorizontal: 7,
+              position: 'absolute',
+              top: 53,
+              backgroundColor: theme.colors.background,
+              /* height: 200, */
+              width: '95%',
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10,
+              borderStyle: 'solid',
+              borderWidth: 1,
+              borderColor: theme.colors.greyOutline
+            }}>
+
+            {
+              state.map((item, index) => (
+                item.isInstall
+                  ? null
+                  : <View key={index}>
+            {listSearch(item)}
+              </View>
+              ))
+            }
+          </View>
+              }
+        </View>
+        <Text style={styles.textPart} >
+          или добавьте новые
+        </Text>
         <View style={styles.viewGroupInput}>
-          <View style={styles.input}>
+          <ShadowBox style={{ margin: 5, flex: 1 }}>
             <Input
               ref={inputNamePart}
               placeholder={'наименование'}
               placeholderTextColor={'red'}
-              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
               errorMessage={'наименование'}
               errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
               onChangeText={(value) => setNamePart(String(value))}
+              value={String(namePart)}
             />
-          </View>
-          <View style={styles.input}>
+          </ShadowBox>
+          <ShadowBox style={{ margin: 5, flex: 1 }}>
             <Input
               ref={inputNumberPart}
               placeholder={'введите номер'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
               errorMessage={'номер детали'}
               errorStyle={styles.errorInput}
               onChangeText={(value) => setNumberPart(String(value))}
+              value={String(numberPart)}
             />
-          </View>
+          </ShadowBox>
         </View>
 
         <View style={styles.viewGroupInput}>
-          <View style={styles.input}>
+          <ShadowBox style={{ margin: 5, flex: 1 }}>
             <Input
               ref={inputAmountPart}
               placeholder={'кол-во'}
               containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
               onChangeText={(value) => setQuantityPart(Number(value))}
               errorMessage={'количество'}
               errorStyle={styles.errorInput}
@@ -124,64 +208,61 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
               defaultValue={String(1)}
               keyboardType={'numeric'}
             />
-          </View>
-          <View style={styles.input}>
+          </ShadowBox>
+          <ShadowBox style={{ margin: 5, flex: 1 }}>
             <Input
               ref={inputCostPart}
               placeholder={'введите цену'}
-              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+              inputStyle={{ textAlign: 'center', fontSize: 12 }}
               errorMessage={'цена детали'}
               errorStyle={styles.errorInput}
               onChangeText={(value) => setCostPart(Number(value))}
               keyboardType={'numeric'}
+              value={String(costPart)}
             />
-          </View>
+          </ShadowBox>
         </View>
-        <SimpleAccordion
-          viewInside={
-          <View style={{ height: '100%' }}>
+        <Accordion
+          insideView={
+          <View style={{ borderWidth: 1, borderColor: theme.colors.greyOutline }}>
           <View style={styles.viewGroupInput}>
-            <View style={styles.input}>
+            <ShadowBox style={{ margin: 5, flex: 1 }}>
               <Input
                 ref={inputSellerName}
                 placeholder={'продавец'}
                 placeholderTextColor={'red'}
-                inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-                errorMessage={'магазин или имя продавца'}
+                inputStyle={{ textAlign: 'center', fontSize: 12 }}
+                errorMessage={'продавец'}
                 errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
                 onChangeText={(value) => setSellerName(String(value))}
               />
-            </View>
-            <View style={styles.input}>
+            </ShadowBox>
+            <ShadowBox style={{ margin: 5, flex: 1 }}>
               <Input
                 ref={inputSellerPhone}
                 placeholder={'телефон'}
-                containerStyle={{ flex: 1 }}
-                inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+                inputStyle={{ textAlign: 'center', fontSize: 12 }}
                 errorMessage={'номер телефона'}
                 errorStyle={styles.errorInput}
                 onChangeText={(value) => setSellerPhone(String(value))}
               />
-            </View>
+            </ShadowBox>
           </View>
-            <View style={styles.input}>
+            <ShadowBox style={{ margin: 5, flex: 1 }}>
               <Input
                 ref={inputSellerLink}
                 placeholder={'данные продавцв'}
                 multiline={true}
-                containerStyle={{ flex: 1 }}
-                inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
+                inputStyle={{ textAlign: 'center', fontSize: 12 }}
                 errorMessage={'данные продавца'}
                 errorStyle={styles.errorInput}
                 onChangeText={(value) => setSellerLink(String(value))}
               />
-            </View>
+            </ShadowBox>
           </View>
         }
           title={'Информация о покупке'}
-          bannerStyle={{ backgroundColor: BACK_INPUT, height: 30, padding: 5 }}
-          titleStyle={{ color: TEXT_WHITE, textAlign: 'center', fontWeight: 'normal', fontSize: 16 }}
-          viewContainerStyle={{ backgroundColor: BACK_INPUT }}
+          bannerStyle={{ height: 30, padding: 5, backgroundColor: BACK_INPUT }}
         />
 
         <View style={styles.viewPart}>
@@ -210,25 +291,23 @@ export const BottomSheetAddition = ({ onPressOk, onPressCancel, initialParts = [
 
       <Button
         containerStyle={styles.buttonStyle}
-        buttonStyle={{ borderColor: 'red' }}
-        titleStyle={{ color: 'red' }}
         title={'Cancel'}
         onPress={() => {
           onPressCancel()
         }}
-        type='outline'
+        color={'error'}
+        type={'solid'}
       />
         <Button
         containerStyle={styles.buttonStyle}
-        buttonStyle={{ borderColor: COLOR_GREEN }}
-        titleStyle={{ color: COLOR_GREEN }}
         title={'Finish'}
         onPress={() => { onPressOk(parts) }}
-        type={'outline'}
+        color={'success'}
+        type={'solid'}
       />
       </View>
       </ScrollView>
-    </ImageBackground>
+  </BackgroundView>
 
   )
 }
@@ -241,7 +320,10 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderRadius: 10 */
   },
-
+  inputText: {
+    textAlign: 'center',
+    fontSize: 14
+  },
   viewGroupInput: {
     flexDirection: 'row',
     justifyContent: 'space-around'
@@ -268,9 +350,7 @@ const styles = StyleSheet.create({
   textPart: {
     textAlign: 'center',
     fontSize: 12,
-    fontStyle: 'italic',
-    color: TEXT_WHITE
-
+    fontStyle: 'italic'
   },
   viewPart: {
     flexDirection: 'row',

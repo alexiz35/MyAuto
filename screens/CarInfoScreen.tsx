@@ -26,13 +26,13 @@ import {
   COLOR_GREEN,
   StatePart,
   ServiceList, StateCar, StateInfo,
-  StateTask,
+  StateService,
   TEXT,
   TEXT_CARD,
   TEXT_WHITE
 } from '../type'
 import { addTask, editCar, editTask, updateMiles } from '../components/Redux/actions'
-import { BottomSheetAddition } from '../components/BottomSheetAddition'
+import { AddPartModal } from '../components/AddPartModal'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
 import { cars } from '../cars.json'

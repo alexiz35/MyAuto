@@ -4,7 +4,7 @@ import { useThemeMode } from '@rneui/themed'
 import React, { useEffect, useState } from 'react'
 export const LightBack = require('../assets/whiteBack.jpg')
 
-const BackgroundView = ({ children }: React.PropsWithChildren<any>): JSX.Element => {
+const BackgroundView = ({ children, props }: React.PropsWithChildren<any>): JSX.Element => {
   const { mode } = useThemeMode()
 
   const BlackBack = require('../assets/Back2.png')
@@ -14,7 +14,7 @@ const BackgroundView = ({ children }: React.PropsWithChildren<any>): JSX.Element
     mode === 'dark' ? setImg(BlackBack) : setImg(LightBack)
   }, [mode])
   return (
-    <ImageBackground source={img} style={{ flex: 1 }} >
+    <ImageBackground source={img} style={props} >
       {children}
     </ImageBackground>
   )

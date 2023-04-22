@@ -133,7 +133,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   }
 
   return (
-    <BackgroundView>
+    <BackgroundView props={{ flex: 1 }}>
       <View style={{ flex: 1 }} >
         <Text style={{ textAlign: 'center', paddingVertical: 10, fontStyle: 'italic' }}>
           Cумма заправок в текущем месяце {sumFuel}

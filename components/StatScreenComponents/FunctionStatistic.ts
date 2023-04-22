@@ -1,8 +1,8 @@
 
-import { StateCar, StateTask } from '../../type'
+import { StateCar, StateService } from '../../type'
 import { TypeSelect } from '../../screens/StatScreen'
 
-const calcSumCostParts = (targetArray: StateTask[]): number => {
+const calcSumCostParts = (targetArray: StateService[]): number => {
   const temp: number[] = []
   targetArray.forEach((item, index) => {
     if (item.sumCostParts === undefined)item.sumCostParts = 0
@@ -22,7 +22,7 @@ export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataSta
   /* setDataChartFuel(tempData) */
 }
 export const yearDataPartsChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
-  const selectYear = dataState.tasks.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
+  const selectYear = dataState.services.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
   return calcSumCostParts(selectYear)
   /* setDataChartParts(tempData) */
 }
@@ -37,7 +37,7 @@ export const monthDataFuelChart = (searchDate: TypeSelect, dataState: StateCar):
   /* setDataChartFuel(tempData) */
 }
 export const monthDataPartsChart = (searchDate: TypeSelect, dataState: StateCar): number => {
-  const selectYear = dataState.tasks.filter((value) =>
+  const selectYear = dataState.services.filter((value) =>
     // @ts-expect-error valueYear?undefined
     new Date(value.startDate).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
     new Date(value.startDate).getMonth() === searchDate.valueMonth
@@ -65,7 +65,7 @@ export const periodDataFuelChart = (searchDate: TypeSelect, dataState: StateCar)
 }
 export const periodDataPartsChart = (searchDate: TypeSelect, dataState: StateCar): number => {
   const { startDate, endDate } = createPeriodDate(searchDate)
-  const filterDate = dataState.tasks.filter((value) => {
+  const filterDate = dataState.services.filter((value) => {
     const tempDate = new Date(value.startDate)
     return startDate <= tempDate && tempDate <= endDate
   })

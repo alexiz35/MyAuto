@@ -3,7 +3,7 @@ import { View, StyleSheet, ImageBackground, ScrollView, Text } from 'react-nativ
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Tasks } from '../components/HomeScreenComponents/Tasks'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { StateTask, TEXT_WHITE } from '../type'
+import { StateService, TEXT_WHITE } from '../type'
 import { useCallback, useEffect, useState } from 'react'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import * as ScreenOrientation from 'expo-screen-orientation'
@@ -60,7 +60,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
         {/* <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].mileage)}</Text>
         <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].currentMiles)}</Text> */}
         <View style={(orientation < 3) ? { flex: 3 } : { flex: 1.5 }}>
-          <Tasks />
+          {/* <Tasks /> */}
         </View>
       </View>
     </BackgroundView>

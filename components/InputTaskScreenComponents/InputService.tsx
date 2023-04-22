@@ -10,21 +10,25 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Button, Dialog, Divider, Icon, Input, Text, useTheme } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateTask, TEXT } from '../../type'
+import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateService, TEXT, TEXT_WHITE, ModalPart } from '../../type'
 import { RootStackParamList } from '../Navigation/Navigation'
-import { addTask, editTask } from '../Redux/actions'
-import { BottomSheetAddition } from '../BottomSheetAddition'
+import { addPart, addTask, editTask } from '../Redux/actions'
+import { AddPartModal } from '../AddPartModal'
 import ShadowBox from '../../CommonComponents/ShadowBox'
 import Accordion from '../Accordion'
 import { Tasks } from '../HomeScreenComponents/Tasks'
+import BackgroundView from '../../CommonComponents/BackgroundView'
+import { useFocusEffect } from '@react-navigation/native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputService = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
+  const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { theme } = useTheme()
 
@@ -60,6 +64,9 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
   const [valueDrop, setValueDrop] = useState<null | string>(null)
   const [itemsDrop, setItemsDrop] = useState(listService)
 
+  const [openAccordion, setOpenAccordion] = useState(false)
+  const [isOpenAccordion, setIsOpenAccordion] = useState(false)
+
   const [startKmInput, setStartKmInput] = useState(0)
   const [startDateInput, setStartDateInput] = useState(new Date())
   const [endKmInput, setEndKmInput] = useState(0)
@@ -71,7 +78,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
   const [amountPart, setAmountPart] = useState(0)
   const [sumCost, setSumCost] = useState(0)
 
-  const [addParts, setAddParts] = useState<[StatePart] | undefined>()
+  const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>()
   const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
 
   const [isVisible, setIsVisible] = useState(false)
@@ -89,18 +96,21 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
     onChange: (event, date) => setStartDateInput(date)
   })
 
-  useEffect(() => {
-    if (editableTask) {
-      const temp = state.cars[state.numberCar].tasks.find((item) => (item.id === currentId))
-      if (temp !== undefined) {
-        setStartKmInput(temp.startKm)
-        setAddParts(temp.addition?.parts)
-        setStartDateInput(new Date(temp.startDate))
-        setCostService(temp.sumCostService !== undefined ? temp.sumCostService : 0)
-        setValueDrop(temp.title)
+  useFocusEffect(
+    useCallback(() => {
+      if (editableTask) {
+        const temp = state.cars[state.numberCar].services.find((item) => (item.id === currentId))
+
+        if (temp !== undefined) {
+          setStartKmInput(temp.startKm)
+          setAddModalParts(temp.addition?.parts)
+          setStartDateInput(new Date(temp.startDate))
+          setCostService(temp.sumCostService !== undefined ? temp.sumCostService : 0)
+          setValueDrop(temp.title)
+          setOpenAccordion(true)
+        }
       }
-    }
-  }, [])
+    }, [editableTask]))
 
   useEffect(() => {
     setEndKmInput(startKmInput + kmToService)
@@ -111,10 +121,10 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
   }, [startDateInput, timeToService])
 
   useEffect(() => {
-    counter(addParts)
-  }, [addParts])
+    counter(addModalParts)
+  }, [addModalParts])
 
-  const counter = (parts: [StatePart] | undefined): void => {
+  const counter = (parts: ModalPart[] | undefined): void => {
     let amount = 0
     let sum = 0
     // eslint-disable-next-line array-callback-return
@@ -125,7 +135,6 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
     setSumCost(sum)
     setAmountPart(amount)
   }
-
   const changeTask = (value: string | null): void => {
     setErrorMsg('')
     switch (value) {
@@ -157,13 +166,57 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
     setErrorMsg('')
     setStartKmInput(value)
   }
+  const clearInput = (): void => {
+    setValueDrop(null)
+    setStartDateInput(new Date())
+    setStartKmInput(0)
+    setCostParts(0)
+    setCostService(0)
+    setAddModalParts(undefined)
+  }
+
+  // ---------------------------Accordion --------------------------------------
+  const isOpen = (open: boolean): void => {
+    setIsOpenAccordion(open)
+    if (!open) setOpenAccordion(false)
+    else setOpenAccordion(true)
+  }
+  // ---------------------------------------------------------------------------
+  const createNewParts = (): void => {
+    addModalParts?.map((item) => {
+      const tempPart: StatePart = {
+        id: item.id,
+        dateBuy: startDateInput,
+        mileageInstall: startKmInput,
+        namePart: item.namePart,
+        dateInstall: startDateInput,
+        isInstall: true,
+        numberPart: item.numberPart,
+        costPart: item.costPart,
+        quantityPart: item.quantityPart,
+        amountCostPart: item.costPart * item.quantityPart,
+        seller: {
+          name: item.seller?.name,
+          link: item.seller?.link,
+          phone: item.seller?.phone
+        }
+      }
+      dispatch(addPart(state.numberCar, tempPart))
+    })
+  }
+
+  // ---------------------------handleButtons-----------------------------------
+  const handleCancel = (): void => {
+    clearInput()
+    setOpenAccordion(false)
+  }
 
   const handleOk = (): void => {
     if (valueDrop === null || startKmInput === 0) {
       setErrorMsg('Введите необходимые данные')
       return
     }
-    const tempNewTask: StateTask = {
+    const tempNewTask: StateService = {
       id: Date.now(),
       startKm: startKmInput,
       endKm: endKmInput,
@@ -172,36 +225,43 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
       title: String(valueDrop),
       sumCostService: costService,
       sumCostParts: sumCost,
-      isFinished: false,
+      /* isFinished: false, */
       addition:
         {
-          parts: addParts,
+          parts: addModalParts,
           services: addServices
         }
     }
 
-    editableTask ? setNewTask(editTask(state.numberCar, currentId, tempNewTask)) : setNewTask(addTask(state.numberCar, tempNewTask))
-    navigation.navigate('BottomTabNav', { screen: 'Home' })
+    createNewParts()
+
+    editableTask
+      ? setNewTask(editTask(state.numberCar, currentId, tempNewTask))
+      : setNewTask(addTask(state.numberCar, tempNewTask))
+    /* navigation.navigate('BottomTabNav', { screen: 'Home' }) */
+    setOpenAccordion(false)
   }
+  // ---------------------------------------------------------------------------
+  // ---------------------- handleModal ----------------------------------------
 
   const handleCancelModal = (): void => {
     setIsVisible(false)
   }
 
-  const handleOkModal = (parts: StatePart[]): void => {
-    // @ts-expect-error kjjkj
-    setAddParts(parts)
+  const handleOkModal = (parts: [ModalPart]): void => {
+    setAddModalParts(parts)
     /* setAddServices(services) */
     setIsVisible(false)
   }
 
+  // ---------------------------------------------------------------------------
+
   return (
   <View>
-    <ScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
+    <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
       <Accordion
         insideView={
           <View>
-            {/* <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}> */}
             <DropDownPicker
               style={styles.dropDownPicker}
               listMode={'SCROLLVIEW'}
@@ -294,6 +354,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
                 setIsVisible(true)
               }}>
                 <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Добавить комплектующие</Text>
+
                 <Text >{`Добавлено деталей: ${amountPart} шт`}</Text>
               </Pressable>
             </ShadowBox>
@@ -333,12 +394,11 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
               overlayStyle={{ width: '100%', padding: 0 }}
               backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
             >
-              <BottomSheetAddition
-                initialParts = {addParts}
+              <AddPartModal
+                initialParts = {addModalParts}
                 onPressCancel = {handleCancelModal}
                 onPressOk={handleOkModal}
               />
-
             </Dialog>
 
             <View style={styles.viewButton}>
@@ -349,7 +409,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
                 title={'Cancel'}
                 color={'error'}
                 type={'solid'}
-                onPress={() => { navigation.goBack() }}
+                onPress={() => { handleCancel() }}
                 raised
                 /* onPress={onPressCancel} */
               />
@@ -369,14 +429,17 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
       }
         title={'Добавьте сервис'}
         bannerStyle={{ backgroundColor: BACK_INPUT }}
-        /* open={openAccordion}
-        isOpen={isOpen} */
+        open={openAccordion}
+        isOpen={isOpen}
         /* textBannerStyle={{ color: TEXT_WHITE }} */
       />
-    </ScrollView>
-    <View style={{ marginTop: 10 }}>
-    <Tasks />
-    </View>
+    </KeyboardAwareScrollView>
+    {openAccordion
+      ? null
+      : <View style={{ marginTop: 10 }}>
+        <Tasks />
+      </View>
+    }
   </View>
   )
 }

@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-virtualized-view'
 import { Dialog, FAB, Icon, Input, Text } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../components/Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, StatePart, StateTask } from '../type'
+import { BACK_INPUT, COLOR_GREEN, ModalPart, StatePart, StateService } from '../type'
 import { listsInfo } from '../components/ListInfo'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 /* import { useNavigation } from '@react-navigation/native' */
@@ -19,12 +19,12 @@ RootStackParamList,
 > */
 
 const InfoScreen = ({ route }: Props): JSX.Element => {
-  const Tasks = useAppSelector((state) => state.cars[state.numberCar])
+  const state = useAppSelector((state) => state.cars[state.numberCar])
   /* const nav = useNavigation<ProfileScreenNavigationProp>() */
 
   const [isVisible, setIsVisible] = useState(false)
-  const [currentPart, setCurrentPart] = useState<StatePart>()
-  const [currentTask, setCurrentTask] = useState<StateTask>(
+  const [currentPart, setCurrentPart] = useState<ModalPart>()
+  const [currentTask, setCurrentTask] = useState<StateService>(
     {
       id: 0,
       title: '',
@@ -34,7 +34,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
       endData: '',
       sumCostParts: 0,
       sumCostService: 0,
-      isFinished: false,
+      /* isFinished: false, */
       addition: {
         parts: [{ id: 0, namePart: '', costPart: 0, numberPart: '', quantityPart: 0 }],
         services: [{ id: 0, nameService: '', costService: 0 }]
@@ -43,8 +43,8 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
   )
 
   const currentId = route.params.taskId
-  const tempTask = (): StateTask => {
-    const temp = Tasks.tasks.find((item) => (item.id === currentId))
+  const tempTask = (): StateService => {
+    const temp = state.services.find((item) => (item.id === currentId))
     if (temp !== undefined) return temp
     else return currentTask
   }

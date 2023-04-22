@@ -4,9 +4,9 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { Button, Dialog, Icon, Input, Tab, TabView, Text, useTheme } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { useEffect, useMemo, useState } from 'react'
-import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateTask, TEXT, TEXT_WHITE } from '../type'
+import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateService, TEXT, TEXT_WHITE } from '../type'
 import { addTask, editTask } from '../components/Redux/actions'
-import { BottomSheetAddition } from '../components/BottomSheetAddition'
+import { AddPartModal } from '../components/AddPartModal'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import InputService from '../components/InputTaskScreenComponents/InputService'
@@ -44,7 +44,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   ) */
 
   return (
-    <BackgroundView>
+    <BackgroundView props={{ flex: 1 }}>
       {/* <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}> */}
         <Tab
           value={index}

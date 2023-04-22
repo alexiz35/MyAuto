@@ -1,6 +1,6 @@
-import { StateTask } from '../../type'
+import { StateService } from '../../type'
 
-export const InfoTaskHTML = (task: StateTask): string => `
+export const InfoTaskHTML = (task: StateService): string => `
     <!doctype html>
     <html class="no-js" lang="">
     

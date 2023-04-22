@@ -18,9 +18,9 @@ export enum ActionType {
   UPDATE_STATE = 'UPDATE_STATE',
   CHANGE_CAR = 'CHANGE_CAR',
   UPDATE_MILES = 'UPDATE_MILES',
-  ADD_TASK = 'ADD_TASK',
-  DEL_TASK = 'DEL_TASK',
-  EDIT_TASK = 'EDIT_TASK',
+  ADD_SERVICE = 'ADD_SERVICE',
+  DEL_SERVICE = 'DEL_SERVICE',
+  EDIT_SERVICE = 'EDIT_SERVICE',
   FINISH_TASK = 'FINISH_TASK',
   ADD_CAR = 'ADD_CAR',
   UPDATE_CAR = 'UPDATE_CAR',
@@ -32,7 +32,8 @@ export enum ActionType {
   EDIT_FUEL = 'EDIT_FUEL',
   ADD_PARTS = 'ADD_PARTS',
   DEL_PARTS = 'DEL_PARTS',
-  EDIT_PARTS = 'EDIT_PARTS'
+  EDIT_PARTS = 'EDIT_PARTS',
+  INSTALL_PART = 'INSTALL_PART'
 }
 
 export interface StateMain {
@@ -46,7 +47,7 @@ export interface StateCar {
   info: StateInfo
   currentMiles: CurrentMiles
   fuel: StateFuel[]
-  tasks: StateTask[]
+  services: StateService[]
   parts: StatePart[]
   mileage: CurrentMiles[]
 }
@@ -89,19 +90,19 @@ export const initialStateInfo = {
   buyMileage: 0
 }
 
-export interface StateTask {
+export interface StateService {
   id: number
   title: string
   startKm: number
   endKm: number
   startDate: string
   endData: string
-  isFinished: boolean
+  /* isFinished: boolean */
   sumCostParts?: number
   sumCostService?: number
   addition?:
   {
-    parts?: [StatePart]
+    parts?: [ModalPart]
     services?: [ServiceList]
   }
 }
@@ -110,6 +111,8 @@ export interface StatePart {
   id: number
   namePart: string
   dateBuy: Date
+  dateInstall?: Date
+  mileageInstall?: number
   costPart: number
   quantityPart: number
   amountCostPart: number
@@ -117,6 +120,7 @@ export interface StatePart {
   numberPart1?: string
   numberPart2?: string
   seller?: Seller
+  isInstall: boolean
 }
 export interface Seller {
   name: string
@@ -163,27 +167,27 @@ export interface ActionMiles {
 }
 // ----------------------------- interface ActionTask -------------------------
 
-export interface ActionAddTask {
-  type: ActionType.ADD_TASK
+export interface ActionAddService {
+  type: ActionType.ADD_SERVICE
   payload: {
     carId: number
-    task: StateTask
+    task: StateService
   }
 }
-export interface ActionDelTask {
-  type: ActionType.DEL_TASK
+export interface ActionDelService {
+  type: ActionType.DEL_SERVICE
   payload: {
     carId: number
     id: number
   }
 }
 
-export interface ActionEditTask {
-  type: ActionType.EDIT_TASK
+export interface ActionEditService {
+  type: ActionType.EDIT_SERVICE
   payload: {
     carId: number
     id: number | undefined
-    task: StateTask
+    task: StateService
   }
 }
 
@@ -267,11 +271,22 @@ export interface ActionEditParts {
   }
 }
 
+export interface ActionInstallPart {
+  type: ActionType.INSTALL_PART
+  payload: {
+    carId: number
+    id: number
+    isInstall: boolean
+  }
+}
+
+// -----------------------------------------------------------------------------
+
 export type AppAction = ActionMiles | ActionChangeCar |
-ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask |
+ActionAddService | ActionDelService | ActionEditService | ActionFinishTask |
 ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken |
 ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel |
-ActionAddParts | ActionDelParts | ActionEditParts
+ActionAddParts | ActionDelParts | ActionEditParts | ActionInstallPart
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 
@@ -286,9 +301,18 @@ export interface ServiceList {
   costService: number
 }
 
+export interface ModalPart {
+  id: number
+  namePart: string
+  costPart: number
+  quantityPart: number
+  numberPart: string
+  seller?: Seller
+}
+
 export interface PropsBottomSheet {
-  initialParts: StatePart[] | undefined
-  onPressOk: (parts: StatePart[]) => void
+  initialParts: ModalPart[] | undefined
+  onPressOk: (parts: [ModalPart]) => void
   onPressCancel: () => void
 }
 

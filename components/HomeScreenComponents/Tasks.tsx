@@ -1,17 +1,13 @@
-import { Button, CheckBox, LinearProgress, ListItem, ListItemProps } from '@rneui/themed'
-import React, { Component, useEffect, useState } from 'react'
-import { FlatList, ImageBackground, ListRenderItem, StyleSheet, Text, View } from 'react-native'
+import { Button, ListItem, ListItemProps } from '@rneui/themed'
+import React, { useEffect, useState } from 'react'
+import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { delTask, finishTask } from '../Redux/actions'
-import { BACK_CARD, BACK_OPACITY, COLOR_GREEN, StateTask } from '../../type'
+import { delTask } from '../Redux/actions'
+import { COLOR_GREEN, StateService } from '../../type'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/Navigation'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Shadow } from 'react-native-shadow-2'
-
-const BACKGROUND = '#13171A'
-const FAB = '#151A1D'
-const TEXT_CARD = '#F7F8FB'
 
 type ListComponentProps = ListItemProps
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
@@ -24,10 +20,10 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
   const nav = useNavigation<ProfileScreenNavigationProp>()
   const numberCar = useAppSelector((state) => state.numberCar)
 
-  const renderRow: ListRenderItem<StateTask> = ({ item }: { item: StateTask }) => {
-    const pressCheck = (): void => {
+  const renderRow: ListRenderItem<StateService> = ({ item }: { item: StateService }) => {
+    /*  const pressCheck = (): void => {
       del(finishTask(numberCar, item.id, !item.isFinished))
-    }
+    } */
 
     // ------------------------- заменить
     const currentMile = 203000
@@ -127,17 +123,15 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
     )
   }
 
-  const listTask = useAppSelector(state => state.cars[0].tasks)
+  const listTask = useAppSelector(state => state.cars[0].services)
 
   const [isSort, setIsSort] = useState(false)
-  console.log('task', useAppSelector(state => state))
 
   useEffect(() => {
     listTask.sort(function (a, b) {
       return a.endKm - b.endKm
     })
     setIsSort(!isSort)
-    console.log('tasks', listTask)
   }, [listTask])
 
   return (

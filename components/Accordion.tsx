@@ -1,4 +1,13 @@
-import { Pressable, StyleProp, StyleSheet, TextInput, TextStyle, View, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TextStyle,
+  View,
+  ViewStyle
+} from 'react-native'
 import { BACK_INPUT, COLOR_GREEN, TEXT_WHITE } from '../type'
 import { Dropdown } from 'react-native-element-dropdown'
 import { Button, Icon, Input, Text } from '@rneui/themed'
@@ -8,6 +17,8 @@ interface Props {
   insideView: JSX.Element
   title: string
   open?: boolean
+  controlled?: boolean
+  onPress?: (isOpen: boolean) => void
   isOpen?: (state: boolean) => void
   bannerStyle?: StyleProp<ViewStyle>
   textBannerStyle?: StyleProp<TextStyle>
@@ -15,31 +26,46 @@ interface Props {
   arrowStyle?: StyleProp<TextStyle | ViewStyle>
 }
 
-const Accordion = ({ insideView, title, open, isOpen, bannerStyle, textBannerStyle, viewContainerStyle, arrowStyle }: Props): JSX.Element => {
+const Accordion = ({
+  insideView, title, open, isOpen, bannerStyle, textBannerStyle, viewContainerStyle, arrowStyle, controlled, onPress
+}: Props): JSX.Element => {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    console.log('open', open, isVisible)
     if (open !== undefined) {
       setIsVisible(open)
     }
   }, [open])
 
   useEffect(() => {
+    console.log('isOpen')
     if (isOpen !== undefined) {
       isOpen(isVisible)
     }
   }, [isVisible])
+
+  const handlePress = (): void => {
+    if (controlled === false) {
+      setIsVisible(!isVisible)
+    } else {
+      if (onPress != null) {
+        onPress(isVisible)
+      }
+    }
+  }
 
   return (
     <View>
       <Pressable
         style={[styles.viewTitle, bannerStyle]}
         onPress={() => {
-          setIsVisible(!isVisible)
+          handlePress()
         }}>
         <Text style={[styles.title, textBannerStyle]}>
           {title}
         </Text>
+
         <Icon
           style={styles.arrow}
           type={'material-community'}

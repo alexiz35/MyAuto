@@ -1,10 +1,10 @@
 import * as Print from 'expo-print'
 import { Alert } from 'react-native'
 import { shareAsync } from 'expo-sharing'
-import { StateTask } from '../../type'
+import { StateService } from '../../type'
 import { InfoTaskHTML } from './InfoTaskHTML'
 
-export const printToFile = async (task: StateTask): Promise<void> => {
+export const printToFile = async (task: StateService): Promise<void> => {
   // On iOS/android prints the given html. On web prints the HTML from the current page.
   const html = InfoTaskHTML(task)
   try {

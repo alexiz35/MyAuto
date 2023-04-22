@@ -1,15 +1,13 @@
 import {
   View,
   StyleSheet,
-  ScrollView,
-  TextInput, KeyboardAvoidingView, Platform
+  TextInput, ActivityIndicator, Pressable
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Button, Divider, Input, useTheme } from '@rneui/themed'
 import React, {
   PropsWithChildren,
-  RefObject,
-  useEffect,
+  RefObject, useEffect,
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
@@ -20,6 +18,7 @@ import { addPart, editPart } from '../Redux/actions'
 import Accordion from '../Accordion'
 import ShadowBox from '../../CommonComponents/ShadowBox'
 import { PartsList } from './PartsList'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputPart = ({ navigation, route }: Props): JSX.Element => {
@@ -49,8 +48,6 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
 
   const [itemPart, setItemPart] = useState<StatePart | null>(null)
 
-  const [isVisible, setIsVisible] = useState(false)
-
   const refNamePart = React.createRef<PropsWithChildren<TextInput>>()
   const refDatePart = React.createRef<PropsWithChildren<TextInput>>()
   const refNumberPart = React.createRef<PropsWithChildren<TextInput>>()
@@ -62,6 +59,8 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
   const refCostPart = React.createRef<PropsWithChildren<TextInput>>()
   const refQuantityPart = React.createRef<PropsWithChildren<TextInput>>()
   const refAmountCostPart = React.createRef<PropsWithChildren<TextInput>>()
+
+  const isOpen2 = false
 
   const clearInput = (): void => {
     setNamePart('')
@@ -76,28 +75,26 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
     setQuantityPart(0)
     setAmountCostPart(0)
   }
-
   const handleError = (): void => {
     refNamePart.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.error } })
     // @ts-expect-error not shake
     refNamePart.current?.shake()
   }
   const handleFocus = (ref: RefObject<TextInput>): void => {
-    ref.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: COLOR_GREEN } })
+    ref.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.success } })
   }
   const handleBlur = (ref: RefObject<TextInput>): void => {
-    ref.current?.setNativeProps({ style: { borderBottomWidth: 0, borderBottomColor: COLOR_GREEN } })
+    ref.current?.setNativeProps({ style: { borderBottomWidth: 0, borderBottomColor: theme.colors.success } })
   }
-
   const inputDate = (): void => DateTimePickerAndroid.open({
     value: new Date(),
     // @ts-expect-error date
     onChange: (event, date) => setDateBuy(date)
   })
 
-  useEffect(() => {
+  /* useEffect(() => {
     navigation.setOptions({ title: 'Купить деталь' })
-  }, [])
+  }, []) */
 
   // ------------------------- function calc input -----------------------------
   const handleOnSubmitQuantity = (): void => {
@@ -111,28 +108,36 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
 
   // ------------------------- control according -------------------------------
   const handleOpen = (item: StatePart): void => {
-    if (!isOpenAccordion) {
-      setNamePart(item.namePart)
-      setDateBuy(item.dateBuy)
-      setNumberPart(item.numberPart)
-      if (item.numberPart1 !== undefined) setNumberPart1(item.numberPart1)
-      if (item.numberPart2 !== undefined) setNumberPart2(item.numberPart2)
-      setCostPart(item.costPart)
-      setQuantityPart(item.quantityPart)
-      setAmountCostPart(item.amountCostPart)
-      if (item.seller?.name !== undefined) setSeller(item.seller?.name)
-      if (item.seller?.phone !== undefined) setSellerPhone(item.seller?.phone)
-      if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
-      setIsEditPart(true)
-      setItemPart(item)
-      setOpenAccordion(true)
-    }
+    setNamePart(item.namePart)
+    setDateBuy(item.dateBuy)
+    setNumberPart(item.numberPart)
+    if (item.numberPart1 !== undefined) setNumberPart1(item.numberPart1)
+    if (item.numberPart2 !== undefined) setNumberPart2(item.numberPart2)
+    setCostPart(item.costPart)
+    setQuantityPart(item.quantityPart)
+    setAmountCostPart(item.amountCostPart)
+    if (item.seller?.name !== undefined) setSeller(item.seller?.name)
+    if (item.seller?.phone !== undefined) setSellerPhone(item.seller?.phone)
+    if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
+    setIsEditPart(true)
+    setItemPart(item)
+    setOpenAccordion(true)
   }
 
   const isOpen = (open: boolean): void => {
-    setIsOpenAccordion(open)
+    setIsOpenAccordion(!isOpenAccordion)
+    /* /!* setIsOpenAccordion(open) *!/
+    console.log('isOpenAcc', isOpenAccordion)
+    /!*
     if (!open) setOpenAccordion(false)
-    else setOpenAccordion(true)
+    else setOpenAccordion(true) *!/
+    setOpenAccordion(!open) */
+  }
+
+  const handleOnPress = (isOpen: boolean): void => {
+    /* setIsOpenAccordion(!isOpenAccordion) */
+    /* setTimeout(() => setIsOpenAccordion(false), 2000) */
+    isOpen ? setOpenAccordion(false) : setOpenAccordion(true)
   }
 
   // ------------------------- button result -----------------------------------
@@ -159,8 +164,8 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
       costPart,
       quantityPart,
       amountCostPart,
-      id: Date.now()
-
+      id: Date.now(),
+      isInstall: false
     }
 
     isEditPart
@@ -171,12 +176,19 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
     /* navigation.navigate('Home') */
   }
 
+  /*  useEffect(() => {
+    setIsOpenAccordion(false)
+  }, [isOpen]) */
+
   return (
     <View>
-      <ScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
+
+      <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }} >
+
       <Accordion
         insideView={
-        <View>
+
+      <View>
         <View style={styles.viewAllInput}>
   {
      // --------------------- Name and Date ------------------------------------
@@ -210,27 +222,27 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
               />
             </ShadowBox>
           </View>
-          <View style={styles.viewGroupInput}>
   {
     // ----------------------- Number part -------------------------------------
   }
-            <ShadowBox style={{ margin: 5, flex: 1 }}>
-              <Input
-                ref={refNumberPart}
-                placeholder={'артикул'}
-                /* placeholderTextColor={'red'} */
-                inputStyle={styles.inputText}
-                errorMessage={'артикул'}
-                errorStyle={styles.errorInput}
-                onChangeText={(value) => setNumberPart(String(value))}
-                value={numberPart}
-                onFocus={() => handleFocus(refNumberPart)}
-                onBlur={() => handleBlur(refNumberPart)}
-                onSubmitEditing={() => refSellerName.current?.focus()}
-              />
-            </ShadowBox>
-          </View>
-          <ShadowBox style={{ flex: 1, marginHorizontal: 5 }}>
+           <View style={styles.viewGroupInput}>
+              <ShadowBox style={{ margin: 5, flex: 1 }}>
+                <Input
+                  ref={refNumberPart}
+                  placeholder={'артикул'}
+                  /* placeholderTextColor={'red'} */
+                  inputStyle={styles.inputText}
+                  errorMessage={'артикул'}
+                  errorStyle={styles.errorInput}
+                  onChangeText={(value) => setNumberPart(String(value))}
+                  value={numberPart}
+                  onFocus={() => handleFocus(refNumberPart)}
+                  onBlur={() => handleBlur(refNumberPart)}
+                  onSubmitEditing={() => refSellerName.current?.focus()}
+                />
+              </ShadowBox>
+           </View>
+            <ShadowBox style={{ flex: 1, marginHorizontal: 5 }}>
             <Accordion
               /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
               title={'Аналоги'}
@@ -340,8 +352,7 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
   {
     // ----------------------- Cost --------------------------------------------
   }
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+
         <View style={styles.viewAllInput}>
 
           <View style={styles.viewGroupInput}>
@@ -396,8 +407,7 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
             />
           </ShadowBox>
         </View>
-          </View>
-          </KeyboardAvoidingView>
+        </View>
 
   {
     // ----------------------- Buttons -----------------------------------------
@@ -422,18 +432,28 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
           />
         </View>
           <Divider insetType={'middle'} width={2}/>
-      </View>}
-        title={'Добавьте покупку'}
+      </View>
+
+      }
+        /* title={'Добавьте покупку'} */
+        title={String(isOpenAccordion)}
         bannerStyle={{ backgroundColor: BACK_INPUT }}
         open={openAccordion}
         isOpen={isOpen}
+        controlled={true}
+        onPress={handleOnPress}
         /* textBannerStyle={{ color: TEXT_WHITE }} */
       />
-      </ScrollView>
 
-      <View style={{ marginTop: 10 }}>
-        <PartsList handlePress={handleOpen}/>
-      </View>
+      </KeyboardAwareScrollView>
+      {isOpenAccordion ? <ActivityIndicator/> : null}
+      {/* </ScrollView> */}
+      { openAccordion
+        ? null
+        : <View style={{ marginTop: 10 }}>
+          <PartsList handlePress={handleOpen} />
+        </View>
+      }
       {/* </ScrollView> */}
     </View>
 

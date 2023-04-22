@@ -1,11 +1,12 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { COLOR_GREEN, StatePart } from '../../type'
-import { Button, ListItem, useTheme } from '@rneui/themed'
+import { Button, Icon, ListItem, useTheme } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { delPart } from '../Redux/actions'
 import { Shadow } from 'react-native-shadow-2'
+import { check } from 'react-native-permissions'
 
 interface handleProp {
   handlePress: (item: StatePart) => void
@@ -61,35 +62,48 @@ export const PartsList = ({ handlePress }: handleProp): JSX.Element => {
           bottomDivider
           topDivider
         >
+          <ListItem.Content style={{ flex: 0.5 }}>
+          <Icon name={'basket-check'} type='material-community' size={22} color={theme.colors.success} style={{ paddingBottom: 3 }}/>
+          <Icon name={'check-decagram' } type='material-community' size={22}
+                  color={ item.isInstall ? theme.colors.success : theme.colors.grey0} />
+          </ListItem.Content>
 
-          <MaterialCommunityIcons name={'cog'} size={24} color={theme.colors.success}/>
           <ListItem.Content style={{ flex: 3 }}>
-            <ListItem.Title style={{ fontSize: 14 }} >
-              {String(new Date(item.dateBuy).toLocaleDateString())}
+            <ListItem.Title style={{ fontSize: 14, paddingBottom: 5 }} >
+              {/* {String(new Date(item.dateBuy).toLocaleDateString())} */}
+              {String(item.namePart)}
             </ListItem.Title>
             <ListItem.Subtitle style={{ fontSize: 14 }} lineBreakMode={'tail'} numberOfLines={1} >
-              {String(item.namePart)}
+              {item.isInstall ? 'установлено' : 'не установлено'}
+            </ListItem.Subtitle>
+
+          </ListItem.Content>
+          <ListItem.Content style={{ flex: 1.4 }}>
+            <ListItem.Title style={{ fontSize: 13 }}>
+              {String(new Date(item.dateBuy).toLocaleDateString())}
+            </ListItem.Title>
+            <ListItem.Subtitle style={{ fontSize: 14 }}>
+              {(item.dateInstall != null) ? String(new Date(item.dateInstall).toLocaleDateString()) : null}
             </ListItem.Subtitle>
           </ListItem.Content>
 
           <ListItem.Content style={{ flex: 1.5 }}>
             <ListItem.Title style={{ fontSize: 14 }}>
-              {item.seller?.name}
+              {item.quantityPart} х {item.amountCostPart}
+            </ListItem.Title>
+            <ListItem.Subtitle >
+              {(item.mileageInstall != null) ? String(new Date(item.mileageInstall).toLocaleDateString()) : null}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+
+         {/*  <ListItem.Content style={{ flex: 1 }}>
+            <ListItem.Title style={{ fontSize: 14 }}>
+              {item.amountCostPart}
             </ListItem.Title>
             <ListItem.Subtitle style={{ fontSize: 14 }}>
               {item.costPart} грн
             </ListItem.Subtitle>
-          </ListItem.Content>
-          <ListItem.Content style={{ flex: 0.7 }}>
-            <ListItem.Title style={{ fontSize: 14 }}>
-              {item.quantityPart} шт
-            </ListItem.Title>
-          </ListItem.Content>
-          <ListItem.Content style={{ flex: 0.7 }}>
-            <ListItem.Title style={{ fontSize: 14 }}>
-              {item.amountCostPart} грн
-            </ListItem.Title>
-          </ListItem.Content>
+          </ListItem.Content> */}
 
         </ListItem.Swipeable>
 

@@ -1,9 +1,9 @@
-import { StatePart, TEXT_WHITE } from '../type'
+import { ModalPart, StatePart, TEXT_WHITE } from '../type'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Divider, Icon } from '@rneui/themed'
 import React from 'react'
 
-export const listsInfo = (item: StatePart, index: number, onInfo: (id: number) => void): JSX.Element => {
+export const listsInfo = (item: ModalPart, index: number, onInfo: (id: number) => void): JSX.Element => {
   return (
     <View>
       <Pressable onPress={() => (onInfo(item.id))}>

@@ -1,14 +1,14 @@
 import {
   ActionAddCar,
   ActionAddFuel, ActionAddParts,
-  ActionAddTask,
+  ActionAddService,
   ActionAddToken,
   ActionDelFuel, ActionDelParts,
-  ActionDelTask,
+  ActionDelService,
   ActionDelToken,
   ActionEditCar, ActionEditFuel, ActionEditParts,
-  ActionEditTask,
-  ActionFinishTask,
+  ActionEditService,
+  ActionFinishTask, ActionInstallPart,
   ActionMiles,
   ActionType,
   ActionUpdateState,
@@ -17,7 +17,7 @@ import {
   StateFuel,
   StateInfo,
   StateMain, StatePart,
-  StateTask
+  StateService
 } from '../../type'
 // -------------------------- Action State -------------------------------------
 export const updateState = (newState: StateMain): ActionUpdateState => (
@@ -35,18 +35,18 @@ export const updateMiles = (carId: number, currentMiles: CurrentMiles): ActionMi
     }
   })
 // ----------------------------- Action Task -----------------------------------
-export const addTask = (carId: number, task: StateTask): ActionAddTask => (
+export const addTask = (carId: number, task: StateService): ActionAddService => (
   {
-    type: ActionType.ADD_TASK,
+    type: ActionType.ADD_SERVICE,
     payload: {
       carId,
       task
     }
   })
 
-export const delTask = (carId: number, id: number): ActionDelTask => (
+export const delTask = (carId: number, id: number): ActionDelService => (
   {
-    type: ActionType.DEL_TASK,
+    type: ActionType.DEL_SERVICE,
     payload: {
       carId,
       id
@@ -64,9 +64,9 @@ export const finishTask = (carId: number, id: number, isFinished: boolean): Acti
   }
 )
 
-export const editTask = (carId: number, id: number | undefined, task: StateTask): ActionEditTask => (
+export const editTask = (carId: number, id: number | undefined, task: StateService): ActionEditService => (
   {
-    type: ActionType.EDIT_TASK,
+    type: ActionType.EDIT_SERVICE,
     payload: {
       carId,
       id,
@@ -162,4 +162,15 @@ export const editPart = (carId: number, id: number | undefined, part: StatePart)
       part
     }
   })
+
+export const installPart = (carId: number, id: number, isInstall: boolean): ActionInstallPart => (
+  {
+    type: ActionType.INSTALL_PART,
+    payload: {
+      carId,
+      id,
+      isInstall
+    }
+  }
+)
 // -----------------------------------------------------------------------------
