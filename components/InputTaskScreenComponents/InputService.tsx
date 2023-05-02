@@ -176,13 +176,14 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
   }
 
   // ---------------------------Accordion --------------------------------------
-  const isOpen = (open: boolean): void => {
+  /* const isOpen = (open: boolean): void => {
     setIsOpenAccordion(open)
     if (!open) setOpenAccordion(false)
     else setOpenAccordion(true)
-  }
+  } */
   // ---------------------------------------------------------------------------
   const createNewParts = (): void => {
+    // eslint-disable-next-line array-callback-return
     addModalParts?.map((item) => {
       const tempPart: StatePart = {
         id: item.id,
@@ -208,7 +209,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
   // ---------------------------handleButtons-----------------------------------
   const handleCancel = (): void => {
     clearInput()
-    setOpenAccordion(false)
+    handleOnPress()
   }
 
   const handleOk = (): void => {
@@ -238,8 +239,8 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
     editableTask
       ? setNewTask(editTask(state.numberCar, currentId, tempNewTask))
       : setNewTask(addTask(state.numberCar, tempNewTask))
-    /* navigation.navigate('BottomTabNav', { screen: 'Home' }) */
-    setOpenAccordion(false)
+
+    handleOnPress()
   }
   // ---------------------------------------------------------------------------
   // ---------------------- handleModal ----------------------------------------
@@ -255,9 +256,19 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
   }
 
   // ---------------------------------------------------------------------------
+  const handleOnPress = (): void => {
+    setIsOpenAccordion(true)
+    setTimeout(() => {
+      setOpenAccordion(!openAccordion)
+      setIsOpenAccordion(false)
+    }, 600)
+  }
 
   return (
   <View>
+    <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
+      <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
+    </Dialog>
     <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
       <Accordion
         insideView={
@@ -351,7 +362,11 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
         /> */}
             <ShadowBox style={{ margin: 5, flex: 1 }}>
               <Pressable style={styles.textCost} onPress={() => {
-                setIsVisible(true)
+                setIsOpenAccordion(true)
+                setTimeout(() => {
+                  setIsVisible(true)
+                  setIsOpenAccordion(false)
+                }, 100)
               }}>
                 <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Добавить комплектующие</Text>
 
@@ -430,7 +445,8 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
         title={'Добавьте сервис'}
         bannerStyle={{ backgroundColor: BACK_INPUT }}
         open={openAccordion}
-        isOpen={isOpen}
+        /* isOpen={isOpen} */
+        onPress={handleOnPress}
         /* textBannerStyle={{ color: TEXT_WHITE }} */
       />
     </KeyboardAwareScrollView>

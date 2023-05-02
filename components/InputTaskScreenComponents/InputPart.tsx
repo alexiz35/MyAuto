@@ -4,7 +4,7 @@ import {
   TextInput, ActivityIndicator, Pressable
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Button, Divider, Input, useTheme } from '@rneui/themed'
+import { Button, Dialog, Divider, Icon, Input, ListItem, useTheme } from '@rneui/themed'
 import React, {
   PropsWithChildren,
   RefObject, useEffect,
@@ -59,8 +59,6 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
   const refCostPart = React.createRef<PropsWithChildren<TextInput>>()
   const refQuantityPart = React.createRef<PropsWithChildren<TextInput>>()
   const refAmountCostPart = React.createRef<PropsWithChildren<TextInput>>()
-
-  const isOpen2 = false
 
   const clearInput = (): void => {
     setNamePart('')
@@ -121,7 +119,8 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
     if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
     setIsEditPart(true)
     setItemPart(item)
-    setOpenAccordion(true)
+    handleOnPress()
+    /* setOpenAccordion(true) */
   }
 
   const isOpen = (open: boolean): void => {
@@ -134,16 +133,18 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
     setOpenAccordion(!open) */
   }
 
-  const handleOnPress = (isOpen: boolean): void => {
-    /* setIsOpenAccordion(!isOpenAccordion) */
-    /* setTimeout(() => setIsOpenAccordion(false), 2000) */
-    isOpen ? setOpenAccordion(false) : setOpenAccordion(true)
+  const handleOnPress = (): void => {
+    setIsOpenAccordion(true)
+    setTimeout(() => {
+      setOpenAccordion(!openAccordion)
+      setIsOpenAccordion(false)
+    }, 600)
   }
 
   // ------------------------- button result -----------------------------------
   const handleCancel = (): void => {
     clearInput()
-    setOpenAccordion(false)
+    handleOnPress()
   }
   const handleOk = (): void => {
     if (namePart === '') {
@@ -172,281 +173,332 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
       ? dispatch(editPart(state.numberCar, itemPart?.id, tempNewPart))
       : dispatch(addPart(state.numberCar, tempNewPart))
     clearInput()
-    setOpenAccordion(!openAccordion)
+    handleOnPress()
     /* navigation.navigate('Home') */
   }
 
   /*  useEffect(() => {
-    setIsOpenAccordion(false)
-  }, [isOpen]) */
+    console.log('hello')
+    setIsOpenAccordion(true)
+    setTimeout(() => setIsOpenAccordion(false), 2000)
+  }, [openAccordion]) */
 
   return (
     <View>
+      {/* {isOpenAccordion ? <ActivityIndicator/> : null} */}
 
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }} >
-
-      <Accordion
-        insideView={
-
-      <View>
-        <View style={styles.viewAllInput}>
-  {
-     // --------------------- Name and Date ------------------------------------
-  }
-          <View style={styles.viewGroupInput}>
-            <ShadowBox style={{ margin: 5, flex: 3 }}>
-              <Input
-                ref={refNamePart}
-                renderErrorMessage={false}
-                placeholder={'название'}
-                inputStyle={styles.inputText}
-                errorStyle={styles.errorInput}
-                onChangeText={(value) => setNamePart(String(value))}
-                value={namePart}
-                onFocus={() => handleFocus(refNamePart)}
-                onBlur={() => handleBlur(refNamePart)}
-                onSubmitEditing={() => refNumberPart.current?.focus()}
-              />
-            </ShadowBox>
-            <ShadowBox style={{ margin: 5, flex: 1.2 }}>
-              <Input
-                ref={refDatePart}
-                renderErrorMessage={false}
-                placeholder={'купить к дате'}
-                inputStyle={styles.inputText}
-                inputContainerStyle={{ borderBottomWidth: 0 }}
-                showSoftInputOnFocus={false}
-                value = {new Date(dateBuy).toLocaleDateString()}
-                onPressOut={inputDate}
-                errorStyle={styles.errorInput}
-              />
-            </ShadowBox>
-          </View>
-  {
-    // ----------------------- Number part -------------------------------------
-  }
-           <View style={styles.viewGroupInput}>
-              <ShadowBox style={{ margin: 5, flex: 1 }}>
-                <Input
-                  ref={refNumberPart}
-                  placeholder={'артикул'}
-                  /* placeholderTextColor={'red'} */
-                  inputStyle={styles.inputText}
-                  errorMessage={'артикул'}
-                  errorStyle={styles.errorInput}
-                  onChangeText={(value) => setNumberPart(String(value))}
-                  value={numberPart}
-                  onFocus={() => handleFocus(refNumberPart)}
-                  onBlur={() => handleBlur(refNumberPart)}
-                  onSubmitEditing={() => refSellerName.current?.focus()}
-                />
-              </ShadowBox>
+       <Accordion
+         insideView={
+         <View>
+           <View style={styles.viewAllInput}>
+             {
+               // --------------------- Name and Date ------------------------------------
+             }
+             <View style={styles.viewGroupInput}>
+               <ShadowBox style={{
+                 margin: 5,
+                 flex: 3
+               }}>
+                 <Input
+                   ref={refNamePart}
+                   renderErrorMessage={false}
+                   placeholder={'название'}
+                   inputStyle={styles.inputText}
+                   errorStyle={styles.errorInput}
+                   onChangeText={(value) => setNamePart(String(value))}
+                   value={namePart}
+                   onFocus={() => handleFocus(refNamePart)}
+                   onBlur={() => handleBlur(refNamePart)}
+                   onSubmitEditing={() => refNumberPart.current?.focus()}
+                 />
+               </ShadowBox>
+               <ShadowBox style={{
+                 margin: 5,
+                 flex: 1.2
+               }}>
+                 <Input
+                   ref={refDatePart}
+                   renderErrorMessage={false}
+                   placeholder={'купить к дате'}
+                   inputStyle={styles.inputText}
+                   inputContainerStyle={{ borderBottomWidth: 0 }}
+                   showSoftInputOnFocus={false}
+                   value={new Date(dateBuy).toLocaleDateString()}
+                   onPressOut={inputDate}
+                   errorStyle={styles.errorInput}
+                 />
+               </ShadowBox>
+             </View>
+             {
+               // ----------------------- Number part -------------------------------------
+             }
+             <View style={styles.viewGroupInput}>
+               <ShadowBox style={{
+                 margin: 5,
+                 flex: 1
+               }}>
+                 <Input
+                   ref={refNumberPart}
+                   placeholder={'артикул'}
+                   /* placeholderTextColor={'red'} */
+                   inputStyle={styles.inputText}
+                   errorMessage={'артикул'}
+                   errorStyle={styles.errorInput}
+                   onChangeText={(value) => setNumberPart(String(value))}
+                   value={numberPart}
+                   onFocus={() => handleFocus(refNumberPart)}
+                   onBlur={() => handleBlur(refNumberPart)}
+                   onSubmitEditing={() => refSellerName.current?.focus()}
+                 />
+               </ShadowBox>
+             </View>
+             <ShadowBox style={{
+               flex: 1,
+               marginHorizontal: 5
+             }}>
+               <Accordion
+                 /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
+                 title={'Аналоги'}
+                 textBannerStyle={{
+                   fontSize: 14,
+                   color: theme.colors.grey3
+                 }}
+                 controlled={false}
+                 insideView={
+                   <View style={styles.viewGroupInput}>
+                     <ShadowBox style={{
+                       margin: 5,
+                       flex: 1
+                     }}>
+                       <Input
+                         ref={refNumber1Part}
+                         renderErrorMessage={false}
+                         placeholder={'аналог 1'}
+                         /* placeholderTextColor={'red'} */
+                         inputStyle={styles.inputText}
+                         errorStyle={styles.errorInput}
+                         inputContainerStyle={{ borderBottomWidth: 0 }}
+                         onChangeText={(value) => setNumberPart1(String(value))}
+                         value={numberPart1}
+                         onFocus={() => handleFocus(refNumber1Part)}
+                         onBlur={() => handleBlur(refNumber1Part)}
+                       />
+                     </ShadowBox>
+                     <ShadowBox style={{
+                       margin: 5,
+                       flex: 1
+                     }}>
+                       <Input
+                         ref={refNumber2Part}
+                         renderErrorMessage={false}
+                         placeholder={'аналог 2'}
+                         /* placeholderTextColor={'red'} */
+                         inputStyle={styles.inputText}
+                         errorStyle={styles.errorInput}
+                         inputContainerStyle={{ borderBottomWidth: 0 }}
+                         onChangeText={(value) => setNumberPart2(String(value))}
+                         value={numberPart2}
+                         onFocus={() => handleFocus(refNumber2Part)}
+                         onBlur={() => handleBlur(refNumber2Part)}
+                       />
+                     </ShadowBox>
+                   </View>
+                 }
+               />
+             </ShadowBox>
            </View>
-            <ShadowBox style={{ flex: 1, marginHorizontal: 5 }}>
-            <Accordion
-              /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
-              title={'Аналоги'}
-              textBannerStyle={{ fontSize: 14, color: theme.colors.grey3 }}
-              insideView={
-                <View style={styles.viewGroupInput}>
-                  <ShadowBox style={{ margin: 5, flex: 1 }}>
-                    <Input
-                      ref={refNumber1Part}
-                      renderErrorMessage={false}
-                      placeholder={'аналог 1'}
-                      /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      onChangeText={(value) => setNumberPart1(String(value))}
-                      value={numberPart1}
-                      onFocus={() => handleFocus(refNumber1Part)}
-                      onBlur={() => handleBlur(refNumber1Part)}
-                    />
-                  </ShadowBox>
-                  <ShadowBox style={{ margin: 5, flex: 1 }}>
-                    <Input
-                      ref={refNumber2Part}
-                      renderErrorMessage={false}
-                      placeholder={'аналог 2'}
-                      /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      onChangeText={(value) => setNumberPart2(String(value))}
-                      value={numberPart2}
-                      onFocus={() => handleFocus(refNumber2Part)}
-                      onBlur={() => handleBlur(refNumber2Part)}
-                    />
-                  </ShadowBox>
-                </View>
-              }
-            />
-          </ShadowBox>
-        </View>
-  {
-     // ---------------------- Seller ------------------------------------------
-  }
+           {
+             // ---------------------- Seller ------------------------------------------
+           }
 
-        <View style={styles.viewAllInput}>
-          <View style={styles.viewGroupInput}>
-              <ShadowBox style={{ margin: 5, flex: 1 }}>
-                <Input
-                  ref={refSellerName}
-                  placeholder={'продавец'}
-                  inputStyle={styles.inputText}
-                  errorMessage={'продавец'}
-                  errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
-                  onChangeText={(value) => setSeller(String(value))}
-                  value={seller}
-                  onFocus={() => handleFocus(refSellerName)}
-                  onBlur={() => handleBlur(refSellerName)}
-                  onSubmitEditing={() => refCostPart.current?.focus()}
-                />
-              </ShadowBox>
-          </View>
-          <ShadowBox style={{ flex: 1, marginHorizontal: 5 }}>
-            <Accordion
-              title={'Данные продавца'}
-              textBannerStyle={{ fontSize: 14, color: theme.colors.grey3 }}
-              insideView={
-                <View style={styles.viewGroupInput}>
-                  <ShadowBox style={{ margin: 5, flex: 1 }}>
-                    <Input
-                      ref={refSellerPhone}
-                      renderErrorMessage={false}
-                      placeholder={'телефон'}
-                      inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      keyboardType={'phone-pad'}
-                      onChangeText={(value) => setSellerPhone(String(value))}
-                      value={sellerPhone}
-                      onFocus={() => handleFocus(refSellerPhone)}
-                      onBlur={() => handleBlur(refSellerPhone)}
-                      onSubmitEditing={() => refSellerLink.current?.focus()}
-                    />
-                  </ShadowBox>
-                  <ShadowBox style={{ margin: 5, flex: 1 }}>
-                    <Input
-                      ref={refSellerLink}
-                      renderErrorMessage={false}
-                      placeholder={'ссылка'}
-                      /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      keyboardType={'url'}
-                      onChangeText={(value) => setSellerWeb(String(value))}
-                      value={sellerWeb}
-                      onFocus={() => handleFocus(refSellerLink)}
-                      onBlur={() => handleBlur(refSellerLink)}
-                      onSubmitEditing={() => refCostPart.current?.focus()}
-                    />
-                  </ShadowBox>
-                </View>
-              }
-            />
-          </ShadowBox>
-        </View>
-  {
-    // ----------------------- Cost --------------------------------------------
-  }
+           <View style={styles.viewAllInput}>
+             <View style={styles.viewGroupInput}>
+               <ShadowBox style={{
+                 margin: 5,
+                 flex: 1
+               }}>
+                 <Input
+                   ref={refSellerName}
+                   placeholder={'продавец'}
+                   inputStyle={styles.inputText}
+                   errorMessage={'продавец'}
+                   errorStyle={{
+                     color: 'gray',
+                     marginTop: 1,
+                     textAlign: 'center'
+                   }}
+                   onChangeText={(value) => setSeller(String(value))}
+                   value={seller}
+                   onFocus={() => handleFocus(refSellerName)}
+                   onBlur={() => handleBlur(refSellerName)}
+                   onSubmitEditing={() => refCostPart.current?.focus()}
+                 />
+               </ShadowBox>
+             </View>
+             <ShadowBox style={{
+               flex: 1,
+               marginHorizontal: 5
+             }}>
+               <Accordion
+                 title={'Данные продавца'}
+                 textBannerStyle={{
+                   fontSize: 14,
+                   color: theme.colors.grey3
+                 }}
+                 controlled={false}
+                 insideView={
+                   <View style={styles.viewGroupInput}>
+                     <ShadowBox style={{
+                       margin: 5,
+                       flex: 1
+                     }}>
+                       <Input
+                         ref={refSellerPhone}
+                         renderErrorMessage={false}
+                         placeholder={'телефон'}
+                         inputStyle={styles.inputText}
+                         errorStyle={styles.errorInput}
+                         inputContainerStyle={{ borderBottomWidth: 0 }}
+                         keyboardType={'phone-pad'}
+                         onChangeText={(value) => setSellerPhone(String(value))}
+                         value={sellerPhone}
+                         onFocus={() => handleFocus(refSellerPhone)}
+                         onBlur={() => handleBlur(refSellerPhone)}
+                         onSubmitEditing={() => refSellerLink.current?.focus()}
+                       />
+                     </ShadowBox>
+                     <ShadowBox style={{
+                       margin: 5,
+                       flex: 1
+                     }}>
+                       <Input
+                         ref={refSellerLink}
+                         renderErrorMessage={false}
+                         placeholder={'ссылка'}
+                         /* placeholderTextColor={'red'} */
+                         inputStyle={styles.inputText}
+                         errorStyle={styles.errorInput}
+                         inputContainerStyle={{ borderBottomWidth: 0 }}
+                         keyboardType={'url'}
+                         onChangeText={(value) => setSellerWeb(String(value))}
+                         value={sellerWeb}
+                         onFocus={() => handleFocus(refSellerLink)}
+                         onBlur={() => handleBlur(refSellerLink)}
+                         onSubmitEditing={() => refCostPart.current?.focus()}
+                       />
+                     </ShadowBox>
+                   </View>
+                 }
+               />
+             </ShadowBox>
+           </View>
+           {
+             // ----------------------- Cost --------------------------------------------
+           }
 
-        <View style={styles.viewAllInput}>
+           <View style={styles.viewAllInput}>
 
-          <View style={styles.viewGroupInput}>
-          <ShadowBox style={{ margin: 5, flex: 1 }}>
-            <Input
-              ref={refCostPart}
-              placeholder={'цена'}
-              /* placeholderTextColor={'red'} */
-              inputStyle={styles.inputText}
-              errorMessage={'цена'}
-              errorStyle={styles.errorInput}
-              keyboardType={'numeric'}
-              onChangeText={(value) => setCostPart(Number(value))}
-              value={String(costPart)}
-              onFocus={() => handleFocus(refCostPart)}
-              onBlur={() => handleBlur(refCostPart)}
-              onSubmitEditing={() => refQuantityPart.current?.focus()}
-            />
-          </ShadowBox>
-          <ShadowBox style={{ margin: 5, flex: 1 }}>
-            <Input
-              ref={refQuantityPart}
-              placeholder={'кол-во'}
-              containerStyle={{ flex: 1 }}
-              inputStyle={styles.inputText}
-              errorMessage={'кол-во'}
-              errorStyle={styles.errorInput}
-              keyboardType={'numeric'}
-              onChangeText={(value) => setQuantityPart(Number(value))}
-              value={String(quantityPart)}
-              onFocus={() => handleFocus(refQuantityPart)}
-              onBlur={() => handleBlur(refQuantityPart)}
-              onSubmitEditing={() => handleOnSubmitQuantity()}
-              /* onBlur={() => handleOnSubmitCost()} */
-            />
-          </ShadowBox>
-          <ShadowBox style={{ margin: 5, flex: 1 }}>
-            <Input
-              ref={refAmountCostPart}
-              placeholder={'сумма'}
-              containerStyle={{ flex: 1 }}
-              inputStyle={styles.inputText}
-              errorMessage={'сумма'}
-              errorStyle={styles.errorInput}
-              keyboardType={'numeric'}
-              onChangeText={(value) => setAmountCostPart(Number(value))}
-              value={String(amountCostPart)}
-              onFocus={() => handleFocus(refAmountCostPart)}
-              onBlur={() => handleBlur(refAmountCostPart)}
-              onSubmitEditing={() => handleOnSubmitAmount()}
-              /* onBlur={() => handleOnSubmitAmount()} */
-            />
-          </ShadowBox>
-        </View>
-        </View>
+             <View style={styles.viewGroupInput}>
+               <ShadowBox style={{
+                 margin: 5,
+                 flex: 1
+               }}>
+                 <Input
+                   ref={refCostPart}
+                   placeholder={'цена'}
+                   /* placeholderTextColor={'red'} */
+                   inputStyle={styles.inputText}
+                   errorMessage={'цена'}
+                   errorStyle={styles.errorInput}
+                   keyboardType={'numeric'}
+                   onChangeText={(value) => setCostPart(Number(value))}
+                   value={String(costPart)}
+                   onFocus={() => handleFocus(refCostPart)}
+                   onBlur={() => handleBlur(refCostPart)}
+                   onSubmitEditing={() => refQuantityPart.current?.focus()}
+                 />
+               </ShadowBox>
+               <ShadowBox style={{
+                 margin: 5,
+                 flex: 1
+               }}>
+                 <Input
+                   ref={refQuantityPart}
+                   placeholder={'кол-во'}
+                   containerStyle={{ flex: 1 }}
+                   inputStyle={styles.inputText}
+                   errorMessage={'кол-во'}
+                   errorStyle={styles.errorInput}
+                   keyboardType={'numeric'}
+                   onChangeText={(value) => setQuantityPart(Number(value))}
+                   value={String(quantityPart)}
+                   onFocus={() => handleFocus(refQuantityPart)}
+                   onBlur={() => handleBlur(refQuantityPart)}
+                   onSubmitEditing={() => handleOnSubmitQuantity()}
+                   /* onBlur={() => handleOnSubmitCost()} */
+                 />
+               </ShadowBox>
+               <ShadowBox style={{
+                 margin: 5,
+                 flex: 1
+               }}>
+                 <Input
+                   ref={refAmountCostPart}
+                   placeholder={'сумма'}
+                   containerStyle={{ flex: 1 }}
+                   inputStyle={styles.inputText}
+                   errorMessage={'сумма'}
+                   errorStyle={styles.errorInput}
+                   keyboardType={'numeric'}
+                   onChangeText={(value) => setAmountCostPart(Number(value))}
+                   value={String(amountCostPart)}
+                   onFocus={() => handleFocus(refAmountCostPart)}
+                   onBlur={() => handleBlur(refAmountCostPart)}
+                   onSubmitEditing={() => handleOnSubmitAmount()}
+                   /* onBlur={() => handleOnSubmitAmount()} */
+                 />
+               </ShadowBox>
+             </View>
+           </View>
 
-  {
-    // ----------------------- Buttons -----------------------------------------
-  }
-        <View style={styles.viewButton}>
+           {
+             // ----------------------- Buttons -----------------------------------------
+           }
+           <View style={styles.viewButton}>
 
-          <Button
-            containerStyle={styles.buttonStyle}
-            title={'Cancel'}
-            color={'error'}
-            type={'solid'}
-            onPress={() => { handleCancel() }}
-          />
-          <Button
-            containerStyle={styles.buttonStyle}
-            title={'Ok'}
-            color={'success'}
-            type={'solid'}
-            onPress={() => {
-              handleOk()
-            }}
-          />
-        </View>
-          <Divider insetType={'middle'} width={2}/>
-      </View>
-
-      }
-        /* title={'Добавьте покупку'} */
-        title={String(isOpenAccordion)}
-        bannerStyle={{ backgroundColor: BACK_INPUT }}
-        open={openAccordion}
-        isOpen={isOpen}
-        controlled={true}
-        onPress={handleOnPress}
-        /* textBannerStyle={{ color: TEXT_WHITE }} */
-      />
-
+             <Button
+               containerStyle={styles.buttonStyle}
+               title={'Cancel'}
+               color={'error'}
+               type={'solid'}
+               onPress={() => {
+                 handleCancel()
+               }}
+             />
+             <Button
+               containerStyle={styles.buttonStyle}
+               title={'Ok'}
+               color={'success'}
+               type={'solid'}
+               onPress={() => {
+                 handleOk()
+               }}
+             />
+           </View>
+           <Divider insetType={'middle'} width={2} />
+         </View>
+       }
+         title={'Добавьте деталь'}
+         bannerStyle={{ backgroundColor: BACK_INPUT }}
+         open={openAccordion}
+         /* isOpen={isOpen} */
+         onPress={handleOnPress}
+         />
       </KeyboardAwareScrollView>
-      {isOpenAccordion ? <ActivityIndicator/> : null}
+      <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
+        <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
+      </Dialog>
       {/* </ScrollView> */}
       { openAccordion
         ? null

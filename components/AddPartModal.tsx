@@ -262,6 +262,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Pr
           </View>
         }
           title={'Информация о покупке'}
+          controlled={false}
           bannerStyle={{ height: 30, padding: 5, backgroundColor: BACK_INPUT }}
         />
 
@@ -301,7 +302,10 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Pr
         <Button
         containerStyle={styles.buttonStyle}
         title={'Finish'}
-        onPress={() => { onPressOk(parts) }}
+        onPress={() => {
+          // @ts-expect-error parts type
+          onPressOk(parts)
+        }}
         color={'success'}
         type={'solid'}
       />

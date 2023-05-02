@@ -95,18 +95,27 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
       setFuelStation(item.StationFuel)
       setIsEditFuel(true)
       setItemFuel(item)
-      setOpenAccordion(true)
+      /* setOpenAccordion(true) */
+      handleOnPress()
     }
   }
-  const isOpen = (open: boolean): void => {
+  /*  const isOpen = (open: boolean): void => {
     setIsOpenAccordion(open)
     if (!open) setOpenAccordion(false)
     else setOpenAccordion(true)
+  } */
+  const handleOnPress = (): void => {
+    setIsOpenAccordion(true)
+    setTimeout(() => {
+      setOpenAccordion(!openAccordion)
+      setIsOpenAccordion(false)
+    }, 100)
   }
   // ------------------------- button result -----------------------------------
   const handleCancel = (): void => {
     clearInput()
-    setOpenAccordion(false)
+    handleOnPress()
+    /* setOpenAccordion(false) */
     /* navigation.goBack() */
   }
   const handleOk = (): void => {
@@ -128,12 +137,16 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
       ? dispatch(editFuel(state.numberCar, itemFuel?.id, tempNewFuel))
       : dispatch(addFuel(state.numberCar, tempNewFuel))
     clearInput()
-    setOpenAccordion(!openAccordion)
+    handleOnPress()
+    /* setOpenAccordion(!openAccordion) */
     /* navigation.navigate('Home') */
   }
 
   return (
     <BackgroundView props={{ flex: 1 }}>
+      <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
+        <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
+      </Dialog>
       <View style={{ flex: 1 }} >
         <Text style={{ textAlign: 'center', paddingVertical: 10, fontStyle: 'italic' }}>
           Cумма заправок в текущем месяце {sumFuel}
@@ -265,7 +278,9 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
               }
               title={'Добавьте заправку'}
               open={openAccordion}
-              isOpen={isOpen}
+              controlled={true}
+              onPress={handleOnPress}
+              /* isOpen={isOpen} */
             />
           </ScrollView>
         </View>
