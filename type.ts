@@ -50,6 +50,7 @@ export interface StateCar {
   services: StateService[]
   parts: StatePart[]
   mileage: CurrentMiles[]
+  others: StateOther[]
 }
 
 export interface StateFuel {
@@ -121,6 +122,14 @@ export interface StatePart {
   numberPart2?: string
   seller?: Seller
   isInstall: boolean
+}
+export interface StateOther {
+  id: number
+  namePart: string
+  dateBuy: Date
+  amountCostPart: number
+  numberPart: string
+  seller?: Seller
 }
 export interface Seller {
   name: string

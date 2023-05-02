@@ -1,17 +1,12 @@
 import {
-  ActivityIndicator,
-  Pressable,
   StyleProp,
   StyleSheet,
-  TextInput,
-  TextStyle,
+  TextStyle, TouchableHighlight,
   View,
   ViewStyle
 } from 'react-native'
-import { BACK_INPUT, COLOR_GREEN, TEXT_WHITE } from '../type'
-import { Dropdown } from 'react-native-element-dropdown'
-import { Button, Icon, Input, Text } from '@rneui/themed'
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import { Icon, Text } from '@rneui/themed'
+import { useEffect, useState } from 'react'
 
 interface Props {
   insideView: JSX.Element
@@ -57,11 +52,12 @@ const Accordion = ({
 
   return (
     <View>
-      <Pressable
+      <TouchableHighlight
         style={[styles.viewTitle, bannerStyle]}
         onPress={() => {
           handlePress()
         }}>
+        <>
         <Text style={[styles.title, textBannerStyle]}>
           {title}
         </Text>
@@ -71,7 +67,8 @@ const Accordion = ({
           type={'material-community'}
           name={isVisible ? 'chevron-up' : 'chevron-down'}
         />
-      </Pressable>
+        </>
+      </TouchableHighlight>
       {isVisible
         ? <View style={[styles.viewDrop, viewContainerStyle]}>
           {insideView}

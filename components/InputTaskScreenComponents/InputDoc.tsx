@@ -5,7 +5,7 @@ import {
   TextInput, KeyboardAvoidingView, Platform
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Button, Divider, Input, useTheme } from '@rneui/themed'
+import { Button, Dialog, Divider, Input, useTheme } from '@rneui/themed'
 import React, {
   PropsWithChildren,
   RefObject,
@@ -20,6 +20,7 @@ import { addPart, editPart } from '../Redux/actions'
 import Accordion from '../Accordion'
 import ShadowBox from '../../CommonComponents/ShadowBox'
 import { PartsList } from './PartsList'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
 const InputDoc = ({ navigation, route }: Props): JSX.Element => {
@@ -125,7 +126,7 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
       if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
       setIsEditPart(true)
       setItemPart(item)
-      setOpenAccordion(true)
+      handleOnPress()
     }
   }
 
@@ -135,10 +136,17 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
     else setOpenAccordion(true)
   }
 
+  const handleOnPress = (): void => {
+    setIsOpenAccordion(true)
+    setTimeout(() => {
+      setOpenAccordion(!openAccordion)
+      setIsOpenAccordion(false)
+    }, 600)
+  }
   // ------------------------- button result -----------------------------------
   const handleCancel = (): void => {
     clearInput()
-    setOpenAccordion(false)
+    handleOnPress()
   }
   const handleOk = (): void => {
     if (namePart === '') {
@@ -167,13 +175,16 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
       ? dispatch(editPart(state.numberCar, itemPart?.id, tempNewPart))
       : dispatch(addPart(state.numberCar, tempNewPart))
     clearInput()
-    setOpenAccordion(!openAccordion)
+    handleOnPress()
     /* navigation.navigate('Home') */
   }
 
   return (
     <View>
-      <ScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
+      <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
+        <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
+      </Dialog>
+      <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
       <Accordion
         title={'Добавьте другие затраты'}
 
@@ -332,10 +343,11 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
       </View>}
         bannerStyle={{ backgroundColor: BACK_INPUT }}
         open={openAccordion}
-        isOpen={isOpen}
+        /* isOpen={isOpen} */
+        onPress={handleOnPress}
         /* textBannerStyle={{ color: TEXT_WHITE }} */
       />
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
       <View style={{ marginTop: 10 }}>
         <PartsList handlePress={handleOpen}/>

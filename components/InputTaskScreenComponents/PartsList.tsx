@@ -1,6 +1,6 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { COLOR_GREEN, StatePart } from '../../type'
-import { Button, Icon, ListItem, useTheme } from '@rneui/themed'
+import { Button, Divider, Icon, ListItem, useTheme } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -68,31 +68,33 @@ export const PartsList = ({ handlePress }: handleProp): JSX.Element => {
                   color={ item.isInstall ? theme.colors.success : theme.colors.grey0} />
           </ListItem.Content>
 
-          <ListItem.Content style={{ flex: 3 }}>
-            <ListItem.Title style={{ fontSize: 14, paddingBottom: 5 }} >
+          <ListItem.Content style={{ flex: 3 }} >
+            <ListItem.Title style={{ paddingBottom: 5 }} >
               {/* {String(new Date(item.dateBuy).toLocaleDateString())} */}
               {String(item.namePart)}
             </ListItem.Title>
-            <ListItem.Subtitle style={{ fontSize: 14 }} lineBreakMode={'tail'} numberOfLines={1} >
+            <Divider color={theme.colors.success} width={2} inset insetType={'middle'}/>
+            <ListItem.Subtitle style={{ fontSize: 12 }} lineBreakMode={'tail'} numberOfLines={1} >
               {item.isInstall ? 'установлено' : 'не установлено'}
             </ListItem.Subtitle>
 
           </ListItem.Content>
-          <ListItem.Content style={{ flex: 1.4 }}>
-            <ListItem.Title style={{ fontSize: 13 }}>
+          <ListItem.Content style={{ flex: 1.5 }}>
+            <ListItem.Title style={{ paddingBottom: 5 }} >
               {String(new Date(item.dateBuy).toLocaleDateString())}
             </ListItem.Title>
-            <ListItem.Subtitle style={{ fontSize: 14 }}>
+
+            <ListItem.Subtitle style={{ fontSize: 12 }}>
               {(item.dateInstall != null) ? String(new Date(item.dateInstall).toLocaleDateString()) : null}
             </ListItem.Subtitle>
           </ListItem.Content>
 
           <ListItem.Content style={{ flex: 1.5 }}>
-            <ListItem.Title style={{ fontSize: 14 }}>
+            <ListItem.Title style={{ paddingBottom: 5 }}>
               {item.quantityPart} х {item.amountCostPart}
             </ListItem.Title>
-            <ListItem.Subtitle >
-              {(item.mileageInstall != null) ? String(new Date(item.mileageInstall).toLocaleDateString()) : null}
+            <ListItem.Subtitle style={{ fontSize: 12 }}>
+              {(item.mileageInstall != null) ? String(item.mileageInstall) : null}
             </ListItem.Subtitle>
           </ListItem.Content>
 
