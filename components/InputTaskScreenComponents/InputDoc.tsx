@@ -1,7 +1,6 @@
 import {
   View,
   StyleSheet,
-  ScrollView,
   TextInput, KeyboardAvoidingView, Platform
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -14,67 +13,49 @@ import React, {
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, StatePart } from '../../type'
+import { BACK_INPUT, COLOR_GREEN, StateOther } from '../../type'
 import { RootStackParamList } from '../Navigation/Navigation'
-import { addPart, editPart } from '../Redux/actions'
+import { addOther, editOther } from '../Redux/actions'
 import Accordion from '../Accordion'
 import ShadowBox from '../../CommonComponents/ShadowBox'
-import { PartsList } from './PartsList'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { OthersList } from './OthersList'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
-const InputDoc = ({ navigation, route }: Props): JSX.Element => {
+const InputDoc = ({ navigation }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { theme } = useTheme()
   /* const { mode } = useThemeMode() */
 
-  const [dateBuy, setDateBuy] = useState(new Date())
   const [namePart, setNamePart] = useState('')
-
+  const [dateBuy, setDateBuy] = useState(new Date())
   const [numberPart, setNumberPart] = useState('')
-  const [numberPart1, setNumberPart1] = useState('')
-  const [numberPart2, setNumberPart2] = useState('')
-
   const [seller, setSeller] = useState('')
   const [sellerPhone, setSellerPhone] = useState('')
   const [sellerWeb, setSellerWeb] = useState('')
-
-  const [costPart, setCostPart] = useState(0)
   const [amountCostPart, setAmountCostPart] = useState(0)
-  const [quantityPart, setQuantityPart] = useState(0)
 
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isOpenAccordion, setIsOpenAccordion] = useState(false)
   const [isEditPart, setIsEditPart] = useState(false)
 
-  const [itemPart, setItemPart] = useState<StatePart | null>(null)
-
-  const [isVisible, setIsVisible] = useState(false)
+  const [itemOther, setItemOther] = useState<StateOther | null>(null)
 
   const refNamePart = React.createRef<PropsWithChildren<TextInput>>()
   const refDatePart = React.createRef<PropsWithChildren<TextInput>>()
   const refNumberPart = React.createRef<PropsWithChildren<TextInput>>()
-  const refNumber1Part = React.createRef<PropsWithChildren<TextInput>>()
-  const refNumber2Part = React.createRef<PropsWithChildren<TextInput>>()
   const refSellerName = React.createRef<PropsWithChildren<TextInput>>()
   const refSellerPhone = React.createRef<PropsWithChildren<TextInput>>()
   const refSellerLink = React.createRef<PropsWithChildren<TextInput>>()
-  const refCostPart = React.createRef<PropsWithChildren<TextInput>>()
-  const refQuantityPart = React.createRef<PropsWithChildren<TextInput>>()
   const refAmountCostPart = React.createRef<PropsWithChildren<TextInput>>()
 
   const clearInput = (): void => {
     setNamePart('')
     setDateBuy(new Date())
-    setNumberPart('')
-    setNumberPart1('')
-    setNumberPart2('')
     setSeller('')
     setSellerPhone('')
     setSellerWeb('')
-    setCostPart(0)
-    setQuantityPart(0)
     setAmountCostPart(0)
   }
 
@@ -100,40 +81,20 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
     navigation.setOptions({ title: 'Купить деталь' })
   }, [])
 
-  // ------------------------- function calc input -----------------------------
-  const handleOnSubmitQuantity = (): void => {
-    setAmountCostPart(quantityPart * costPart)
-    refAmountCostPart.current?.focus()
-  }
-  const handleOnSubmitAmount = (): void => {
-    setCostPart(amountCostPart / quantityPart)
-    /* inputFuelAmount.current?.focus() */
-  }
-
   // ------------------------- control according -------------------------------
-  const handleOpen = (item: StatePart): void => {
+  const handleOpen = (item: StateOther): void => {
     if (!isOpenAccordion) {
       setNamePart(item.namePart)
       setDateBuy(item.dateBuy)
       setNumberPart(item.numberPart)
-      if (item.numberPart1 !== undefined) setNumberPart1(item.numberPart1)
-      if (item.numberPart2 !== undefined) setNumberPart2(item.numberPart2)
-      setCostPart(item.costPart)
-      setQuantityPart(item.quantityPart)
       setAmountCostPart(item.amountCostPart)
       if (item.seller?.name !== undefined) setSeller(item.seller?.name)
       if (item.seller?.phone !== undefined) setSellerPhone(item.seller?.phone)
       if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
       setIsEditPart(true)
-      setItemPart(item)
+      setItemOther(item)
       handleOnPress()
     }
-  }
-
-  const isOpen = (open: boolean): void => {
-    setIsOpenAccordion(open)
-    if (!open) setOpenAccordion(false)
-    else setOpenAccordion(true)
   }
 
   const handleOnPress = (): void => {
@@ -153,27 +114,22 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
       handleError()
       return
     }
-    const tempNewPart: StatePart = {
+    const tempNewOther: StateOther = {
       namePart,
       dateBuy,
       numberPart,
-      numberPart1,
-      numberPart2,
       seller: {
         name: seller,
         phone: sellerPhone,
         link: sellerWeb
       },
-      costPart,
-      quantityPart,
       amountCostPart,
       id: Date.now()
-
     }
 
     isEditPart
-      ? dispatch(editPart(state.numberCar, itemPart?.id, tempNewPart))
-      : dispatch(addPart(state.numberCar, tempNewPart))
+      ? dispatch(editOther(state.numberCar, itemOther?.id, tempNewOther))
+      : dispatch(addOther(state.numberCar, tempNewOther))
     clearInput()
     handleOnPress()
     /* navigation.navigate('Home') */
@@ -241,7 +197,7 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
                   value={seller}
                   onFocus={() => handleFocus(refSellerName)}
                   onBlur={() => handleBlur(refSellerName)}
-                  onSubmitEditing={() => refCostPart.current?.focus()}
+                  onSubmitEditing={() => refAmountCostPart.current?.focus()}
                 />
               </ShadowBox>
           </View>
@@ -281,7 +237,7 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
                       value={sellerWeb}
                       onFocus={() => handleFocus(refSellerLink)}
                       onBlur={() => handleBlur(refSellerLink)}
-                      onSubmitEditing={() => refCostPart.current?.focus()}
+                      onSubmitEditing={() => refAmountCostPart.current?.focus()}
                     />
                   </ShadowBox>
                 </View>
@@ -299,18 +255,18 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
           <View style={styles.viewGroupInput}>
           <ShadowBox style={{ margin: 5, flex: 1 }}>
             <Input
-              ref={refCostPart}
+              ref={refAmountCostPart}
               placeholder={'стоимость'}
               /* placeholderTextColor={'red'} */
               inputStyle={styles.inputText}
               errorMessage={'стоимость'}
               errorStyle={styles.errorInput}
               keyboardType={'numeric'}
-              onChangeText={(value) => setCostPart(Number(value))}
-              value={String(costPart)}
-              onFocus={() => handleFocus(refCostPart)}
-              onBlur={() => handleBlur(refCostPart)}
-              onSubmitEditing={() => refQuantityPart.current?.focus()}
+              onChangeText={(value) => setAmountCostPart(Number(value))}
+              value={String(amountCostPart)}
+              onFocus={() => handleFocus(refAmountCostPart)}
+              onBlur={() => handleBlur(refAmountCostPart)}
+              /* onSubmitEditing={() => refQuantityPart.current?.focus()} */
             />
           </ShadowBox>
         </View>
@@ -350,7 +306,7 @@ const InputDoc = ({ navigation, route }: Props): JSX.Element => {
       </KeyboardAwareScrollView>
 
       <View style={{ marginTop: 10 }}>
-        <PartsList handlePress={handleOpen}/>
+        <OthersList handlePress={handleOpen}/>
       </View>
       {/* </ScrollView> */}
     </View>

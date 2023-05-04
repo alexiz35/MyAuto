@@ -1,12 +1,12 @@
 import {
   ActionAddCar,
-  ActionAddFuel, ActionAddParts,
+  ActionAddFuel, ActionAddOthers, ActionAddParts,
   ActionAddService,
   ActionAddToken,
-  ActionDelFuel, ActionDelParts,
+  ActionDelFuel, ActionDelOthers, ActionDelParts,
   ActionDelService,
   ActionDelToken,
-  ActionEditCar, ActionEditFuel, ActionEditParts,
+  ActionEditCar, ActionEditFuel, ActionEditOthers, ActionEditParts,
   ActionEditService,
   ActionFinishTask, ActionInstallPart,
   ActionMiles,
@@ -16,7 +16,7 @@ import {
   StateCar,
   StateFuel,
   StateInfo,
-  StateMain, StatePart,
+  StateMain, StateOther, StatePart,
   StateService
 } from '../../type'
 // -------------------------- Action State -------------------------------------
@@ -174,3 +174,31 @@ export const installPart = (carId: number, id: number, isInstall: boolean): Acti
   }
 )
 // -----------------------------------------------------------------------------
+// ----------------------------- Action Parts -----------------------------------
+export const addOther = (carId: number, other: StateOther): ActionAddOthers => (
+  {
+    type: ActionType.ADD_OTHERS,
+    payload: {
+      carId,
+      other
+    }
+  })
+
+export const delOther = (carId: number, id: number): ActionDelOthers => (
+  {
+    type: ActionType.DEL_OTHERS,
+    payload: {
+      carId,
+      id
+    }
+  })
+
+export const editOther = (carId: number, id: number | undefined, other: StateOther): ActionEditOthers => (
+  {
+    type: ActionType.EDIT_OTHERS,
+    payload: {
+      carId,
+      id,
+      other
+    }
+  })

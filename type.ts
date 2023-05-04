@@ -33,7 +33,10 @@ export enum ActionType {
   ADD_PARTS = 'ADD_PARTS',
   DEL_PARTS = 'DEL_PARTS',
   EDIT_PARTS = 'EDIT_PARTS',
-  INSTALL_PART = 'INSTALL_PART'
+  INSTALL_PART = 'INSTALL_PART',
+  ADD_OTHERS = 'ADD_OTHERS',
+  DEL_OTHERS = 'DEL_OTHERS',
+  EDIT_OTHERS = 'EDIT_OTHERS',
 }
 
 export interface StateMain {
@@ -290,12 +293,39 @@ export interface ActionInstallPart {
 }
 
 // -----------------------------------------------------------------------------
+// ----------------------------- interface ActionOthers -------------------------
+export interface ActionAddOthers {
+  type: ActionType.ADD_OTHERS
+  payload: {
+    carId: number
+    other: StateOther
+  }
+}
+export interface ActionDelOthers {
+  type: ActionType.DEL_OTHERS
+  payload: {
+    carId: number
+    id: number
+  }
+}
+
+export interface ActionEditOthers {
+  type: ActionType.EDIT_OTHERS
+  payload: {
+    carId: number
+    id: number | undefined
+    other: StateOther
+  }
+}
+
+// -----------------------------------------------------------------------------
 
 export type AppAction = ActionMiles | ActionChangeCar |
 ActionAddService | ActionDelService | ActionEditService | ActionFinishTask |
 ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken |
 ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel |
-ActionAddParts | ActionDelParts | ActionEditParts | ActionInstallPart
+ActionAddParts | ActionDelParts | ActionEditParts | ActionInstallPart |
+ActionAddOthers | ActionDelOthers | ActionEditOthers
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 
