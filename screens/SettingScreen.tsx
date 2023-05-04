@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../components/Navigation/Navigation'
-import { Alert, Button, ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Button, Pressable, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
-import { CheckBox, Divider, Icon } from '@rneui/themed'
+import { CheckBox, Divider, Icon, Text } from '@rneui/themed'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
 import { BACK_OPACITY, COLOR_GREEN, TEXT_WHITE } from '../type'
@@ -17,6 +17,8 @@ import {
   GDUserInfo,
   getRefreshToken
 } from '../components/GoogleAPI'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import BackgroundView from '../CommonComponents/BackgroundView'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -231,35 +233,35 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   }
 
   return (
-    <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
+    <BackgroundView style={{ height: '100%' }}>
       <ScrollView nestedScrollEnabled={true} style={{ flex: 1, paddingHorizontal: 10 }}>
         <Divider style={{ marginTop: 10 }}/>
         <View>
           <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
-          <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Машины</Text>
+          <Text style={{ padding: 10, textAlign: 'center' }}>Машины</Text>
         </View>
         <Divider />
         {
           state.cars.map((item, index) => (
             <View key={index} style={styles.viewText}>
-            <Text style={styles.text}>{item.info.model}</Text>
+            <Text >{item.info.model}</Text>
             <Divider/>
             </View>
           ))
         }
         <Divider inset insetType={'middle'}/>
         <Pressable onPress={() => navigation.navigate('CarInfoScreen')}>
-          <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Добавить машину</Text>
+          <Text style={{ padding: 10, textAlign: 'center' }}>Добавить машину</Text>
         </Pressable>
         <Divider/>
         <Pressable >
           <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
           {userInfo === null
             ? (
-              <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Подключить GoogleDisk для бэкапа</Text>
+              <Text style={{ padding: 10, textAlign: 'center' }}>Подключить GoogleDisk для бэкапа</Text>
               )
             : (
-              <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>{userInfo.name}</Text>
+              <Text style={{ padding: 10, textAlign: 'center' }}>{userInfo.name}</Text>
               )
           }
         </Pressable>
@@ -357,8 +359,14 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         </View>
         <Divider inset insetType={'middle'}/>
 
+        <TouchableHighlight onPress={async () => {
+          await AsyncStorage.clear()
+        }}>
+          <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Сброс Redux</Text>
+
+        </TouchableHighlight>
       </ScrollView>
-    </ImageBackground>
+    </BackgroundView>
   )
 }
 export default SettingScreen
@@ -368,8 +376,5 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  text: {
-    color: TEXT_WHITE
   }
 })

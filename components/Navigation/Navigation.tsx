@@ -204,10 +204,11 @@ export const Navigation = (): JSX.Element => {
 
               <Pressable
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onPress={
-                async () => {
+                onPress={() =>
+                  navigation.navigate('SettingScreen')
+                /* async () => {
                   await AsyncStorage.clear()
-                }}>
+                } */}>
                 <LogoTitle />
               </Pressable>
 

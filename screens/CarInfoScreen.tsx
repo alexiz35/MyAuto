@@ -40,6 +40,7 @@ import { Dropdown } from 'react-native-element-dropdown'
 import { SimpleAccordion } from 'react-native-simple-accordion'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { BusyIndicator, useIsReady } from '../components/useIsReadyHook'
+import BackgroundView from '../CommonComponents/BackgroundView'
 
 interface ListCar {
   label: string
@@ -169,7 +170,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
   if (!isReady) { return <BusyIndicator/> } else {
     return (
-    <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
+    <BackgroundView style={{ height: '100%' }}>
       <ScrollView nestedScrollEnabled={true} style={{ flex: 1, paddingHorizontal: 10 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', flex: 1, marginVertical: 20 }}>
           <View style={{ flex: 1, paddingRight: 5 }}>
@@ -392,7 +393,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         </View>
     </ScrollView>
 
-</ImageBackground>
+    </BackgroundView>
 
     )
   }
