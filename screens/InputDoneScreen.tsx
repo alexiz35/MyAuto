@@ -9,13 +9,13 @@ import { addTask, editTask } from '../components/Redux/actions'
 import { AddPartModal } from '../components/AddPartModal'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import InputService from '../components/InputTaskScreenComponents/InputService'
-import InputPart from '../components/InputTaskScreenComponents/InputPart'
+import InputService from '../components/InputDoneScreenComponents/InputService'
+import InputPart from '../components/InputDoneScreenComponents/InputPart'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import InputDoc from '../components/InputTaskScreenComponents/InputDoc'
+import InputDoc from '../components/InputDoneScreenComponents/InputDoc'
 
-  type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
-const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
+  type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
+const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const { theme } = useTheme()
   const setNewTask = useAppDispatch()
@@ -102,7 +102,7 @@ const InputTaskScreen = ({ navigation, route }: Props): JSX.Element => {
   )
 }
 
-export default InputTaskScreen
+export default InputDoneScreen
 
 const styles = StyleSheet.create({
   dropDownPicker: {

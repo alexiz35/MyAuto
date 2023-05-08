@@ -21,7 +21,7 @@ import ShadowBox from '../../CommonComponents/ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { OthersList } from './OthersList'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
+type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
 const InputDoc = ({ navigation }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)

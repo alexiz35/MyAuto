@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
           placement={'right'}
           icon={{ name: 'add', color: 'white' }}
           onPress={() => {
-            navigation.navigate('InputTaskScreen', { editable: false })
+            navigation.navigate('InputDoneScreen', { editable: false })
           }}
         />
         <FAB

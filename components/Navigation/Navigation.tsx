@@ -4,7 +4,7 @@ import { CompositeScreenProps, NavigationContainer, NavigatorScreenParams } from
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import HomeScreen from '../../screens/HomeScreen'
-import InputTaskScreen from '../../screens/InputTaskScreen'
+import InputDoneScreen from '../../screens/InputDoneScreen'
 import { Alert, Image, Pressable, View } from 'react-native'
 import { Button, FAB, Icon, Switch, Text, useTheme, useThemeMode } from '@rneui/themed'
 import { useEffect, useState } from 'react'
@@ -42,7 +42,7 @@ import createStackNavigator, { StackScreenProps } from '@react-navigation/stack'
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
   BottomTabNav: NavigatorScreenParams<RootTabParamList>
-  InputTaskScreen: { editable: boolean, taskId?: number, typeTask: number }
+  InputDoneScreen: { editable: boolean, taskId?: number, typeTask: number }
   Info: { taskId: number, typeTask: number }
   CarInfoScreen: undefined
   SettingScreen: undefined
@@ -55,7 +55,7 @@ export type RootTabParamList = {
   CarInfoScreen: undefined
   Tasks: undefined
   StatScreen: undefined
-  InputTaskScreen: { editable: boolean, taskId?: number, typeTask: number }
+  InputDoneScreen: { editable: boolean, taskId?: number, typeTask: number }
 }
 
 function LogoTitle (): JSX.Element {
@@ -263,8 +263,8 @@ export const Navigation = (): JSX.Element => {
           )}
         />
         <Stack.Screen
-          name='InputTaskScreen'
-          component={InputTaskScreen}
+          name='InputDoneScreen'
+          component={InputDoneScreen}
           options={{
             title: 'Edit Task',
             headerTintColor: theme.colors.black,
@@ -326,7 +326,7 @@ export const Navigation = (): JSX.Element => {
                   size: 20
                 }}
                 onPress={() => {
-                  navigation.navigate('InputTaskScreen', { editable: true, taskId: route.params.taskId })
+                  navigation.navigate('InputDoneScreen', { editable: true, taskId: route.params.taskId })
                 }}
               />
             )
@@ -402,7 +402,7 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                       }}
                       icon={{ name: 'add', color: theme.colors.black }}
                       onPress={() => {
-                        navigation.navigate('InputTaskScreen', { editable: false, typeTask: 0 })
+                        navigation.navigate('InputDoneScreen', { editable: false, typeTask: 0 })
                       }}
                     />
 

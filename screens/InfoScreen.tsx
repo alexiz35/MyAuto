@@ -15,7 +15,7 @@ import BackgroundView from '../CommonComponents/BackgroundView'
 type Props = NativeStackScreenProps<RootStackParamList, 'Info'>
 /* type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
-'InputTaskScreen'
+'InputDoneScreen'
 > */
 
 const InfoScreen = ({ route }: Props): JSX.Element => {
@@ -156,7 +156,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
        {/*  <Button
           title={'Edit'}
           onPress={() => {
-            nav.navigate('InputTaskScreen', { editable: true, taskId: currentId })
+            nav.navigate('InputDoneScreen', { editable: true, taskId: currentId })
           }}
           color={'secondary'}
         /> */}

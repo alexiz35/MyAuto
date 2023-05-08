@@ -17,17 +17,17 @@ import { RootStackParamList } from './Navigation/Navigation'
 import { addPart, editPart } from './Redux/actions'
 import Accordion from './Accordion'
 import ShadowBox from './../CommonComponents/ShadowBox'
-import { PartsList } from './InputTaskScreenComponents/PartsList'
+import { PartsList } from './InputDoneScreenComponents/PartsList'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 interface InputPartProps {
   isCancel: () => void
   isOk: (partResult: StatePart) => void
-  part?: StatePart
+  part?: StatePart | null
 }
 
-/* type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'> */
-const InputPart = ({ isCancel, isOk, part }: InputPartProps): JSX.Element => {
+/* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
+const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { theme } = useTheme()
@@ -48,7 +48,6 @@ const InputPart = ({ isCancel, isOk, part }: InputPartProps): JSX.Element => {
   const [amountCostPart, setAmountCostPart] = useState(0)
   const [quantityPart, setQuantityPart] = useState(0)
 
-  const [openAccordion, setOpenAccordion] = useState(false)
   const [isOpenAccordion, setIsOpenAccordion] = useState(false)
   const [isEditPart, setIsEditPart] = useState(false)
 
@@ -96,9 +95,11 @@ const InputPart = ({ isCancel, isOk, part }: InputPartProps): JSX.Element => {
     onChange: (event, date) => setDateBuy(date)
   })
 
-  /* useEffect(() => {
-    navigation.setOptions({ title: 'Купить деталь' })
-  }, []) */
+  useEffect(() => {
+    if (part !== null) {
+      handleOpen(part)
+    }
+  }, [])
 
   // ------------------------- function calc input -----------------------------
   const handleOnSubmitQuantity = (): void => {
@@ -124,27 +125,9 @@ const InputPart = ({ isCancel, isOk, part }: InputPartProps): JSX.Element => {
     if (item.seller?.phone !== undefined) setSellerPhone(item.seller?.phone)
     if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
     setIsEditPart(true)
-    setItemPart(item)
-    handleOnPress()
+    /* setItemPart(item) */
+    /* handleOnPress() */
     /* setOpenAccordion(true) */
-  }
-
-  const isOpen = (open: boolean): void => {
-    setIsOpenAccordion(!isOpenAccordion)
-    /* /!* setIsOpenAccordion(open) *!/
-    console.log('isOpenAcc', isOpenAccordion)
-    /!*
-    if (!open) setOpenAccordion(false)
-    else setOpenAccordion(true) *!/
-    setOpenAccordion(!open) */
-  }
-
-  const handleOnPress = (): void => {
-    setIsOpenAccordion(true)
-    setTimeout(() => {
-      setOpenAccordion(!openAccordion)
-      setIsOpenAccordion(false)
-    }, 600)
   }
 
   // ------------------------- button result -----------------------------------
@@ -175,9 +158,9 @@ const InputPart = ({ isCancel, isOk, part }: InputPartProps): JSX.Element => {
       isInstall: false
     }
 
-    isEditPart
+    /* isEditPart
       ? dispatch(editPart(state.numberCar, itemPart?.id, tempNewPart))
-      : dispatch(addPart(state.numberCar, tempNewPart))
+      : dispatch(addPart(state.numberCar, tempNewPart)) */
     clearInput()
     isOk(tempNewPart)
     /* navigation.navigate('Home') */

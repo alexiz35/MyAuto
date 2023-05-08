@@ -24,7 +24,7 @@ import BackgroundView from '../../CommonComponents/BackgroundView'
 import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'InputTaskScreen'>
+type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
 const InputService = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
