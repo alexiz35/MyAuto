@@ -171,7 +171,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   if (!isReady) { return <BusyIndicator/> } else {
     return (
     <BackgroundView style={{ height: '100%' }}>
-      <ScrollView nestedScrollEnabled={true} style={{ flex: 1, paddingHorizontal: 10 }}>
+      <ScrollView nestedScrollEnabled={true} style={{ paddingHorizontal: 10, height: '100%' }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', flex: 1, marginVertical: 20 }}>
           <View style={{ flex: 1, paddingRight: 5 }}>
             <Dropdown

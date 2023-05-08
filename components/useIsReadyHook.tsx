@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, ImageBackground, View } from 'react-native'
 import { COLOR_GREEN } from '../type'
+import BackgroundView from '../CommonComponents/BackgroundView'
 
 export const useIsReady = (): boolean => {
   const [isReady, setIsReady] = useState(false)
@@ -14,14 +15,14 @@ export const useIsReady = (): boolean => {
 
 export const BusyIndicator = (): JSX.Element => {
   return (
-    <ImageBackground source={require('../assets/Back2.png')} style={{ height: '100%' }}>
+    <BackgroundView style={{ height: '100%' }}>
 
   <View style={{
-    flex: 1,
+    height: '100%',
     justifyContent: 'center'
   }}>
   <ActivityIndicator size="large" color={COLOR_GREEN} />
   </View>
-  </ImageBackground>
+  </BackgroundView>
   )
 }

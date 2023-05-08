@@ -26,7 +26,7 @@ import {
 } from '../../type'
 import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
-import PaperScreen from '../../screens/PaperScreen'
+import TaskScreen from '../../screens/TaskScreen'
 /* import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs' */
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FuelScreen from '../../screens/FuelScreen'
@@ -53,7 +53,7 @@ export type RootTabParamList = {
   Fuel: undefined
   Null: undefined
   CarInfoScreen: undefined
-  PaperScreen: undefined
+  Tasks: undefined
   StatScreen: undefined
   InputTaskScreen: { editable: boolean, taskId?: number, typeTask: number }
 }
@@ -156,7 +156,27 @@ export const Navigation = (): JSX.Element => {
       <Stack.Navigator screenOptions={ {
         headerStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_TOP
         headerTransparent: false,
-        statusBarStyle: 'dark'
+        statusBarStyle: 'dark',
+        headerRight: () => (
+          <View style={{ flexDirection: 'row' }}>
+            <Button
+              type='outline'
+              buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.black }}
+              size='md'
+              icon={{
+                name: 'theme-light-dark',
+                type: 'material-community',
+                size: 20,
+                color: theme.colors.black
+              }}
+              onPress={
+                () => {
+                  toggle()
+                }}
+            />
+
+          </View>
+        )
       }}>
         {/* <Stack.Screen
           name='Home'
@@ -389,15 +409,15 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                     )
                   }}
       />
-      <Tab.Screen name={'PaperScreen'} component={PaperScreen}
+      <Tab.Screen name={'Tasks'} component={TaskScreen}
                   options={{
-                    tabBarLabel: 'Paper',
+                    tabBarLabel: 'Tasks',
                     tabBarIcon: ({ color, focused }) => (
                       <MaterialCommunityIcons
-                        name='cash'
+                        name='calendar-check'
                         /* type='material-community' */
                         color={color}
-                        size={focused ? 26 : 22}
+                        size={focused ? 24 : 20}
                       />
                     )
                   }}

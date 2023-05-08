@@ -1,8 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../components/Navigation/Navigation'
-import { Alert, Button, Pressable, StyleSheet, TouchableHighlight, View } from 'react-native'
-import { ScrollView } from 'react-native-virtualized-view'
-import { CheckBox, Divider, Icon, Text } from '@rneui/themed'
+import { Alert, Button, Pressable, StyleSheet, TouchableHighlight, View, ScrollView } from 'react-native'
+import { CheckBox, Divider, Icon, Text, useTheme } from '@rneui/themed'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
 import { BACK_OPACITY, COLOR_GREEN, TEXT_WHITE } from '../type'
@@ -26,6 +25,7 @@ WebBrowser.maybeCompleteAuthSession()
 const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const state = useAppSelector(state => state)
   const dispatch = useAppDispatch()
+  const { theme } = useTheme()
 
   const [token, setToken] = useState('')
   const [userInfo, setUserInfo] = useState<GDUserInfo | null>(null)
@@ -233,11 +233,11 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   }
 
   return (
-    <BackgroundView style={{ height: '100%' }}>
-      <ScrollView nestedScrollEnabled={true} style={{ flex: 1, paddingHorizontal: 10 }}>
+    <BackgroundView >
+      <ScrollView nestedScrollEnabled={true} style={{ paddingHorizontal: 10, height: '100%' }}>
         <Divider style={{ marginTop: 10 }}/>
         <View>
-          <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
+          <Icon type={'material-community'} name={'circle'} color={theme.colors.success} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
           <Text style={{ padding: 10, textAlign: 'center' }}>Машины</Text>
         </View>
         <Divider />
@@ -255,7 +255,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         </Pressable>
         <Divider/>
         <Pressable >
-          <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
+          <Icon type={'material-community'} name={'circle'} color={theme.colors.success} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
           {userInfo === null
             ? (
               <Text style={{ padding: 10, textAlign: 'center' }}>Подключить GoogleDisk для бэкапа</Text>
@@ -287,7 +287,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         }
         <Divider/>
         <Pressable onPress={() => { void importData() }} disabled={!auth} >
-          <Text style={[{ padding: 10, textAlign: 'center' }, auth ? { color: TEXT_WHITE } : { color: 'grey' }]} >Импорт данных</Text>
+          <Text style={[{ padding: 10, textAlign: 'center' }, auth ? { color: theme.colors.black } : { color: theme.colors.grey3 }]} >Импорт данных</Text>
         </Pressable>
         {/* <Button
           title="Refresh Token"
@@ -335,26 +335,26 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         /> */}
         <Divider inset insetType={'middle'}/>
         <Pressable onPress={() => { void backup() }} disabled={!auth}>
-          <Text style={[{ padding: 10, textAlign: 'center' }, auth ? { color: TEXT_WHITE } : { color: 'grey' }]}>Экспорт данных</Text>
+          <Text style={[{ padding: 10, textAlign: 'center' }, auth ? { color: theme.colors.black } : { color: theme.colors.grey3 }]}>Экспорт данных</Text>
         </Pressable>
         <Divider/>
         <View>
-          <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
-          <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Контроль пробега</Text>
+          <Icon type={'material-community'} name={'circle'} color={theme.colors.success} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
+          <Text style={{ padding: 10, textAlign: 'center' }}>Контроль пробега</Text>
         </View>
         <Divider />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Напоминание при входе в приложении</Text>
+        <Text style={{ padding: 10, textAlign: 'center' }}>Напоминание при входе в приложении</Text>
         <CheckBox containerStyle={{ backgroundColor: BACK_OPACITY, paddingVertical: 3 }} checked={true} checkedColor={COLOR_GREEN}/>
         </View>
         <Divider inset insetType={'middle'}/>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Периодическое напоминание в фоне</Text>
+          <Text style={{ padding: 10, textAlign: 'center' }}>Периодическое напоминание в фоне</Text>
           <CheckBox containerStyle={{ backgroundColor: BACK_OPACITY, paddingVertical: 3 }} checked={true} checkedColor={COLOR_GREEN}/>
         </View>
         <Divider inset insetType={'middle'}/>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Синхронизация пробега с авто</Text>
+          <Text style={{ padding: 10, textAlign: 'center' }}>Синхронизация пробега с авто</Text>
           <CheckBox containerStyle={{ backgroundColor: BACK_OPACITY, paddingVertical: 3 }} checked={true} checkedColor={COLOR_GREEN}/>
         </View>
         <Divider inset insetType={'middle'}/>
@@ -362,7 +362,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         <TouchableHighlight onPress={async () => {
           await AsyncStorage.clear()
         }}>
-          <Text style={{ color: TEXT_WHITE, padding: 10, textAlign: 'center' }}>Сброс Redux</Text>
+          <Text style={{ padding: 10, textAlign: 'center' }}>Сброс Redux</Text>
 
         </TouchableHighlight>
       </ScrollView>
