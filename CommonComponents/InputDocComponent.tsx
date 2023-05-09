@@ -12,18 +12,20 @@ import React, {
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, StateOther } from '../../type'
-import { RootStackParamList } from '../Navigation/Navigation'
-import { addOther, editOther } from '../Redux/actions'
-import Accordion from '../Accordion'
-import ShadowBox from '../../CommonComponents/ShadowBox'
+import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { BACK_INPUT, COLOR_GREEN, StateOther, StatePart } from '../type'
+import { addOther, editOther } from '../components/Redux/actions'
+import Accordion from '../components/Accordion'
+import ShadowBox from '../CommonComponents/ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { OthersList } from './OthersList'
-import InputDocComponent from '../../CommonComponents/InputDocComponent'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
-const InputDoc = ({ navigation }: Props): JSX.Element => {
+interface InputDocProps {
+  isCancel: () => void
+  isOk: (otherResult: StateOther) => void
+  other?: StateOther | null
+}
+
+const InputDoc = ({ isCancel, isOk, other = null }: InputDocProps): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { theme } = useTheme()
@@ -79,7 +81,10 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
   })
 
   useEffect(() => {
-    navigation.setOptions({ title: 'Купить деталь' })
+    if (other !== null) {
+      handleOpen(other)
+    }
+    /* navigation.setOptions({ title: 'Купить деталь' }) */
   }, [])
 
   // ------------------------- control according -------------------------------
@@ -94,21 +99,21 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
       if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
       setIsEditPart(true)
       setItemOther(item)
-      handleOnPress()
+      /* handleOnPress() */
     }
   }
 
-  const handleOnPress = (): void => {
+  /*  const handleOnPress = (): void => {
     setIsOpenAccordion(true)
     setTimeout(() => {
       setOpenAccordion(!openAccordion)
       setIsOpenAccordion(false)
     }, 600)
-  }
+  } */
   // ------------------------- button result -----------------------------------
   const handleCancel = (): void => {
     clearInput()
-    handleOnPress()
+    isCancel()
   }
   const handleOk = (): void => {
     if (namePart === '') {
@@ -128,25 +133,20 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
       id: Date.now()
     }
 
-    isEditPart
+    /* isEditPart
       ? dispatch(editOther(state.numberCar, itemOther?.id, tempNewOther))
-      : dispatch(addOther(state.numberCar, tempNewOther))
+      : dispatch(addOther(state.numberCar, tempNewOther)) */
     clearInput()
-    handleOnPress()
+    isOk(tempNewOther)
+    /* handleOnPress() */
     /* navigation.navigate('Home') */
   }
 
   return (
     <View>
-      <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
-        <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
-      </Dialog>
-      <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
-      <Accordion
-        title={'Добавьте другие затраты'}
 
-        insideView={
-        /* <View>
+      <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
+        <View>
         <View style={styles.viewAllInput}>
   {
      // --------------------- Name and Date ------------------------------------
@@ -229,7 +229,7 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
                       ref={refSellerLink}
                       renderErrorMessage={false}
                       placeholder={'ссылка'}
-                      /!* placeholderTextColor={'red'} *!/
+                      /* placeholderTextColor={'red'} */
                       inputStyle={styles.inputText}
                       errorStyle={styles.errorInput}
                       inputContainerStyle={{ borderBottomWidth: 0 }}
@@ -258,7 +258,7 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
             <Input
               ref={refAmountCostPart}
               placeholder={'стоимость'}
-              /!* placeholderTextColor={'red'} *!/
+              /* placeholderTextColor={'red'} */
               inputStyle={styles.inputText}
               errorMessage={'стоимость'}
               errorStyle={styles.errorInput}
@@ -267,7 +267,7 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
               value={String(amountCostPart)}
               onFocus={() => handleFocus(refAmountCostPart)}
               onBlur={() => handleBlur(refAmountCostPart)}
-              /!* onSubmitEditing={() => refQuantityPart.current?.focus()} *!/
+              /* onSubmitEditing={() => refQuantityPart.current?.focus()} */
             />
           </ShadowBox>
         </View>
@@ -297,21 +297,9 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
           />
         </View>
           <Divider insetType={'middle'} width={2}/>
-      </View> */
-          <InputDocComponent isCancel={handleCancel} isOk={handleOk} other={itemOther}/>
-      }
-        bannerStyle={{ backgroundColor: BACK_INPUT }}
-        open={openAccordion}
-        /* isOpen={isOpen} */
-        onPress={handleOnPress}
-        /* textBannerStyle={{ color: TEXT_WHITE }} */
-      />
+      </View>
       </KeyboardAwareScrollView>
 
-      <View style={{ marginTop: 10 }}>
-        <OthersList handlePress={handleOpen}/>
-      </View>
-      {/* </ScrollView> */}
     </View>
 
   )
