@@ -27,7 +27,7 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { theme } = useTheme()
-  /* const { mode } = useThemeMode() */
+  const { mode } = useThemeMode()
 
   const [namePart, setNamePart] = useState('')
   const [dateBuy, setDateBuy] = useState(new Date())
