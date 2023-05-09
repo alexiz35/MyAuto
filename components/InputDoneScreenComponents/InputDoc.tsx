@@ -4,7 +4,7 @@ import {
   TextInput, KeyboardAvoidingView, Platform
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Button, Dialog, Divider, Input, useTheme } from '@rneui/themed'
+import { Button, Dialog, Divider, Input, useTheme, useThemeMode } from '@rneui/themed'
 import React, {
   PropsWithChildren,
   RefObject,
