@@ -1,7 +1,7 @@
 import { ImageBackground, Pressable, View } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
 import { Button, CheckBox, Dialog, Divider, FAB, Overlay, SpeedDial, Text, useTheme } from '@rneui/themed'
-import { BACK_INPUT, BACK_OPACITY, COLOR_GREEN, StateOther, StatePart, TEXT_WHITE } from '../type'
+import { BACK_INPUT, BACK_OPACITY, COLOR_GREEN, StateOther, StatePart, StateService, TEXT_WHITE } from '../type'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import InputPart from '../components/InputDoneScreenComponents/InputPart'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -11,6 +11,7 @@ import { printToFile } from '../components/Print/Print'
 import React, { useState } from 'react'
 import InputPartComponent from '../components/InputPartComponent'
 import InputDocComponent from '../CommonComponents/InputDocComponent'
+import InputServiceComponent from '../CommonComponents/InputServiceComponent'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
 
@@ -18,6 +19,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   const { theme } = useTheme()
   const [openFab, setOpenFab] = useState(false)
   const [visiblePart, setVisiblePart] = useState(false)
+  const [visibleService, setVisibleService] = useState(false)
   const [visibleOther, setVisibleOther] = useState(false)
 
   const pressPartFab = (): void => {
@@ -26,7 +28,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   }
 
   const pressServiceFab = (): void => {
-    setVisiblePart(true)
+    setVisibleService(true)
     setOpenFab(false)
   }
 
@@ -39,12 +41,17 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     setVisiblePart(false)
     console.log('result', resultPart)
   }
+  const handleOkService = (resultService: StateService): void => {
+    setVisiblePart(false)
+    console.log('result', resultService)
+  }
   const handleOkOther = (resultOther: StateOther): void => {
     setVisibleOther(false)
     console.log('result', resultOther)
   }
   const handleCancel = (): void => {
     setVisiblePart(false)
+    setVisibleService(false)
     setVisibleOther(false)
   }
 
@@ -62,12 +69,29 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
             </BackgroundView>
           </Dialog>
 
-          <Dialog isVisible={visibleOther} overlayStyle={{ width: '100%', backgroundColor: BACK_OPACITY }}>
+          <Overlay isVisible={visibleService}
+                   fullScreen
+                   overlayStyle={{ justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.50)' }}
+          >
             <BackgroundView>
-              <Text style={{ textAlign: 'center' }}>Запланируйте покупку детали</Text>
-          <InputDocComponent isCancel={handleCancel} isOk={handleOkOther}/>
+              <View style={{ margin: 10 }} >
+              <Text style={{ textAlign: 'center' }}>Запланируйте service</Text>
+              <InputServiceComponent isCancel={handleCancel} isOk={handleOkService}/>
+              </View>
             </BackgroundView>
-          </Dialog>
+          </Overlay>
+
+          <Overlay isVisible={visibleOther}
+                   fullScreen
+                   overlayStyle={{ justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.50)' }}
+          >
+            <BackgroundView >
+              <View style={{ margin: 10 }} >
+                <Text style={{ textAlign: 'center' }}>Запланируйте покупку other</Text>
+                <InputDocComponent isCancel={handleCancel} isOk={handleOkOther}/>
+              </View>
+            </BackgroundView>
+          </Overlay>
 
         </View>
       <SpeedDial

@@ -296,7 +296,7 @@ const InputDoc = ({ isCancel, isOk, other = null }: InputDocProps): JSX.Element 
             }}
           />
         </View>
-          <Divider insetType={'middle'} width={2}/>
+
       </View>
       </KeyboardAwareScrollView>
 
