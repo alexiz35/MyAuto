@@ -40,7 +40,7 @@ interface InputServiceProps {
   service?: StateService | null
 }
 
-const InputService = ({ isCancel, isOk, service }: InputServiceProps): JSX.Element => {
+const InputService = ({ isCancel, isOk, service = null }: InputServiceProps): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const setNewTask = useAppDispatch()
   const dispatch = useAppDispatch()
@@ -111,21 +111,22 @@ const InputService = ({ isCancel, isOk, service }: InputServiceProps): JSX.Eleme
     onChange: (event, date) => setStartDateInput(date)
   })
 
-  /* useFocusEffect(
-    useCallback(() => {
-      if (editableTask) {
-        const temp = state.cars[state.numberCar].services.find((item) => (item.id === currentId))
+  useEffect(() => {
+    if (service !== null) {
+      handleOpen(service)
+    }
+  }, [])
 
-        if (temp !== undefined) {
-          setStartKmInput(temp.startKm)
-          setAddModalParts(temp.addition?.parts)
-          setStartDateInput(new Date(temp.startDate))
-          setCostService(temp.sumCostService !== undefined ? temp.sumCostService : 0)
-          setValueDrop(temp.title)
-          setOpenAccordion(true)
-        }
-      }
-    }, [editableTask])) */
+  const handleOpen = (item: StateService): void => {
+    if (!isOpenAccordion) {
+      setStartKmInput(item.startKm)
+      setAddModalParts(item.addition?.parts)
+      setStartDateInput(new Date(item.startDate))
+      setCostService(item.sumCostService !== undefined ? item.sumCostService : 0)
+      setValueDrop(item.title)
+      /* handleOnPress() */
+    }
+  }
 
   useEffect(() => {
     setEndKmInput(startKmInput + kmToService)

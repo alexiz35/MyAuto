@@ -21,6 +21,7 @@ import ShadowBox from '../../CommonComponents/ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { OthersList } from './OthersList'
 import InputDocComponent from '../../CommonComponents/InputDocComponent'
+import { PartsList } from './PartsList'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
 const InputDoc = ({ navigation }: Props): JSX.Element => {
@@ -141,6 +142,7 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
       <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
         <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
       </Dialog>
+      <View>
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
       <Accordion
         title={'Добавьте другие затраты'}
@@ -307,9 +309,13 @@ const InputDoc = ({ navigation }: Props): JSX.Element => {
         /* textBannerStyle={{ color: TEXT_WHITE }} */
       />
       </KeyboardAwareScrollView>
+      </View>
 
-      <View style={{ marginTop: 10 }}>
-        <OthersList handlePress={handleOpen}/>
+      <View style={{ marginTop: 10, height: '85%' }}>
+        { openAccordion
+          ? null
+          : <OthersList handlePress={handleOpen} />
+        }
       </View>
       {/* </ScrollView> */}
     </View>

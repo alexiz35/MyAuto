@@ -4,7 +4,7 @@ import {
   TextInput, ActivityIndicator, Pressable
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Button, Dialog, Divider, Icon, Input, ListItem, useTheme } from '@rneui/themed'
+import { Button, Dialog, Divider, Icon, Input, ListItem, Text, useTheme } from '@rneui/themed'
 import React, {
   PropsWithChildren,
   RefObject, useEffect,
@@ -20,6 +20,7 @@ import ShadowBox from '../../CommonComponents/ShadowBox'
 import { PartsList } from './PartsList'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import InputPartComponent from '../InputPartComponent'
+import { getTabBarHeight } from '@react-navigation/bottom-tabs/lib/typescript/src/views/BottomTabBar'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
 const InputPart = ({ navigation, route }: Props): JSX.Element => {
@@ -92,9 +93,9 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
   }, [openAccordion]) */
 
   return (
-    <View>
+    <View >
       {/* {isOpenAccordion ? <ActivityIndicator/> : null} */}
-
+      <View>
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }} >
        <Accordion
          insideView={
@@ -107,16 +108,20 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
          onPress={handleOnPressAccordion}
          />
       </KeyboardAwareScrollView>
+      </View>
       <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
         <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
       </Dialog>
       {/* </ScrollView> */}
+      <View style={{ marginTop: 10, height: '85%' }}>
       { openAccordion
         ? null
-        : <View style={{ marginTop: 10 }}>
-          <PartsList handlePress={handleOpenForEdit} />
-        </View>
+        : <PartsList handlePress={handleOpenForEdit} />
+
       }
+      </View>
+      {/* <Text>HELLO</Text> */}
+
       {/* </ScrollView> */}
     </View>
 

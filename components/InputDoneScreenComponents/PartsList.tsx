@@ -1,6 +1,6 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { COLOR_GREEN, StatePart } from '../../type'
-import { Button, Divider, Icon, ListItem, useTheme } from '@rneui/themed'
+import { Button, Divider, Icon, ListItem, useTheme, Text } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'

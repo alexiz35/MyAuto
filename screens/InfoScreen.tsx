@@ -45,6 +45,7 @@ const InfoScreen = ({ route }: Props): JSX.Element => {
   const currentId = route.params.taskId
   const tempTask = (): StateService => {
     const temp = state.services.find((item) => (item.id === currentId))
+    console.log('info', currentId)
     if (temp !== undefined) return temp
     else return currentTask
   }

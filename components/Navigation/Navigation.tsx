@@ -327,6 +327,7 @@ export const Navigation = (): JSX.Element => {
                 }}
                 onPress={() => {
                   navigation.navigate('InputDoneScreen', { editable: true, taskId: route.params.taskId })
+                  console.log('navigate', route.params.taskId)
                 }}
               />
             )

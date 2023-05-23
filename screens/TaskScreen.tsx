@@ -12,6 +12,7 @@ import React, { useState } from 'react'
 import InputPartComponent from '../components/InputPartComponent'
 import InputDocComponent from '../CommonComponents/InputDocComponent'
 import InputServiceComponent from '../CommonComponents/InputServiceComponent'
+import { PartsList } from '../components/InputDoneScreenComponents/PartsList'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
 
@@ -61,7 +62,15 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
         <View style={{ height: '100%' }}>
           <Text style={{ textAlign: 'center' }}>Запланируйте</Text>
-
+  {
+    // ------------------------------ flatTask -------------------------------------------------------
+  }
+          <View>
+            <PartsList handlePress={null}/>
+          </View>
+  {
+    // ------------------------------ flatTask -------------------------------------------------------
+  }
           <Dialog isVisible={visiblePart} overlayStyle={{ width: '100%', backgroundColor: BACK_OPACITY }}>
             <BackgroundView>
               <Text style={{ textAlign: 'center' }}>Запланируйте покупку детали</Text>

@@ -21,7 +21,6 @@ export enum ActionType {
   ADD_SERVICE = 'ADD_SERVICE',
   DEL_SERVICE = 'DEL_SERVICE',
   EDIT_SERVICE = 'EDIT_SERVICE',
-  FINISH_TASK = 'FINISH_TASK',
   ADD_CAR = 'ADD_CAR',
   UPDATE_CAR = 'UPDATE_CAR',
   DEL_CAR = 'DEL_CAR',
@@ -37,6 +36,10 @@ export enum ActionType {
   ADD_OTHERS = 'ADD_OTHERS',
   DEL_OTHERS = 'DEL_OTHERS',
   EDIT_OTHERS = 'EDIT_OTHERS',
+  ADD_TASK = 'ADD_TASK',
+  DEL_TASK = 'DEL_TASK',
+  EDIT_TASK = 'EDIT_TASK',
+  FINISH_TASK = 'FINISH_TASK',
 }
 
 export interface StateMain {
@@ -139,6 +142,23 @@ export interface Seller {
   phone?: string
   link?: string
 }
+
+export interface StateTask {
+  id: number
+  typeTask: string
+  name: string
+  name2: string
+  name3: string
+  dateStartTask: Date
+  dateEndTask: Date
+  milesStartTask: number
+  milesEndTask: number
+  cost: number
+  quantity: number
+  amount: number
+  seller: Seller
+  isFinished: boolean
+}
 // -------------------------------------------------------------------------------------------
 // -----------------------------------type for Miles state----------------------------------
 export interface CurrentMiles {
@@ -203,14 +223,14 @@ export interface ActionEditService {
   }
 }
 
-export interface ActionFinishTask {
+/* export interface ActionFinishTask {
   type: ActionType.FINISH_TASK
   payload: {
     carId: number
     id: number
     isFinished: boolean
   }
-}
+} */
 // ----------------------------- interface ActionCar -------------------------
 
 export interface ActionAddCar {
@@ -319,13 +339,49 @@ export interface ActionEditOthers {
 }
 
 // -----------------------------------------------------------------------------
+// ----------------------------- interface ActionTask -------------------------
+
+export interface ActionAddTask {
+  type: ActionType.ADD_SERVICE
+  payload: {
+    carId: number
+    task: StateService
+  }
+}
+export interface ActionDelTask {
+  type: ActionType.DEL_SERVICE
+  payload: {
+    carId: number
+    id: number
+  }
+}
+
+export interface ActionEditTask {
+  type: ActionType.EDIT_SERVICE
+  payload: {
+    carId: number
+    id: number | undefined
+    task: StateService
+  }
+}
+
+export interface ActionFinishTask {
+  type: ActionType.FINISH_TASK
+  payload: {
+    carId: number
+    id: number
+    isFinished: boolean
+  }
+}
+// -------------------------------------------------------------------------------------------
 
 export type AppAction = ActionMiles | ActionChangeCar |
-ActionAddService | ActionDelService | ActionEditService | ActionFinishTask |
+ActionAddService | ActionDelService | ActionEditService |
 ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken |
 ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel |
 ActionAddParts | ActionDelParts | ActionEditParts | ActionInstallPart |
-ActionAddOthers | ActionDelOthers | ActionEditOthers
+ActionAddOthers | ActionDelOthers | ActionEditOthers |
+ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 
