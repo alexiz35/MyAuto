@@ -19,7 +19,7 @@ import Accordion from '../Accordion'
 import ShadowBox from '../../CommonComponents/ShadowBox'
 import { PartsList } from './PartsList'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import InputPartComponent from '../InputPartComponent'
+import InputPartComponent from '../../CommonComponents/InputPartComponent'
 import { getTabBarHeight } from '@react-navigation/bottom-tabs/lib/typescript/src/views/BottomTabBar'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>

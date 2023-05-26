@@ -1,13 +1,13 @@
 import {
   ActionAddCar,
   ActionAddFuel, ActionAddOthers, ActionAddParts,
-  ActionAddService,
+  ActionAddService, ActionAddTask,
   ActionAddToken,
   ActionDelFuel, ActionDelOthers, ActionDelParts,
-  ActionDelService,
+  ActionDelService, ActionDelTask,
   ActionDelToken,
   ActionEditCar, ActionEditFuel, ActionEditOthers, ActionEditParts,
-  ActionEditService,
+  ActionEditService, ActionEditTask,
   ActionFinishTask, ActionInstallPart,
   ActionMiles,
   ActionType,
@@ -17,7 +17,7 @@ import {
   StateFuel,
   StateInfo,
   StateMain, StateOther, StatePart,
-  StateService
+  StateService, StateTask
 } from '../../type'
 // -------------------------- Action State -------------------------------------
 export const updateState = (newState: StateMain): ActionUpdateState => (
@@ -35,7 +35,7 @@ export const updateMiles = (carId: number, currentMiles: CurrentMiles): ActionMi
     }
   })
 // ----------------------------- Action Task -----------------------------------
-export const addTask = (carId: number, task: StateService): ActionAddService => (
+export const addService = (carId: number, task: StateService): ActionAddService => (
   {
     type: ActionType.ADD_SERVICE,
     payload: {
@@ -44,7 +44,7 @@ export const addTask = (carId: number, task: StateService): ActionAddService => 
     }
   })
 
-export const delTask = (carId: number, id: number): ActionDelService => (
+export const delService = (carId: number, id: number): ActionDelService => (
   {
     type: ActionType.DEL_SERVICE,
     payload: {
@@ -53,7 +53,7 @@ export const delTask = (carId: number, id: number): ActionDelService => (
     }
   })
 
-export const finishTask = (carId: number, id: number, isFinished: boolean): ActionFinishTask => (
+/* export const finishTask = (carId: number, id: number, isFinished: boolean): ActionFinishTask => (
   {
     type: ActionType.FINISH_TASK,
     payload: {
@@ -62,9 +62,9 @@ export const finishTask = (carId: number, id: number, isFinished: boolean): Acti
       isFinished
     }
   }
-)
+) */
 
-export const editTask = (carId: number, id: number | undefined, task: StateService): ActionEditService => (
+export const editService = (carId: number, id: number | undefined, task: StateService): ActionEditService => (
   {
     type: ActionType.EDIT_SERVICE,
     payload: {
@@ -202,3 +202,44 @@ export const editOther = (carId: number, id: number | undefined, other: StateOth
       other
     }
   })
+
+// ----------------------------- Action Task -----------------------------------
+export const addTask = (carId: number, task: StateTask): ActionAddTask => (
+  {
+    type: ActionType.ADD_TASK,
+    payload: {
+      carId,
+      task
+    }
+  })
+
+export const delTask = (carId: number, id: number): ActionDelTask => (
+  {
+    type: ActionType.DEL_TASK,
+    payload: {
+      carId,
+      id
+    }
+  })
+
+export const finishTask = (carId: number, id: number, isFinished: boolean): ActionFinishTask => (
+  {
+    type: ActionType.FINISH_TASK,
+    payload: {
+      carId,
+      id,
+      isFinished
+    }
+  }
+)
+
+export const editTask = (carId: number, id: number | undefined, task: StateTask): ActionEditTask => (
+  {
+    type: ActionType.EDIT_TASK,
+    payload: {
+      carId,
+      id,
+      task
+    }
+  })
+// -----------------------------------------------------------------------------

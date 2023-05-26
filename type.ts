@@ -57,6 +57,7 @@ export interface StateCar {
   parts: StatePart[]
   mileage: CurrentMiles[]
   others: StateOther[]
+  tasks: StateTask[]
 }
 
 export interface StateFuel {
@@ -342,14 +343,14 @@ export interface ActionEditOthers {
 // ----------------------------- interface ActionTask -------------------------
 
 export interface ActionAddTask {
-  type: ActionType.ADD_SERVICE
+  type: ActionType.ADD_TASK
   payload: {
     carId: number
-    task: StateService
+    task: StateTask
   }
 }
 export interface ActionDelTask {
-  type: ActionType.DEL_SERVICE
+  type: ActionType.DEL_TASK
   payload: {
     carId: number
     id: number
@@ -357,11 +358,11 @@ export interface ActionDelTask {
 }
 
 export interface ActionEditTask {
-  type: ActionType.EDIT_SERVICE
+  type: ActionType.EDIT_TASK
   payload: {
     carId: number
     id: number | undefined
-    task: StateService
+    task: StateTask
   }
 }
 

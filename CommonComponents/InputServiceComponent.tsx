@@ -25,7 +25,7 @@ import {
   StateOther
 } from '../type'
 import { RootStackParamList } from '../components/Navigation/Navigation'
-import { addPart, addTask, editTask } from '../components/Redux/actions'
+import { addPart, addService, editService } from '../components/Redux/actions'
 import { AddPartModal } from '../components/AddPartModal'
 import ShadowBox from './ShadowBox'
 import Accordion from '../components/Accordion'

@@ -2,7 +2,7 @@ import { Button, ListItem, ListItemProps } from '@rneui/themed'
 import React, { useEffect, useState } from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { delTask } from '../Redux/actions'
+import { delService } from '../Redux/actions'
 import { COLOR_GREEN, StateService } from '../../type'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/Navigation'
@@ -73,7 +73,7 @@ export const Tasks: React.FunctionComponent<ListComponentProps> = () => {
             title='delete'
             icon={{ name: 'delete', color: 'white' }}
             buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-            onPress={() => del(delTask(numberCar, item.id))}
+            onPress={() => del(delService(numberCar, item.id))}
           />
         )}
       >

@@ -31,7 +31,7 @@ import {
   TEXT_CARD,
   TEXT_WHITE
 } from '../type'
-import { addTask, editCar, editTask, updateMiles } from '../components/Redux/actions'
+import { addService, editCar, editService, updateMiles } from '../components/Redux/actions'
 import { AddPartModal } from '../components/AddPartModal'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'

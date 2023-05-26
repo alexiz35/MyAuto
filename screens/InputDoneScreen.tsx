@@ -5,7 +5,7 @@ import { Button, Dialog, Icon, Input, Tab, TabView, Text, useTheme } from '@rneu
 import DropDownPicker from 'react-native-dropdown-picker'
 import { useEffect, useMemo, useState } from 'react'
 import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateService, TEXT, TEXT_WHITE } from '../type'
-import { addTask, editTask } from '../components/Redux/actions'
+import { addService, editService } from '../components/Redux/actions'
 import { AddPartModal } from '../components/AddPartModal'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'

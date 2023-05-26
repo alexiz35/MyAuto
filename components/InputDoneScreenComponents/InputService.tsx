@@ -15,7 +15,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateService, TEXT, TEXT_WHITE, ModalPart } from '../../type'
 import { RootStackParamList } from '../Navigation/Navigation'
-import { addPart, addTask, editTask } from '../Redux/actions'
+import { addPart, addService, editService } from '../Redux/actions'
 import { AddPartModal } from '../AddPartModal'
 import ShadowBox from '../../CommonComponents/ShadowBox'
 import Accordion from '../Accordion'
@@ -240,8 +240,8 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
     createNewParts(service)
 
     editableTask
-      ? setNewTask(editTask(state.numberCar, currentId, service))
-      : setNewTask(addTask(state.numberCar, service))
+      ? setNewTask(editService(state.numberCar, currentId, service))
+      : setNewTask(addService(state.numberCar, service))
 
     handleOnPress()
   }

@@ -8,21 +8,27 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { printToFile } from '../components/Print/Print'
-import React, { useState } from 'react'
-import InputPartComponent from '../components/InputPartComponent'
+import React, { useEffect, useState } from 'react'
+import InputPartComponent from '../CommonComponents/InputPartComponent'
 import InputDocComponent from '../CommonComponents/InputDocComponent'
 import InputServiceComponent from '../CommonComponents/InputServiceComponent'
 import { PartsList } from '../components/InputDoneScreenComponents/PartsList'
+import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { TasksList } from '../components/TaskScreenComponents/TasksList'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
 
 const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   const { theme } = useTheme()
+  const listTasks = useAppSelector(state => state.cars[0].tasks)
+  const carId = useAppSelector(state => state.numberCar)
+  const dispatch = useAppDispatch()
   const [openFab, setOpenFab] = useState(false)
   const [visiblePart, setVisiblePart] = useState(false)
   const [visibleService, setVisibleService] = useState(false)
   const [visibleOther, setVisibleOther] = useState(false)
 
+  // ----------------------------------- handle pressing FAB -----------------------------
   const pressPartFab = (): void => {
     setVisiblePart(true)
     setOpenFab(false)
@@ -37,9 +43,11 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     setVisibleOther(true)
     setOpenFab(false)
   }
-
+  // --------------------------------------------------------------------------------
+  // ------------------------- handle modal button ----------------------------------
   const handleOkPart = (resultPart: StatePart): void => {
     setVisiblePart(false)
+
     console.log('result', resultPart)
   }
   const handleOkService = (resultService: StateService): void => {
@@ -55,18 +63,22 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     setVisibleService(false)
     setVisibleOther(false)
   }
+  // --------------------------------------------------------------------------------
+  /* useEffect(()=>{
+
+  },[]) */
 
   return (
     <>
     <BackgroundView >
 
         <View style={{ height: '100%' }}>
-          <Text style={{ textAlign: 'center' }}>Запланируйте</Text>
+         {/*  <Text style={{ textAlign: 'center' }}>Запланируйте</Text> */}
   {
     // ------------------------------ flatTask -------------------------------------------------------
   }
-          <View>
-            <PartsList handlePress={null}/>
+          <View style={{ marginTop: 20 }}>
+            <TasksList handlePress={null}/>
           </View>
   {
     // ------------------------------ flatTask -------------------------------------------------------

@@ -11,13 +11,13 @@ import React, {
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useAppDispatch, useAppSelector } from './Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, StatePart } from './../type'
-import { RootStackParamList } from './Navigation/Navigation'
-import { addPart, editPart } from './Redux/actions'
-import Accordion from './Accordion'
-import ShadowBox from './../CommonComponents/ShadowBox'
-import { PartsList } from './InputDoneScreenComponents/PartsList'
+import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { BACK_INPUT, COLOR_GREEN, StatePart } from '../type'
+import { RootStackParamList } from '../components/Navigation/Navigation'
+import { addPart, editPart } from '../components/Redux/actions'
+import Accordion from '../components/Accordion'
+import ShadowBox from './ShadowBox'
+import { PartsList } from '../components/InputDoneScreenComponents/PartsList'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 interface InputPartProps {

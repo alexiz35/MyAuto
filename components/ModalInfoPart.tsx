@@ -2,7 +2,7 @@ import { ImageBackground, ScrollView, StyleSheet, Text, ToastAndroid, View } fro
 import { Button, Icon, Input } from '@rneui/themed'
 import { BACK_INPUT, COLOR_GREEN, StatePart, Seller, StateService, TEXT_WHITE } from '../type'
 import { useState } from 'react'
-import { editTask } from './Redux/actions'
+import { editService } from './Redux/actions'
 import { useAppDispatch, useAppSelector } from './Redux/hook'
 
 interface ModalInfoPartProps {
@@ -56,7 +56,7 @@ export const ModalInfoPart = ({ currentTask, currentPart, onPressCancel }: Modal
       amountPart,
       seller
     })
-    setEditTask(editTask(numberCar, currentTask.id, currentTask))
+    setEditTask(editService(numberCar, currentTask.id, currentTask))
   }
 
   // ----------------------------------------------------------------
