@@ -212,8 +212,8 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     // -------------------------------------------------------------------
     case ActionType.ADD_TASK: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-
       newArray[indexArray].tasks.push(action.payload.task)
+      console.log('resultRedux')
       return {
         ...state,
         cars: newArray

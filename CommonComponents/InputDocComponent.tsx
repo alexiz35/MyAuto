@@ -90,7 +90,7 @@ const InputDoc = ({ isCancel, isOk, other = null }: InputDocProps): JSX.Element 
   // ------------------------- control according -------------------------------
   const handleOpen = (item: StateOther): void => {
     if (!isOpenAccordion) {
-      setNamePart(item.namePart)
+      setNamePart(item.nameOther)
       setDateBuy(item.dateBuy)
       setNumberPart(item.numberPart)
       setAmountCostPart(item.amountCostPart)
@@ -121,7 +121,7 @@ const InputDoc = ({ isCancel, isOk, other = null }: InputDocProps): JSX.Element 
       return
     }
     const tempNewOther: StateOther = {
-      namePart,
+      nameOther: namePart,
       dateBuy,
       numberPart,
       seller: {

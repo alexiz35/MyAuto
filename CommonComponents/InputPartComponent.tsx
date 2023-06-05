@@ -116,8 +116,12 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
     setNamePart(item.namePart)
     setDateBuy(item.dateBuy)
     setNumberPart(item.numberPart)
-    if (item.numberPart1 !== undefined) setNumberPart1(item.numberPart1)
-    if (item.numberPart2 !== undefined) setNumberPart2(item.numberPart2)
+    item.numberPart1 !== undefined
+      ? setNumberPart1(item.numberPart1)
+      : setNumberPart1('')
+    item.numberPart2 !== undefined
+      ? setNumberPart2(item.numberPart2)
+      : setNumberPart2('')
     setCostPart(item.costPart)
     setQuantityPart(item.quantityPart)
     setAmountCostPart(item.amountCostPart)

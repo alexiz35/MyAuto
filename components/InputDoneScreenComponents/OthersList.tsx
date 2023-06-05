@@ -70,7 +70,7 @@ export const OthersList = ({ handlePress }: handleProp): JSX.Element => {
           <ListItem.Content style={{ flex: 3 }} >
             <ListItem.Title style={{ paddingBottom: 5 }} >
               {/* {String(new Date(item.dateBuy).toLocaleDateString())} */}
-              {String(item.namePart)}
+              {String(item.nameOther)}
             </ListItem.Title>
             <Divider color={theme.colors.success} width={2} inset insetType={'middle'}/>
             <ListItem.Subtitle style={{ fontSize: 12 }} lineBreakMode={'tail'} numberOfLines={1} >

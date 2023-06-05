@@ -68,17 +68,17 @@ export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
               (() => {
                 switch (item.typeTask) {
                   case 'part':
-                    return <Icon name={'basket-check'} type='material-community' size={22}
+                    return <Icon name={'car-cog'} type='material-community' size={22}
                                  color={theme.colors.success}
                                  style={{ paddingBottom: 3 }} />
 
                   case 'service':
-                    return <Icon name={'check-decagram'} type='material-community' size={22}
+                    return <Icon name={'car-wrench'} type='material-community' size={22}
                                  color={theme.colors.success}
                                  style={{ paddingBottom: 3 }} />
 
                   case 'other':
-                    return <Icon name={'check'} type='material-community' size={22}
+                    return <Icon name={'account-cash'} type='material-community' size={22}
                                  color={theme.colors.success}
                                  style={{ paddingBottom: 3 }} />
 

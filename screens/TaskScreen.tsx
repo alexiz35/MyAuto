@@ -1,20 +1,31 @@
 import { ImageBackground, Pressable, View } from 'react-native'
 import { ScrollView } from 'react-native-virtualized-view'
 import { Button, CheckBox, Dialog, Divider, FAB, Overlay, SpeedDial, Text, useTheme } from '@rneui/themed'
-import { BACK_INPUT, BACK_OPACITY, COLOR_GREEN, StateOther, StatePart, StateService, TEXT_WHITE } from '../type'
+import {
+  BACK_INPUT,
+  BACK_OPACITY,
+  COLOR_GREEN,
+  StateOther,
+  StatePart,
+  StateService,
+  StateTask,
+  TEXT_WHITE
+} from '../type'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import InputPart from '../components/InputDoneScreenComponents/InputPart'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { printToFile } from '../components/Print/Print'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import InputPartComponent from '../CommonComponents/InputPartComponent'
 import InputDocComponent from '../CommonComponents/InputDocComponent'
 import InputServiceComponent from '../CommonComponents/InputServiceComponent'
 import { PartsList } from '../components/InputDoneScreenComponents/PartsList'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { TasksList } from '../components/TaskScreenComponents/TasksList'
+import { addOther, addTask, editOther } from '../components/Redux/actions'
+import { useFocusEffect } from '@react-navigation/native'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
 
@@ -27,6 +38,9 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   const [visiblePart, setVisiblePart] = useState(false)
   const [visibleService, setVisibleService] = useState(false)
   const [visibleOther, setVisibleOther] = useState(false)
+  const [statePart, setStatePart] = useState<StatePart>()
+  const [stateService, setStateService] = useState<StateService>()
+  const [stateOther, setStateOther] = useState<StateOther>()
 
   // ----------------------------------- handle pressing FAB -----------------------------
   const pressPartFab = (): void => {
@@ -47,8 +61,27 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   // ------------------------- handle modal button ----------------------------------
   const handleOkPart = (resultPart: StatePart): void => {
     setVisiblePart(false)
+    const tempOtherPart: StateTask = {
+      id: resultPart.id,
+      typeTask: 'part',
+      name: resultPart.namePart,
+      numberPart1: resultPart.numberPart,
+      numberPart2: resultPart.numberPart1,
+      numberPart3: resultPart.numberPart2,
+      dateStartTask: new Date(),
+      dateEndTask: resultPart.dateBuy,
+      cost: resultPart.costPart,
+      quantity: resultPart.quantityPart,
+      amount: resultPart.amountCostPart,
+      isFinished: false,
+      seller: resultPart.seller
+    }
 
-    console.log('result', resultPart)
+    /* isEditPart
+      ? dispatch(editOther(state.numberCar, itemOther?.id, tempNewOther))
+      : */
+    dispatch(addTask(carId, tempOtherPart))
+    console.log('resultPart', resultPart)
   }
   const handleOkService = (resultService: StateService): void => {
     setVisiblePart(false)
@@ -56,17 +89,91 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   }
   const handleOkOther = (resultOther: StateOther): void => {
     setVisibleOther(false)
+    const tempOtherTask: StateTask = {
+      id: resultOther.id,
+      typeTask: 'other',
+      name: resultOther.nameOther,
+      dateEndTask: resultOther.dateBuy,
+      amount: resultOther.amountCostPart,
+      isFinished: false,
+      seller: resultOther.seller
+    }
+
+    /* isEditPart
+      ? dispatch(editOther(state.numberCar, itemOther?.id, tempNewOther))
+      : */
+    dispatch(addTask(carId, tempOtherTask))
     console.log('result', resultOther)
   }
-  const handleCancel = (): void => {
+  const handleCancelPart = (): void => {
+    setStatePart(undefined)
     setVisiblePart(false)
+  }
+  const handleCancelService = (): void => {
+    setStateService(undefined)
     setVisibleService(false)
+  }
+  const handleCancelOther = (): void => {
+    setStateOther(undefined)
     setVisibleOther(false)
   }
   // --------------------------------------------------------------------------------
-  /* useEffect(()=>{
+  const handleClick = (item: StateTask): void => {
+    switch (item.typeTask) {
+      case 'part':
+        setStatePart(formPart(item))
+        setVisiblePart(true)
+        break
+      case 'service':
+        setVisibleService(true)
+        break
+      case 'other':
+        setStateOther(formOther(item))
+        setVisibleOther(true)
+        break
+      default: break
+    }
+  }
 
-  },[]) */
+  const formPart = (item: StateTask): StatePart => {
+    return {
+      id: item.id,
+      namePart: item.name,
+      numberPart: item.numberPart1,
+      numberPart1: item.numberPart2,
+      numberPart2: item.numberPart3,
+      dateBuy: item.dateEndTask,
+      costPart: item.cost,
+      quantityPart: item.quantity,
+      amountCostPart: item.amount,
+      seller: item.seller,
+      isInstall: false
+    }
+  }
+  /* const formService = (item:StateTask):StateService => {
+    return {
+      id: item.id,
+      title: item.name,
+      endData: item.dateEndTask,
+
+    }
+
+  } */
+  const formOther = (item: StateTask): StateOther => {
+    return {
+      id: item.id,
+      nameOther: item.name,
+      seller: item.seller,
+      dateBuy: item.dateEndTask,
+      numberPart: item.numberPart1,
+      amountCostPart: item.amount
+    }
+  }
+  // --------------------------------------------------------------------------------
+  useFocusEffect(
+    useCallback(() => {
+      console.log('Res', listTasks)
+    }, []))
 
   return (
     <>
@@ -78,7 +185,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     // ------------------------------ flatTask -------------------------------------------------------
   }
           <View style={{ marginTop: 20 }}>
-            <TasksList handlePress={null}/>
+            <TasksList handlePress={handleClick}/>
           </View>
   {
     // ------------------------------ flatTask -------------------------------------------------------
@@ -86,7 +193,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
           <Dialog isVisible={visiblePart} overlayStyle={{ width: '100%', backgroundColor: BACK_OPACITY }}>
             <BackgroundView>
               <Text style={{ textAlign: 'center' }}>Запланируйте покупку детали</Text>
-              <InputPartComponent isCancel={handleCancel} isOk={handleOkPart}/>
+              <InputPartComponent isCancel={handleCancelPart} isOk={handleOkPart} part={statePart}/>
             </BackgroundView>
           </Dialog>
 
@@ -97,7 +204,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
             <BackgroundView>
               <View style={{ margin: 10 }} >
               <Text style={{ textAlign: 'center' }}>Запланируйте service</Text>
-              <InputServiceComponent isCancel={handleCancel} isOk={handleOkService}/>
+              <InputServiceComponent isCancel={handleCancelService} isOk={handleOkService}/>
               </View>
             </BackgroundView>
           </Overlay>
@@ -109,7 +216,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
             <BackgroundView >
               <View style={{ margin: 10 }} >
                 <Text style={{ textAlign: 'center' }}>Запланируйте покупку other</Text>
-                <InputDocComponent isCancel={handleCancel} isOk={handleOkOther}/>
+                <InputDocComponent isCancel={handleCancelOther} isOk={handleOkOther} other={stateOther}/>
               </View>
             </BackgroundView>
           </Overlay>

@@ -132,7 +132,7 @@ export interface StatePart {
 }
 export interface StateOther {
   id: number
-  namePart: string
+  nameOther: string
   dateBuy: Date
   amountCostPart: number
   numberPart: string
@@ -148,16 +148,17 @@ export interface StateTask {
   id: number
   typeTask: string
   name: string
-  name2: string
-  name3: string
-  dateStartTask: Date
+  numberPart1?: string
+  numberPart2?: string
+  numberPart3?: string
+  dateStartTask?: Date
   dateEndTask: Date
-  milesStartTask: number
-  milesEndTask: number
-  cost: number
-  quantity: number
+  milesStartTask?: number
+  milesEndTask?: number
+  cost?: number
+  quantity?: number
   amount: number
-  seller: Seller
+  seller?: Seller
   isFinished: boolean
 }
 // -------------------------------------------------------------------------------------------
