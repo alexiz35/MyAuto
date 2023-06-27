@@ -98,6 +98,15 @@ export const initialStateInfo = {
   buyMileage: 0
 }
 
+export interface StateServiceTask {
+  id: number
+  title: string
+  dateService: Date
+  milesService: number
+  seller?: Seller
+  amountCostService: number
+}
+
 export interface StateService {
   id: number
   title: string

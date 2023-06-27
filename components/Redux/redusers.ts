@@ -213,7 +213,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     case ActionType.ADD_TASK: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
       newArray[indexArray].tasks.push(action.payload.task)
-      console.log('resultRedux')
+      console.log('reduxAdd')
       return {
         ...state,
         cars: newArray
@@ -222,7 +222,6 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
 
     case ActionType.DEL_TASK: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-
       newArray[indexArray].tasks = newArray[indexArray].tasks.filter(item => item.id !== action.payload.id)
       return {
         ...state,
@@ -232,7 +231,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
 
     case ActionType.EDIT_TASK: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-
+      console.log('reduxEdit')
       const tempTasks = newArray[indexArray].tasks.filter(item => item.id !== action.payload.id)
       newArray[indexArray].tasks = tempTasks.concat(action.payload.task)
       return {

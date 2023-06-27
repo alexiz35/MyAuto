@@ -1,31 +1,25 @@
-import { ImageBackground, Pressable, View } from 'react-native'
-import { ScrollView } from 'react-native-virtualized-view'
-import { Button, CheckBox, Dialog, Divider, FAB, Overlay, SpeedDial, Text, useTheme } from '@rneui/themed'
+import { View } from 'react-native'
+import { Dialog, Overlay, SpeedDial, Text, useTheme } from '@rneui/themed'
 import {
   BACK_INPUT,
   BACK_OPACITY,
-  COLOR_GREEN,
   StateOther,
   StatePart,
-  StateService,
-  StateTask,
-  TEXT_WHITE
+  StateServiceTask,
+  StateTask
 } from '../type'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import InputPart from '../components/InputDoneScreenComponents/InputPart'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
+import { RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { printToFile } from '../components/Print/Print'
-import React, { useCallback, useEffect, useState } from 'react'
+/* import { printToFile } from '../components/Print/Print' */
+import { useCallback, useEffect, useState } from 'react'
 import InputPartComponent from '../CommonComponents/InputPartComponent'
 import InputDocComponent from '../CommonComponents/InputDocComponent'
-import InputServiceComponent from '../CommonComponents/InputServiceComponent'
-import { PartsList } from '../components/InputDoneScreenComponents/PartsList'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { TasksList } from '../components/TaskScreenComponents/TasksList'
-import { addOther, addTask, editOther } from '../components/Redux/actions'
+import { addTask, editTask } from '../components/Redux/actions'
 import { useFocusEffect } from '@react-navigation/native'
+import InputServiceTaskComponents from '../components/TaskScreenComponents/InputServiceTaskComponent'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
 
@@ -39,21 +33,29 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   const [visibleService, setVisibleService] = useState(false)
   const [visibleOther, setVisibleOther] = useState(false)
   const [statePart, setStatePart] = useState<StatePart>()
-  const [stateService, setStateService] = useState<StateService>()
+  const [stateService, setStateService] = useState<StateServiceTask>()
   const [stateOther, setStateOther] = useState<StateOther>()
+
+  const [isEditTask, setIsEditTask] = useState(false)
 
   // ----------------------------------- handle pressing FAB -----------------------------
   const pressPartFab = (): void => {
+    setIsEditTask(false)
+    setStatePart(undefined)
     setVisiblePart(true)
     setOpenFab(false)
   }
 
   const pressServiceFab = (): void => {
+    setIsEditTask(false)
+    setStateService(undefined)
     setVisibleService(true)
     setOpenFab(false)
   }
 
   const pressOtherFab = (): void => {
+    setIsEditTask(false)
+    setStateOther(undefined)
     setVisibleOther(true)
     setOpenFab(false)
   }
@@ -77,15 +79,26 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
       seller: resultPart.seller
     }
 
-    /* isEditPart
-      ? dispatch(editOther(state.numberCar, itemOther?.id, tempNewOther))
-      : */
-    dispatch(addTask(carId, tempOtherPart))
-    console.log('resultPart', resultPart)
+    isEditTask
+      ? dispatch(editTask(carId, statePart?.id, tempOtherPart))
+      : dispatch(addTask(carId, tempOtherPart))
   }
-  const handleOkService = (resultService: StateService): void => {
-    setVisiblePart(false)
-    console.log('result', resultService)
+  const handleOkService = (resultService: StateServiceTask): void => {
+    setVisibleService(false)
+    const tempServiceTask: StateTask = {
+      id: resultService.id,
+      typeTask: 'service',
+      name: resultService.title,
+      dateEndTask: resultService.dateService,
+      milesEndTask: resultService.milesService,
+      amount: resultService.amountCostService,
+      isFinished: false,
+      seller: resultService.seller
+    }
+
+    isEditTask
+      ? dispatch(editTask(carId, stateService?.id, tempServiceTask))
+      : dispatch(addTask(carId, tempServiceTask))
   }
   const handleOkOther = (resultOther: StateOther): void => {
     setVisibleOther(false)
@@ -99,11 +112,9 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
       seller: resultOther.seller
     }
 
-    /* isEditPart
-      ? dispatch(editOther(state.numberCar, itemOther?.id, tempNewOther))
-      : */
-    dispatch(addTask(carId, tempOtherTask))
-    console.log('result', resultOther)
+    isEditTask
+      ? dispatch(editTask(carId, stateOther?.id, tempOtherTask))
+      : dispatch(addTask(carId, tempOtherTask))
   }
   const handleCancelPart = (): void => {
     setStatePart(undefined)
@@ -117,14 +128,17 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     setStateOther(undefined)
     setVisibleOther(false)
   }
-  // --------------------------------------------------------------------------------
+
+  // ----------------handle click on item List----------------------------------
   const handleClick = (item: StateTask): void => {
+    setIsEditTask(true)
     switch (item.typeTask) {
       case 'part':
         setStatePart(formPart(item))
         setVisiblePart(true)
         break
       case 'service':
+        setStateService(formService(item))
         setVisibleService(true)
         break
       case 'other':
@@ -139,33 +153,34 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     return {
       id: item.id,
       namePart: item.name,
-      numberPart: item.numberPart1,
+      numberPart: item.numberPart1 ?? '',
       numberPart1: item.numberPart2,
       numberPart2: item.numberPart3,
       dateBuy: item.dateEndTask,
-      costPart: item.cost,
-      quantityPart: item.quantity,
+      costPart: item.cost ?? 0,
+      quantityPart: item.quantity ?? 0,
       amountCostPart: item.amount,
       seller: item.seller,
       isInstall: false
     }
   }
-  /* const formService = (item:StateTask):StateService => {
+  const formService = (item: StateTask): StateServiceTask => {
     return {
       id: item.id,
       title: item.name,
-      endData: item.dateEndTask,
-
+      dateService: item.dateEndTask,
+      milesService: item.milesEndTask ?? 0,
+      amountCostService: item.amount,
+      seller: item.seller
     }
-
-  } */
+  }
   const formOther = (item: StateTask): StateOther => {
     return {
       id: item.id,
       nameOther: item.name,
       seller: item.seller,
       dateBuy: item.dateEndTask,
-      numberPart: item.numberPart1,
+      numberPart: item.numberPart1 ?? '',
       amountCostPart: item.amount
     }
   }
@@ -204,7 +219,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
             <BackgroundView>
               <View style={{ margin: 10 }} >
               <Text style={{ textAlign: 'center' }}>Запланируйте service</Text>
-              <InputServiceComponent isCancel={handleCancelService} isOk={handleOkService}/>
+              <InputServiceTaskComponents isCancel={handleCancelService} isOk={handleOkService} service={stateService}/>
               </View>
             </BackgroundView>
           </Overlay>

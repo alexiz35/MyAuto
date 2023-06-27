@@ -11,78 +11,65 @@ import React, {
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, StatePart } from '../type'
-import { RootStackParamList } from '../components/Navigation/Navigation'
-import { addPart, editPart } from '../components/Redux/actions'
-import Accordion from '../components/Accordion'
-import ShadowBox from './ShadowBox'
-import { PartsList } from '../components/InputDoneScreenComponents/PartsList'
+import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { RootStackParamList } from '../Navigation/Navigation'
+import { addPart, editPart } from '../Redux/actions'
+import Accordion from '../Accordion'
+import ShadowBox from '../../CommonComponents/ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { StateService, StateServiceTask } from '../../type'
 
-interface InputPartProps {
+interface InputServiceProps {
   isCancel: () => void
-  isOk: (partResult: StatePart) => void
-  part?: StatePart | null
+  isOk: (serviceResult: StateServiceTask) => void
+  service?: StateServiceTask | null
 }
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
-const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element => {
+const InputServiceTaskComponents = ({ isCancel, isOk, service = null }: InputServiceProps): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { theme } = useTheme()
-  console.log('ClickPartId', part?.id)
   /* const { mode } = useThemeMode() */
 
-  const [dateBuy, setDateBuy] = useState(new Date())
-  const [namePart, setNamePart] = useState('')
-
-  const [numberPart, setNumberPart] = useState('')
-  const [numberPart1, setNumberPart1] = useState('')
-  const [numberPart2, setNumberPart2] = useState('')
+  // ------------------------ state Inputs -------------------------------------
+  const [nameServiceTask, setNameServiceTask] = useState('')
+  const [dateEndTask, setDateEndTask] = useState(new Date())
+  const [milesEnd, setMilesEnd] = useState(0)
 
   const [seller, setSeller] = useState('')
   const [sellerPhone, setSellerPhone] = useState('')
   const [sellerWeb, setSellerWeb] = useState('')
 
-  const [costPart, setCostPart] = useState(0)
-  const [amountCostPart, setAmountCostPart] = useState(0)
-  const [quantityPart, setQuantityPart] = useState(0)
+  const [amountCostServiceTask, setAmountCostServiceTask] = useState(0)
+  // ----------------------------------------------------------------------------
 
   const [isOpenAccordion, setIsOpenAccordion] = useState(false)
   const [isEditPart, setIsEditPart] = useState(false)
 
-  const [itemPart, setItemPart] = useState<StatePart | null>(null)
+  const [itemPart, setItemPart] = useState<StateService | null>(null)
 
-  const refNamePart = React.createRef<PropsWithChildren<TextInput>>()
-  const refDatePart = React.createRef<PropsWithChildren<TextInput>>()
-  const refNumberPart = React.createRef<PropsWithChildren<TextInput>>()
-  const refNumber1Part = React.createRef<PropsWithChildren<TextInput>>()
-  const refNumber2Part = React.createRef<PropsWithChildren<TextInput>>()
+  const refNameService = React.createRef<PropsWithChildren<TextInput>>()
+  const refDateService = React.createRef<PropsWithChildren<TextInput>>()
+  const refMilesService = React.createRef<PropsWithChildren<TextInput>>()
   const refSellerName = React.createRef<PropsWithChildren<TextInput>>()
   const refSellerPhone = React.createRef<PropsWithChildren<TextInput>>()
   const refSellerLink = React.createRef<PropsWithChildren<TextInput>>()
-  const refCostPart = React.createRef<PropsWithChildren<TextInput>>()
-  const refQuantityPart = React.createRef<PropsWithChildren<TextInput>>()
   const refAmountCostPart = React.createRef<PropsWithChildren<TextInput>>()
 
   const clearInput = (): void => {
-    setNamePart('')
-    setDateBuy(new Date())
-    setNumberPart('')
-    setNumberPart1('')
-    setNumberPart2('')
+    setNameServiceTask('')
+    setDateEndTask(new Date())
+    setMilesEnd(0)
     setSeller('')
     setSellerPhone('')
     setSellerWeb('')
-    setCostPart(0)
-    setQuantityPart(0)
-    setAmountCostPart(0)
+    setAmountCostServiceTask(0)
   }
   const handleError = (): void => {
-    refNamePart.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.error } })
+    refNameService.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.error } })
     // @ts-expect-error not shake
-    refNamePart.current?.shake()
+    refNameService.current?.shake()
   }
   const handleFocus = (ref: RefObject<TextInput>): void => {
     ref.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.success } })
@@ -93,39 +80,21 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
   const inputDate = (): void => DateTimePickerAndroid.open({
     value: new Date(),
     // @ts-expect-error date
-    onChange: (event, date) => setDateBuy(date)
+    onChange: (event, date) => setDateEndTask(date)
   })
 
   useEffect(() => {
-    if (part !== null) {
-      handleOpen(part)
+    if (service !== null) {
+      handleOpen(service)
     }
   }, [])
 
-  // ------------------------- function calc input -----------------------------
-  const handleOnSubmitQuantity = (): void => {
-    setAmountCostPart(quantityPart * costPart)
-    refAmountCostPart.current?.focus()
-  }
-  const handleOnSubmitAmount = (): void => {
-    setCostPart(amountCostPart / quantityPart)
-    /* inputFuelAmount.current?.focus() */
-  }
-
   // ------------------------- control according -------------------------------
-  const handleOpen = (item: StatePart): void => {
-    setNamePart(item.namePart)
-    setDateBuy(item.dateBuy)
-    setNumberPart(item.numberPart)
-    item.numberPart1 !== undefined
-      ? setNumberPart1(item.numberPart1)
-      : setNumberPart1('')
-    item.numberPart2 !== undefined
-      ? setNumberPart2(item.numberPart2)
-      : setNumberPart2('')
-    setCostPart(item.costPart)
-    setQuantityPart(item.quantityPart)
-    setAmountCostPart(item.amountCostPart)
+  const handleOpen = (item: StateServiceTask): void => {
+    setNameServiceTask(item.title)
+    setDateEndTask(item.dateService)
+    setMilesEnd(item.milesService)
+    setAmountCostServiceTask(item.amountCostService)
     if (item.seller?.name !== undefined) setSeller(item.seller?.name)
     if (item.seller?.phone !== undefined) setSellerPhone(item.seller?.phone)
     if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
@@ -141,33 +110,27 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
     isCancel()
   }
   const handleOk = (): void => {
-    if (namePart === '') {
+    if (nameServiceTask === '') {
       handleError()
-      return
     }
-    const tempNewPart: StatePart = {
-      namePart,
-      dateBuy,
-      numberPart,
-      numberPart1,
-      numberPart2,
+    const tempNewService: StateServiceTask = {
+      id: Date.now(),
+      title: nameServiceTask,
+      amountCostService: amountCostServiceTask,
+      dateService: dateEndTask,
+      milesService: milesEnd,
       seller: {
         name: seller,
         phone: sellerPhone,
         link: sellerWeb
-      },
-      costPart,
-      quantityPart,
-      amountCostPart,
-      id: Date.now(),
-      isInstall: false
+      }
     }
 
     /* isEditPart
       ? dispatch(editPart(state.numberCar, itemPart?.id, tempNewPart))
       : dispatch(addPart(state.numberCar, tempNewPart)) */
     clearInput()
-    isOk(tempNewPart)
+    isOk(tempNewService)
     /* navigation.navigate('Home') */
   }
 
@@ -194,112 +157,61 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
                     flex: 3
                   }}>
                     <Input
-                      ref={refNamePart}
+                      ref={refNameService}
                       renderErrorMessage={false}
                       placeholder={'название'}
                       inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      onChangeText={(value) => setNamePart(String(value))}
-                      value={namePart}
-                      onFocus={() => handleFocus(refNamePart)}
-                      onBlur={() => handleBlur(refNamePart)}
-                      onSubmitEditing={() => refNumberPart.current?.focus()}
+                      onChangeText={(value) => setNameServiceTask(String(value))}
+                      value={nameServiceTask}
+                      onFocus={() => handleFocus(refNameService)}
+                      onBlur={() => handleBlur(refNameService)}
+                      onSubmitEditing={() => refMilesService.current?.focus()}
                     />
                   </ShadowBox>
+                </View>
+                {
+                  // ----------------------- Date and mile task -------------------------------------
+                }
+                <View style={styles.viewGroupInput}>
                   <ShadowBox style={{
                     margin: 5,
                     flex: 1.2
                   }}>
                     <Input
-                      ref={refDatePart}
-                      renderErrorMessage={false}
+                      ref={refDateService}
+                      renderErrorMessage={true}
+                      errorMessage={'дата сервиса'}
+                      errorStyle={styles.errorInput}
                       placeholder={'купить к дате'}
                       inputStyle={styles.inputText}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
+                      /* inputContainerStyle={{ borderBottomWidth: 0 }} */
                       showSoftInputOnFocus={false}
-                      value={new Date(dateBuy).toLocaleDateString()}
+                      value={new Date(dateEndTask).toLocaleDateString()}
                       onPressOut={inputDate}
-                      errorStyle={styles.errorInput}
                     />
                   </ShadowBox>
-                </View>
-                {
-                  // ----------------------- Number part -------------------------------------
-                }
-                <View style={styles.viewGroupInput}>
+
                   <ShadowBox style={{
                     margin: 5,
                     flex: 1
                   }}>
                     <Input
-                      ref={refNumberPart}
-                      placeholder={'артикул'}
-                      /* placeholderTextColor={'red'} */
+                      ref={refMilesService}
+                      placeholder={'до пробега'}
                       inputStyle={styles.inputText}
-                      errorMessage={'артикул'}
+                      renderErrorMessage={true}
+                      errorMessage={'пробег сервиса'}
                       errorStyle={styles.errorInput}
-                      onChangeText={(value) => setNumberPart(String(value))}
-                      value={numberPart}
-                      onFocus={() => handleFocus(refNumberPart)}
-                      onBlur={() => handleBlur(refNumberPart)}
+                      /* inputContainerStyle={{ borderBottomWidth: 0 }} */
+                      onChangeText={(value) => setMilesEnd(Number(value))}
+                      value={String(milesEnd)}
+                      onFocus={() => handleFocus(refMilesService)}
+                      onBlur={() => handleBlur(refMilesService)}
                       onSubmitEditing={() => refSellerName.current?.focus()}
+                      keyboardType={'numeric'}
                     />
                   </ShadowBox>
                 </View>
-                <ShadowBox style={{
-                  flex: 1,
-                  marginHorizontal: 5
-                }}>
-                  <Accordion
-                    /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
-                    title={'Аналоги'}
-                    textBannerStyle={{
-                      fontSize: 14,
-                      color: theme.colors.grey3
-                    }}
-                    controlled={false}
-                    insideView={
-                      <View style={styles.viewGroupInput}>
-                        <ShadowBox style={{
-                          margin: 5,
-                          flex: 1
-                        }}>
-                          <Input
-                            ref={refNumber1Part}
-                            renderErrorMessage={false}
-                            placeholder={'аналог 1'}
-                            /* placeholderTextColor={'red'} */
-                            inputStyle={styles.inputText}
-                            errorStyle={styles.errorInput}
-                            inputContainerStyle={{ borderBottomWidth: 0 }}
-                            onChangeText={(value) => setNumberPart1(String(value))}
-                            value={numberPart1}
-                            onFocus={() => handleFocus(refNumber1Part)}
-                            onBlur={() => handleBlur(refNumber1Part)}
-                          />
-                        </ShadowBox>
-                        <ShadowBox style={{
-                          margin: 5,
-                          flex: 1
-                        }}>
-                          <Input
-                            ref={refNumber2Part}
-                            renderErrorMessage={false}
-                            placeholder={'аналог 2'}
-                            /* placeholderTextColor={'red'} */
-                            inputStyle={styles.inputText}
-                            errorStyle={styles.errorInput}
-                            inputContainerStyle={{ borderBottomWidth: 0 }}
-                            onChangeText={(value) => setNumberPart2(String(value))}
-                            value={numberPart2}
-                            onFocus={() => handleFocus(refNumber2Part)}
-                            onBlur={() => handleBlur(refNumber2Part)}
-                          />
-                        </ShadowBox>
-                      </View>
-                    }
-                  />
-                </ShadowBox>
               </View>
               {
                 // ---------------------- Seller ------------------------------------------
@@ -316,16 +228,12 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
                       placeholder={'продавец'}
                       inputStyle={styles.inputText}
                       errorMessage={'продавец'}
-                      errorStyle={{
-                        color: 'gray',
-                        marginTop: 1,
-                        textAlign: 'center'
-                      }}
+                      errorStyle={styles.errorInput}
                       onChangeText={(value) => setSeller(String(value))}
                       value={seller}
                       onFocus={() => handleFocus(refSellerName)}
                       onBlur={() => handleBlur(refSellerName)}
-                      onSubmitEditing={() => refCostPart.current?.focus()}
+                      onSubmitEditing={() => refAmountCostPart.current?.focus()}
                     />
                   </ShadowBox>
                 </View>
@@ -378,7 +286,7 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
                             value={sellerWeb}
                             onFocus={() => handleFocus(refSellerLink)}
                             onBlur={() => handleBlur(refSellerLink)}
-                            onSubmitEditing={() => refCostPart.current?.focus()}
+                            onSubmitEditing={() => refAmountCostPart.current?.focus()}
                           />
                         </ShadowBox>
                       </View>
@@ -398,57 +306,18 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
                     flex: 1
                   }}>
                     <Input
-                      ref={refCostPart}
-                      placeholder={'цена'}
-                      /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
-                      errorMessage={'цена'}
-                      errorStyle={styles.errorInput}
-                      keyboardType={'numeric'}
-                      onChangeText={(value) => setCostPart(Number(value))}
-                      value={String(costPart)}
-                      onFocus={() => handleFocus(refCostPart)}
-                      onBlur={() => handleBlur(refCostPart)}
-                      onSubmitEditing={() => refQuantityPart.current?.focus()}
-                    />
-                  </ShadowBox>
-                  <ShadowBox style={{
-                    margin: 5,
-                    flex: 1
-                  }}>
-                    <Input
-                      ref={refQuantityPart}
-                      placeholder={'кол-во'}
-                      containerStyle={{ flex: 1 }}
-                      inputStyle={styles.inputText}
-                      errorMessage={'кол-во'}
-                      errorStyle={styles.errorInput}
-                      keyboardType={'numeric'}
-                      onChangeText={(value) => setQuantityPart(Number(value))}
-                      value={String(quantityPart)}
-                      onFocus={() => handleFocus(refQuantityPart)}
-                      onBlur={() => handleBlur(refQuantityPart)}
-                      onSubmitEditing={() => handleOnSubmitQuantity()}
-                      /* onBlur={() => handleOnSubmitCost()} */
-                    />
-                  </ShadowBox>
-                  <ShadowBox style={{
-                    margin: 5,
-                    flex: 1
-                  }}>
-                    <Input
                       ref={refAmountCostPart}
-                      placeholder={'сумма'}
+                      placeholder={'стоимость'}
                       containerStyle={{ flex: 1 }}
                       inputStyle={styles.inputText}
-                      errorMessage={'сумма'}
+                      errorMessage={'стоимость'}
                       errorStyle={styles.errorInput}
                       keyboardType={'numeric'}
-                      onChangeText={(value) => setAmountCostPart(Number(value))}
-                      value={String(amountCostPart)}
+                      onChangeText={(value) => setAmountCostServiceTask(Number(value))}
+                      value={String(amountCostServiceTask)}
                       onFocus={() => handleFocus(refAmountCostPart)}
                       onBlur={() => handleBlur(refAmountCostPart)}
-                      onSubmitEditing={() => handleOnSubmitAmount()}
+                      /* onSubmitEditing={() => handleOnSubmitAmount()} */
                       /* onBlur={() => handleOnSubmitAmount()} */
                     />
                   </ShadowBox>
@@ -491,7 +360,7 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
   )
 }
 
-export default InputPart
+export default InputServiceTaskComponents
 
 const styles = StyleSheet.create({
   viewAllInput: {
