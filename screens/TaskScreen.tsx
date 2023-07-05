@@ -134,8 +134,11 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     setIsEditTask(true)
     switch (item.typeTask) {
       case 'part':
+        console.log('press1')
         setStatePart(formPart(item))
+        console.log('press2')
         setVisiblePart(true)
+        console.log('press3')
         break
       case 'service':
         setStateService(formService(item))
@@ -185,10 +188,9 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     }
   }
   // --------------------------------------------------------------------------------
-  useFocusEffect(
+  /*  useFocusEffect(
     useCallback(() => {
-      console.log('Res', listTasks)
-    }, []))
+    }, [])) */
 
   return (
     <>

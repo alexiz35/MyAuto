@@ -111,7 +111,6 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     // -------------------------------------------------------------------
     case ActionType.ADD_FUEL: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-      console.log('reduce', newArray[indexArray])
       newArray[indexArray].fuel.push(action.payload.fuel)
       return {
         ...state,
@@ -145,7 +144,6 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     // -------------------------------------------------------------------
     case ActionType.ADD_PARTS: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-      console.log('reduce', newArray[indexArray])
       newArray[indexArray].parts.push(action.payload.part)
       return {
         ...state,
@@ -178,7 +176,6 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     // -------------------------------------------------------------------
     case ActionType.ADD_OTHERS: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-      console.log('reduce', newArray[indexArray])
       newArray[indexArray].others.push(action.payload.other)
       return {
         ...state,
@@ -213,7 +210,6 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     case ActionType.ADD_TASK: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
       newArray[indexArray].tasks.push(action.payload.task)
-      console.log('reduxAdd')
       return {
         ...state,
         cars: newArray
@@ -231,7 +227,6 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
 
     case ActionType.EDIT_TASK: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-      console.log('reduxEdit')
       const tempTasks = newArray[indexArray].tasks.filter(item => item.id !== action.payload.id)
       newArray[indexArray].tasks = tempTasks.concat(action.payload.task)
       return {
@@ -246,7 +241,6 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
         (task, index) => {
           if (task.id === action.payload.id) {
             newArray[indexArray].tasks[index].isFinished = action.payload.isFinished
-            console.log('finish', newArray)
 
             return true
           }

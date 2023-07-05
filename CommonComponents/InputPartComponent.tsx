@@ -27,11 +27,11 @@ interface InputPartProps {
 }
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
-const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element => {
+const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { theme } = useTheme()
-  console.log('ClickPartId', part?.id)
+  console.log('clickIn Component')
   /* const { mode } = useThemeMode() */
 
   const [dateBuy, setDateBuy] = useState(new Date())
@@ -97,8 +97,10 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
   })
 
   useEffect(() => {
+    console.log('inputUse')
     if (part !== null) {
       handleOpen(part)
+      console.log('inputUseEffect')
     }
   }, [])
 
@@ -483,15 +485,15 @@ const InputPart = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element
             </View>
 
       </KeyboardAwareScrollView>
-      <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
+      {/* <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
         <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
-      </Dialog>
+      </Dialog> */}
     </View>
 
   )
 }
 
-export default InputPart
+export default InputPartComponent
 
 const styles = StyleSheet.create({
   viewAllInput: {

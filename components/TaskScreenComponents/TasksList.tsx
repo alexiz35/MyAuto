@@ -1,10 +1,10 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { COLOR_GREEN, StatePart, StateTask } from '../../type'
-import { Button, Divider, Icon, ListItem, useTheme, Text } from '@rneui/themed'
+import { Button, Divider, Icon, ListItem, useTheme, Text, CheckBox } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { delPart, delTask } from '../Redux/actions'
+import { delPart, delTask, finishTask } from '../Redux/actions'
 import { Shadow } from 'react-native-shadow-2'
 import { check } from 'react-native-permissions'
 
@@ -18,7 +18,13 @@ export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
   const { theme } = useTheme()
   const dispatch = useAppDispatch()
   const [isSortParts, setIsSortParts] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
   const renderRow: ListRenderItem<StateTask> = ({ item }: { item: StateTask }) => {
+    const pressCheck = (): void => {
+      dispatch(finishTask(carId, item.id, !item.isFinished))
+      setIsChecked(!isChecked)
+    }
+
     return (
       <View style={styles.listItem}>
          <Shadow stretch={true} >
@@ -62,10 +68,17 @@ export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
           bottomDivider
           topDivider
         >
-          <ListItem.Content style={{ flex: 0.5 }}>
-
+          {/*
+          -------------------------------first column -----------------------------
+          */}
+          <ListItem.CheckBox
+            checked={item.isFinished}
+            onPress={pressCheck}
+            center
+            style={{ flex: 0.5 }}
+          >
             {
-              (() => {
+              /* (() => {
                 switch (item.typeTask) {
                   case 'part':
                     return <Icon name={'car-cog'} type='material-community' size={22}
@@ -85,32 +98,74 @@ export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
                   default:
                     return null
                 }
-              })()
+              })() */
             }
-          </ListItem.Content>
 
+            {
+              /* <CheckBox
+                center
+                /!* title="Click Here" *!/
+                /!* checked={check1}
+                onPress={() => setCheck1(!check1)} *!/
+              /> */
+
+            }
+
+          </ListItem.CheckBox>
+          {/*
+          -------------------------------second column -----------------------------
+          */}
           <ListItem.Content style={{ flex: 3 }} >
-            <ListItem.Title style={{ paddingBottom: 5 }} >
-              {/* {String(new Date(item.dateBuy).toLocaleDateString())} */}
+            <ListItem.Title >
+              <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+              {
+                (() => {
+                  switch (item.typeTask) {
+                    case 'part':
+                      return <Icon name={'car-cog'} type='material-community' size={22}
+                                   color={theme.colors.success}
+                                   containerStyle={{ paddingBottom: 0, paddingRight: 10 }} />
+
+                    case 'service':
+                      return <Icon name={'car-wrench'} type='material-community' size={22}
+                                   color={theme.colors.success}
+                                   containerStyle={{ paddingBottom: 0, paddingRight: 10 }} />
+
+                    case 'other':
+                      return <Icon name={'account-cash'} type='material-community' size={22}
+                                   color={theme.colors.success}
+                                   containerStyle={{ paddingBottom: 0, paddingRight: 10 }} />
+
+                    default:
+                      return null
+                  }
+                })()
+              }
+              <Text >
               {String(item.typeTask)}
+              </Text>
+              </View>
             </ListItem.Title>
             <Divider color={theme.colors.success} width={2} inset insetType={'middle'}/>
             <ListItem.Subtitle style={{ fontSize: 12 }} lineBreakMode={'tail'} numberOfLines={1} >
               {String(item.name)}
             </ListItem.Subtitle>
 
+            {/*
+          -------------------------------third column -----------------------------
+          */}
           </ListItem.Content>
           <ListItem.Content style={{ flex: 1.5 }}>
             <ListItem.Title style={{ paddingBottom: 5 }} >
               {String(new Date(item.dateEndTask).toLocaleDateString())}
             </ListItem.Title>
 
-            {/* <ListItem.Subtitle style={{ fontSize: 12 }}>
-              {(item.dateInstall != null) ? String(new Date(item.dateInstall).toLocaleDateString()) : null}
-            </ListItem.Subtitle> */}
+            <ListItem.Subtitle style={{ fontSize: 12 }}>
+              {String(Math.floor((new Date(item.dateEndTask).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)).toString()) + '  д'}
+            </ListItem.Subtitle>
           </ListItem.Content>
 
-          <ListItem.Content style={{ flex: 1.5 }}>
+          <ListItem.Content style={{ flex: 1.2 }}>
             <ListItem.Title style={{ paddingBottom: 5 }}>
               {item.amount}
             </ListItem.Title>
@@ -118,8 +173,10 @@ export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
               {(item.mileageInstall != null) ? String(item.mileageInstall) : null}
             </ListItem.Subtitle> */}
           </ListItem.Content>
-
-         {/*  <ListItem.Content style={{ flex: 1 }}>
+          {/*
+          -------------------------------end column -----------------------------
+          */}
+          {/*  <ListItem.Content style={{ flex: 1 }}>
             <ListItem.Title style={{ fontSize: 14 }}>
               {item.amountCostPart}
             </ListItem.Title>
