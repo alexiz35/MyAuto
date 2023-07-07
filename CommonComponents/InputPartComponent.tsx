@@ -1,40 +1,61 @@
 import {
   View,
   StyleSheet,
-  TextInput, ActivityIndicator, Pressable
+  TextInput
 } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Button, Dialog, Divider, Icon, Input, ListItem, useTheme } from '@rneui/themed'
+import { Button, Divider, Input, useTheme } from '@rneui/themed'
 import React, {
   PropsWithChildren,
-  RefObject, useEffect,
-  useState
+  RefObject
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { BACK_INPUT, COLOR_GREEN, StatePart } from '../type'
-import { RootStackParamList } from '../components/Navigation/Navigation'
-import { addPart, editPart } from '../components/Redux/actions'
+/* import { useAppDispatch, useAppSelector } from '../components/Redux/hook' */
+import { StatePart } from '../type'
 import Accordion from '../components/Accordion'
 import ShadowBox from './ShadowBox'
-import { PartsList } from '../components/InputDoneScreenComponents/PartsList'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useForm, Controller } from 'react-hook-form'
 
 interface InputPartProps {
   isCancel: () => void
   isOk: (partResult: StatePart) => void
-  part?: StatePart | null
+  part?: StatePart
 }
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
-const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JSX.Element => {
-  const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state)
+const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Element => {
+  /*  const dispatch = useAppDispatch()
+  const state = useAppSelector((state) => state) */
   const { theme } = useTheme()
-  console.log('clickIn Component')
   /* const { mode } = useThemeMode() */
+  const tempNullPart: StatePart = {
+    id: Date.now(),
+    namePart: '',
+    numberPart: '',
+    dateBuy: new Date(),
+    costPart: 0,
+    quantityPart: 0,
+    amountCostPart: 0,
+    numberPart1: '',
+    numberPart2: '',
+    mileageInstall: 0,
+    dateInstall: new Date(),
+    isInstall: false,
+    seller: {
+      name: '',
+      phone: '',
+      link: ''
+    }
+  }
 
-  const [dateBuy, setDateBuy] = useState(new Date())
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    setValue
+  } = useForm<StatePart>({ mode: 'onBlur', defaultValues: part === undefined ? tempNullPart : part })
+
+  /* const [dateBuy, setDateBuy] = useState(new Date())
   const [namePart, setNamePart] = useState('')
 
   const [numberPart, setNumberPart] = useState('')
@@ -47,12 +68,7 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
 
   const [costPart, setCostPart] = useState(0)
   const [amountCostPart, setAmountCostPart] = useState(0)
-  const [quantityPart, setQuantityPart] = useState(0)
-
-  const [isOpenAccordion, setIsOpenAccordion] = useState(false)
-  const [isEditPart, setIsEditPart] = useState(false)
-
-  const [itemPart, setItemPart] = useState<StatePart | null>(null)
+  const [quantityPart, setQuantityPart] = useState(0) */
 
   const refNamePart = React.createRef<PropsWithChildren<TextInput>>()
   const refDatePart = React.createRef<PropsWithChildren<TextInput>>()
@@ -66,19 +82,6 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
   const refQuantityPart = React.createRef<PropsWithChildren<TextInput>>()
   const refAmountCostPart = React.createRef<PropsWithChildren<TextInput>>()
 
-  const clearInput = (): void => {
-    setNamePart('')
-    setDateBuy(new Date())
-    setNumberPart('')
-    setNumberPart1('')
-    setNumberPart2('')
-    setSeller('')
-    setSellerPhone('')
-    setSellerWeb('')
-    setCostPart(0)
-    setQuantityPart(0)
-    setAmountCostPart(0)
-  }
   const handleError = (): void => {
     refNamePart.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.error } })
     // @ts-expect-error not shake
@@ -93,91 +96,27 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
   const inputDate = (): void => DateTimePickerAndroid.open({
     value: new Date(),
     // @ts-expect-error date
-    onChange: (event, date) => setDateBuy(date)
+    onChange: (event, date) => setValue('dateBuy', date)
   })
 
-  useEffect(() => {
-    console.log('inputUse')
-    if (part !== null) {
-      handleOpen(part)
-      console.log('inputUseEffect')
-    }
-  }, [])
-
   // ------------------------- function calc input -----------------------------
-  const handleOnSubmitQuantity = (): void => {
-    setAmountCostPart(quantityPart * costPart)
+  /*  const handleOnSubmitQuantity = (): void => {
+    const tempAmount = partState?.quantityPart * partState?.costPart
+    setPartState({ ...partState, amountCostPart: tempAmount })
     refAmountCostPart.current?.focus()
   }
   const handleOnSubmitAmount = (): void => {
     setCostPart(amountCostPart / quantityPart)
-    /* inputFuelAmount.current?.focus() */
-  }
-
-  // ------------------------- control according -------------------------------
-  const handleOpen = (item: StatePart): void => {
-    setNamePart(item.namePart)
-    setDateBuy(item.dateBuy)
-    setNumberPart(item.numberPart)
-    item.numberPart1 !== undefined
-      ? setNumberPart1(item.numberPart1)
-      : setNumberPart1('')
-    item.numberPart2 !== undefined
-      ? setNumberPart2(item.numberPart2)
-      : setNumberPart2('')
-    setCostPart(item.costPart)
-    setQuantityPart(item.quantityPart)
-    setAmountCostPart(item.amountCostPart)
-    if (item.seller?.name !== undefined) setSeller(item.seller?.name)
-    if (item.seller?.phone !== undefined) setSellerPhone(item.seller?.phone)
-    if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
-    setIsEditPart(true)
-    /* setItemPart(item) */
-    /* handleOnPress() */
-    /* setOpenAccordion(true) */
-  }
+    /!* inputFuelAmount.current?.focus() *!/
+  } */
 
   // ------------------------- button result -----------------------------------
   const handleCancel = (): void => {
-    clearInput()
     isCancel()
   }
-  const handleOk = (): void => {
-    if (namePart === '') {
-      handleError()
-      return
-    }
-    const tempNewPart: StatePart = {
-      namePart,
-      dateBuy,
-      numberPart,
-      numberPart1,
-      numberPart2,
-      seller: {
-        name: seller,
-        phone: sellerPhone,
-        link: sellerWeb
-      },
-      costPart,
-      quantityPart,
-      amountCostPart,
-      id: Date.now(),
-      isInstall: false
-    }
-
-    /* isEditPart
-      ? dispatch(editPart(state.numberCar, itemPart?.id, tempNewPart))
-      : dispatch(addPart(state.numberCar, tempNewPart)) */
-    clearInput()
-    isOk(tempNewPart)
-    /* navigation.navigate('Home') */
+  const handleOk = (dataForm: StatePart): void => {
+    isOk(dataForm)
   }
-
-  /*  useEffect(() => {
-    console.log('hello')
-    setIsOpenAccordion(true)
-    setTimeout(() => setIsOpenAccordion(false), 2000)
-  }, [openAccordion]) */
 
   return (
     <View>
@@ -195,23 +134,31 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                     margin: 5,
                     flex: 3
                   }}>
+                    <Controller name={'namePart'}
+                                 control={control}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
                     <Input
                       ref={refNamePart}
                       renderErrorMessage={false}
                       placeholder={'название'}
                       inputStyle={styles.inputText}
                       errorStyle={styles.errorInput}
-                      onChangeText={(value) => setNamePart(String(value))}
-                      value={namePart}
+                      onChangeText={(value) => onChange(value)}
+                      value={value}
                       onFocus={() => handleFocus(refNamePart)}
                       onBlur={() => handleBlur(refNamePart)}
                       onSubmitEditing={() => refNumberPart.current?.focus()}
+                    />
+                                ) }
                     />
                   </ShadowBox>
                   <ShadowBox style={{
                     margin: 5,
                     flex: 1.2
                   }}>
+                    <Controller name={'dateBuy'}
+                                control={control}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
                     <Input
                       ref={refDatePart}
                       renderErrorMessage={false}
@@ -219,10 +166,13 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                       inputStyle={styles.inputText}
                       inputContainerStyle={{ borderBottomWidth: 0 }}
                       showSoftInputOnFocus={false}
-                      value={new Date(dateBuy).toLocaleDateString()}
+                      value={new Date(value).toLocaleDateString()}
+                      /* onChangeText={(value) => onChange(value)} */
                       onPressOut={inputDate}
                       errorStyle={styles.errorInput}
                     />
+                                )}
+                                />
                   </ShadowBox>
                 </View>
                 {
@@ -233,6 +183,9 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                     margin: 5,
                     flex: 1
                   }}>
+                    <Controller name={'numberPart'}
+                                control={control}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
                     <Input
                       ref={refNumberPart}
                       placeholder={'артикул'}
@@ -240,12 +193,14 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                       inputStyle={styles.inputText}
                       errorMessage={'артикул'}
                       errorStyle={styles.errorInput}
-                      onChangeText={(value) => setNumberPart(String(value))}
-                      value={numberPart}
+                      onChangeText={(value) => onChange(value)}
+                      value={value}
                       onFocus={() => handleFocus(refNumberPart)}
                       onBlur={() => handleBlur(refNumberPart)}
                       onSubmitEditing={() => refSellerName.current?.focus()}
                     />
+                                )}
+                                />
                   </ShadowBox>
                 </View>
                 <ShadowBox style={{
@@ -266,6 +221,9 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                           margin: 5,
                           flex: 1
                         }}>
+                          <Controller name={'numberPart1'}
+                                      control={control}
+                                      render={ ({ field: { onChange, value, onBlur } }) => (
                           <Input
                             ref={refNumber1Part}
                             renderErrorMessage={false}
@@ -274,16 +232,21 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                             inputStyle={styles.inputText}
                             errorStyle={styles.errorInput}
                             inputContainerStyle={{ borderBottomWidth: 0 }}
-                            onChangeText={(value) => setNumberPart1(String(value))}
-                            value={numberPart1}
+                            onChangeText={(value) => onChange(value)}
+                            value={value}
                             onFocus={() => handleFocus(refNumber1Part)}
                             onBlur={() => handleBlur(refNumber1Part)}
                           />
+                                      )}
+                                      />
                         </ShadowBox>
                         <ShadowBox style={{
                           margin: 5,
                           flex: 1
                         }}>
+                          <Controller name={'numberPart2'}
+                                      control={control}
+                                      render={ ({ field: { onChange, value, onBlur } }) => (
                           <Input
                             ref={refNumber2Part}
                             renderErrorMessage={false}
@@ -292,11 +255,13 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                             inputStyle={styles.inputText}
                             errorStyle={styles.errorInput}
                             inputContainerStyle={{ borderBottomWidth: 0 }}
-                            onChangeText={(value) => setNumberPart2(String(value))}
-                            value={numberPart2}
+                            onChangeText={(value) => onChange(value)}
+                            value={value}
                             onFocus={() => handleFocus(refNumber2Part)}
                             onBlur={() => handleBlur(refNumber2Part)}
                           />
+                                      )}
+                                      />
                         </ShadowBox>
                       </View>
                     }
@@ -313,6 +278,9 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                     margin: 5,
                     flex: 1
                   }}>
+                    <Controller name={'seller.name'}
+                                control={control}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
                     <Input
                       ref={refSellerName}
                       placeholder={'продавец'}
@@ -323,12 +291,14 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                         marginTop: 1,
                         textAlign: 'center'
                       }}
-                      onChangeText={(value) => setSeller(String(value))}
-                      value={seller}
+                      onChangeText={(value) => onChange(value)}
+                      value={value}
                       onFocus={() => handleFocus(refSellerName)}
                       onBlur={() => handleBlur(refSellerName)}
                       onSubmitEditing={() => refCostPart.current?.focus()}
                     />
+                                )}
+                                />
                   </ShadowBox>
                 </View>
                 <ShadowBox style={{
@@ -348,6 +318,9 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                           margin: 5,
                           flex: 1
                         }}>
+                          <Controller name={'seller.phone'}
+                                      control={control}
+                                      render={ ({ field: { onChange, value, onBlur } }) => (
                           <Input
                             ref={refSellerPhone}
                             renderErrorMessage={false}
@@ -356,17 +329,22 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                             errorStyle={styles.errorInput}
                             inputContainerStyle={{ borderBottomWidth: 0 }}
                             keyboardType={'phone-pad'}
-                            onChangeText={(value) => setSellerPhone(String(value))}
-                            value={sellerPhone}
+                            onChangeText={(value) => onChange(value)}
+                            value={value}
                             onFocus={() => handleFocus(refSellerPhone)}
                             onBlur={() => handleBlur(refSellerPhone)}
                             onSubmitEditing={() => refSellerLink.current?.focus()}
                           />
+                                      )}
+                                      />
                         </ShadowBox>
                         <ShadowBox style={{
                           margin: 5,
                           flex: 1
                         }}>
+                          <Controller name={'seller.link'}
+                                      control={control}
+                                      render={ ({ field: { onChange, value, onBlur } }) => (
                           <Input
                             ref={refSellerLink}
                             renderErrorMessage={false}
@@ -376,12 +354,14 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                             errorStyle={styles.errorInput}
                             inputContainerStyle={{ borderBottomWidth: 0 }}
                             keyboardType={'url'}
-                            onChangeText={(value) => setSellerWeb(String(value))}
-                            value={sellerWeb}
+                            onChangeText={(value) => onChange(value)}
+                            value={value}
                             onFocus={() => handleFocus(refSellerLink)}
                             onBlur={() => handleBlur(refSellerLink)}
                             onSubmitEditing={() => refCostPart.current?.focus()}
                           />
+                                      )}
+                                      />
                         </ShadowBox>
                       </View>
                     }
@@ -399,6 +379,9 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                     margin: 5,
                     flex: 1
                   }}>
+                    <Controller name={'costPart'}
+                                control={control}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
                     <Input
                       ref={refCostPart}
                       placeholder={'цена'}
@@ -407,17 +390,22 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                       errorMessage={'цена'}
                       errorStyle={styles.errorInput}
                       keyboardType={'numeric'}
-                      onChangeText={(value) => setCostPart(Number(value))}
-                      value={String(costPart)}
+                      onChangeText={(value) => onChange(Number(value))}
+                      value={String(value)}
                       onFocus={() => handleFocus(refCostPart)}
                       onBlur={() => handleBlur(refCostPart)}
                       onSubmitEditing={() => refQuantityPart.current?.focus()}
                     />
+                                )}
+                                />
                   </ShadowBox>
                   <ShadowBox style={{
                     margin: 5,
                     flex: 1
                   }}>
+                    <Controller name={'quantityPart'}
+                                control={control}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
                     <Input
                       ref={refQuantityPart}
                       placeholder={'кол-во'}
@@ -426,18 +414,23 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                       errorMessage={'кол-во'}
                       errorStyle={styles.errorInput}
                       keyboardType={'numeric'}
-                      onChangeText={(value) => setQuantityPart(Number(value))}
-                      value={String(quantityPart)}
+                      onChangeText={(value) => onChange(Number(value))}
+                      value={String(value)}
                       onFocus={() => handleFocus(refQuantityPart)}
                       onBlur={() => handleBlur(refQuantityPart)}
-                      onSubmitEditing={() => handleOnSubmitQuantity()}
+                      /* onSubmitEditing={() => handleOnSubmitQuantity()} */
                       /* onBlur={() => handleOnSubmitCost()} */
                     />
+                                )}
+                                />
                   </ShadowBox>
                   <ShadowBox style={{
                     margin: 5,
                     flex: 1
                   }}>
+                    <Controller name={'amountCostPart'}
+                                control={control}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
                     <Input
                       ref={refAmountCostPart}
                       placeholder={'сумма'}
@@ -446,13 +439,15 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                       errorMessage={'сумма'}
                       errorStyle={styles.errorInput}
                       keyboardType={'numeric'}
-                      onChangeText={(value) => setAmountCostPart(Number(value))}
-                      value={String(amountCostPart)}
+                      onChangeText={(value) => onChange(Number(value))}
+                      value={String(value)}
                       onFocus={() => handleFocus(refAmountCostPart)}
                       onBlur={() => handleBlur(refAmountCostPart)}
-                      onSubmitEditing={() => handleOnSubmitAmount()}
+                      /* onSubmitEditing={() => handleOnSubmitAmount()} */
                       /* onBlur={() => handleOnSubmitAmount()} */
                     />
+                                )}
+                                />
                   </ShadowBox>
                 </View>
               </View>
@@ -476,9 +471,10 @@ const InputPartComponent = ({ isCancel, isOk, part = null }: InputPartProps): JS
                   title={'Ok'}
                   color={'success'}
                   type={'solid'}
-                  onPress={() => {
+                  /* onPress={() => {
                     handleOk()
-                  }}
+                  }} */
+                  onPress={handleSubmit(handleOk)}
                 />
               </View>
               <Divider insetType={'middle'} width={2} />

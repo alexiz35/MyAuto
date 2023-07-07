@@ -1,5 +1,5 @@
-import { View } from 'react-native'
-import { Dialog, Overlay, SpeedDial, Text, useTheme } from '@rneui/themed'
+import { ActivityIndicator, View } from 'react-native'
+import { BottomSheet, Button, Dialog, Overlay, SpeedDial, Text, useTheme } from '@rneui/themed'
 import {
   BACK_INPUT,
   BACK_OPACITY,
@@ -12,7 +12,7 @@ import BackgroundView from '../CommonComponents/BackgroundView'
 import { RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 /* import { printToFile } from '../components/Print/Print' */
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import InputPartComponent from '../CommonComponents/InputPartComponent'
 import InputDocComponent from '../CommonComponents/InputDocComponent'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
@@ -20,6 +20,8 @@ import { TasksList } from '../components/TaskScreenComponents/TasksList'
 import { addTask, editTask } from '../components/Redux/actions'
 import { useFocusEffect } from '@react-navigation/native'
 import InputServiceTaskComponents from '../components/TaskScreenComponents/InputServiceTaskComponent'
+import Spinner from 'react-native-loading-spinner-overlay'
+import InputTaskPartScreen from '../components/TaskScreenComponents/InputTaskPartScreen'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
 
@@ -38,11 +40,18 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
   const [isEditTask, setIsEditTask] = useState(false)
 
+  const [isActivity, setIsActivity] = useState(false)
+
   // ----------------------------------- handle pressing FAB -----------------------------
   const pressPartFab = (): void => {
-    setIsEditTask(false)
-    setStatePart(undefined)
-    setVisiblePart(true)
+    /* setIsActivity(true) */
+    /* setIsEditTask(false) */
+    navigation.navigate('CarInfoScreen')
+    /* setStatePart(undefined)
+    setTimeout(() => {
+      setVisiblePart(true)
+      setIsActivity(false)
+    }, 1) */
     setOpenFab(false)
   }
 
@@ -134,11 +143,12 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     setIsEditTask(true)
     switch (item.typeTask) {
       case 'part':
-        console.log('press1')
+        setIsActivity(true)
         setStatePart(formPart(item))
-        console.log('press2')
-        setVisiblePart(true)
-        console.log('press3')
+        setTimeout(() => {
+          setVisiblePart(true)
+          setIsActivity(false)
+        }, 1)
         break
       case 'service':
         setStateService(formService(item))
@@ -195,6 +205,15 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   return (
     <>
     <BackgroundView >
+      {/* <Dialog isVisible={isActivity} overlayStyle={{ backgroundColor: theme.colors.background }}>
+        <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
+      </Dialog> */}
+      <Spinner visible={isActivity}
+               textContent={'wait...'}
+               color={theme.colors.success}
+               textStyle={{ color: theme.colors.success }}
+               overlayColor={'rgba(0, 0, 0, 0.7)'}
+      />
 
         <View style={{ height: '100%' }}>
          {/*  <Text style={{ textAlign: 'center' }}>Запланируйте</Text> */}
@@ -207,12 +226,20 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   {
     // ------------------------------ flatTask -------------------------------------------------------
   }
-          <Dialog isVisible={visiblePart} overlayStyle={{ width: '100%', backgroundColor: BACK_OPACITY }}>
+          {/* <BottomSheet isVisible={visiblePart} modalProps={{ animationType: 'slide' }} >
             <BackgroundView>
               <Text style={{ textAlign: 'center' }}>Запланируйте покупку детали</Text>
+              <Button title={'ok'} onPress={() => setVisiblePart(false)}/>
               <InputPartComponent isCancel={handleCancelPart} isOk={handleOkPart} part={statePart}/>
             </BackgroundView>
-          </Dialog>
+          </BottomSheet> */}
+          <BottomSheet isVisible={visiblePart} modalProps={{ animationType: 'slide' }} >
+            <BackgroundView>
+              <Text style={{ textAlign: 'center' }}>Запланируйте покупку детали</Text>
+              {/* <Button title={'ok'} onPress={() => setVisiblePart(false)}/> */}
+              <InputPartComponent isCancel={handleCancelPart} isOk={handleOkPart} part={statePart}/>
+            </BackgroundView>
+          </BottomSheet>
 
           <Overlay isVisible={visibleService}
                    fullScreen

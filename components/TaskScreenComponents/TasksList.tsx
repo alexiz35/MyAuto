@@ -1,7 +1,7 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { COLOR_GREEN, StatePart, StateTask } from '../../type'
 import { Button, Divider, Icon, ListItem, useTheme, Text, CheckBox } from '@rneui/themed'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { delPart, delTask, finishTask } from '../Redux/actions'
@@ -19,7 +19,8 @@ export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
   const dispatch = useAppDispatch()
   const [isSortParts, setIsSortParts] = useState(false)
   const [isChecked, setIsChecked] = useState(false)
-  const renderRow: ListRenderItem<StateTask> = ({ item }: { item: StateTask }) => {
+
+  const renderRow: ListRenderItem<StateTask> = useCallback(({ item }: { item: StateTask }) => {
     const pressCheck = (): void => {
       dispatch(finishTask(carId, item.id, !item.isFinished))
       setIsChecked(!isChecked)
@@ -190,7 +191,7 @@ export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
         </Shadow>
       </View>
     )
-  }
+  }, [])
 
   useEffect(() => {
     if (listTasks !== undefined) {

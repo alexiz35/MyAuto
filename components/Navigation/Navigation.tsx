@@ -38,6 +38,7 @@ import { current } from '@reduxjs/toolkit'
 import CarInfoScreen from '../../screens/CarInfoScreen'
 import SettingScreen from '../../screens/SettingScreen'
 import createStackNavigator, { StackScreenProps } from '@react-navigation/stack'
+import InputTaskPartScreen from '../TaskScreenComponents/InputTaskPartScreen'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
@@ -46,6 +47,7 @@ export type RootStackParamList = {
   Info: { taskId: number, typeTask: number }
   CarInfoScreen: undefined
   SettingScreen: undefined
+  InputTaskPartScreen: undefined
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootTabParamList = {
@@ -53,6 +55,7 @@ export type RootTabParamList = {
   Fuel: undefined
   Null: undefined
   CarInfoScreen: undefined
+  InputTaskPartScreen: undefined
   Tasks: undefined
   StatScreen: undefined
   InputDoneScreen: { editable: boolean, taskId?: number, typeTask: number }
@@ -225,7 +228,7 @@ export const Navigation = (): JSX.Element => {
               <Pressable
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 onPress={() =>
-                  navigation.navigate('SettingScreen')
+                  navigation.navigate('InputTaskPartScreen')
                 /* async () => {
                   await AsyncStorage.clear()
                 } */}>
@@ -295,6 +298,14 @@ export const Navigation = (): JSX.Element => {
           component={CarInfoScreen}
           options={{
             title: 'Car Info',
+            headerTintColor: theme.colors.black
+          }} />
+
+        <Stack.Screen
+          name='InputTaskPartScreen'
+          component={InputTaskPartScreen}
+          options={{
+            title: 'Запланируйте покупку запчастей',
             headerTintColor: theme.colors.black
           }} />
 
