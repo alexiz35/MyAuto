@@ -78,13 +78,14 @@ const styles = StyleSheet.create({
   },
   viewContainerVertical: {
     flexDirection: 'column',
-    height: '100%'
+    height: '100%',
+    marginHorizontal: 40
   },
   containerMainCard: {
     margin: 20,
     alignSelf: 'center',
     flex: 1,
-    width: '80%'
+    width: '100%'
   }
 })
 

@@ -1,5 +1,5 @@
 import { ActivityIndicator, View } from 'react-native'
-import { BottomSheet, Button, Dialog, Overlay, SpeedDial, Text, useTheme } from '@rneui/themed'
+import { BottomSheet, Button, Dialog, Overlay, SpeedDial, Text } from '@rneui/themed'
 import {
   BACK_INPUT,
   BACK_OPACITY,
@@ -22,11 +22,12 @@ import { useFocusEffect } from '@react-navigation/native'
 import InputServiceTaskComponents from '../components/TaskScreenComponents/InputServiceTaskComponent'
 import Spinner from 'react-native-loading-spinner-overlay'
 import InputTaskPartScreen from '../components/TaskScreenComponents/InputTaskPartScreen'
+import { useTheme } from 'react-native-paper'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
 
 const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
-  const { theme } = useTheme()
+  const theme = useTheme()
   const listTasks = useAppSelector(state => state.cars[0].tasks)
   const carId = useAppSelector(state => state.numberCar)
   const dispatch = useAppDispatch()
@@ -210,8 +211,8 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
       </Dialog> */}
       <Spinner visible={isActivity}
                textContent={'wait...'}
-               color={theme.colors.success}
-               textStyle={{ color: theme.colors.success }}
+               color={theme.colors.error}
+               textStyle={{ color: theme.colors.error }}
                overlayColor={'rgba(0, 0, 0, 0.7)'}
       />
 
@@ -221,7 +222,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
     // ------------------------------ flatTask -------------------------------------------------------
   }
           <View style={{ marginTop: 20 }}>
-            <TasksList handlePress={handleClick}/>
+            {/* <TasksList handlePress={handleClick}/> */}
           </View>
   {
     // ------------------------------ flatTask -------------------------------------------------------

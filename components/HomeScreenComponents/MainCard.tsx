@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useEffect, useState } from 'react'
 import { updateMiles } from '../Redux/actions'
+import { TouchableRipple } from 'react-native-paper'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -59,12 +60,14 @@ export const MainCard = (): JSX.Element => {
   }
 
   return (
-    <ImageBackground source={require('../../assets/darkBack.jpg')} resizeMethod={'auto'} resizeMode={'cover'} >
-      <Pressable style={styles.containerView} android_ripple={{ color: 'grey' }}
+    <ImageBackground source={require('../../assets/whiteBack2.jpg')} resizeMethod={'auto'} resizeMode={'cover'} >
+    <View>
+      <TouchableRipple style={styles.containerView}
                  onPress={() => {
                    Vibration.vibrate(100)
                    navStack.navigate('CarInfoScreen')
                  }}>
+        <>
         <Text style={styles.carText} >
           {`${infoCar.brand} ${infoCar.model}`}
           {<Icon
@@ -76,30 +79,33 @@ export const MainCard = (): JSX.Element => {
           />}
         </Text>
         <Divider inset={true} insetType="middle" />
-        <View style={styles.infoView}>
-          <Pressable style={styles.kmView} onPress={() => {
-            setValueMileage(currentMiles.currentMileage)
-            setVisibleMileage(true)
-          }}>
-            <Icon
-              style={{ marginHorizontal: 10 }}
-              name='location-arrow'
-              type='font-awesome'
-              color={'grey'}
-            />
-            <View>
+
+        </>
+      </TouchableRipple>
+      <View style={styles.infoView}>
+        <Pressable style={styles.kmView} onPress={() => {
+          setValueMileage(currentMiles.currentMileage)
+          setVisibleMileage(true)
+        }}>
+          <Icon
+            style={{ marginHorizontal: 10 }}
+            name='location-arrow'
+            type='font-awesome'
+            color={'grey'}
+          />
+          <View>
             <Text style={styles.kmText}>
               {String(currentMiles.currentMileage)}
             </Text>
-              <Badge
-                containerStyle={{ position: 'absolute', top: 2, left: 30 }}
-                status={isNeedUpdate ? 'error' : 'success'}
-              />
-            </View>
-          </Pressable>
+            <Badge
+              containerStyle={{ position: 'absolute', top: 2, left: 30 }}
+              status={isNeedUpdate ? 'error' : 'success'}
+            />
+          </View>
+        </Pressable>
 
-          <Pressable style={styles.costView} onPress={() => navTab.navigate('StatScreen')}>
-            <View style={styles.costTOView}>
+        <Pressable style={styles.costView} onPress={() => navTab.navigate('StatScreen')}>
+          <View style={styles.costTOView}>
             <Icon
               style={{ marginHorizontal: 10 }}
               name='car-wrench'
@@ -112,8 +118,8 @@ export const MainCard = (): JSX.Element => {
             }}>
               22000 грн
             </Text>
-            </View>
-            <View style={styles.costFuelView}>
+          </View>
+          <View style={styles.costFuelView}>
             <Icon
               style={{ marginHorizontal: 10 }}
               name='gas-station'
@@ -126,19 +132,20 @@ export const MainCard = (): JSX.Element => {
             }}>
               22000 грн
             </Text>
-            </View>
-          </Pressable>
+          </View>
+        </Pressable>
 
-          {/* <View style={{ position: 'relative', left: 0, flex: 0.5 }}>
+        {/* <View style={{ position: 'relative', left: 0, flex: 0.5 }}>
             <Image source={require('../assets/renaultLogo2.png')} resizeMethod={'scale'} resizeMode={'cover'} style={{ height: 70, width: 70 }}/>
           </View> */}
-          {/*  <Text style={{ fontSize: 16, color: TEXT_CARD }}>
+        {/*  <Text style={{ fontSize: 16, color: TEXT_CARD }}>
                   Заправка: 22000 грн
                 </Text> */}
 
-        </View>
-      </Pressable>
-          <Dialog
+      </View>
+    </View>
+
+      <Dialog
             isVisible={visibleMileage}
             onBackdropPress={toggleMileage}
           >
@@ -179,9 +186,9 @@ const styles = StyleSheet.create({
   containerView: {
     justifyContent: 'center',
     alignContent: 'center',
-    height: 100,
     /* backgroundColor: BACK_CARD, */
-    borderRadius: 10
+    /* borderRadius: 10, */
+    padding: 7
 
   },
   carText: {
@@ -193,7 +200,8 @@ const styles = StyleSheet.create({
   infoView: {
     justifyContent: 'space-between',
     flexDirection: 'row',
-    marginTop: 10
+    marginTop: 2,
+    padding: 7
   },
   kmView: {
     paddingTop: 3,

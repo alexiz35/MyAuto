@@ -1,29 +1,25 @@
 import 'react-native-gesture-handler'
-import { CompositeScreenProps, NavigationContainer, NavigatorScreenParams } from '@react-navigation/native'
+import {
+  CompositeScreenProps, NavigationContainer, NavigatorScreenParams,
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme
+}
+  from '@react-navigation/native'
 
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
 import { Alert, Image, Pressable, View } from 'react-native'
-import { Button, FAB, Icon, Switch, Text, useTheme, useThemeMode } from '@rneui/themed'
-import { useEffect, useState } from 'react'
+import { FAB, Icon, Switch, useThemeMode } from '@rneui/themed'
+import { useCallback, useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
 import InfoScreen from '../../screens/InfoScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BackgroundImage, color } from '@rneui/base'
-import {
-  BACK_CARD,
-  BACK_TAB_BOTTOM,
-  BACK_TAB_TOP,
-  COLOR_GREEN,
-  HEADER_TINT_COLOR,
-  TEXT,
-  TEXT_CARD,
-  TEXT_WHITE
-} from '../../type'
+
 import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
 import TaskScreen from '../../screens/TaskScreen'
@@ -39,6 +35,19 @@ import CarInfoScreen from '../../screens/CarInfoScreen'
 import SettingScreen from '../../screens/SettingScreen'
 import createStackNavigator, { StackScreenProps } from '@react-navigation/stack'
 import InputTaskPartScreen from '../TaskScreenComponents/InputTaskPartScreen'
+
+import {
+  useTheme,
+  MD3DarkTheme,
+  MD3LightTheme,
+  adaptNavigationTheme,
+  PaperProvider,
+  Button,
+  Text,
+  IconButton, Surface, TouchableRipple
+} from 'react-native-paper'
+import merge from 'deepmerge'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
@@ -63,7 +72,7 @@ export type RootTabParamList = {
 
 function LogoTitle (): JSX.Element {
   return (
-    <Shadow stretch={true}>
+    <Surface elevation={3} >
     <Image
       style={{
         width: 50,
@@ -73,7 +82,7 @@ function LogoTitle (): JSX.Element {
         require('../../assets/renaultLogo2.png')
       }
     />
-    </Shadow>
+    </Surface>
   )
 }
 
@@ -85,17 +94,56 @@ function LogoTitle (): JSX.Element {
   )
 } */
 
+/* ----------------------------------------------------------------------------- */
+const { LightTheme, DarkTheme } = adaptNavigationTheme({
+  reactNavigationLight: NavigationDefaultTheme,
+  reactNavigationDark: NavigationDarkTheme
+})
+
+const CombinedDefaultThemeBase = merge(MD3LightTheme, LightTheme)
+const CombinedDarkThemeBase = merge(MD3DarkTheme, DarkTheme)
+const CombinedDefaultTheme = {
+  ...CombinedDefaultThemeBase,
+  colors: {
+    ...CombinedDefaultThemeBase.colors,
+    tertiary: 'rgb(46, 108, 0)',
+    onTertiary: 'rgb(255, 255, 255)',
+    tertiaryContainer: 'rgb(128, 255, 44)',
+    onTertiaryContainer: 'rgb(9, 33, 0)'
+  }
+}
+const CombinedDarkTheme = {
+  ...CombinedDarkThemeBase,
+  colors: {
+    ...CombinedDarkThemeBase.colors,
+    tertiary: 'rgb(103, 225, 0)',
+    onTertiary: 'rgb(21, 56, 0)',
+    tertiaryContainer: 'rgb(33, 81, 0)',
+    onTertiaryContainer: 'rgb(128, 255, 44)'
+  }
+}
+/* ----------------------------------------------------------------------------- */
+
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()
 type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
   const { mode, setMode } = useThemeMode()
-  const { theme } = useTheme()
-  const toggle = (): void => {
+  /* const { theme } = useTheme() */
+
+  const [isThemeDark, setIsThemeDark] = useState(false)
+
+  const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme
+
+  const toggleTheme = useCallback(() => {
+    return setIsThemeDark(!isThemeDark)
+  }, [isThemeDark])
+
+  /* const toggle = (): void => {
     if (mode === 'dark') setMode('light')
     else setMode('dark')
-  }
+  } */
   /*  const [initial, setInitial] = useState(true)
   const [location, setLocation] = useState(0)
   const [prevCoords, setPrevCoords] = useState({ latitude: 0, longitude: 0 })
@@ -155,30 +203,22 @@ export const Navigation = (): JSX.Element => {
   }, []) */
 
   return (
+    <PaperProvider theme={theme}>
     <NavigationContainer >
       <Stack.Navigator screenOptions={ {
-        headerStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_TOP
+        /* headerStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_TOP */
         headerTransparent: false,
         statusBarStyle: 'dark',
         headerRight: () => (
-          <View style={{ flexDirection: 'row' }}>
-            <Button
-              type='outline'
-              buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.black }}
-              size='md'
-              icon={{
-                name: 'theme-light-dark',
-                type: 'material-community',
-                size: 20,
-                color: theme.colors.black
-              }}
-              onPress={
-                () => {
-                  toggle()
-                }}
-            />
+            <IconButton
+              mode='outlined'
+              rippleColor={theme.colors.primary}
+              icon={'theme-light-dark'}
+              size={20}
+              onPress={() => {
+                toggleTheme()
+              }}/>
 
-          </View>
         )
       }}>
         {/* <Stack.Screen
@@ -225,7 +265,7 @@ export const Navigation = (): JSX.Element => {
               <LogoTitle />
               </Pressable> */
 
-              <Pressable
+              <TouchableRipple
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 onPress={() =>
                   navigation.navigate('InputTaskPartScreen')
@@ -233,7 +273,7 @@ export const Navigation = (): JSX.Element => {
                   await AsyncStorage.clear()
                 } */}>
                 <LogoTitle />
-              </Pressable>
+              </TouchableRipple>
 
             ),
             headerLeft: () => (
@@ -241,27 +281,27 @@ export const Navigation = (): JSX.Element => {
                 <Text >Today: {/* {Math.trunc(distance)} */} m</Text>
               </View>
             ),
-            title: 'title',
-            headerRight: () => (
+            title: 'title'
+            /* headerRight: () => (
               <View style={{ flexDirection: 'row' }}>
               <Button
                 type='outline'
-                buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.black }}
+                buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.border }}
                 size='md'
                 icon={{
                   name: 'theme-light-dark',
                   type: 'material-community',
                   size: 20,
-                  color: theme.colors.black
+                  color: theme.colors.text
                 }}
                 onPress={
                   () => {
-                    toggle()
+                    toggleTheme()
                   }}
               />
 
               </View>
-            )
+            ) */
           }
           )}
         />
@@ -270,22 +310,22 @@ export const Navigation = (): JSX.Element => {
           component={InputDoneScreen}
           options={{
             title: 'Edit Task',
-            headerTintColor: theme.colors.black,
+            headerTintColor: theme.colors.text,
             headerRight: () => (
               <View style={{ flexDirection: 'row' }}>
                 <Button
                   type='outline'
-                  buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.black }}
+                  buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.border }}
                   size='md'
                   icon={{
                     name: 'theme-light-dark',
                     type: 'material-community',
                     size: 20,
-                    color: theme.colors.black
+                    color: theme.colors.text
                   }}
                   onPress={
                     () => {
-                      toggle()
+                      toggleTheme()
                     }}
                 />
 
@@ -298,7 +338,7 @@ export const Navigation = (): JSX.Element => {
           component={CarInfoScreen}
           options={{
             title: 'Car Info',
-            headerTintColor: theme.colors.black
+            headerTintColor: theme.colors.text
           }} />
 
         <Stack.Screen
@@ -306,7 +346,7 @@ export const Navigation = (): JSX.Element => {
           component={InputTaskPartScreen}
           options={{
             title: 'Запланируйте покупку запчастей',
-            headerTintColor: theme.colors.black
+            headerTintColor: theme.colors.text
           }} />
 
         <Stack.Screen
@@ -314,7 +354,7 @@ export const Navigation = (): JSX.Element => {
           component={SettingScreen}
           options={{
             title: 'Setting',
-            headerTintColor: theme.colors.black
+            headerTintColor: theme.colors.text
           }} />
 
         <Stack.Screen
@@ -323,17 +363,17 @@ export const Navigation = (): JSX.Element => {
           initialParams={{ taskId: 0 }}
           options={({ navigation, route }) => ({
             title: 'Info task',
-            headerTintColor: theme.colors.black,
+            headerTintColor: theme.colors.text,
             headerRight: () => (
 
                 <Button
                 type='outline'
                 size='md'
-                buttonStyle={{ borderColor: theme.colors.black }}
+                buttonStyle={{ borderColor: theme.colors.border }}
                 icon={{
                   name: 'pencil',
                   type: 'material-community',
-                  color: theme.colors.black,
+                  color: theme.colors.text,
                   size: 20
                 }}
                 onPress={() => {
@@ -346,6 +386,7 @@ export const Navigation = (): JSX.Element => {
       </Stack.Navigator>
 
     </NavigationContainer>
+    </PaperProvider>
   )
 }
 
@@ -353,16 +394,23 @@ export const Navigation = (): JSX.Element => {
 type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
-  const { theme } = useTheme()
+  const theme = useTheme()
   const FabTab = (): any => null
+  /* const Tab = createMaterialBottomTabNavigator() */
 
   return (
     <Tab.Navigator
+      initialRouteName={'Home'}
+     /*  barStyle={{ backgroundColor: theme.colors.background }} */
+      /* activeColor={theme.colors.onBackground} */
+      /* inactiveColor={theme.colors.secondary} */
+
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.black, // 'white',
-        tabBarInactiveTintColor: theme.colors.grey1, // 'gray',
-        tabBarStyle: { backgroundColor: theme.colors.background, paddingVertical: 5 }, // BACK_TAB_BOTTOM
+        /* tabBarActiveBackgroundColor: theme.colors.backdrop, */
+        tabBarActiveTintColor: theme.colors.primary, // 'white',
+        tabBarInactiveTintColor: theme.colors.secondary, // 'gray',
+        tabBarStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_BOTTOM
         tabBarIconStyle: { paddingVertical: 0 },
         tabBarLabelStyle: { fontSize: 14 }
       }}
@@ -409,10 +457,10 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                       color= {theme.colors.background} // {'black'}
                       style={{ marginBottom: 30, elevation: 5 }}
                       containerStyle={{
-                        borderWidth: 1,
-                        borderColor: 'rgba(68,67,67,0.49)'
+                        borderWidth: 5,
+                        borderColor: /* 'rgba(68,67,67,0.49)' */ theme.colors.primary
                       }}
-                      icon={{ name: 'add', color: theme.colors.black }}
+                      icon={{ name: 'add', color: theme.colors.primary }}
                       onPress={() => {
                         navigation.navigate('InputDoneScreen', { editable: false, typeTask: 0 })
                       }}

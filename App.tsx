@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from '@rneui/themed'
 import { COLOR_GREEN } from './type'
 
 export default function App (): JSX.Element {
-  const theme = createTheme({
+/*   const theme = createTheme({
     mode: 'dark',
     darkColors:
       { success: COLOR_GREEN },
@@ -16,18 +16,18 @@ export default function App (): JSX.Element {
     components: {
       Button: {
         buttonStyle: {
-          /* borderColor: 'blue' */
+          /!* borderColor: 'blue' *!/
         }
       }
     }
-  })
+  }) */
   return (
     <SafeAreaProvider>
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
-        <ThemeProvider theme={theme}>
+        {/* <ThemeProvider theme={theme}> */}
         <Navigation />
-        </ThemeProvider>
+        {/* </ThemeProvider> */}
       </PersistGate>
     </Provider>
     </SafeAreaProvider>
