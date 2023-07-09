@@ -1,5 +1,5 @@
-import { View, StyleSheet, ImageBackground, Pressable, Alert, Vibration, ActivityIndicator } from 'react-native'
-import { BACK_CARD, COLOR_GREEN, CurrentMiles, initialStateInfo, StateInfo, TEXT_CARD, TEXT_WHITE } from '../../type'
+import { View, StyleSheet, Vibration } from 'react-native'
+import { CurrentMiles, initialStateInfo, StateInfo } from '../../type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from '../Navigation/Navigation'
 import { useNavigation } from '@react-navigation/native'
@@ -12,8 +12,6 @@ import {
   Button,
   Divider,
   useTheme,
-  Badge,
-  HelperText,
   Portal,
   Dialog,
   TextInput
@@ -105,7 +103,6 @@ export const MainCard = (): JSX.Element => {
             >
               {String(currentMiles.currentMileage) + ' km'}
             </Button>
-            {/* <HelperText type={'error'} padding={'none'} style={{ textAlign: 'center', marginTop: 0 }} visible={true}>обновите пробег</HelperText> */}
           </>
         </TouchableRipple>
 
@@ -145,9 +142,6 @@ export const MainCard = (): JSX.Element => {
                 maxLength={8}
                 placeholder={'введите пробег'}
                 right={<TextInput.Affix text="km" />}
-                /* inputStyle={styles.inputText} */
-                /* errorMessage={'пробег, km'} */
-                /* errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }} */
                 onChangeText={(value) => setValueMileage(Number(value))}
                 keyboardType={'numeric'}
                 value={String(valueMileage)}
@@ -168,7 +162,6 @@ export const MainCard = (): JSX.Element => {
               </Button>
 
               </Dialog.Actions>
-              {/* <Dialog.Button title="CANCEL" onPress={toggleMileage} /> */}
           </Dialog>
 
       </Portal>
