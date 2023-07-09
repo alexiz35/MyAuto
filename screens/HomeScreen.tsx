@@ -15,12 +15,14 @@ import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { Orientation } from 'expo-screen-orientation'
 import { Button } from '@rneui/themed'
 import BackgroundView from '../CommonComponents/BackgroundView'
+import { Surface, useTheme } from 'react-native-paper'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const setMiles = useAppDispatch()
+  const theme = useTheme()
   const cars = useAppSelector((state) => state)
 
   // -----------------------------block orientation screen--------------------------
@@ -54,9 +56,15 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
     <BackgroundView>
       <View style={(orientation < 3) ? styles.viewContainerVertical : styles.viewContainerHorizontal}>
 
-        <Shadow stretch={true} distance={10} containerStyle={styles.containerMainCard}>
+        {/* <Shadow stretch={true} distance={10} containerStyle={styles.containerMainCard}> */}
+        <Surface style={[styles.containerMainCard, {
+          backgroundColor: theme.colors.background,
+          borderWidth: 1,
+          borderColor: theme.colors.primary
+        }]} elevation={4}>
           <MainCard />
-        </Shadow>
+        </Surface>
+        {/* </Shadow> */}
         {/* <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].mileage)}</Text>
         <Text style={{ color: TEXT_WHITE }}>{JSON.stringify(cars.cars[cars.numberCar].currentMiles)}</Text> */}
         <View style={(orientation < 3) ? { flex: 3 } : { flex: 1.5 }}>
@@ -84,8 +92,9 @@ const styles = StyleSheet.create({
   containerMainCard: {
     margin: 20,
     alignSelf: 'center',
-    flex: 1,
-    width: '100%'
+    /* flex: 1, */
+    width: '100%',
+    borderRadius: 10
   }
 })
 
