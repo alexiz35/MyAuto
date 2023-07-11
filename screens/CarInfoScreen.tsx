@@ -6,7 +6,6 @@ import {
   Pressable,
   ImageBackground,
   ScrollView,
-  TextInput,
   NativeSyntheticEvent,
   NativeTouchEvent,
   TextInputFocusEventData,
@@ -17,7 +16,6 @@ import {
 } from 'react-native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { Button, Dialog, Icon, Input } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
@@ -41,6 +39,7 @@ import { SimpleAccordion } from 'react-native-simple-accordion'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { BusyIndicator, useIsReady } from '../components/useIsReadyHook'
 import BackgroundView from '../CommonComponents/BackgroundView'
+import { TextInput, useTheme, Button, IconButton, Divider } from 'react-native-paper'
 
 interface ListCar {
   label: string
@@ -53,6 +52,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const numberCar = useAppSelector(state => state.numberCar)
   const car = useAppSelector(state => state.cars)
   const state = useAppSelector(state => state)
+  const { colors } = useTheme()
 
   const itemsFuel = [
     { label: 'Дизель', value: 'Дизель' },
@@ -68,6 +68,64 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     { label: 'Coupe', value: 'Coupe' },
     { label: 'Combi', value: 'Combi' }
   ]
+  // -----------------------------------------------------------------------
+  const styles = StyleSheet.create({
+
+    viewAllInput: {
+
+    },
+    dropDownPicker: {
+      padding: 5,
+      borderWidth: 1,
+      borderColor: colors.outline,
+      borderRadius: 5,
+      backgroundColor: colors.surface
+    },
+    viewGroupEngine: {
+      flexDirection: 'row',
+      columnGap: 7,
+      justifyContent: 'space-around'
+    },
+    input: {
+      marginVertical: 5,
+      /* marginHorizontal: 5, */
+      flex: 1
+    },
+    errorInput: {
+      color: 'gray',
+      marginTop: 1,
+      textAlign: 'center'
+    },
+    inputYear: {
+      flex: 1.2,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: 0,
+      paddingHorizontal: 10,
+      backgroundColor: BACK_INPUT,
+      borderWidth: 0,
+      borderRadius: 0,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 1
+      },
+      shadowOpacity: 0.20,
+      shadowRadius: 1.41,
+
+      elevation: 2
+    },
+    viewButton: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      marginTop: 30
+    },
+    buttonStyle: {
+      flex: 1,
+      marginHorizontal: 10
+    }
+
+  })
 
   // ---------------------DropState----------------------------------------
   const [itemsBrand, setItemsBrand] = useState<ListCar[]>([])
@@ -172,16 +230,15 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     return (
     <BackgroundView style={{ height: '100%' }}>
       <ScrollView nestedScrollEnabled={true} style={{ paddingHorizontal: 10, height: '100%' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', flex: 1, marginVertical: 20 }}>
-          <View style={{ flex: 1, paddingRight: 5 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 15, columnGap: 7 }}>
+          <View style={{ flex: 1 }}>
             <Dropdown
               style={styles.dropDownPicker}
-              selectedTextStyle={{ color: COLOR_GREEN, paddingHorizontal: 10 }}
-              activeColor={'black'}
-              itemContainerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-              itemTextStyle={{ color: TEXT_WHITE }}
-              inputSearchStyle={{ backgroundColor: 'rgba(61,61,61,1)' }}
-              containerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
+              selectedTextStyle={{ paddingHorizontal: 10, color: colors.onBackground }}
+              activeColor={colors.primaryContainer}
+              itemTextStyle={{ color: colors.onSurface }}
+              inputSearchStyle={{ backgroundColor: colors.surfaceVariant, color: colors.onSurfaceVariant }}
+              containerStyle={{ backgroundColor: colors.surface }}
               data={itemsBrand}
               labelField={'label'}
               valueField={'value'}
@@ -196,177 +253,170 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               }}
             />
           </View>
-          <View style={{ flex: 1, paddingLeft: 5 }}>
-          <Dropdown
-            disable={disableModel}
-            style={styles.dropDownPicker}
-            selectedTextStyle={{ color: COLOR_GREEN, paddingHorizontal: 10 }}
-            activeColor={'black'}
-            itemContainerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-            itemTextStyle={{ color: TEXT_WHITE }}
-            inputSearchStyle={{ backgroundColor: 'rgba(61,61,61,1)' }}
-            containerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-            placeholderStyle={disableModel ? { color: 'black' } : { color: TEXT_WHITE }}
-            data={itemsModel}
-            labelField={'label'}
-            valueField={'value'}
-            placeholder={'Select Model'}
-            search
-            searchPlaceholder="Search..."
-            value={valueModel}
-            onChange={item => {
-              setValueModel(item.value)
-            }}
-          />
+          <View style={{ flex: 1 }}>
+              <Dropdown
+                disable={disableModel}
+                style={styles.dropDownPicker}
+                selectedTextStyle={{ paddingHorizontal: 10, color: colors.onBackground }}
+                activeColor={colors.primaryContainer}
+                itemTextStyle={{ color: colors.onSurface }}
+                inputSearchStyle={{ backgroundColor: colors.surfaceVariant, color: colors.onSurfaceVariant }}
+                containerStyle={{ backgroundColor: colors.surface }}
+                placeholderStyle={disableModel ? { color: 'black' } : { color: TEXT_WHITE }}
+                data={itemsModel}
+                labelField={'label'}
+                valueField={'value'}
+                placeholder={'Select Model'}
+                search
+                searchPlaceholder="Search..."
+                value={valueModel}
+                onChange={item => {
+                  setValueModel(item.value)
+                }}
+              />
           </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', flex: 1 }}>
-          <View style={{ flex: 2, paddingRight: 5 }}>
-            <Dropdown
-              style={[styles.dropDownPicker, { paddingVertical: 3 }]}
-              selectedTextStyle={{ color: TEXT_WHITE, paddingHorizontal: 5, fontSize: 14 }}
-              activeColor={'black'}
-              itemContainerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-              itemTextStyle={{ color: TEXT_WHITE }}
-              inputSearchStyle={{ backgroundColor: 'rgba(61,61,61,1)' }}
-              containerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-              data={itemsFuel}
-              labelField={'label'}
-              valueField={'value'}
-              placeholder={'Топливо'}
-              placeholderStyle={{ color: TEXT_WHITE }}
-              value={valueFuel}
-              onChange={item => {
-                setValueFuel(item.value)
-              }}
-            />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', columnGap: 7, marginTop: 15, marginBottom: 12 }}>
+          <View style={{ flex: 2 }}>
+              <Dropdown
+                style={styles.dropDownPicker}
+                selectedTextStyle={{
+                  paddingHorizontal: 10,
+                  color: colors.onBackground
+                }}
+                activeColor={colors.primaryContainer}
+                itemTextStyle={{ color: colors.onSurface }}
+                inputSearchStyle={{
+                  backgroundColor: colors.surfaceVariant,
+                  color: colors.onSurfaceVariant
+                }}
+                containerStyle={{ backgroundColor: colors.surface }}
+                data={itemsFuel}
+                labelField={'label'}
+                valueField={'value'}
+                placeholder={'Топливо'}
+                placeholderStyle={{ color: colors.onBackground }}
+                value={valueFuel}
+                onChange={item => {
+                  setValueFuel(item.value)
+                }}
+              />
           </View>
-          <View style={{ flex: 2, paddingRight: 5 }}>
-          <Dropdown
-            style={[styles.dropDownPicker, { paddingVertical: 3 }]}
-            selectedTextStyle={{ color: TEXT_WHITE, paddingHorizontal: 10, fontSize: 14 }}
-            activeColor={'black'}
-            itemContainerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-            itemTextStyle={{ color: TEXT_WHITE }}
-            inputSearchStyle={{ backgroundColor: 'rgba(61,61,61,1)' }}
-            containerStyle={{ backgroundColor: 'rgba(61,61,61,0.55)' }}
-            placeholderStyle={disableModel ? { color: 'black' } : { color: TEXT_WHITE }}
-            data={itemsBody}
-            labelField={'label'}
-            valueField={'value'}
-            placeholder={'Тип'}
-            value={valueBody}
-            onChange={item => {
-              setValueBody(item.value)
-            }}
-          />
+          <View style={{ flex: 2 }}>
+              <Dropdown
+                style={styles.dropDownPicker}
+                selectedTextStyle={{
+                  paddingHorizontal: 10,
+                  color: colors.onBackground
+                }}
+                activeColor={colors.primaryContainer}
+                itemTextStyle={{ color: colors.onSurface }}
+                inputSearchStyle={{
+                  backgroundColor: colors.surfaceVariant,
+                  color: colors.onSurfaceVariant
+                }}
+                containerStyle={{ backgroundColor: colors.surface }}
+                placeholderStyle={{ color: colors.onBackground }}
+
+                data={itemsBody}
+                labelField={'label'}
+                valueField={'value'}
+                placeholder={'Тип'}
+                value={valueBody}
+                onChange={item => {
+                  setValueBody(item.value)
+                }}
+              />
           </View>
-          <View style={ styles.inputYear}>
-          <TextInput
-            placeholder={'Year'}
-            placeholderTextColor={TEXT_WHITE}
-            style={{ color: TEXT_WHITE }}
-            keyboardType={'numeric'}
-            maxLength={4}
-            value={valueYear}
-            onChangeText={(value) => setValueYear(String(value))}
-          />
+          <View style={{ flex: 2 }}>
+              <Dropdown
+                style={styles.dropDownPicker}
+                selectedTextStyle={{
+                  paddingHorizontal: 10,
+                  color: colors.onBackground
+                }}
+                activeColor={colors.primaryContainer}
+                itemTextStyle={{ color: colors.onSurface }}
+                inputSearchStyle={{
+                  backgroundColor: colors.surfaceVariant,
+                  color: colors.onSurfaceVariant
+                }}
+                containerStyle={{ backgroundColor: colors.surface }}
+                placeholderStyle={{ color: colors.onBackground }}
+
+                data={itemsBody}
+                labelField={'label'}
+                valueField={'value'}
+                placeholder={'Тип'}
+                value={valueBody}
+                onChange={item => {
+                  setValueBody(item.value)
+                }}
+              />
           </View>
         </View>
-        <View style={{ marginVertical: 10 }}>
-          <SimpleAccordion
-            viewInside={
-              <View style={{ height: '100%' }}>
-                <View style={styles.viewGroupEngine}>
-                  <View style={styles.input}>
-                    <Input
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', columnGap: 7, marginBottom: 12 }}>
+          <View style={{ flex: 1 }}>
+                    <TextInput
+                      mode={'outlined'}
                       /* ref={inputSellerName} */
                       placeholder={'тип двигателя'}
-                      inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-                      errorMessage={'тип двигателя'}
-                      errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
+                      label={'тип двигателя'}
                       /* onChangeText={(value) => setSellerName(String(value))} */
                     />
                   </View>
-                  <View style={styles.input}>
-                    <Input
+          <View style={{ flex: 1 }}>
+                    <TextInput
+                      mode={'outlined'}
                       /* ref={inputSellerPhone} */
+                      label={'трансмиссия'}
                       placeholder={'трансмиссия'}
-                      containerStyle={{ flex: 1 }}
-                      inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-                      errorMessage={'трансмиссия'}
-                      errorStyle={styles.errorInput}
                       /* onChangeText={(value) => setSellerPhone(String(value))} */
                     />
                   </View>
-                </View>
-                <View style={styles.input}>
-                  <Input
-                    /* ref={inputSellerLink} */
-                    placeholder={'объем двигателя'}
-                    multiline={true}
-                    containerStyle={{ flex: 1 }}
-                    inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-                    errorMessage={'объем двигателя, л'}
-                    errorStyle={styles.errorInput}
-                    /* onChangeText={(value) => setSellerLink(String(value))} */
-                  />
-                </View>
-              </View>
-            }
-            title={'Двигатель'}
-            bannerStyle={{ backgroundColor: BACK_INPUT, height: 30, padding: 5 }}
-            titleStyle={{ color: TEXT_WHITE, textAlign: 'center', fontWeight: 'normal', fontSize: 16 }}
-            viewContainerStyle={{ backgroundColor: BACK_INPUT }}
-          />
-          </View>
+        </View>
+        <Divider horizontalInset bold />
         <View style={styles.input}>
-            <Input
+            <TextInput
+              mode={'outlined'}
               /* ref={inputSellerLink} */
               placeholder={'VIN код автомобиля'}
-              containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-              errorMessage={'VIN код автомобиля'}
-              errorStyle={styles.errorInput}
+              label={'VIN код автомобиля'}
               onChangeText={(value) => setValueVin(String(value))}
               value={valueVin}
             />
           </View>
           <View style={styles.viewGroupEngine}>
-            <View style={[styles.input, { marginRight: 10 }]}>
-              <Input
+            <View style={[styles.input, { }]}>
+              <TextInput
+                mode={'outlined'}
                 /* ref={inputSellerName} */
                 placeholder={'дата покупки'}
                 showSoftInputOnFocus={false}
-                inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-                errorMessage={'дата покупки'}
-                errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
+                label={'дата покупки'}
                 onPressIn={ inputDateBuy }
                 value = {valueDateBuy.toLocaleDateString()}
               />
             </View>
             <View style={styles.input}>
-              <Input
+              <TextInput
+                mode={'outlined'}
                 /* ref={inputSellerPhone} */
                 placeholder={'пробег при покупке'}
-                containerStyle={{ flex: 1 }}
-                inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-                errorMessage={'пробег при покупке'}
-                errorStyle={styles.errorInput}
+                label={'пробег при покупке'}
                 keyboardType={'numeric'}
                 value={String(valueBuyMileage)}
                 onChangeText={(value) => setValueBuyMileage(Number(value))}
               />
             </View>
           </View>
+        <Divider horizontalInset bold style={{ marginTop: 8, marginBottom: 6 }} />
           <View style={[styles.input, { width: '50%', alignSelf: 'center' }]}>
-            <Input
+            <TextInput
+              mode={'outlined'}
               /* ref={inputSellerLink} */
               placeholder={'текущий пробег'}
-              containerStyle={{ flex: 1 }}
-              inputStyle={{ textAlign: 'center', fontSize: 12, color: TEXT_WHITE }}
-              errorMessage={'текуший пробег'}
-              errorStyle={styles.errorInput}
+              label={'текуший пробег'}
               keyboardType={'numeric'}
               value={String(valueCurrentMileage)}
               onChangeText={(value) => setValueCurrentMileage(Number(value))}
@@ -375,21 +425,25 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         <View style={styles.viewButton}>
 
           <Button
-            containerStyle={styles.buttonStyle}
-            buttonStyle={{ borderColor: 'red' }}
-            titleStyle={{ color: 'red' }}
-            title={'Cancel'}
+            icon={'close-thick'}
             onPress={() => { navigation.goBack() }}
-            type='outline'
-          />
+            mode='outlined'
+            rippleColor={colors.error}
+            textColor={colors.error}
+            style={styles.buttonStyle}
+          >
+            Cancel
+          </Button>
           <Button
-            containerStyle={styles.buttonStyle}
-            buttonStyle={{ borderColor: COLOR_GREEN }}
-            titleStyle={{ color: COLOR_GREEN }}
-            title={'Finish'}
-            type={'outline'}
+            icon={'check-bold'}
+            style={styles.buttonStyle}
+            textColor={colors.tertiary}
+            rippleColor={colors.tertiary}
+            mode={'outlined'}
             onPress={() => { handleOkCarInfo() }}
-          />
+          >
+            Ok
+          </Button>
         </View>
     </ScrollView>
 
@@ -400,77 +454,3 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 }
 
 export default CarInfoScreen
-
-const styles = StyleSheet.create({
-
-  viewAllInput: {
-
-  },
-  dropDownPicker: {
-    padding: 10,
-    backgroundColor: BACK_INPUT,
-    borderWidth: 0,
-    borderRadius: 0,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
-  },
-  viewGroupEngine: {
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
-  input: {
-    marginVertical: 5,
-    backgroundColor: BACK_INPUT,
-    flex: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
-  },
-  errorInput: {
-    color: 'gray',
-    marginTop: 1,
-    textAlign: 'center'
-  },
-  inputYear: {
-    flex: 1.2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 0,
-    paddingHorizontal: 10,
-    backgroundColor: BACK_INPUT,
-    borderWidth: 0,
-    borderRadius: 0,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
-  },
-  viewButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20
-  },
-  buttonStyle: {
-    width: '40%',
-    borderRadius: 5
-  }
-
-})

@@ -119,7 +119,8 @@ const CombinedDarkTheme = {
     tertiary: 'rgb(103, 225, 0)',
     onTertiary: 'rgb(21, 56, 0)',
     tertiaryContainer: 'rgb(33, 81, 0)',
-    onTertiaryContainer: 'rgb(128, 255, 44)'
+    onTertiaryContainer: 'rgb(128, 255, 44)',
+    error: 'rgb(186, 26, 26)'
   }
 }
 /* ----------------------------------------------------------------------------- */
