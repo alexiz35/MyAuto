@@ -210,6 +210,7 @@ export const Navigation = (): JSX.Element => {
         /* headerStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_TOP */
         headerTransparent: false,
         statusBarStyle: 'dark',
+
         headerRight: () => (
             <IconButton
               mode='outlined'
@@ -333,15 +334,20 @@ export const Navigation = (): JSX.Element => {
               </View>
             )
           }} />
-
+        {
+// ------------------------------CarInfoScreen----------------------------------
+        }
         <Stack.Screen
           name='CarInfoScreen'
           component={CarInfoScreen}
           options={{
+            headerStyle: { backgroundColor: theme.colors.background },
             title: 'Car Info',
-            headerTintColor: theme.colors.text
+            headerTintColor: theme.colors.onBackground
           }} />
-
+        {
+// -----------------------------------------------------------------------------
+        }
         <Stack.Screen
           name='InputTaskPartScreen'
           component={InputTaskPartScreen}

@@ -74,13 +74,13 @@ export interface StateFuel {
 export interface StateInfo {
   brand: string
   model: string
-  fuel: string
-  body: string
-  year: string
+  fuel?: string
+  body?: string
+  year?: string
   engine?: string
   capacity?: string
   gear?: string
-  vin: string
+  vin?: string
   dateBuy: Date
   buyMileage: number
 }

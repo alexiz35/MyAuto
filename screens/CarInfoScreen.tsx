@@ -1,45 +1,16 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Pressable,
-  ImageBackground,
-  ScrollView,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
-  TextInputFocusEventData,
-  GestureResponderEvent,
-  Keyboard,
-  ActivityIndicator,
-  InteractionManager
-} from 'react-native'
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import { View, StyleSheet, ScrollView } from 'react-native'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import DropDownPicker from 'react-native-dropdown-picker'
-import React, { useEffect, useMemo, useState } from 'react'
-import {
-  BACK_INPUT,
-  BACKGROUND,
-  COLOR_GREEN,
-  StatePart,
-  ServiceList, StateCar, StateInfo,
-  StateService,
-  TEXT,
-  TEXT_CARD,
-  TEXT_WHITE
-} from '../type'
-import { addService, editCar, editService, updateMiles } from '../components/Redux/actions'
-import { AddPartModal } from '../components/AddPartModal'
+import { useEffect, useState } from 'react'
+import { StateInfo } from '../type'
+import { editCar, updateMiles } from '../components/Redux/actions'
 import { RootStackParamList } from '../components/Navigation/Navigation'
-import { useNavigation } from '@react-navigation/native'
 import { cars } from '../cars.json'
 import { Dropdown } from 'react-native-element-dropdown'
-import { SimpleAccordion } from 'react-native-simple-accordion'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { BusyIndicator, useIsReady } from '../components/useIsReadyHook'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { TextInput, useTheme, Button, IconButton, Divider } from 'react-native-paper'
+import { TextInput, useTheme, Button, Divider } from 'react-native-paper'
 
 interface ListCar {
   label: string
@@ -51,7 +22,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const setCar = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
   const car = useAppSelector(state => state.cars)
-  const state = useAppSelector(state => state)
+  /* const state = useAppSelector(state => state) */
   const { colors } = useTheme()
 
   const itemsFuel = [
@@ -66,15 +37,35 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     { label: 'Sedan', value: 'Sedan' },
     { label: 'Cabriolet', value: 'Cabriolet' },
     { label: 'Coupe', value: 'Coupe' },
-    { label: 'Combi', value: 'Combi' }
+    { label: 'Universal', value: 'Universal' }
   ]
+
   // -----------------------------------------------------------------------
   const styles = StyleSheet.create({
 
     viewAllInput: {
 
     },
-    dropDownPicker: {
+    row1: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      marginTop: 15,
+      columnGap: 7
+    },
+    row2: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 15,
+      columnGap: 7,
+      marginBottom: 12
+    },
+    row3: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      columnGap: 7,
+      marginBottom: 12
+    },
+    dropDown: {
       padding: 5,
       borderWidth: 1,
       borderColor: colors.outline,
@@ -96,33 +87,16 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       marginTop: 1,
       textAlign: 'center'
     },
-    inputYear: {
-      flex: 1.2,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingVertical: 0,
-      paddingHorizontal: 10,
-      backgroundColor: BACK_INPUT,
-      borderWidth: 0,
-      borderRadius: 0,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 1
-      },
-      shadowOpacity: 0.20,
-      shadowRadius: 1.41,
 
-      elevation: 2
-    },
     viewButton: {
       flexDirection: 'row',
       justifyContent: 'space-around',
-      marginTop: 30
+      marginTop: 30,
+      columnGap: 25
     },
     buttonStyle: {
-      flex: 1,
-      marginHorizontal: 10
+      flex: 1
+      /* marginHorizontal: 10 */
     }
 
   })
@@ -130,28 +104,28 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   // ---------------------DropState----------------------------------------
   const [itemsBrand, setItemsBrand] = useState<ListCar[]>([])
   const [itemsModel, setItemsModel] = useState<ListCar[]>([])
-  const [disableModel, setDisableModel] = useState(true)
+  const [itemsYear, setItemsYear] = useState<ListCar[]>([])
+
   const [valueBrand, setValueBrand] = useState<string>('')
   const [valueModel, setValueModel] = useState<string>('')
 
-  const [valueFuel, setValueFuel] = useState<string>('')
-  const [valueBody, setValueBody] = useState<string>('')
-  const [valueYear, setValueYear] = useState<string>('')
+  const [valueFuel, setValueFuel] = useState<string | undefined>('')
+  const [valueBody, setValueBody] = useState<string | undefined>('')
+  const [valueYear, setValueYear] = useState<string | undefined>('')
 
-  const [valueVin, setValueVin] = useState<string>('')
-  const [valueDateBuy, setValueDateBuy] = useState(new Date())
+  const [valueVin, setValueVin] = useState<string | undefined>('')
+  const [valueDateBuy, setValueDateBuy] = useState<Date>(new Date())
   const [valueCurrentMileage, setValueCurrentMileage] = useState(0)
   const [valueBuyMileage, setValueBuyMileage] = useState(0)
 
-  const [valueEngine, setValueEngine] = useState<string>('')
-  const [valueGear, setValueGear] = useState('')
-  const [valueCapacity, setValueCapacity] = useState<number>(0)
+  const [valueEngine, setValueEngine] = useState<string | undefined>('')
+  const [valueGear, setValueGear] = useState<string | undefined>('')
+  /* const [valueCapacity, setValueCapacity] = useState<number>(0) */
 
   // ----------------------------------------------------------------------
   const inputDateBuy = (): void => DateTimePickerAndroid.open({
     value: new Date(),
-    // @ts-expect-error undefined
-    onChange: (event, date) => setValueDateBuy(date)
+    onChange: (event, date = new Date()) => setValueDateBuy(date)
   })
   // ----------------------button Ok handler-------------------------------
   const handleOkCarInfo = (): void => {
@@ -161,6 +135,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       fuel: valueFuel,
       body: valueBody,
       year: valueYear,
+      engine: valueEngine,
+      gear: valueGear,
       vin: valueVin,
       dateBuy: valueDateBuy,
       buyMileage: valueBuyMileage
@@ -200,16 +176,31 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     }
     return []
   }
+
+  const listYear = (): ListCar[] => {
+    const tempList: ListCar[] = []
+    let index = 0
+    for (let i = 1990; i < 2023; i++) {
+      tempList[index] = {
+        label: String(i),
+        value: String(i)
+      }
+      index++
+    }
+    return tempList
+  }
   // ----------------------------------------------------------------------
 
   // --------------------DropEffect----------------------------------------
   useEffect(() => {
     setItemsBrand(listBrand())
-    console.log('fuel', state.cars[state.numberCar].fuel)
+    setItemsYear(listYear())
   }, [])
+
   useEffect(() => {
     setItemsModel(listModel())
   }, [valueBrand])
+
   // --------------------InitialSateScreen-------------------------------------
   useEffect(() => {
     const temp = car[numberCar].info
@@ -218,6 +209,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     setValueFuel(temp.fuel)
     setValueBody(temp.body)
     setValueYear(temp.year)
+    setValueEngine(temp.engine)
+    setValueGear(temp.gear)
     setValueVin(temp.vin)
     setValueDateBuy(new Date(temp.dateBuy))
     setValueBuyMileage(temp.buyMileage)
@@ -230,10 +223,10 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     return (
     <BackgroundView style={{ height: '100%' }}>
       <ScrollView nestedScrollEnabled={true} style={{ paddingHorizontal: 10, height: '100%' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 15, columnGap: 7 }}>
+        <View style={styles.row1 }>
           <View style={{ flex: 1 }}>
             <Dropdown
-              style={styles.dropDownPicker}
+              style={styles.dropDown}
               selectedTextStyle={{ paddingHorizontal: 10, color: colors.onBackground }}
               activeColor={colors.primaryContainer}
               itemTextStyle={{ color: colors.onSurface }}
@@ -243,26 +236,27 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               labelField={'label'}
               valueField={'value'}
               placeholder={'Select Brand'}
-              placeholderStyle={{ color: TEXT_WHITE }}
+              placeholderStyle={{ color: colors.onBackground }}
               search
               searchPlaceholder="Search..."
               value={valueBrand}
               onChange={item => {
                 setValueBrand(item.value)
-                setDisableModel(false)
+                /* setDisableModel(false) */
               }}
             />
           </View>
           <View style={{ flex: 1 }}>
               <Dropdown
-                disable={disableModel}
-                style={styles.dropDownPicker}
+                /* disable={disableModel} */
+                style={styles.dropDown}
                 selectedTextStyle={{ paddingHorizontal: 10, color: colors.onBackground }}
                 activeColor={colors.primaryContainer}
                 itemTextStyle={{ color: colors.onSurface }}
                 inputSearchStyle={{ backgroundColor: colors.surfaceVariant, color: colors.onSurfaceVariant }}
                 containerStyle={{ backgroundColor: colors.surface }}
-                placeholderStyle={disableModel ? { color: 'black' } : { color: TEXT_WHITE }}
+                /* placeholderStyle={disableModel ? { color: 'black' } : { color: TEXT_WHITE }} */
+                placeholderStyle={{ color: colors.onBackground }}
                 data={itemsModel}
                 labelField={'label'}
                 valueField={'value'}
@@ -276,10 +270,10 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               />
           </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', columnGap: 7, marginTop: 15, marginBottom: 12 }}>
-          <View style={{ flex: 2 }}>
+        <View style={styles.row2 }>
+          <View style={{ flex: 1 }}>
               <Dropdown
-                style={styles.dropDownPicker}
+                style={styles.dropDown}
                 selectedTextStyle={{
                   paddingHorizontal: 10,
                   color: colors.onBackground
@@ -302,9 +296,9 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 }}
               />
           </View>
-          <View style={{ flex: 2 }}>
+          <View style={{ flex: 1 }}>
               <Dropdown
-                style={styles.dropDownPicker}
+                style={styles.dropDown}
                 selectedTextStyle={{
                   paddingHorizontal: 10,
                   color: colors.onBackground
@@ -328,41 +322,40 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 }}
               />
           </View>
-          <View style={{ flex: 2 }}>
+          <View style={{ flex: 1 }}>
               <Dropdown
-                style={styles.dropDownPicker}
+                style={styles.dropDown}
                 selectedTextStyle={{
                   paddingHorizontal: 10,
                   color: colors.onBackground
                 }}
                 activeColor={colors.primaryContainer}
                 itemTextStyle={{ color: colors.onSurface }}
-                inputSearchStyle={{
-                  backgroundColor: colors.surfaceVariant,
-                  color: colors.onSurfaceVariant
-                }}
+
                 containerStyle={{ backgroundColor: colors.surface }}
                 placeholderStyle={{ color: colors.onBackground }}
-
-                data={itemsBody}
+                /* maxHeight={300}
+                showsVerticalScrollIndicator */
+                data={itemsYear}
                 labelField={'label'}
                 valueField={'value'}
-                placeholder={'Тип'}
-                value={valueBody}
+                placeholder={'Year'}
+                value={valueYear}
                 onChange={item => {
-                  setValueBody(item.value)
+                  setValueYear(item.value)
                 }}
               />
           </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', columnGap: 7, marginBottom: 12 }}>
+        <View style={styles.row3 }>
           <View style={{ flex: 1 }}>
                     <TextInput
                       mode={'outlined'}
                       /* ref={inputSellerName} */
                       placeholder={'тип двигателя'}
                       label={'тип двигателя'}
-                      /* onChangeText={(value) => setSellerName(String(value))} */
+                      value={valueEngine}
+                      onChangeText={(value) => setValueEngine(String(value))}
                     />
                   </View>
           <View style={{ flex: 1 }}>
@@ -371,7 +364,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       /* ref={inputSellerPhone} */
                       label={'трансмиссия'}
                       placeholder={'трансмиссия'}
-                      /* onChangeText={(value) => setSellerPhone(String(value))} */
+                      value={valueGear}
+                      onChangeText={(value) => setValueGear(String(value))}
                     />
                   </View>
         </View>
@@ -387,7 +381,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             />
           </View>
           <View style={styles.viewGroupEngine}>
-            <View style={[styles.input, { }]}>
+            <View style={styles.input}>
               <TextInput
                 mode={'outlined'}
                 /* ref={inputSellerName} */
