@@ -419,7 +419,8 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
         tabBarInactiveTintColor: theme.colors.secondary, // 'gray',
         tabBarStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_BOTTOM
         tabBarIconStyle: { paddingVertical: 0 },
-        tabBarLabelStyle: { fontSize: 14 }
+        tabBarLabelStyle: { fontSize: 14 },
+        tabBarHideOnKeyboard: true
       }}
     >
       <Tab.Screen name={'Home'} component={HomeScreen}
@@ -435,6 +436,9 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                     )
                   }}
       />
+      {
+        // ------------------------Fuel BotTab----------------------------------
+      }
       <Tab.Screen name={'Fuel'} component={FuelScreen}
                   options={{
                     tabBarLabel: 'Fuel',
@@ -448,6 +452,9 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                     )
                   }}
       />
+      {
+        // ----------------------------------------------------------------------
+      }
       <Tab.Screen name={'Null'} component={FabTab}
                   options={{
                     tabBarLabel: 'Fuel',
