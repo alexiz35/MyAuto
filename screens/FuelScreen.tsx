@@ -5,24 +5,16 @@ import {
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react'
-import {
-  BACK_INPUT,
-  StateFuel, StatePart
-} from '../type'
+import { useEffect, useState } from 'react'
+import { StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, editFuel } from '../components/Redux/actions'
-import { Dialog, Icon, Input, LinearProgress, ListItem } from '@rneui/themed'
-import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
+import { RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { useFocusEffect } from '@react-navigation/native'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
-import Accordion from '../components/Accordion'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import ShadowBox from '../CommonComponents/ShadowBox'
-import { useTheme, Text, Surface, TextInput, List, Button, HelperText } from 'react-native-paper'
-import { Controller, useController, useForm } from 'react-hook-form'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useTheme, Text, Surface, TextInput, List, Button, HelperText, IconButton } from 'react-native-paper'
+import { Controller, useForm } from 'react-hook-form'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Fuel'>
 
@@ -43,7 +35,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
 
   const tempNullFuel: FormFuel = {
     dateFuel: new Date(),
-    mileageFuel: '100',
+    mileageFuel: '',
     volumeFuel: '',
     CostFuel: '',
     AmountFuel: '',
@@ -53,83 +45,55 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   const dataToForm = (data: StateFuel): FormFuel => {
     return {
       dateFuel: data.dateFuel,
-      mileageFuel: String(data.mileageFuel),
-      volumeFuel: String(data.volumeFuel),
-      CostFuel: String(data.CostFuel),
-      AmountFuel: String(data.AmountFuel),
+      mileageFuel: data.mileageFuel === 0 ? '' : String(data.mileageFuel),
+      volumeFuel: data.volumeFuel === 0 ? '' : String(data.volumeFuel),
+      CostFuel: data.CostFuel === 0 ? '' : String(data.CostFuel),
+      AmountFuel: data.AmountFuel === 0 ? '' : String(data.AmountFuel),
       StationFuel: data.StationFuel
     }
   }
   const formToData = (data: FormFuel): StateFuel => {
     return {
-      id: Date.now(),
+      id: isEditFuel ? itemFuel?.id : Date.now(),
       dateFuel: data.dateFuel,
       mileageFuel: Number(data.mileageFuel),
       volumeFuel: Number(data.volumeFuel),
       CostFuel: Number(data.CostFuel),
       AmountFuel: Number(data.AmountFuel),
-      StationFuel: data.StationFuel
+      StationFuel: data.StationFuel,
+      typeFuel: state.info.fuel ?? undefined
     }
   }
-  /* const editFuel : StateFuel  */
-
-  /* const [errorMsg, setErrorMsg] = useState('') */
-  /* const [valueDrop, setValueDrop] = useState<null | string>(null) */
-
-  /* const [fuelDate, setFuelDate] = useState(new Date())
-  const [fuelMileage, setFuelMileage] = useState(0)
-  const [fuelVolume, setFuelVolume] = useState(0)
-  const [fuelCost, setFuelCost] = useState(0)
-  const [fuelAmount, setFuelAmount] = useState(0)
-  const [fuelStation, setFuelStation] = useState('') */
 
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isEditFuel, setIsEditFuel] = useState(false)
   const [itemFuel, setItemFuel] = useState<StateFuel>(formToData(tempNullFuel))
   const [sumFuel, setSumFuel] = useState(0)
 
-  /* const inputFuelCost = React.createRef<PropsWithChildren<typeof TextInput>>()
-  const inputFuelAmount = React.createRef<PropsWithChildren<typeof TextInput>>() */
+  const [isList, setIsList] = useState(true)
 
   // ------------------------- Controller Form-----------------------------------
   const {
     control,
-    reset,
     handleSubmit,
-    formState,
     setValue,
-    setFocus,
-    trigger
+    getValues,
+    setFocus
 
-  } = useForm<FormFuel>({ mode: 'onChange', defaultValues: tempNullFuel, values: dataToForm(itemFuel) })
+  } = useForm<FormFuel>({ mode: 'onSubmit', defaultValues: tempNullFuel, values: dataToForm(itemFuel) })
 
   // ----------------------------------------------------------------------------
-  const transformOut = (value: number): string => {
-    console.log('value', value)
-    return isNaN(value) || value === 0 ? '' : value.toString()
-  }
-  const transformIn = (value: string): number => {
-    const output = parseInt(value, 10)
-    return isNaN(output) ? 0 : output
-  }
-
   const inputDate = (): void => DateTimePickerAndroid.open({
     value: new Date(),
     // @ts-expect-error date undefined
     onChange: (event, date) => setValue('dateFuel', date)
   })
+
   const clearInput = (): void => {
-    /* setItemFuel(formToData(tempNullFuel)) */
     setIsEditFuel(false)
-    reset({
-      dateFuel: new Date(),
-      mileageFuel: '100',
-      volumeFuel: '',
-      CostFuel: '',
-      AmountFuel: '',
-      StationFuel: ''
-    })
+    setItemFuel(formToData(tempNullFuel))
   }
+
   // ---------------------------------------------------------------------------
   /* useFocusEffect(
     useCallback(() => {
@@ -139,7 +103,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   useEffect(() => {
     const tempFuel = state.fuel.filter((item) => (new Date(item.dateFuel).getMonth() === new Date().getMonth()))
     const sumFuel = tempFuel.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.AmountFuel,
+      (accumulator, currentValue) => Number(accumulator) + Number(currentValue.AmountFuel),
       0
     )
     setSumFuel(sumFuel)
@@ -147,21 +111,26 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
 
   // ------------------------- function calc input -----------------------------
   const handleOnSubmitCost = (): void => {
-    /* setFuelAmount(fuelVolume * fuelCost) */
-    /* inputFuelAmount.current?.focus() */
+    const valueCost = getValues(['volumeFuel', 'CostFuel'])
+    const amountFuel = Number(valueCost[0]) * Number(valueCost[1])
+    setValue('AmountFuel', amountFuel === 0 ? '' : String(amountFuel))
   }
   const handleOnSubmitAmount = (): void => {
-    /* setFuelCost(fuelAmount / fuelVolume) */
-    /* inputFuelAmount.current?.focus() */
+    const amountCalc = getValues(['volumeFuel', 'CostFuel', 'AmountFuel'])
+    const tempCalc = Number(amountCalc[2]) / Number(amountCalc[0])
+    setValue('CostFuel', isNaN(tempCalc) ? '' : String(tempCalc))
   }
   // ------------------------- control according -------------------------------
   const handleOpen = (item: StateFuel): void => {
+    setIsList(false)
+    setOpenAccordion(true)
     setIsEditFuel(true)
     setItemFuel(item)
-    setOpenAccordion(true)
   }
 
   const handleOnPress = (): void => {
+    if (!openAccordion) setIsList(false)
+    else setTimeout(() => setIsList(true), 100)
     setOpenAccordion(!openAccordion)
     clearInput()
   }
@@ -170,208 +139,229 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
     handleOnPress()
   }
 
-  console.log('ERROR', formState.errors)
-  const handleOk = (dataForm: StateFuel): void => {
-    /* if (valueDrop === null || startKmInput === 0) {
-      setErrorMsg('Введите необходимые данные')
-      return
-    } */
-
-    dataForm.id = Date.now()
-
-    isEditFuel
-      ? dispatch(editFuel(carId, itemFuel?.id, dataForm))
-      : dispatch(addFuel(carId, dataForm))
-    clearInput()
+  const handleOk = (dataForm: FormFuel): void => {
+    setTimeout(() =>
+      isEditFuel
+        ? dispatch(editFuel(carId, itemFuel?.id, formToData(dataForm)))
+        : dispatch(addFuel(carId, formToData(dataForm)))
+    , 100)
     handleOnPress()
   }
 
   return (
     <BackgroundView props={{ flex: 1 }}>
-      {/* <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: colors.background }}>
-        <Dialog.Loading loadingProps={{ size: 'large', color: colors.tertiary }}/>
-      </Dialog> */}
+
       <View style={{ flex: 1 }} >
-        <Text style={{ textAlign: 'center', paddingVertical: 10, fontStyle: 'italic' }}>
-          Cумма заправок в текущем месяце {sumFuel}
-        </Text>
+        {
+/* ----------------------- Top String --------------------------------------- */
+        }
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ fontStyle: 'italic' }}>
+              Cумма заправок в текущем месяце {sumFuel}
+
+            </Text>
+            <IconButton icon={'calendar-month'} onPress={() => { navigation.navigate('StatScreen') }} />
+        </View>
+        {
+/* ----------------------- Form Accordion ----------------------------------- */
+        }
         <KeyboardAvoidingView>
         <ScrollView style={{ marginTop: 5 }}>
             <List.Accordion
-              title={'Добавьте заправку'}
+              title={isEditFuel ? 'Редактируйте заправку' : 'Добавьте заправку'}
               description={ state.info.fuel }
               style={{ backgroundColor: colors.secondaryContainer }}
               expanded={openAccordion}
               onPress={handleOnPress}
             >
-              {/* bannerStyle={{ backgroundColor: colors.secondaryContainer }} */}
-              {/* insideView= */}
-<View>
-                <View style={{ backgroundColor: colors.background, rowGap: 10/* 'rgba(61,61,61,0.35)' */ }}>
-                  {/* <Surface mode={'flat'} elevation={4} style={{ margin: 5, flex: 1, marginBottom: 10 }}>
-                  <Text style={{ textAlign: 'center', paddingVertical: 7 }}>{valueDrop}</Text>
-                  </Surface> */}
 
-                  <View style={[styles.viewGroupInput, { marginTop: 20 }]}>
-                    <Surface elevation={2} style={{ margin: 5, flex: 1 }}>
-                      <Controller name={'dateFuel'}
-                                  control={control}
-                                  render={ ({ field: { onChange, value, onBlur, ref } }) => (
-                    <TextInput
-                        ref={ref}
-                        placeholder={'Дата заправки'}
-                        style={{ flex: 1, backgroundColor: colors.surface }}
-                        label={'Дата заправки'}
-                        showSoftInputOnFocus={false}
-                        value = {new Date(value).toLocaleDateString()}
-                        onPressOut={inputDate}
-                        onSubmitEditing={() => setFocus('mileageFuel')}
-                      />
-                                  )}/>
-                    </Surface>
-                    <Surface elevation={2} style={{ margin: 5, flex: 1 }}>
-                      <Controller name={'mileageFuel'}
-                                  control={control}
-                                  rules={{ required: 'REQ', minLength: { value: 2, message: 'MIN' } }}
-                                  defaultValue={'100'}
-                                  render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
-                                    <>
-                                          <TextInput
-                                              ref={ref}
-                                              placeholder={'пробег'}
-                                              style={{ flex: 1, backgroundColor: colors.surface }}
-                                              label={'текущий пробег'}
-                                              onChangeText={(value) => onChange(value)}
-                                              onSubmitEditing={() => {
-                                                setFocus('volumeFuel')
-                                              }}
-                                              onBlur={onBlur}
-                                              keyboardType={'numeric'}
-                                              value={value}
-                                              error={(error != null) && true}
-                                            />
-                                    {/* <HelperText type="error">{formState.errors.mileageFuel?.message}</HelperText> */}
-                                    </>
-                                  )}/>
+              <View style={{ backgroundColor: colors.background, rowGap: 10 }}>
 
-                      {/* <Text>{String(errors.mileageFuel?.message)}</Text> */}
-                    </Surface>
-                  </View>
+                {
+/* ----------------------- Date and Miles ----------------------------------- */
+                }
+                <View style={[styles.viewGroupInput, { marginTop: 20 }]}>
+                  <Surface elevation={2} style={styles.surface}>
+                    <Controller name={'dateFuel'}
+                                control={control}
+                                render={ ({ field: { value, ref } }) => (
+                                  <TextInput
+                                    ref={ref}
+                                    placeholder={'Дата заправки'}
+                                    style={{ flex: 1, backgroundColor: colors.surface }}
+                                    label={'Дата заправки'}
+                                    showSoftInputOnFocus={false}
+                                    value = {new Date(value).toLocaleDateString()}
+                                    onPressOut={inputDate}
+                                    onSubmitEditing={() => setFocus('mileageFuel')}
+                                  />
+                                )}
+                    />
+                  </Surface>
+                  <Surface elevation={2} style={styles.surface}>
+                    <Controller name={'mileageFuel'}
+                                control={control}
+                                rules={{ required: 'введите пробег', maxLength: 7, minLength: 1, min: 1, max: 10000000, pattern: /\d/ }}
+                                defaultValue={'100'}
+                                render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                                  <>
+                                    <TextInput
+                                      ref={ref}
+                                      style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
+                                      label={'пробег'}
+                                      onChangeText={(value) => onChange(value)}
+                                      onSubmitEditing={() => {
+                                        setFocus('volumeFuel')
+                                      }}
+                                      onBlur={onBlur}
+                                      keyboardType={'numeric'}
+                                      value={value}
+                                      error={(error != null) && true}
+                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="km"/>}
+                                    />
+                                    { (error != null)
+                                      ? <HelperText type="error">1..10000000 km</HelperText>
+                                      : null
+                                    }
+                                  </>
+                                )}
+                    />
 
+                  </Surface>
+                </View>
+                {
+/* ----------------------- Value, Cost, Amount Fuel-------------------------- */
+                }
                 <View style={styles.viewGroupInput}>
-                  <Surface elevation={2} style={{ margin: 5, flex: 1 }}>
+                  <Surface elevation={2} style={styles.surface}>
                     <Controller name={'volumeFuel'}
                                 control={control}
-                                rules={{ /* required: 'hello', */ minLength: 3 }}
+                                rules={{ required: 'введите объем топлива', maxLength: 3, minLength: 1, min: 1, max: 100, pattern: /\d/ }}
                                 render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
                                   <>
-                  <TextInput
-                      ref={ref}
-                      placeholder={'кол-во топлива'}
-                      label={'кол-во топлива'}
-                      style={{ flex: 1, backgroundColor: colors.surface }}
-                      onChangeText={(value) => onChange(value)}
-                      keyboardType={'numeric'}
-                      value={value}
-                      onSubmitEditing={() => setFocus('CostFuel')}
-                    />
-                              {/*   {((error === undefined)) ? <Text>This is required</Text> : null} */}
+                                    <TextInput
+                                      ref={ref}
+                                      label={'объем'}
+                                      style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
+                                      onChangeText={(value) => onChange(value)}
+                                      keyboardType={'numeric'}
+                                      value={value}
+                                      onSubmitEditing={() => setFocus('CostFuel')}
+                                      error={(error != null) && true}
+                                      onBlur={onBlur}
+                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="л"/>}
+
+                                    />
+                                    { (error != null)
+                                      ? <HelperText type="error">1..100 L</HelperText>
+                                      : null
+                                    }
                                   </>
-                                )}/>
+                                )}
+                    />
                   </Surface>
 
-                  <Surface elevation={2} style={{ margin: 5, flex: 1 }}>
+                  <Surface elevation={2} style={styles.surface}>
                     <Controller name={'CostFuel'}
                                 control={control}
-                                render={ ({ field: { onChange, value, onBlur, ref } }) => (
-                  <TextInput
-                      ref={ref}
-                      placeholder={'цена топлива'}
-                      label={'цена топлива'}
-                      style={{ flex: 1, backgroundColor: colors.surface }}
-                      onChangeText={(value) => onChange(value)}
-                      keyboardType={'numeric'}
-                      value={value}
-                      onSubmitEditing={() => setFocus('AmountFuel')/* handleOnSubmitCost() */}
-                      onBlur={() => handleOnSubmitCost()}
+                                render={ ({ field: { onChange, value, ref } }) => (
+                                  <TextInput
+                                    ref={ref}
+                                    label={'цена'}
+                                    style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
+                                    onChangeText={(value) => onChange(value)}
+                                    keyboardType={'numeric'}
+                                    value={value}
+                                    onSubmitEditing={() => setFocus('AmountFuel')/* handleOnSubmitCost() */}
+                                    onBlur={() => handleOnSubmitCost()}
+                                    right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="грн"/>}
+                                  />
+                                )}
                     />
-                                )}/>
                   </Surface>
 
-                  <Surface elevation={2} style={{ margin: 5, flex: 1 }}>
+                  <Surface elevation={2} style={styles.surface}>
                     <Controller name={'AmountFuel'}
                                 control={control}
-                                render={ ({ field: { onChange, value, onBlur, ref } }) => (
-                    <TextInput
-                      ref={ref}
-                      placeholder={'сумма заправки'}
-                      label={'сумма заправки'}
-                      style={{ flex: 1, backgroundColor: colors.surface }}
-                      onChangeText={(value) => onChange(value)}
-                      keyboardType={'numeric'}
-                      value={value}
-                      onSubmitEditing={() => setFocus('StationFuel')/* handleOnSubmitAmount() */}
-                      onBlur={() => handleOnSubmitAmount()}
+                                render={ ({ field: { onChange, value, ref } }) => (
+                                  <TextInput
+                                    ref={ref}
+                                    label={'сумма'}
+                                    style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
+                                    onChangeText={(value) => onChange(value)}
+                                    keyboardType={'numeric'}
+                                    value={value}
+                                    onSubmitEditing={() => setFocus('StationFuel')/* handleOnSubmitAmount() */}
+                                    onBlur={() => handleOnSubmitAmount()}
+                                    right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="грн"/>}
+                                  />
+                                )}
                     />
-                                )}/>
                   </Surface>
                 </View>
-                  <Surface elevation={2} style={{ margin: 5 }}>
+                {
+/* ------------------------- Station Fuel ----------------------------------- */
+                }
+                <Surface elevation={2} style={{ margin: 5 }}>
                     <Controller name={'StationFuel'}
                                 control={control}
-                                rules={{ required: 'REQ', minLength: { value: 2, message: 'MIN' } }}
+                                rules={{ /* required: 'REQ' *//* , minLength: { value: 2, message: 'MIN' } */ }}
                                 render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
                                   <>
-                    <TextInput
-                      ref={ref}
-                      placeholder={'название заправки'}
-                      label={'название заправки'}
-                      style={{ flex: 1, backgroundColor: colors.surface }}
-                      onChangeText={(value) => onChange(String(value))}
-                      value={String(value)}
-                      onBlur={onBlur}
-                      error={(error != null) && true}
-                    />
-                   {/*  <HelperText type="error">{formState.errors.StationFuel?.message}</HelperText> */}
+                                    <TextInput
+                                      ref={ref}
+                                      /* placeholder={'название заправки'} */
+                                      label={'название заправки'}
+                                      style={{ flex: 1, backgroundColor: colors.surface }}
+                                      onChangeText={(value) => onChange(String(value))}
+                                      value={String(value)}
+                                      onBlur={onBlur}
+                                      error={(error != null) && true}
+                                    />
+                                    {/*  <HelperText type="error">{formState.errors.StationFuel?.message}</HelperText> */}
                                   </>
-                                )}/>
-                  </Surface>
-
-                  {/* <Text style={styles.button}>{errorMsg}</Text> */}
+                                )}
+                    />
+                </Surface>
+                {/* <Text style={styles.button}>{errorMsg}</Text> */}
+                {
+/* --------------------------- Buttons -------------------------------------- */
+                }
                 <View style={styles.viewButton}>
-                  <Button
-                    style={styles.buttonStyle}
-                    mode={'elevated'}
-                    buttonColor={colors.secondaryContainer}
-                    textColor={colors.primary}
-                    onPress={() => handleCancel() }
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    style={styles.buttonStyle}
-                    mode={'elevated'}
-                    buttonColor={colors.secondaryContainer}
-                    textColor={colors.primary}
-                    onPress={handleSubmit(handleOk) }
+                    <Button
+                      style={styles.buttonStyle}
+                      mode={'elevated'}
+                      buttonColor={colors.secondaryContainer}
+                      textColor={colors.primary}
+                      onPress={() => handleCancel() }
                     >
-                    Ok
-                  </Button>
+                      Cancel
+                    </Button>
+                    <Button
+                      style={styles.buttonStyle}
+                      mode={'elevated'}
+                      buttonColor={colors.secondaryContainer}
+                      textColor={colors.primary}
+                      onPress={handleSubmit(handleOk) }
+                    >
+                      Ok
+                    </Button>
                 </View>
               </View>
-</View>
-              {/* open={openAccordion}
-              controlled={true}
-              onPress={handleOnPress}
-              /* isOpen={isOpen} */
-           }
+
             </List.Accordion>
         </ScrollView>
         </KeyboardAvoidingView>
-        {!openAccordion &&
-          <View style={{ marginTop: 10 }}>
+        {
+/* ----------------------- List Fuel ---------------------------------------- */
+        }
+        {isList &&
+          <View style={styles.flatList}>
             <FuelList handlePress={handleOpen} />
           </View>
+        }
+        {
+/* -------------------------------------------------------------------------- */
         }
       </View>
     </BackgroundView>
@@ -387,6 +377,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     columnGap: 10
     /* marginVertical: 10 */
+  },
+  surface: {
+    margin: 5,
+    flex: 1
+  },
+  flatList: {
+    marginTop: 10,
+    height: 400
   },
   inputText: {
     textAlign: 'center',

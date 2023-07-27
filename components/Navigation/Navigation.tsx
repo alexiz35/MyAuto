@@ -11,7 +11,6 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
 import { Alert, Image, Pressable, View } from 'react-native'
-import { FAB, Icon, Switch, useThemeMode } from '@rneui/themed'
 import { useCallback, useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
@@ -44,7 +43,7 @@ import {
   PaperProvider,
   Button,
   Text,
-  IconButton, Surface, TouchableRipple
+  IconButton, Surface, TouchableRipple, FAB, Portal
 } from 'react-native-paper'
 import merge from 'deepmerge'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
@@ -130,7 +129,7 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
-  const { mode, setMode } = useThemeMode()
+  /* const { mode, setMode } = useThemeMode() */
   /* const { theme } = useTheme() */
 
   const [isThemeDark, setIsThemeDark] = useState(false)
@@ -439,12 +438,12 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
       {
         // ------------------------Fuel BotTab----------------------------------
       }
-      <Tab.Screen name={'Fuel'} component={FuelScreen}
+      <Tab.Screen name={'InputDoneScreen'} component={InputDoneScreen}
                   options={{
-                    tabBarLabel: 'Fuel',
+                    tabBarLabel: 'Buy',
                     tabBarIcon: ({ color, focused }) => (
                       <MaterialCommunityIcons
-                        name={focused ? 'gas-station' : 'gas-station-outline'}
+                        name={focused ? 'cart' : 'cart-outline'}
                         /* type='material-community' */
                         color={color}
                         size={focused ? 22 : 20}
@@ -467,19 +466,27 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                       />
                     ), */
                     tabBarButton: () => (
-                       <FAB
-                      color= {theme.colors.background} // {'black'}
-                      style={{ marginBottom: 30, elevation: 5 }}
-                      containerStyle={{
+                       <IconButton
+                         mode={'contained'}
+                      style={{
+                        bottom: 35,
+                        elevation: 5,
                         borderWidth: 5,
-                        borderColor: /* 'rgba(68,67,67,0.49)' */ theme.colors.primary
+                        borderColor: theme.colors.primary,
+                        backgroundColor: theme.colors.background,
+                        height: 65,
+                        width: 65
                       }}
-                      icon={{ name: 'add', color: theme.colors.primary }}
+                      /* containerStyle={{
+                        borderWidth: 5,
+                        borderColor: /!* 'rgba(68,67,67,0.49)' *!/ theme.colors.primary
+                      }} */
+                      icon={ 'gas-station'}
                       onPress={() => {
-                        navigation.navigate('InputDoneScreen', { editable: false, typeTask: 0 })
+                        navigation.navigate('Fuel')
+                        /* navigation.navigate('InputDoneScreen', { editable: false, typeTask: 0 }) */
                       }}
-                    />
-
+                       ></IconButton>
                     )
                   }}
       />
@@ -500,9 +507,9 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                   options={{
                     tabBarLabel: 'Statistic',
                     tabBarIcon: ({ color, focused }) => (
-                          <Icon
+                          <MaterialCommunityIcons
                             name={focused ? 'chart-box' : 'chart-box-outline'}
-                            type='material-community'
+                            /* type='material-community' */
                             color={color}
                             size={focused ? 22 : 20}
                           />

@@ -1,11 +1,13 @@
 import { FlatList, ListRenderItem, StyleSheet, TouchableHighlight, TouchableHighlightComponent, View } from 'react-native'
 import { COLOR_GREEN, StateFuel } from '../../type'
 import { Button, ListItem } from '@rneui/themed'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { delFuel } from '../Redux/actions'
-import { Surface, TouchableRipple, useTheme } from 'react-native-paper'
+import { ActivityIndicator, Surface, TouchableRipple, useTheme } from 'react-native-paper'
+import { FlashList } from '@shopify/flash-list'
+import { BusyIndicator } from '../useIsReadyHook'
 
 interface handleProp {
   handlePress: (item: StateFuel) => void
@@ -17,6 +19,7 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
   const dispatch = useAppDispatch()
   const { colors } = useTheme()
   const [isSortFuel, setIsSortFuel] = useState(false)
+  const [isLoad, setIsLoad] = useState(true)
 
   const renderRow: ListRenderItem<StateFuel> = ({ item }: { item: StateFuel }) => {
     return (
@@ -107,20 +110,37 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
   useEffect(() => {
     listFuel.sort(function (a, b) {
       // @ts-expect-error data
-      return Date.parse(a.dateFuel) - Date.parse(b.dateFuel)
-      console.log('effect')
+      return Date.parse(b.dateFuel) - Date.parse(a.dateFuel)
     })
     setIsSortFuel(!isSortFuel)
   }, [listFuel])
 
+  useEffect(() => {
+    setTimeout(() => setIsLoad(false), 20)
+  }, [])
+
   return (
-    <FlatList
-      scrollEnabled
-      data={listFuel}
-      extraData={isSortFuel}
-      renderItem={renderRow}
-      keyExtractor={(item, index) => index.toString()}
-    />
+    <>
+    {isLoad
+      ? <BusyIndicator/>/* <ActivityIndicator size={'large'} color={'green'} /> */
+      : <FlatList
+    scrollEnabled
+    data={listFuel}
+    extraData={isSortFuel}
+    renderItem={(item) => renderRow(item)}
+    /* estimatedItemSize={70} */
+    keyExtractor={(item, index) => index.toString()}
+    getItemLayout={(data, index) => (
+      {
+        length: 70,
+        offset: 70 * index,
+        index
+      }
+    )}
+    initialNumToRender={7}
+  />
+}
+    </>
   )
 }
 

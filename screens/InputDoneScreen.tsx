@@ -1,7 +1,7 @@
 import { View, StyleSheet, SafeAreaView, Pressable, ImageBackground, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { Button, Dialog, Icon, Input, Tab, TabView, Text, useTheme } from '@rneui/themed'
+import { Button, Dialog, Icon, Input, Tab, TabView } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { useEffect, useMemo, useState } from 'react'
 import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateService, TEXT, TEXT_WHITE } from '../type'
@@ -13,11 +13,12 @@ import InputService from '../components/InputDoneScreenComponents/InputService'
 import InputPart from '../components/InputDoneScreenComponents/InputPart'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import InputDoc from '../components/InputDoneScreenComponents/InputDoc'
+import { useTheme } from 'react-native-paper'
 
   type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
 const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
-  const { theme } = useTheme()
+  const theme = useTheme()
   const setNewTask = useAppDispatch()
   const state = useAppSelector((state) => state)
   const [index, setIndex] = useState(0)
@@ -50,7 +51,7 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
           value={index}
           onChange={(e) => setIndex(e)}
           indicatorStyle={{
-            backgroundColor: theme.colors.black,
+            backgroundColor: theme.colors.primary,
             height: 3
           }}
           buttonStyle={{
@@ -60,18 +61,18 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
         >
           <Tab.Item
             title='Запчасти'
-            titleStyle={{ fontSize: 12, color: theme.colors.black }}
-            icon={{ name: 'cog', type: 'material-community', size: 20, color: theme.colors.black }}
+            titleStyle={{ fontSize: 12, color: theme.colors.primary }}
+            icon={{ name: 'cog', type: 'material-community', size: 20, color: theme.colors.primary }}
           />
           <Tab.Item
             title="сервис"
-            titleStyle={{ fontSize: 12, color: theme.colors.black }}
-            icon={{ name: 'car-wrench', type: 'material-community', size: 20, color: theme.colors.black }}
+            titleStyle={{ fontSize: 12, color: theme.colors.primary }}
+            icon={{ name: 'car-wrench', type: 'material-community', size: 20, color: theme.colors.primary }}
           />
           <Tab.Item
             title="другое"
-            titleStyle={{ fontSize: 12, color: theme.colors.black }}
-            icon={{ name: 'account-cash', type: 'material-community', size: 20, color: theme.colors.black }}
+            titleStyle={{ fontSize: 12, color: theme.colors.primary }}
+            icon={{ name: 'account-cash', type: 'material-community', size: 20, color: theme.colors.primary }}
           />
         </Tab>
 
