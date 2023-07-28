@@ -13,7 +13,7 @@ import InputService from '../components/InputDoneScreenComponents/InputService'
 import InputPart from '../components/InputDoneScreenComponents/InputPart'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import InputDoc from '../components/InputDoneScreenComponents/InputDoc'
-import { useTheme } from 'react-native-paper'
+import { SegmentedButtons, useTheme } from 'react-native-paper'
 
   type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
 const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
@@ -22,11 +22,12 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
   const setNewTask = useAppDispatch()
   const state = useAppSelector((state) => state)
   const [index, setIndex] = useState(0)
+  const [value, setValue] = useState('part')
 
   /* const editableTask: boolean = route.params.editable
   const currentId: number | undefined = route.params.taskId */
   useEffect(() => {
-    setIndex(route.params.typeTask)
+    /* setIndex(route.params.typeTask) */
   }, [])
 
   /* const [currentTask, setCurrentTask] = useState<StateTask>(
@@ -45,9 +46,21 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
   ) */
 
   return (
-    <BackgroundView props={{ flex: 1 }}>
+    <BackgroundView props={{ flex: 1, paddingTop: 10 }}>
+
+      <SegmentedButtons
+        value={value} onValueChange={setValue}
+        buttons={[
+          { value: 'part', label: 'part' },
+          { value: 'service', label: 'service' },
+          { value: 'other', label: 'other' }
+        ]}
+      />
+      <View style={{ marginTop: 10 }}>
+        <InputPart navigation={navigation} route={route}/>
+      </View>
       {/* <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}> */}
-        <Tab
+       {/*  <Tab
           value={index}
           onChange={(e) => setIndex(e)}
           indicatorStyle={{
@@ -74,9 +87,9 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
             titleStyle={{ fontSize: 12, color: theme.colors.primary }}
             icon={{ name: 'account-cash', type: 'material-community', size: 20, color: theme.colors.primary }}
           />
-        </Tab>
+        </Tab> */}
 
-        <TabView value={index} onChange={setIndex} animationType='spring' disableSwipe>
+     {/*    <TabView value={index} onChange={setIndex} animationType='spring' disableSwipe>
           <TabView.Item style={{ width: '100%' }}>
             <View >
             <InputPart navigation={navigation} route={route}/>
@@ -94,7 +107,7 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
               <InputDoc navigation={navigation} route={route}/>
             </View>
           </TabView.Item>
-        </TabView>
+        </TabView> */}
         {/* <InputService navigation={navigation} route={route}/> */}
     {/* </ScrollView> */}
 

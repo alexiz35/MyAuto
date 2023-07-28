@@ -100,7 +100,7 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }} >
        <Accordion
          insideView={
-         <InputPartComponent isCancel={handleCancel} isOk={handleOk} part={itemPart}/>
+<View></View>
        }
          title={'Добавьте деталь'}
          bannerStyle={{ backgroundColor: BACK_INPUT }}
@@ -117,7 +117,7 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
       <View style={{ marginTop: 10, height: '85%' }}>
       { openAccordion
         ? null
-        : <PartsList handlePress={handleOpenForEdit} />
+        : null/* <PartsList handlePress={handleOpenForEdit} /> */
 
       }
       </View>
