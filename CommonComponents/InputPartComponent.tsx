@@ -3,7 +3,7 @@ import {
   StyleSheet,
   TextInput
 } from 'react-native'
-import { Button, Divider, Input, useTheme } from '@rneui/themed'
+import { Button, Divider, Input } from '@rneui/themed'
 import React, {
   PropsWithChildren,
   RefObject
@@ -15,6 +15,7 @@ import Accordion from '../components/Accordion'
 import ShadowBox from './ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
+import { useTheme } from 'react-native-paper'
 
 interface InputPartProps {
   isCancel: () => void
@@ -26,7 +27,7 @@ interface InputPartProps {
 const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Element => {
   /*  const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state) */
-  const { theme } = useTheme()
+  const theme = useTheme()
   /* const { mode } = useThemeMode() */
   const tempNullPart: StatePart = {
     id: Date.now(),
@@ -88,10 +89,10 @@ const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Eleme
     refNamePart.current?.shake()
   }
   const handleFocus = (ref: RefObject<TextInput>): void => {
-    ref.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.success } })
+    ref.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.primary } })
   }
   const handleBlur = (ref: RefObject<TextInput>): void => {
-    ref.current?.setNativeProps({ style: { borderBottomWidth: 0, borderBottomColor: theme.colors.success } })
+    ref.current?.setNativeProps({ style: { borderBottomWidth: 0, borderBottomColor: theme.colors.primary } })
   }
   const inputDate = (): void => DateTimePickerAndroid.open({
     value: new Date(),
@@ -212,7 +213,7 @@ const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Eleme
                     title={'Аналоги'}
                     textBannerStyle={{
                       fontSize: 14,
-                      color: theme.colors.grey3
+                      color: theme.colors.secondary
                     }}
                     controlled={false}
                     insideView={
@@ -309,7 +310,7 @@ const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Eleme
                     title={'Данные продавца'}
                     textBannerStyle={{
                       fontSize: 14,
-                      color: theme.colors.grey3
+                      color: theme.colors.secondary
                     }}
                     controlled={false}
                     insideView={

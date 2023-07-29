@@ -1,12 +1,13 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { COLOR_GREEN, StatePart } from '../../type'
-import { Button, Divider, Icon, ListItem, useTheme, Text } from '@rneui/themed'
+import { Button, Divider, Icon, ListItem, Text } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { delPart } from '../Redux/actions'
 import { Shadow } from 'react-native-shadow-2'
 import { check } from 'react-native-permissions'
+import { useTheme } from 'react-native-paper'
 
 interface handleProp {
   handlePress: (item: StatePart) => void
@@ -15,7 +16,7 @@ interface handleProp {
 export const PartsList = ({ handlePress }: handleProp): JSX.Element => {
   const listParts = useAppSelector(state => state.cars[0].parts)
   const carId = useAppSelector(state => state.numberCar)
-  const { theme } = useTheme()
+  const theme = useTheme()
   const dispatch = useAppDispatch()
   const [isSortParts, setIsSortParts] = useState(false)
   const renderRow: ListRenderItem<StatePart> = ({ item }: { item: StatePart }) => {

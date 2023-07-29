@@ -9,14 +9,27 @@ import { useEffect, useState } from 'react'
 import { StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, editFuel } from '../components/Redux/actions'
-import { RootTabParamList } from '../components/Navigation/Navigation'
+import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { useTheme, Text, Surface, TextInput, List, Button, HelperText, IconButton } from 'react-native-paper'
+import {
+  useTheme,
+  Text,
+  Surface,
+  TextInput,
+  List,
+  Button,
+  HelperText,
+  IconButton,
+  ToggleButton
+} from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { CompositeScreenProps, useNavigation } from '@react-navigation/native'
 
-type Props = BottomTabScreenProps<RootTabParamList, 'Fuel'>
+/* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
+type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'FuelScreen'>, NativeStackScreenProps<RootStackParamList>>
 
 interface FormFuel {
   dateFuel: Date
@@ -32,6 +45,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   const state = useAppSelector((state) => state.cars[state.numberCar])
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useTheme()
+  const nav = useNavigation()
 
   const tempNullFuel: FormFuel = {
     dateFuel: new Date(),
@@ -71,6 +85,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   const [sumFuel, setSumFuel] = useState(0)
 
   const [isList, setIsList] = useState(true)
+  const [dateList, setDateList] = useState('last')
 
   // ------------------------- Controller Form-----------------------------------
   const {
@@ -357,7 +372,17 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
         }
         {isList &&
           <View style={styles.flatList}>
-            <FuelList handlePress={handleOpen} />
+            <ToggleButton.Row onValueChange={value => setDateList(value)}
+                              value={dateList}
+                              style={{ alignSelf: 'flex-end', marginBottom: 10 }}
+            >
+              <ToggleButton icon="numeric-3" value="last" size={20} style={{ height: 20 }}/>
+              <ToggleButton icon="numeric-10" value="ten" size={20} style={{ height: 20 }}/>
+              <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
+            </ToggleButton.Row>
+
+            <FuelList handlePress={handleOpen} filterList={dateList} />
+
           </View>
         }
         {
@@ -383,7 +408,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   flatList: {
-    marginTop: 10,
+    marginTop: 15,
     height: 400
   },
   inputText: {

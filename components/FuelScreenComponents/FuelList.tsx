@@ -5,15 +5,16 @@ import { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { delFuel } from '../Redux/actions'
-import { ActivityIndicator, Surface, TouchableRipple, useTheme } from 'react-native-paper'
+import { ActivityIndicator, Surface, Text, TouchableRipple, useTheme } from 'react-native-paper'
 import { FlashList } from '@shopify/flash-list'
 import { BusyIndicator } from '../useIsReadyHook'
 
 interface handleProp {
   handlePress: (item: StateFuel) => void
+  filterList: string
 }
 
-export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
+export const FuelList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
   const listFuel = useAppSelector(state => state.cars[0].fuel)
   const carId = useAppSelector(state => state.numberCar)
   const dispatch = useAppDispatch()
@@ -116,8 +117,17 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
   }, [listFuel])
 
   useEffect(() => {
-    setTimeout(() => setIsLoad(false), 20)
-  }, [])
+    setTimeout(() => setIsLoad(false), 10)
+    return setIsLoad(true)
+  }, [filterList])
+
+  const filter = (): StateFuel[] => {
+    switch (filterList) {
+      case 'last': return listFuel.slice(0, 3)
+      case 'ten': return listFuel.slice(0, 10)
+      default: return listFuel
+    }
+  }
 
   return (
     <>
@@ -125,7 +135,7 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
       ? <BusyIndicator/>/* <ActivityIndicator size={'large'} color={'green'} /> */
       : <FlatList
     scrollEnabled
-    data={listFuel}
+    data={filter()}
     extraData={isSortFuel}
     renderItem={(item) => renderRow(item)}
     /* estimatedItemSize={70} */
@@ -137,7 +147,7 @@ export const FuelList = ({ handlePress }: handleProp): JSX.Element => {
         index
       }
     )}
-    initialNumToRender={7}
+    initialNumToRender={5}
   />
 }
     </>

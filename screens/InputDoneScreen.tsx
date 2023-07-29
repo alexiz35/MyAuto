@@ -7,22 +7,23 @@ import { useEffect, useMemo, useState } from 'react'
 import { BACK_INPUT, COLOR_GREEN, StatePart, ServiceList, StateService, TEXT, TEXT_WHITE } from '../type'
 import { addService, editService } from '../components/Redux/actions'
 import { AddPartModal } from '../components/AddPartModal'
-import { RootStackParamList } from '../components/Navigation/Navigation'
+import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import InputService from '../components/InputDoneScreenComponents/InputService'
 import InputPart from '../components/InputDoneScreenComponents/InputPart'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import InputDoc from '../components/InputDoneScreenComponents/InputDoc'
-import { SegmentedButtons, useTheme } from 'react-native-paper'
+import { Divider, SegmentedButtons, useTheme } from 'react-native-paper'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 
-  type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'>
+  type Props = BottomTabScreenProps<RootTabParamList, 'InputDoneScreen'>
 const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
   const theme = useTheme()
   const setNewTask = useAppDispatch()
   const state = useAppSelector((state) => state)
   const [index, setIndex] = useState(0)
-  const [value, setValue] = useState('part')
+  const [typeBuy, setTypeBuy] = useState('part')
 
   /* const editableTask: boolean = route.params.editable
   const currentId: number | undefined = route.params.taskId */
@@ -49,15 +50,28 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
     <BackgroundView props={{ flex: 1, paddingTop: 10 }}>
 
       <SegmentedButtons
-        value={value} onValueChange={setValue}
+        value={typeBuy} onValueChange={setTypeBuy}
         buttons={[
           { value: 'part', label: 'part' },
           { value: 'service', label: 'service' },
           { value: 'other', label: 'other' }
         ]}
       />
-      <View style={{ marginTop: 10 }}>
-        <InputPart navigation={navigation} route={route}/>
+      <View style={{ marginTop: 10, flex: 1 }}>
+        {
+          (() => {
+            switch (typeBuy) {
+              case 'part':
+                return <InputPart />
+              case 'service':
+                return <InputPart />
+              case 'other':
+                return <InputPart />
+              default:
+                return null
+            }
+          })()
+        }
       </View>
       {/* <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}> */}
        {/*  <Tab

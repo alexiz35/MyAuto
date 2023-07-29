@@ -56,16 +56,18 @@ export type RootStackParamList = {
   CarInfoScreen: undefined
   SettingScreen: undefined
   InputTaskPartScreen: undefined
+  FuelScreen: undefined
+
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootTabParamList = {
   Home: undefined
-  Fuel: undefined
   Null: undefined
   CarInfoScreen: undefined
   InputTaskPartScreen: undefined
   Tasks: undefined
   StatScreen: undefined
+  FuelScreen: undefined
   InputDoneScreen: { editable: boolean, taskId?: number, typeTask: number }
 }
 
@@ -346,6 +348,18 @@ export const Navigation = (): JSX.Element => {
           }} />
         {
 // -----------------------------------------------------------------------------
+// ------------------------------CarInfoScreen----------------------------------
+        }
+        <Stack.Screen
+          name='FuelScreen'
+          component={FuelScreen}
+          options={{
+            headerStyle: { backgroundColor: theme.colors.background },
+            title: 'Fuel',
+            headerTintColor: theme.colors.onBackground
+          }} />
+        {
+// -----------------------------------------------------------------------------
         }
         <Stack.Screen
           name='InputTaskPartScreen'
@@ -483,7 +497,7 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                       }} */
                       icon={ 'gas-station'}
                       onPress={() => {
-                        navigation.navigate('Fuel')
+                        navigation.navigate('FuelScreen')
                         /* navigation.navigate('InputDoneScreen', { editable: false, typeTask: 0 }) */
                       }}
                        ></IconButton>
