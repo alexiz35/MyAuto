@@ -1,6 +1,7 @@
 import {
   View,
-  StyleSheet
+  StyleSheet,
+  TextInput
 } from 'react-native'
 import { Button, Divider, Input } from '@rneui/themed'
 import React, {
@@ -14,7 +15,7 @@ import Accordion from '../components/Accordion'
 import ShadowBox from './ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
-import { Surface, TextInput, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 
 interface InputPartProps {
   isCancel: () => void
@@ -52,8 +53,7 @@ const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Eleme
     control,
     handleSubmit,
     formState: { errors, isValid },
-    setValue,
-    setFocus
+    setValue
   } = useForm<StatePart>({ mode: 'onBlur', defaultValues: part === undefined ? tempNullPart : part })
 
   /* const [dateBuy, setDateBuy] = useState(new Date())
@@ -131,58 +131,69 @@ const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Eleme
                   // --------------------- Name and Date ------------------------------------
                 }
                 <View style={styles.viewGroupInput}>
-                  <Surface elevation={2} style={styles.surface}>
+                  <ShadowBox style={{
+                    margin: 5,
+                    flex: 3
+                  }}>
                     <Controller name={'namePart'}
                                  control={control}
-                                render={ ({ field: { onChange, value, onBlur, ref } }) => (
-                    <TextInput
-                      ref={ref}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
+                    <Input
+                      ref={refNamePart}
+                      renderErrorMessage={false}
                       placeholder={'название'}
-                      style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                      label={'название'}
+                      inputStyle={styles.inputText}
+                      errorStyle={styles.errorInput}
                       onChangeText={(value) => onChange(value)}
                       value={value}
                       onFocus={() => handleFocus(refNamePart)}
-                      onBlur={onBlur}
-                      onSubmitEditing={() => {
-                        setFocus('dateBuy')
-                      }}
+                      onBlur={() => handleBlur(refNamePart)}
+                      onSubmitEditing={() => refNumberPart.current?.focus()}
                     />
                                 ) }
                     />
-                  </Surface>
-                  <Surface elevation={2} style={styles.surface}>
+                  </ShadowBox>
+                  <ShadowBox style={{
+                    margin: 5,
+                    flex: 1.2
+                  }}>
                     <Controller name={'dateBuy'}
                                 control={control}
-                                render={ ({ field: { onChange, value, onBlur, ref } }) => (
-                    <TextInput
-                      ref={ref}
-                      placeholder={'дата покупки'}
-                      style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                      label={'Дата покупки'}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
+                    <Input
+                      ref={refDatePart}
+                      renderErrorMessage={false}
+                      placeholder={'купить к дате'}
+                      inputStyle={styles.inputText}
+                      inputContainerStyle={{ borderBottomWidth: 0 }}
                       showSoftInputOnFocus={false}
                       value={new Date(value).toLocaleDateString()}
                       /* onChangeText={(value) => onChange(value)} */
                       onPressOut={inputDate}
-                      onSubmitEditing={() => setFocus('mileageFuel')}
+                      errorStyle={styles.errorInput}
                     />
                                 )}
                                 />
-                  </Surface>
+                  </ShadowBox>
                 </View>
                 {
                   // ----------------------- Number part -------------------------------------
                 }
                 <View style={styles.viewGroupInput}>
-                  <Surface elevation={2} style={styles.surface}>
+                  <ShadowBox style={{
+                    margin: 5,
+                    flex: 1
+                  }}>
                     <Controller name={'numberPart'}
                                 control={control}
-                                render={ ({ field: { onChange, value, onBlur, ref } }) => (
-                    <TextInput
-                      ref={ref}
+                                render={ ({ field: { onChange, value, onBlur } }) => (
+                    <Input
+                      ref={refNumberPart}
                       placeholder={'артикул'}
-                      style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                      label={'пробег'}
+                      /* placeholderTextColor={'red'} */
+                      inputStyle={styles.inputText}
+                      errorMessage={'артикул'}
+                      errorStyle={styles.errorInput}
                       onChangeText={(value) => onChange(value)}
                       value={value}
                       onFocus={() => handleFocus(refNumberPart)}
@@ -191,9 +202,12 @@ const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Eleme
                     />
                                 )}
                                 />
-                  </Surface>
+                  </ShadowBox>
                 </View>
-                <Surface elevation={2} style={styles.surface}>
+                <ShadowBox style={{
+                  flex: 1,
+                  marginHorizontal: 5
+                }}>
                   <Accordion
                     /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
                     title={'Аналоги'}
@@ -204,48 +218,56 @@ const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Eleme
                     controlled={false}
                     insideView={
                       <View style={styles.viewGroupInput}>
-                        <Surface elevation={2} style={styles.surface}>
+                        <ShadowBox style={{
+                          margin: 5,
+                          flex: 1
+                        }}>
                           <Controller name={'numberPart1'}
                                       control={control}
-                                      render={ ({ field: { onChange, value, onBlur, ref } }) => (
-                          <TextInput
-                            ref={ref}
+                                      render={ ({ field: { onChange, value, onBlur } }) => (
+                          <Input
+                            ref={refNumber1Part}
+                            renderErrorMessage={false}
                             placeholder={'аналог 1'}
-                            style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                            label={'аналог 1'}
+                            /* placeholderTextColor={'red'} */
+                            inputStyle={styles.inputText}
+                            errorStyle={styles.errorInput}
+                            inputContainerStyle={{ borderBottomWidth: 0 }}
                             onChangeText={(value) => onChange(value)}
                             value={value}
-                            onSubmitEditing={() => {
-                              setFocus('numberPart2')
-                            }}
-                            onBlur={onBlur}
+                            onFocus={() => handleFocus(refNumber1Part)}
+                            onBlur={() => handleBlur(refNumber1Part)}
                           />
                                       )}
                                       />
-                        </Surface>
-                        <Surface elevation={2} style={styles.surface}>
+                        </ShadowBox>
+                        <ShadowBox style={{
+                          margin: 5,
+                          flex: 1
+                        }}>
                           <Controller name={'numberPart2'}
                                       control={control}
-                                      render={ ({ field: { onChange, value, onBlur, ref } }) => (
-                                        <TextInput
-                                          ref={ref}
-                                          placeholder={'аналог 2'}
-                                          style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                          label={'аналог 2'}
-                                          onChangeText={(value) => onChange(value)}
-                                          value={value}
-                                          onSubmitEditing={() => {
-                                            setFocus('numberPart2')
-                                          }}
-                                          onBlur={onBlur}
-                                        />
+                                      render={ ({ field: { onChange, value, onBlur } }) => (
+                          <Input
+                            ref={refNumber2Part}
+                            renderErrorMessage={false}
+                            placeholder={'аналог 2'}
+                            /* placeholderTextColor={'red'} */
+                            inputStyle={styles.inputText}
+                            errorStyle={styles.errorInput}
+                            inputContainerStyle={{ borderBottomWidth: 0 }}
+                            onChangeText={(value) => onChange(value)}
+                            value={value}
+                            onFocus={() => handleFocus(refNumber2Part)}
+                            onBlur={() => handleBlur(refNumber2Part)}
+                          />
                                       )}
                                       />
-                        </Surface>
+                        </ShadowBox>
                       </View>
                     }
                   />
-                </Surface>
+                </ShadowBox>
               </View>
               {
                 // ---------------------- Seller ------------------------------------------
@@ -474,10 +496,6 @@ const styles = StyleSheet.create({
   viewAllInput: {
     margin: 5,
     borderRadius: 10
-  },
-  surface: {
-    margin: 5,
-    flex: 1
   },
   viewGroupInput: {
     flexDirection: 'row',

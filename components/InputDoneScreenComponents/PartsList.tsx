@@ -1,5 +1,5 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
-import { COLOR_GREEN, StatePart } from '../../type'
+import { COLOR_GREEN, StateFuel, StatePart } from '../../type'
 import { Button, Divider, Icon, ListItem, Text } from '@rneui/themed'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
@@ -7,26 +7,31 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { delPart } from '../Redux/actions'
 import { Shadow } from 'react-native-shadow-2'
 import { check } from 'react-native-permissions'
-import { useTheme } from 'react-native-paper'
+import { Surface, useTheme } from 'react-native-paper'
+import { BusyIndicator } from '../useIsReadyHook'
 
 interface handleProp {
   handlePress: (item: StatePart) => void
+  filterList: string
+
 }
 
-export const PartsList = ({ handlePress }: handleProp): JSX.Element => {
+export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
   const listParts = useAppSelector(state => state.cars[0].parts)
   const carId = useAppSelector(state => state.numberCar)
   const theme = useTheme()
   const dispatch = useAppDispatch()
   const [isSortParts, setIsSortParts] = useState(false)
+  const [isLoad, setIsLoad] = useState(true)
+
   const renderRow: ListRenderItem<StatePart> = ({ item }: { item: StatePart }) => {
     return (
       <View style={styles.listItem}>
-         <Shadow stretch={true} >
+        <Surface elevation={1} >
 
         <ListItem.Swipeable
           animation={{ type: 'spring' }}
-          containerStyle={{ padding: 5, height: 70 }}
+          containerStyle={{ padding: 5, height: 70, backgroundColor: theme.colors.surface }}
           style={{ }}
           onPress={() =>
             handlePress(item)
@@ -64,37 +69,37 @@ export const PartsList = ({ handlePress }: handleProp): JSX.Element => {
           topDivider
         >
           <ListItem.Content style={{ flex: 0.5 }}>
-          <Icon name={'basket-check'} type='material-community' size={22} color={theme.colors.success} style={{ paddingBottom: 3 }}/>
+          <Icon name={'basket-check'} type='material-community' size={22} color={theme.colors.tertiary} style={{ paddingBottom: 3 }}/>
           <Icon name={'check-decagram' } type='material-community' size={22}
-                  color={ item.isInstall ? theme.colors.success : theme.colors.grey0} />
+                  color={ item.isInstall ? theme.colors.tertiary : theme.colors.secondary} />
           </ListItem.Content>
 
           <ListItem.Content style={{ flex: 3 }} >
-            <ListItem.Title style={{ paddingBottom: 5 }} >
+            <ListItem.Title style={{ paddingBottom: 5, color: theme.colors.onSurface }} lineBreakMode={'tail'} numberOfLines={1}>
               {/* {String(new Date(item.dateBuy).toLocaleDateString())} */}
               {String(item.namePart)}
             </ListItem.Title>
-            <Divider color={theme.colors.success} width={2} inset insetType={'middle'}/>
-            <ListItem.Subtitle style={{ fontSize: 12 }} lineBreakMode={'tail'} numberOfLines={1} >
+           {/*  <Divider color={theme.colors.tertiary} width={2} inset insetType={'middle'}/> */}
+            <ListItem.Subtitle style={{ fontSize: 12, color: theme.colors.onSurface }} lineBreakMode={'tail'} numberOfLines={1} >
               {item.isInstall ? 'установлено' : 'не установлено'}
             </ListItem.Subtitle>
 
           </ListItem.Content>
           <ListItem.Content style={{ flex: 1.5 }}>
-            <ListItem.Title style={{ paddingBottom: 5 }} >
+            <ListItem.Title style={{ paddingBottom: 5, fontSize: 12, color: theme.colors.onSurface }} >
               {String(new Date(item.dateBuy).toLocaleDateString())}
             </ListItem.Title>
 
-            <ListItem.Subtitle style={{ fontSize: 12 }}>
+            <ListItem.Subtitle style={{ fontSize: 12, color: theme.colors.onSurface }}>
               {(item.dateInstall != null) ? String(new Date(item.dateInstall).toLocaleDateString()) : null}
             </ListItem.Subtitle>
           </ListItem.Content>
 
           <ListItem.Content style={{ flex: 1.5 }}>
-            <ListItem.Title style={{ paddingBottom: 5 }}>
+            <ListItem.Title style={{ paddingBottom: 5, fontSize: 12, color: theme.colors.onSurface }}>
               {item.quantityPart} х {item.amountCostPart}
             </ListItem.Title>
-            <ListItem.Subtitle style={{ fontSize: 12 }}>
+            <ListItem.Subtitle style={{ fontSize: 12, color: theme.colors.onSurface }}>
               {(item.mileageInstall != null) ? String(item.mileageInstall) : null}
             </ListItem.Subtitle>
           </ListItem.Content>
@@ -110,7 +115,7 @@ export const PartsList = ({ handlePress }: handleProp): JSX.Element => {
 
         </ListItem.Swipeable>
 
-        </Shadow>
+        </Surface>
       </View>
     )
   }
@@ -125,13 +130,39 @@ export const PartsList = ({ handlePress }: handleProp): JSX.Element => {
     }
   }, [listParts])
 
+  useEffect(() => {
+    setTimeout(() => setIsLoad(false), 10)
+    return setIsLoad(true)
+  }, [filterList])
+
+  const filter = (): StatePart[] => {
+    switch (filterList) {
+      case 'last': return listParts.slice(0, 3)
+      case 'ten': return listParts.slice(0, 10)
+      default: return listParts
+    }
+  }
+
   return (
-    <FlatList
-      data={listParts}
-      extraData={isSortParts}
-      renderItem={renderRow}
-      keyExtractor={(item, index) => index.toString()}
-    />
+    <>
+    { isLoad
+      ? <BusyIndicator />
+      : <FlatList
+        data={listParts}
+        extraData={isSortParts}
+        renderItem={renderRow}
+        keyExtractor={(item, index) => index.toString()}
+        getItemLayout={(data, index) => (
+          {
+            length: 70,
+            offset: 70 * index,
+            index
+          }
+        )}
+        initialNumToRender={5}
+        />
+    }
+    </>
   )
 }
 
