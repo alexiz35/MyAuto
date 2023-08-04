@@ -5,44 +5,22 @@ import {
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { StatePart } from '../../type'
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { addFuel, editFuel } from '../Redux/actions'
-import { RootStackParamList, RootTabParamList } from '../Navigation/Navigation'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { FuelList } from '../FuelScreenComponents/FuelList'
+import { addPart, editPart } from '../Redux/actions'
+
 import BackgroundView from '../../CommonComponents/BackgroundView'
 import {
   useTheme,
-  Text,
-  Surface,
-  TextInput,
   List,
-  Button,
-  HelperText,
-  IconButton,
-  Divider,
-  SegmentedButtons,
   ToggleButton
 } from 'react-native-paper'
-import { Controller, useForm } from 'react-hook-form'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { CompositeScreenProps, useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { PartsList } from './PartsList'
 import InputPartComponent from '../../CommonComponents/InputPartComponent'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 /* type Props = NativeStackScreenProps<RootStackParamList,'I'> */
-
-interface FormPart {
-  dateFuel: Date
-  mileageFuel: string
-  volumeFuel: string
-  CostFuel: string
-  AmountFuel: string
-  StationFuel: string
-}
 
 const InputPart = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -51,94 +29,23 @@ const InputPart = (): JSX.Element => {
   const { colors } = useTheme()
   const nav = useNavigation()
 
-  const tempNullPart: FormPart = {
-    dateFuel: new Date(),
-    mileageFuel: '',
-    volumeFuel: '',
-    CostFuel: '',
-    AmountFuel: '',
-    StationFuel: ''
-  }
-
-  const dataToForm = (data: StatePart): FormPart => {
-    return {
-      dateFuel: data.dateFuel,
-      mileageFuel: data.mileageFuel === 0 ? '' : String(data.mileageFuel),
-      volumeFuel: data.volumeFuel === 0 ? '' : String(data.volumeFuel),
-      CostFuel: data.CostFuel === 0 ? '' : String(data.CostFuel),
-      AmountFuel: data.AmountFuel === 0 ? '' : String(data.AmountFuel),
-      StationFuel: data.StationFuel
-    }
-  }
-  const formToData = (data: FormPart): StatePart => {
-    return {
-      id: isEditPart ? itemPart?.id : Date.now(),
-      dateFuel: data.dateFuel,
-      mileageFuel: Number(data.mileageFuel),
-      volumeFuel: Number(data.volumeFuel),
-      CostFuel: Number(data.CostFuel),
-      AmountFuel: Number(data.AmountFuel),
-      StationFuel: data.StationFuel,
-      typeFuel: state.info.fuel ?? undefined
-    }
-  }
-
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isEditPart, setIsEditPart] = useState(false)
-  const [itemPart, setItemPart] = useState<StatePart>(formToData(tempNullPart))
-  const [sumPart, setSumPart] = useState(0)
+  const [itemPart, setItemPart] = useState<StatePart | undefined>()
 
   const [isList, setIsList] = useState(true)
   const [dateList, setDateList] = useState('last')
 
-  // ------------------------- Controller Form-----------------------------------
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    getValues,
-    setFocus
-
-  } = useForm<FormPart>({ mode: 'onSubmit', defaultValues: tempNullPart, values: dataToForm(itemPart) })
-
-  // ----------------------------------------------------------------------------
-  const inputDate = (): void => DateTimePickerAndroid.open({
-    value: new Date(),
-    // @ts-expect-error date undefined
-    onChange: (event, date) => setValue('dateFuel', date)
-  })
-
   const clearInput = (): void => {
     setIsEditPart(false)
-    setItemPart(formToData(tempNullPart))
+    setItemPart(undefined)
   }
 
-  // ---------------------------------------------------------------------------
-  /* useFocusEffect(
-    useCallback(() => {
-      setValueDrop(state.info.fuel)
-    }, [state.info.fuel])) */
-
+  // --------------------------Hide tabBottom when openAccordion-----------------
   useEffect(() => {
-    const tempFuel = state.fuel.filter((item) => (new Date(item.dateFuel).getMonth() === new Date().getMonth()))
-    const sumFuel = tempFuel.reduce(
-      (accumulator, currentValue) => Number(accumulator) + Number(currentValue.AmountFuel),
-      0
-    )
-    setSumPart(sumFuel)
-  }, [state.fuel])
-
-  // ------------------------- function calc input -----------------------------
-  const handleOnSubmitCost = (): void => {
-    const valueCost = getValues(['volumeFuel', 'CostFuel'])
-    const amountFuel = Number(valueCost[0]) * Number(valueCost[1])
-    setValue('AmountFuel', amountFuel === 0 ? '' : String(amountFuel))
-  }
-  const handleOnSubmitAmount = (): void => {
-    const amountCalc = getValues(['volumeFuel', 'CostFuel', 'AmountFuel'])
-    const tempCalc = Number(amountCalc[2]) / Number(amountCalc[0])
-    setValue('CostFuel', isNaN(tempCalc) ? '' : String(tempCalc))
-  }
+    if (openAccordion) nav.setOptions({ tabBarStyle: { display: 'none', backgroundColor: colors.background } })
+    else nav.setOptions({ tabBarStyle: { display: 'flex', backgroundColor: colors.background } })
+  }, [openAccordion])
   // ------------------------- control according -------------------------------
   const handleOpen = (item: StatePart): void => {
     setIsList(false)
@@ -148,8 +55,9 @@ const InputPart = (): JSX.Element => {
   }
 
   const handleOnPress = (): void => {
-    if (!openAccordion) setIsList(false)
-    else setTimeout(() => setIsList(true), 100)
+    if (!openAccordion) {
+      setIsList(false)
+    } else setTimeout(() => setIsList(true), 100)
     setOpenAccordion(!openAccordion)
     clearInput()
   }
@@ -158,11 +66,11 @@ const InputPart = (): JSX.Element => {
     handleOnPress()
   }
 
-  const handleOk = (dataForm: FormPart): void => {
+  const handleOk = (dataForm: StatePart): void => {
     setTimeout(() =>
       isEditPart
-        ? dispatch(editFuel(carId, itemPart?.id, formToData(dataForm)))
-        : dispatch(addFuel(carId, formToData(dataForm)))
+        ? dispatch(editPart(carId, itemPart?.id, dataForm))
+        : dispatch(addPart(carId, dataForm))
     , 100)
     handleOnPress()
   }
@@ -189,7 +97,7 @@ const InputPart = (): JSX.Element => {
               onPress={handleOnPress}
             >
 
-              <InputPartComponent isCancel={handleCancel} isOk={handleOk} part={itemPart}/>
+              <InputPartComponent isCancel={handleCancel} isOk={handleOk} part={itemPart} isEdit={isEditPart}/>
 
             </List.Accordion>
         </ScrollView>
@@ -197,18 +105,6 @@ const InputPart = (): JSX.Element => {
         {
 /* ----------------------- List Fuel ---------------------------------------- */
         }
-
-        {/* <SegmentedButtons
-          density={'high'}
-
-          style={{ width: '40%', marginTop: 20 }}
-          value={dateList} onValueChange={setDateList}
-          buttons={[
-            { value: 'last', label: 'last' },
-            { value: 'service', label: 'service' },
-            { value: 'other', label: 'other' }
-          ]}
-        /> */}
 
         {isList &&
           <View style={styles.flatList}>

@@ -96,7 +96,7 @@ const InputPart = ({ navigation, route }: Props): JSX.Element => {
   return (
     <View >
       {/* {isOpenAccordion ? <ActivityIndicator/> : null} */}
-      <View>
+      <View >
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }} >
        <Accordion
          insideView={

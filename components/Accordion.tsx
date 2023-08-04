@@ -27,14 +27,12 @@ const Accordion = ({
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    console.log('open', open, isVisible)
     if (open !== undefined) {
       setIsVisible(open)
     }
   }, [open])
 
   useEffect(() => {
-    console.log('isOpen')
     if (isOpen !== undefined) {
       isOpen(isVisible)
     }

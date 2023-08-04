@@ -1,4 +1,4 @@
-import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
+import { FlatList, ListRenderItem, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { COLOR_GREEN, StateFuel, StatePart } from '../../type'
 import { Button, Divider, Icon, ListItem, Text } from '@rneui/themed'
 import { useEffect, useState } from 'react'
@@ -33,9 +33,9 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
           animation={{ type: 'spring' }}
           containerStyle={{ padding: 5, height: 70, backgroundColor: theme.colors.surface }}
           style={{ }}
-          onPress={() =>
-            handlePress(item)
-          }
+          Component={TouchableHighlight}
+
+          onPress={() => handlePress(item)}
           leftContent={() => (
             <Button
               title='info'
@@ -101,6 +101,7 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
             </ListItem.Title>
             <ListItem.Subtitle style={{ fontSize: 12, color: theme.colors.onSurface }}>
               {(item.mileageInstall != null) ? String(item.mileageInstall) : null}
+
             </ListItem.Subtitle>
           </ListItem.Content>
 
@@ -145,6 +146,7 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
 
   return (
     <>
+
     { isLoad
       ? <BusyIndicator />
       : <FlatList

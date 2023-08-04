@@ -28,6 +28,7 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
   /* const editableTask: boolean = route.params.editable
   const currentId: number | undefined = route.params.taskId */
   useEffect(() => {
+
     /* setIndex(route.params.typeTask) */
   }, [])
 

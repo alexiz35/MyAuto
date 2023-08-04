@@ -10,7 +10,7 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
-import { Alert, Image, Pressable, View } from 'react-native'
+import { Alert, Image, Platform, Pressable, View } from 'react-native'
 import { useCallback, useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
@@ -433,7 +433,7 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
         tabBarStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_BOTTOM
         tabBarIconStyle: { paddingVertical: 0 },
         tabBarLabelStyle: { fontSize: 14 },
-        tabBarHideOnKeyboard: true
+        tabBarHideOnKeyboard: Platform.OS !== 'ios'
       }}
     >
       <Tab.Screen name={'Home'} component={HomeScreen}
