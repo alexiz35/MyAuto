@@ -1,12 +1,11 @@
-import { FlatList, ListRenderItem, StyleSheet, TouchableHighlight, TouchableHighlightComponent, View } from 'react-native'
-import { COLOR_GREEN, StateFuel } from '../../type'
+import { FlatList, ListRenderItem, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { StateFuel } from '../../type'
 import { Button, ListItem } from '@rneui/themed'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { delFuel } from '../Redux/actions'
-import { ActivityIndicator, Surface, Text, TouchableRipple, useTheme } from 'react-native-paper'
-import { FlashList } from '@shopify/flash-list'
+import { Surface, useTheme } from 'react-native-paper'
 import { BusyIndicator } from '../useIsReadyHook'
 
 interface handleProp {
@@ -114,6 +113,7 @@ export const FuelList = ({ handlePress, filterList = 'last' }: handleProp): JSX.
       return Date.parse(b.dateFuel) - Date.parse(a.dateFuel)
     })
     setIsSortFuel(!isSortFuel)
+    console.log('render')
   }, [listFuel])
 
   useEffect(() => {

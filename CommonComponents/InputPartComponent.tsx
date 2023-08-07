@@ -2,22 +2,14 @@ import {
   View,
   StyleSheet
 } from 'react-native'
-import { } from '@rneui/themed'
-import React, {
-  PropsWithChildren,
-  RefObject, useEffect, useLayoutEffect, useState
-} from 'react'
+import { useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 /* import { useAppDispatch, useAppSelector } from '../components/Redux/hook' */
-import { StateFuel, StatePart } from '../type'
+import { StatePart } from '../type'
 import Accordion from '../components/Accordion'
-import ShadowBox from './ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
 import { Button, Surface, TextInput, useTheme } from 'react-native-paper'
-import { useNavigation } from '@react-navigation/native'
-import { BottomTabBar, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { RootTabParamList } from '../components/Navigation/Navigation'
 
 interface InputPartProps {
   isCancel: () => void
@@ -47,7 +39,6 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
   const state = useAppSelector((state) => state) */
 
   const theme = useTheme()
-  const nav = useNavigation()
 
   const tempNullPart: FormPart = {
     namePart: '',
@@ -104,7 +95,6 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
     setValue,
     setFocus
   } = useForm<FormPart>({ mode: 'onBlur', defaultValues: tempNullPart, values: dataToForm(itemPart) })
@@ -164,7 +154,8 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'namePart'}
                                 control={control}
-                                render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                rules={{ required: 'введите название' }}
+                                render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
                                   <TextInput
                                     ref={ref}
                                     dense
@@ -173,6 +164,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     onChangeText={(value) => onChange(value)}
                                     value={value}
                                     onBlur={onBlur}
+                                    error={(error != null) && true}
                                     onSubmitEditing={() => {
                                       setFocus('dateBuy')
                                     }}
@@ -183,7 +175,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'dateBuy'}
                                 control={control}
-                                render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                render={ ({ field: { value, ref } }) => (
                                   <TextInput
                                     ref={ref}
                                     dense
@@ -191,7 +183,6 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     label={'Дата покупки'}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
-                                    /* onChangeText={(value) => onChange(value)} */
                                     onPressOut={inputDate}
                                     onSubmitEditing={() => setFocus('numberPart')}
                                   />

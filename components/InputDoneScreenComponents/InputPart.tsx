@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { StatePart } from '../../type'
 import { addPart, editPart } from '../Redux/actions'
 

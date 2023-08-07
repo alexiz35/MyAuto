@@ -26,7 +26,7 @@ import {
 } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { CompositeScreenProps, useNavigation } from '@react-navigation/native'
+import { CompositeScreenProps } from '@react-navigation/native'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'FuelScreen'>, NativeStackScreenProps<RootStackParamList>>
@@ -45,7 +45,6 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   const state = useAppSelector((state) => state.cars[state.numberCar])
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useTheme()
-  const nav = useNavigation()
 
   const tempNullFuel: FormFuel = {
     dateFuel: new Date(),
