@@ -1,14 +1,9 @@
-import { FlatList, ListRenderItem, StyleSheet, TouchableHighlight, View } from 'react-native'
-import { COLOR_GREEN, StateFuel, StatePart } from '../../type'
-import { Button, Divider, Icon, ListItem, Text } from '@rneui/themed'
+import { FlatList } from 'react-native'
+import { StatePart } from '../../type'
 import { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { delPart } from '../Redux/actions'
-import { Shadow } from 'react-native-shadow-2'
-import { check } from 'react-native-permissions'
-import { Surface, useTheme } from 'react-native-paper'
+import { useAppSelector } from '../Redux/hook'
 import { BusyIndicator } from '../useIsReadyHook'
+import { RenderRowPart } from './PartRow'
 
 interface handleProp {
   handlePress: (item: StatePart) => void
@@ -18,13 +13,10 @@ interface handleProp {
 
 export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
   const listParts = useAppSelector(state => state.cars[0].parts)
-  const carId = useAppSelector(state => state.numberCar)
-  const theme = useTheme()
-  const dispatch = useAppDispatch()
   const [isSortParts, setIsSortParts] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
 
-  const renderRow: ListRenderItem<StatePart> = ({ item }: { item: StatePart }) => {
+  /* const renderRow: ListRenderItem<StatePart> = ({ item }: { item: StatePart }) => {
     return (
       <View style={styles.listItem}>
         <Surface elevation={1} >
@@ -76,10 +68,10 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
 
           <ListItem.Content style={{ flex: 3 }} >
             <ListItem.Title style={{ paddingBottom: 5, color: theme.colors.onSurface }} lineBreakMode={'tail'} numberOfLines={1}>
-              {/* {String(new Date(item.dateBuy).toLocaleDateString())} */}
+              {/!* {String(new Date(item.dateBuy).toLocaleDateString())} *!/}
               {String(item.namePart)}
             </ListItem.Title>
-           {/*  <Divider color={theme.colors.tertiary} width={2} inset insetType={'middle'}/> */}
+           {/!*  <Divider color={theme.colors.tertiary} width={2} inset insetType={'middle'}/> *!/}
             <ListItem.Subtitle style={{ fontSize: 12, color: theme.colors.onSurface }} lineBreakMode={'tail'} numberOfLines={1} >
               {item.isInstall ? 'установлено' : 'не установлено'}
             </ListItem.Subtitle>
@@ -105,21 +97,21 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
             </ListItem.Subtitle>
           </ListItem.Content>
 
-         {/*  <ListItem.Content style={{ flex: 1 }}>
+         {/!*  <ListItem.Content style={{ flex: 1 }}>
             <ListItem.Title style={{ fontSize: 14 }}>
               {item.amountCostPart}
             </ListItem.Title>
             <ListItem.Subtitle style={{ fontSize: 14 }}>
               {item.costPart} грн
             </ListItem.Subtitle>
-          </ListItem.Content> */}
+          </ListItem.Content> *!/}
 
         </ListItem.Swipeable>
 
         </Surface>
       </View>
     )
-  }
+  } */
 
   useEffect(() => {
     if (listParts.length > 1) {
@@ -150,9 +142,9 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
     { isLoad
       ? <BusyIndicator />
       : <FlatList
-        data={listParts}
+        data={filter()}
         extraData={isSortParts}
-        renderItem={renderRow}
+        renderItem={({ item }) => <RenderRowPart handlePress={handlePress} item={item}/>}
         keyExtractor={(item, index) => index.toString()}
         getItemLayout={(data, index) => (
           {
@@ -161,19 +153,9 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
             index
           }
         )}
-        initialNumToRender={5}
+        initialNumToRender={6}
         />
     }
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  listItem: {
-    height: 70,
-    paddingRight: 0,
-    marginHorizontal: 5,
-    marginVertical: 5,
-    flex: 1
-  }
-})

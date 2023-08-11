@@ -1,17 +1,17 @@
 import { StyleSheet, View } from 'react-native'
-import { StateFuel } from '../../type'
+import { StatePart } from '../../type'
 import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useState } from 'react'
-import { delFuel } from '../Redux/actions'
+import { delPart } from '../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { Icon } from '@rneui/themed'
 
-interface propsRowFuel {
-  handlePress: (item: StateFuel) => void
-  item: StateFuel
+interface propsRowPart {
+  handlePress: (item: StatePart) => void
+  item: StatePart
 }
 
-export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element => {
+export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
 
@@ -69,17 +69,21 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
       >
 
         <Card.Title
-          style={{ flex: 3.6, paddingLeft: 12 }}
+          style={{ flex: 3.6, paddingLeft: 2 }}
           leftStyle={{ marginRight: 2 }}
           left={() =>
-            <MaterialCommunityIcons name={'gas-station'} size={24} color={colors.tertiary} style={{}}/>
+            <>
+              <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/>
+              <Icon name={'check-decagram' } type='material-community' size={22}
+                    color={ item.isInstall ? colors.tertiary : colors.secondary} />
+            </>
           }
-          title={String(new Date(item.dateFuel).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))}
+          title={String(item.namePart)}
           titleStyle={{ paddingRight: 2 }}
           subtitleStyle={{ paddingRight: 2 }}
-          subtitle={item.StationFuel}
+          subtitle={item.isInstall ? 'установлено' : 'не установлено'}
           titleVariant={'bodyMedium'}
-          subtitleVariant={'bodyMedium'}
+          subtitleVariant={'bodySmall'}
         />
         {/* <ListItem.Title style={{ fontSize: 14, color: colors.onSurface }}>
               {String(new Date(item.dateFuel).toLocaleDateString())}
@@ -91,17 +95,21 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
         <Card.Title
           style={{ flex: 2.3 }}
 
-          title={String(item.volumeFuel) + ' л'}
-          subtitle = {String(item.CostFuel) + ' грн/л'}
+          title={String(new Date(item.dateBuy).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))}
+          subtitle = {(item.dateInstall != null)
+            ? String(new Date(item.dateInstall).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))
+            : null}
+
           titleVariant={'bodyMedium'}
-          subtitleVariant={'bodyMedium'}
+          subtitleVariant={'bodySmall'}
           titleStyle={{ paddingRight: 2 }}
           subtitleStyle={{ paddingRight: 2 }}
         />
 
         <Card.Title
           style={{ flex: 2.2 }}
-          title={String(item.AmountFuel) + ' грн'}
+          title={` ${item.quantityPart} х ${item.amountCostPart}`}
+          subtitle={(item.mileageInstall != null) ? String(item.mileageInstall) : null}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}
@@ -120,7 +128,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delFuel(carId, item.id))
+                         dispatch(delPart(carId, item.id))
                          closeMenu()
                        }}
             />
