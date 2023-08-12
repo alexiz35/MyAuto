@@ -1,10 +1,8 @@
 import {
   View,
   StyleSheet,
-  TextInput, KeyboardAvoidingView, Platform
+  KeyboardAvoidingView, Platform
 } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Button, Dialog, Divider, Input, useTheme } from '@rneui/themed'
 import React, {
   PropsWithChildren,
   RefObject,
@@ -18,128 +16,93 @@ import { addOther, editOther } from '../components/Redux/actions'
 import Accordion from '../components/Accordion'
 import ShadowBox from '../CommonComponents/ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useTheme, Surface, TextInput, Button } from 'react-native-paper'
+import { Controller, useForm } from 'react-hook-form'
 
 interface InputDocProps {
   isCancel: () => void
   isOk: (otherResult: StateOther) => void
-  other?: StateOther | null
+  other?: StateOther
+  isEdit: boolean
 }
 
-const InputDoc = ({ isCancel, isOk, other = null }: InputDocProps): JSX.Element => {
-  const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state)
-  const { theme } = useTheme()
-  /* const { mode } = useThemeMode() */
+interface FormOther {
+  nameOther: string
+  numberPart: string
+  dateBuy: Date
+  amountCostOther: string
+  seller: {
+    name: string
+    phone: string
+    link: string
+  }
+}
 
-  const [namePart, setNamePart] = useState('')
-  const [dateBuy, setDateBuy] = useState(new Date())
-  const [numberPart, setNumberPart] = useState('')
-  const [seller, setSeller] = useState('')
-  const [sellerPhone, setSellerPhone] = useState('')
-  const [sellerWeb, setSellerWeb] = useState('')
-  const [amountCostPart, setAmountCostPart] = useState(0)
+const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JSX.Element => {
+  const theme = useTheme()
 
-  const [openAccordion, setOpenAccordion] = useState(false)
-  const [isOpenAccordion, setIsOpenAccordion] = useState(false)
-  const [isEditPart, setIsEditPart] = useState(false)
-
-  const [itemOther, setItemOther] = useState<StateOther | null>(null)
-
-  const refNamePart = React.createRef<PropsWithChildren<TextInput>>()
-  const refDatePart = React.createRef<PropsWithChildren<TextInput>>()
-  const refNumberPart = React.createRef<PropsWithChildren<TextInput>>()
-  const refSellerName = React.createRef<PropsWithChildren<TextInput>>()
-  const refSellerPhone = React.createRef<PropsWithChildren<TextInput>>()
-  const refSellerLink = React.createRef<PropsWithChildren<TextInput>>()
-  const refAmountCostPart = React.createRef<PropsWithChildren<TextInput>>()
-
-  const clearInput = (): void => {
-    setNamePart('')
-    setDateBuy(new Date())
-    setSeller('')
-    setSellerPhone('')
-    setSellerWeb('')
-    setAmountCostPart(0)
+  const tempNullOther: FormOther = {
+    nameOther: '',
+    numberPart: '',
+    dateBuy: new Date(),
+    amountCostOther: '',
+    seller: {
+      name: '',
+      phone: '',
+      link: ''
+    }
   }
 
-  const handleError = (): void => {
-    refNamePart.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: theme.colors.error } })
-    // @ts-expect-error not shake
-    refNamePart.current?.shake()
+  const dataToForm = (data: StateOther): FormOther => {
+    return {
+      nameOther: data.nameOther,
+      dateBuy: data.dateBuy,
+      numberPart: data.numberPart,
+      amountCostOther: data.amountCostOther === undefined || data.amountCostOther === 0 ? '' : String(data.amountCostOther),
+      seller: {
+        name: data.seller?.name === undefined ? '' : data.seller?.name,
+        phone: data.seller?.phone === undefined ? '' : data.seller?.phone,
+        link: data.seller?.link === undefined ? '' : data.seller.link
+      }
+    }
   }
-  const handleFocus = (ref: RefObject<TextInput>): void => {
-    ref.current?.setNativeProps({ style: { borderBottomWidth: 1, borderBottomColor: COLOR_GREEN } })
+
+  const formToData = (data: FormOther): StateOther => {
+    return {
+      id: isEdit ? itemOther?.id : Date.now(),
+      nameOther: data.nameOther,
+      dateBuy: data.dateBuy,
+      numberPart: data.numberPart,
+      amountCostOther: Number(data.amountCostOther),
+      seller: {
+        name: data.seller.name,
+        phone: data.seller.phone,
+        link: data.seller.link
+      }
+    }
   }
-  const handleBlur = (ref: RefObject<TextInput>): void => {
-    ref.current?.setNativeProps({ style: { borderBottomWidth: 0, borderBottomColor: COLOR_GREEN } })
-  }
+
+  const [itemOther, setItemOther] = useState<StateOther>((other != null) ? other : formToData(tempNullOther))
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    setFocus
+  } = useForm<FormOther>({ mode: 'onBlur', defaultValues: tempNullOther, values: dataToForm(itemOther) })
 
   const inputDate = (): void => DateTimePickerAndroid.open({
     value: new Date(),
     // @ts-expect-error date
-    onChange: (event, date) => setDateBuy(date)
+    onChange: (event, date) => setValue('dateBuy', date)
   })
 
-  useEffect(() => {
-    if (other !== null) {
-      handleOpen(other)
-    }
-    /* navigation.setOptions({ title: 'Купить деталь' }) */
-  }, [])
-
-  // ------------------------- control according -------------------------------
-  const handleOpen = (item: StateOther): void => {
-    if (!isOpenAccordion) {
-      setNamePart(item.nameOther)
-      setDateBuy(item.dateBuy)
-      setNumberPart(item.numberPart)
-      setAmountCostPart(item.amountCostPart)
-      if (item.seller?.name !== undefined) setSeller(item.seller?.name)
-      if (item.seller?.phone !== undefined) setSellerPhone(item.seller?.phone)
-      if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
-      setIsEditPart(true)
-      setItemOther(item)
-      /* handleOnPress() */
-    }
-  }
-
-  /*  const handleOnPress = (): void => {
-    setIsOpenAccordion(true)
-    setTimeout(() => {
-      setOpenAccordion(!openAccordion)
-      setIsOpenAccordion(false)
-    }, 600)
-  } */
   // ------------------------- button result -----------------------------------
   const handleCancel = (): void => {
-    clearInput()
     isCancel()
   }
-  const handleOk = (): void => {
-    if (namePart === '') {
-      handleError()
-      return
-    }
-    const tempNewOther: StateOther = {
-      nameOther: namePart,
-      dateBuy,
-      numberPart,
-      seller: {
-        name: seller,
-        phone: sellerPhone,
-        link: sellerWeb
-      },
-      amountCostPart,
-      id: Date.now()
-    }
-
-    /* isEditPart
-      ? dispatch(editOther(state.numberCar, itemOther?.id, tempNewOther))
-      : dispatch(addOther(state.numberCar, tempNewOther)) */
-    clearInput()
-    isOk(tempNewOther)
-    /* handleOnPress() */
-    /* navigation.navigate('Home') */
+  const handleOk = (dataForm: FormOther): void => {
+    isOk(formToData(dataForm))
   }
 
   return (
@@ -147,157 +110,192 @@ const InputDoc = ({ isCancel, isOk, other = null }: InputDocProps): JSX.Element 
 
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
         <View>
-        <View style={styles.viewAllInput}>
+          <View style={styles.viewAllInput}>
   {
      // --------------------- Name and Date ------------------------------------
   }
-          <View style={styles.viewGroupInput}>
-            <ShadowBox style={{ margin: 5, flex: 3 }}>
-              <Input
-                ref={refNamePart}
-                renderErrorMessage={false}
-                placeholder={'название'}
-                inputStyle={styles.inputText}
-                errorStyle={styles.errorInput}
-                onChangeText={(value) => setNamePart(String(value))}
-                value={namePart}
-                onFocus={() => handleFocus(refNamePart)}
-                onBlur={() => handleBlur(refNamePart)}
-                onSubmitEditing={() => refNumberPart.current?.focus()}
+            <View style={styles.viewGroupInput}>
+            <Surface elevation={2} style={styles.surface}>
+              <Controller name={'nameOther'}
+                          control={control}
+                          rules={{ required: 'введите название' }}
+                          render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                            <TextInput
+                              ref={ref}
+                              dense
+                              style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
+                              label={'название'}
+                              onChangeText={(value) => onChange(value)}
+                              value={value}
+                              onBlur={onBlur}
+                              error={(error != null) && true}
+                              onSubmitEditing={() => {
+                                setFocus('dateBuy')
+                              }}
+                            />
+                          ) }
               />
-            </ShadowBox>
-            <ShadowBox style={{ margin: 5, flex: 1.2 }}>
-              <Input
-                ref={refDatePart}
-                renderErrorMessage={false}
-                placeholder={'купить к дате'}
-                inputStyle={styles.inputText}
-                inputContainerStyle={{ borderBottomWidth: 0 }}
-                showSoftInputOnFocus={false}
-                value = {new Date(dateBuy).toLocaleDateString()}
-                onPressOut={inputDate}
-                errorStyle={styles.errorInput}
+            </Surface>
+            <Surface elevation={2} style={styles.surface}>
+              <Controller name={'dateBuy'}
+                          control={control}
+                          render={ ({ field: { value, ref } }) => (
+                            <TextInput
+                              ref={ref}
+                              dense
+                              style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                              label={'Дата покупки'}
+                              showSoftInputOnFocus={false}
+                              value={new Date(value).toLocaleDateString()}
+                              onPressOut={inputDate}
+                              onSubmitEditing={() => setFocus('numberPart')}
+                            />
+                          )}
               />
-            </ShadowBox>
+            </Surface>
           </View>
 
-        </View>
   {
      // ---------------------- Seller ------------------------------------------
   }
-        <View style={styles.viewAllInput}>
-          <View style={styles.viewGroupInput}>
-              <ShadowBox style={{ margin: 5, flex: 1 }}>
-                <Input
-                  ref={refSellerName}
-                  placeholder={'продавец'}
-                  inputStyle={styles.inputText}
-                  errorMessage={'продавец'}
-                  errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
-                  onChangeText={(value) => setSeller(String(value))}
-                  value={seller}
-                  onFocus={() => handleFocus(refSellerName)}
-                  onBlur={() => handleBlur(refSellerName)}
-                  onSubmitEditing={() => refAmountCostPart.current?.focus()}
-                />
-              </ShadowBox>
+            <View style={styles.viewGroupInput}>
+            <Surface elevation={2} style={styles.surface}>
+              <Controller name={'seller.name'}
+                          control={control}
+                          render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                            <TextInput
+                              ref={ref}
+                              style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                              label={'продавец'}
+                              onChangeText={(value) => onChange(value)}
+                              value={value}
+                              /* onSubmitEditing={() => {
+                                setFocus('numberPart2')
+                              }} */
+                              onBlur={onBlur}
+                            />
+                          )}
+              />
+            </Surface>
           </View>
-          <ShadowBox style={{ flex: 1, marginHorizontal: 5 }}>
+
+  {
+     // ----------------------Addition------------------------------------------
+  }
+
+            <Surface elevation={2} style={styles.surface}>
             <Accordion
+              /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
               title={'Данные продавца'}
-              textBannerStyle={{ fontSize: 14, color: theme.colors.grey3 }}
+              textBannerStyle={{
+                fontSize: 14,
+                color: theme.colors.secondary
+              }}
+              controlled={false}
               insideView={
-                <View style={styles.viewGroupInput}>
-                  <ShadowBox style={{ margin: 5, flex: 1 }}>
-                    <Input
-                      ref={refSellerPhone}
-                      renderErrorMessage={false}
-                      placeholder={'телефон'}
-                      inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      keyboardType={'phone-pad'}
-                      onChangeText={(value) => setSellerPhone(String(value))}
-                      value={sellerPhone}
-                      onFocus={() => handleFocus(refSellerPhone)}
-                      onBlur={() => handleBlur(refSellerPhone)}
-                      onSubmitEditing={() => refSellerLink.current?.focus()}
-                    />
-                  </ShadowBox>
-                  <ShadowBox style={{ margin: 5, flex: 1 }}>
-                    <Input
-                      ref={refSellerLink}
-                      renderErrorMessage={false}
-                      placeholder={'ссылка'}
-                      /* placeholderTextColor={'red'} */
-                      inputStyle={styles.inputText}
-                      errorStyle={styles.errorInput}
-                      inputContainerStyle={{ borderBottomWidth: 0 }}
-                      keyboardType={'url'}
-                      onChangeText={(value) => setSellerWeb(String(value))}
-                      value={sellerWeb}
-                      onFocus={() => handleFocus(refSellerLink)}
-                      onBlur={() => handleBlur(refSellerLink)}
-                      onSubmitEditing={() => refAmountCostPart.current?.focus()}
-                    />
-                  </ShadowBox>
+                <View style={{ flexDirection: 'column' }}>
+                  <View style={styles.viewGroupInput}>
+
+                    <Surface elevation={2} style={styles.surface}>
+                      <Controller name={'seller.phone'}
+                                  control={control}
+                                  render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                    <TextInput
+                                      ref={ref}
+                                      style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                      label={'телефон'}
+                                      keyboardType={'phone-pad'}
+                                      onChangeText={(value) => onChange(value)}
+                                      value={value}
+                                      onSubmitEditing={() => {
+                                        setFocus('seller.link')
+                                      }}
+                                      onBlur={onBlur}
+                                    />
+                                  )}
+                      />
+                    </Surface>
+                    <Surface elevation={2} style={styles.surface}>
+                      <Controller name={'seller.link'}
+                                  control={control}
+                                  render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                    <TextInput
+                                      ref={ref}
+                                      style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                      label={'интернет'}
+                                      keyboardType={'url'}
+                                      onChangeText={(value) => onChange(value)}
+                                      value={value}
+                                      /* onSubmitEditing={() => {
+                                        setFocus('numberPart2')
+                                      }} */
+                                      onBlur={onBlur}
+                                    />
+                                  )}
+                      />
+                    </Surface>
+                  </View>
+                  {
+                    // ---------------------- Seller ------------------------------------------
+                  }
+
                 </View>
               }
             />
-          </ShadowBox>
-        </View>
+          </Surface>
+
   {
     // ----------------------- Cost --------------------------------------------
   }
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={styles.viewAllInput}>
 
           <View style={styles.viewGroupInput}>
-          <ShadowBox style={{ margin: 5, flex: 1 }}>
-            <Input
-              ref={refAmountCostPart}
-              placeholder={'стоимость'}
-              /* placeholderTextColor={'red'} */
-              inputStyle={styles.inputText}
-              errorMessage={'стоимость'}
-              errorStyle={styles.errorInput}
-              keyboardType={'numeric'}
-              onChangeText={(value) => setAmountCostPart(Number(value))}
-              value={String(amountCostPart)}
-              onFocus={() => handleFocus(refAmountCostPart)}
-              onBlur={() => handleBlur(refAmountCostPart)}
-              /* onSubmitEditing={() => refQuantityPart.current?.focus()} */
-            />
-          </ShadowBox>
-        </View>
+            <Surface elevation={2} style={styles.surface}>
+              <Controller name={'amountCostOther'}
+                          control={control}
+                          render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                            <TextInput
+                              ref={ref}
+                              style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
+                              label={'сумма'}
+                              onChangeText={(value) => onChange(value)}
+                              value={value}
+                              keyboardType={'numeric'}
+                              onBlur={onBlur}
+                              /* onSubmitEditing={() => setFocus('numberPart')} */
+                            />
+                          )}
+              />
+            </Surface>
           </View>
-          </KeyboardAvoidingView>
 
   {
     // ----------------------- Buttons -----------------------------------------
   }
-        <View style={styles.viewButton}>
+          <View style={styles.viewButton}>
 
-          <Button
-            containerStyle={styles.buttonStyle}
-            title={'Cancel'}
-            color={'error'}
-            type={'solid'}
-            onPress={() => { handleCancel() }}
-          />
-          <Button
-            containerStyle={styles.buttonStyle}
-            title={'Ok'}
-            color={'success'}
-            type={'solid'}
-            onPress={() => {
-              handleOk()
-            }}
-          />
+            <Button
+              style={styles.buttonStyle}
+              labelStyle={{ color: 'white' }}
+              buttonColor={theme.colors.error}
+              /* type={'solid'} */
+              onPress={() => {
+                handleCancel()
+              }}
+            >Cancel</Button>
+            <Button
+              style={styles.buttonStyle}
+              labelStyle={{ color: 'white' }}
+              buttonColor={theme.colors.tertiary}
+              /* type={'solid'} */
+              /* onPress={() => {
+                handleOk()
+              }} */
+              onPress={handleSubmit(handleOk)}
+            >Ok</Button>
+          </View>
+
         </View>
-
-      </View>
+        </View>
       </KeyboardAwareScrollView>
 
     </View>
@@ -305,12 +303,16 @@ const InputDoc = ({ isCancel, isOk, other = null }: InputDocProps): JSX.Element 
   )
 }
 
-export default InputDoc
+export default InputDocComponent
 
 const styles = StyleSheet.create({
   viewAllInput: {
     margin: 5,
     borderRadius: 10
+  },
+  surface: {
+    margin: 5,
+    flex: 1
   },
   viewGroupInput: {
     flexDirection: 'row',

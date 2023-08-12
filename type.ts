@@ -143,7 +143,7 @@ export interface StateOther {
   id: number
   nameOther: string
   dateBuy: Date
-  amountCostPart: number
+  amountCostOther: number
   numberPart: string
   seller?: Seller
 }

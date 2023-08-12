@@ -6,18 +6,20 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { delOther, delPart } from '../Redux/actions'
 import { Shadow } from 'react-native-shadow-2'
 import { check } from 'react-native-permissions'
+import { BusyIndicator } from '../useIsReadyHook'
+import { RenderRowOther } from './OtherRow'
 
 interface handleProp {
   handlePress: (item: StateOther) => void
+  filterList: string
 }
 
-export const OthersList = ({ handlePress }: handleProp): JSX.Element => {
+export const OthersList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
   const listOthers = useAppSelector(state => state.cars[0].others)
-  const carId = useAppSelector(state => state.numberCar)
-  const { theme } = useTheme()
-  const dispatch = useAppDispatch()
   const [isSortOthers, setIsSortOthers] = useState(false)
-  const renderRow: ListRenderItem<StateOther> = ({ item }: { item: StateOther }) => {
+  const [isLoad, setIsLoad] = useState(true)
+
+  /* const renderRow: ListRenderItem<StateOther> = ({ item }: { item: StateOther }) => {
     return (
       <View style={styles.listItem}>
          <Shadow stretch={true} >
@@ -63,13 +65,13 @@ export const OthersList = ({ handlePress }: handleProp): JSX.Element => {
         >
           <ListItem.Content style={{ flex: 0.5 }}>
           <Icon name={'basket-check'} type='material-community' size={22} color={theme.colors.success} style={{ paddingBottom: 3 }}/>
-          {/* <Icon name={'check-decagram' } type='material-community' size={22}
-                  color={ item.isInstall ? theme.colors.success : theme.colors.grey0} /> */}
+          {/!* <Icon name={'check-decagram' } type='material-community' size={22}
+                  color={ item.isInstall ? theme.colors.success : theme.colors.grey0} /> *!/}
           </ListItem.Content>
 
           <ListItem.Content style={{ flex: 3 }} >
             <ListItem.Title style={{ paddingBottom: 5 }} >
-              {/* {String(new Date(item.dateBuy).toLocaleDateString())} */}
+              {/!* {String(new Date(item.dateBuy).toLocaleDateString())} *!/}
               {String(item.nameOther)}
             </ListItem.Title>
             <Divider color={theme.colors.success} width={2} inset insetType={'middle'}/>
@@ -83,28 +85,28 @@ export const OthersList = ({ handlePress }: handleProp): JSX.Element => {
               {String(new Date(item.dateBuy).toLocaleDateString())}
             </ListItem.Title>
 
-            {/* <ListItem.Subtitle style={{ fontSize: 12 }}>
+            {/!* <ListItem.Subtitle style={{ fontSize: 12 }}>
               {(item.dateInstall != null) ? String(new Date(item.dateInstall).toLocaleDateString()) : null}
-            </ListItem.Subtitle> */}
+            </ListItem.Subtitle> *!/}
           </ListItem.Content>
 
           <ListItem.Content style={{ flex: 1.5 }}>
             <ListItem.Title style={{ paddingBottom: 5 }}>
               {item.amountCostPart}
             </ListItem.Title>
-           {/*  <ListItem.Subtitle style={{ fontSize: 12 }}>
+           {/!*  <ListItem.Subtitle style={{ fontSize: 12 }}>
               {(item.mileageInstall != null) ? String(item.mileageInstall) : null}
-            </ListItem.Subtitle> */}
+            </ListItem.Subtitle> *!/}
           </ListItem.Content>
 
-         {/*  <ListItem.Content style={{ flex: 1 }}>
+         {/!*  <ListItem.Content style={{ flex: 1 }}>
             <ListItem.Title style={{ fontSize: 14 }}>
               {item.amountCostPart}
             </ListItem.Title>
             <ListItem.Subtitle style={{ fontSize: 14 }}>
               {item.costPart} грн
             </ListItem.Subtitle>
-          </ListItem.Content> */}
+          </ListItem.Content> *!/}
 
         </ListItem.Swipeable>
 
@@ -112,6 +114,7 @@ export const OthersList = ({ handlePress }: handleProp): JSX.Element => {
       </View>
     )
   }
+ */
 
   useEffect(() => {
     if (listOthers.length > 1) {
@@ -123,13 +126,41 @@ export const OthersList = ({ handlePress }: handleProp): JSX.Element => {
     }
   }, [listOthers])
 
+  useEffect(() => {
+    setTimeout(() => setIsLoad(false), 10)
+    return setIsLoad(true)
+  }, [filterList])
+
+  const filter = (): StateOther[] => {
+    switch (filterList) {
+      case 'last': return listOthers.slice(0, 3)
+      case 'ten': return listOthers.slice(0, 10)
+      default: return listOthers
+    }
+  }
+
   return (
-    <FlatList
-      data={listOthers}
-      extraData={isSortOthers}
-      renderItem={renderRow}
-      keyExtractor={(item, index) => index.toString()}
-    />
+    <>
+
+      {isLoad
+        ? <BusyIndicator />
+        : <FlatList
+          data={filter()}
+          extraData={isSortOthers}
+          renderItem={({ item }) =>
+            <RenderRowOther handlePress={handlePress} item={item}/>}
+          keyExtractor={(item, index) => index.toString()}
+          getItemLayout={(data, index) => (
+            {
+              length: 70,
+              offset: 70 * index,
+              index
+            }
+          )}
+          initialNumToRender={6}
+        />
+      }
+    </>
   )
 }
 

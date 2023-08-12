@@ -133,42 +133,8 @@ export default InputPart
 
 const styles = StyleSheet.create({
 
-  viewGroupInput: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    columnGap: 10
-    /* marginVertical: 10 */
-  },
-  surface: {
-    margin: 5,
-    flex: 1
-  },
   flatList: {
     marginTop: 15,
     height: 400
-  },
-  inputText: {
-    textAlign: 'center',
-    fontSize: 14
-  },
-  errorInput: {
-    color: 'gray',
-    marginTop: 1,
-    textAlign: 'center'
-  },
-
-  button: {
-    textAlign: 'center',
-    color: 'red'
-  },
-  viewButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 5,
-    marginBottom: 20
-  },
-  buttonStyle: {
-    width: '40%',
-    borderRadius: 5
   }
 })
