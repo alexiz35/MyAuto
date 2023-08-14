@@ -8,11 +8,11 @@ import {
   KeyboardAvoidingView, Platform
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Button, Dialog, Divider, Icon, Input, Text, useTheme } from '@rneui/themed'
+import { Dialog, Divider, Icon, Input } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { useAppDispatch, useAppSelector } from '../../components/Redux/hook'
 import {
   BACK_INPUT,
   COLOR_GREEN,
@@ -23,29 +23,44 @@ import {
   TEXT_WHITE,
   ModalPart,
   StateOther
-} from '../type'
-import { RootStackParamList } from '../components/Navigation/Navigation'
-import { addPart, addService, editService } from '../components/Redux/actions'
-import { AddPartModal } from '../components/AddPartModal'
-import ShadowBox from './ShadowBox'
-import Accordion from '../components/Accordion'
-import { Tasks } from '../components/HomeScreenComponents/Tasks'
-import BackgroundView from './BackgroundView'
+} from '../../type'
+import { RootStackParamList } from '../../components/Navigation/Navigation'
+import { addPart, addService, editService } from '../../components/Redux/actions'
+import { AddPartModal } from '../../components/AddPartModal'
+import ShadowBox from '../ShadowBox'
+import Accordion from '../../components/Accordion'
+import { Tasks } from '../../components/HomeScreenComponents/Tasks'
+import BackgroundView from '../BackgroundView'
 import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { IconButton, Modal, useTheme, Text, Portal, Button } from 'react-native-paper'
+import { ListService, PickService } from './PickService'
 
 interface InputServiceProps {
   isCancel: () => void
   isOk: (serviceResult: StateService) => void
   service?: StateService | null
+  isEdit: boolean
 }
 
-const InputService = ({ isCancel, isOk, service = null }: InputServiceProps): JSX.Element => {
+interface FormPart {
+  namePart: string
+  numberPart: string
+  dateBuy: Date
+  costPart: string
+  quantityPart: string
+  amountCostPart: string
+  seller: {
+    name: string
+    phone: string
+    link: string
+  }
+}
+
+const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServiceProps): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
-  const setNewTask = useAppDispatch()
-  const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state)
-  const { theme } = useTheme()
+
+  const theme = useTheme()
 
   const listService = [
     { label: 'engineOil', value: 'engineOil' },
@@ -73,6 +88,16 @@ const InputService = ({ isCancel, isOk, service = null }: InputServiceProps): JS
       }
     }
   ) */
+
+  const [visibleModalService, setVisibleModalService] = useState(false)
+  const [typeService, setTypeService] = useState<ListService>()
+
+  const showModalService = () => setVisibleModalService(true)
+  const hideModalService = () => setVisibleModalService(false)
+  const okModalService = (item: ListService): void => {
+    setTypeService(item)
+    hideModalService()
+  }
 
   const [errorMsg, setErrorMsg] = useState('')
   const [openDrop, setOpenDrop] = useState(false)
@@ -275,19 +300,29 @@ const InputService = ({ isCancel, isOk, service = null }: InputServiceProps): JS
 
   return (
   <View>
-    <Dialog isVisible={isOpenAccordion} overlayStyle={{ backgroundColor: theme.colors.background }}>
-      <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
-    </Dialog>
+    <Portal>
+    <Modal visible={visibleModalService} onDismiss={hideModalService} dismissableBackButton
+           contentContainerStyle={{ marginHorizontal: 20, backgroundColor: theme.colors.background, borderRadius: 5, padding: 3 }}>
+      <PickService typeService={typeService} cancelPress={hideModalService} okPress={okModalService}/>
+    </Modal>
+    </Portal>
     <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
           <View>
-            <DropDownPicker
+            <Button mode={'elevated'} onPress={showModalService} >
+              {typeService !== undefined
+                ? `${String(typeService?.nameService)} / ${String(typeService?.mileage)} km / ${String(typeService?.date)} год`
+                : 'Выберите тип ТО'
+              }
+            </Button>
+
+            {/*  <DropDownPicker
               style={styles.dropDownPicker}
               listMode={'SCROLLVIEW'}
               dropDownContainerStyle={{
                 backgroundColor: theme.colors.background, // 'rgba(61,61,61,0.94)'
                 marginHorizontal: 5,
                 width: '97%',
-                borderColor: theme.colors.greyOutline
+                borderColor: theme.colors.outline
               }}
               disableBorderRadius={true}
               placeholder={'Выберите тип ТО'}
@@ -298,16 +333,16 @@ const InputService = ({ isCancel, isOk, service = null }: InputServiceProps): JS
               setOpen={setOpenDrop}
               setValue={setValueDrop}
               setItems={setItemsDrop}
-              selectedItemLabelStyle={{ color: theme.colors.success, fontWeight: 'bold' }}
+              selectedItemLabelStyle={{ color: theme.colors.tertiary, fontWeight: 'bold' }}
               onChangeValue={(value) => changeTask(value)}
-              textStyle={{ color: theme.colors.black, textAlign: 'center', fontSize: 18 }}
+              textStyle={{ color: theme.colors.primary, textAlign: 'center', fontSize: 18 }}
               arrowIconStyle={{
                 width: 30,
                 height: 30
 
               }}
               ArrowDownIconComponent={() => <Icon type={'material-community'} name={'chevron-down'} color={'grey'} size={30}/>}
-            />
+            /> */}
             <View style={styles.viewAllInput}>
 
               <View style={styles.viewGroupInput}>

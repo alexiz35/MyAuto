@@ -65,7 +65,7 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
               case 'part':
                 return <InputPart />
               case 'service':
-                return <InputPart />
+                return <InputService />
               case 'other':
                 return <InputDoc />
               default:
