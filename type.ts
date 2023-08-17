@@ -112,8 +112,8 @@ export interface StateService {
   title: string
   startKm: number
   endKm: number
-  startDate: string
-  endData: string
+  startDate: Date
+  endData: Date
   /* isFinished: boolean */
   sumCostParts?: number
   sumCostService?: number
@@ -416,8 +416,8 @@ export interface ModalPart {
   seller?: Seller
 }
 
-export interface PropsBottomSheet {
-  initialParts: ModalPart[] | undefined
+export interface ModalAddPartsProps {
+  initialParts: ModalPart[]
   onPressOk: (parts: [ModalPart]) => void
   onPressCancel: () => void
 }

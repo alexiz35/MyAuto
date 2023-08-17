@@ -5,16 +5,17 @@ import {
   TextInput,
   View, ScrollView
 } from 'react-native'
-import { Button, Text, Divider, Icon, Input, useTheme } from '@rneui/themed'
-import { BACK_INPUT, StatePart, PropsBottomSheet, Seller, ModalPart } from '../type'
-import { useAppSelector } from './Redux/hook'
-import BackgroundView from '../CommonComponents/BackgroundView'
-import ShadowBox from '../CommonComponents/ShadowBox'
-import Accordion from './Accordion'
+import { Button, Text, Divider, Icon, Input } from '@rneui/themed'
+import { BACK_INPUT, StatePart, ModalAddPartsProps, Seller, ModalPart } from '../../type'
+import { useAppSelector } from '../../components/Redux/hook'
+import BackgroundView from '../BackgroundView'
+import ShadowBox from '../ShadowBox'
+import Accordion from '../../components/Accordion'
+import { useTheme } from 'react-native-paper'
 
-export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: PropsBottomSheet): JSX.Element => {
+export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: ModalAddPartsProps): JSX.Element => {
   const state = useAppSelector(state => state.cars[0].parts)
-  const { theme } = useTheme()
+  const theme = useTheme()
 
   const [namePart, setNamePart] = useState('')
   const [numberPart, setNumberPart] = useState('')
@@ -149,7 +150,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Pr
               borderBottomRightRadius: 10,
               borderStyle: 'solid',
               borderWidth: 1,
-              borderColor: theme.colors.greyOutline
+              borderColor: theme.colors.outline
             }}>
 
             {
@@ -224,7 +225,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Pr
         </View>
         <Accordion
           insideView={
-          <View style={{ borderWidth: 1, borderColor: theme.colors.greyOutline }}>
+          <View style={{ borderWidth: 1, borderColor: theme.colors.outline }}>
           <View style={styles.viewGroupInput}>
             <ShadowBox style={{ margin: 5, flex: 1 }}>
               <Input

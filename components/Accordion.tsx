@@ -1,12 +1,12 @@
 import {
   StyleProp,
   StyleSheet,
-  TextStyle, TouchableHighlight,
+  TextStyle,
   View,
   ViewStyle
 } from 'react-native'
-import { Icon, Text } from '@rneui/themed'
 import { useEffect, useState } from 'react'
+import { TouchableRipple, Text, IconButton } from 'react-native-paper'
 
 interface Props {
   insideView: JSX.Element
@@ -50,7 +50,7 @@ const Accordion = ({
 
   return (
     <View>
-      <TouchableHighlight
+      <TouchableRipple
         style={[styles.viewTitle, bannerStyle]}
         onPress={() => {
           handlePress()
@@ -60,13 +60,12 @@ const Accordion = ({
           {title}
         </Text>
 
-        <Icon
+        <IconButton
           style={styles.arrow}
-          type={'material-community'}
-          name={isVisible ? 'chevron-up' : 'chevron-down'}
+          icon={isVisible ? 'chevron-up' : 'chevron-down'}
         />
         </>
-      </TouchableHighlight>
+      </TouchableRipple>
       {isVisible
         ? <View style={[styles.viewDrop, viewContainerStyle]}>
           {insideView}

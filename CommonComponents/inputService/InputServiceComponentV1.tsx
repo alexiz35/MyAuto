@@ -26,7 +26,7 @@ import {
 } from '../../type'
 import { RootStackParamList } from '../../components/Navigation/Navigation'
 import { addPart, addService, editService } from '../../components/Redux/actions'
-import { AddPartModal } from '../../components/AddPartModal'
+import { AddPartModal } from './AddPartModal'
 import ShadowBox from '../ShadowBox'
 import Accordion from '../../components/Accordion'
 import { Tasks } from '../../components/HomeScreenComponents/Tasks'

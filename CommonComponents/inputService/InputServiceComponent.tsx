@@ -26,15 +26,26 @@ import {
 } from '../../type'
 import { RootStackParamList } from '../../components/Navigation/Navigation'
 import { addPart, addService, editService } from '../../components/Redux/actions'
-import { AddPartModal } from '../../components/AddPartModal'
+import { AddPartModal } from './AddPartModal'
 import ShadowBox from '../ShadowBox'
 import Accordion from '../../components/Accordion'
 import { Tasks } from '../../components/HomeScreenComponents/Tasks'
 import BackgroundView from '../BackgroundView'
 import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { IconButton, Modal, useTheme, Text, Portal, Button } from 'react-native-paper'
+import {
+  IconButton,
+  Modal,
+  useTheme,
+  Text,
+  Portal,
+  Button,
+  Surface,
+  TextInput,
+  TouchableRipple
+} from 'react-native-paper'
 import { ListService, PickService } from './PickService'
+import { Controller, useForm } from 'react-hook-form'
 
 interface InputServiceProps {
   isCancel: () => void
@@ -43,24 +54,61 @@ interface InputServiceProps {
   isEdit: boolean
 }
 
-interface FormPart {
-  namePart: string
-  numberPart: string
-  dateBuy: Date
-  costPart: string
-  quantityPart: string
-  amountCostPart: string
-  seller: {
-    name: string
-    phone: string
-    link: string
-  }
+interface FormService {
+  startKm: string
+  endKm: string
+  startDate: Date
+  endDate: Date
+  sumCostParts: string
+  sunCostService: string
 }
 
 const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServiceProps): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
 
   const theme = useTheme()
+
+  const tempNullService: FormService = {
+    startKm: '',
+    endKm: '',
+    startDate: new Date(),
+    endDate: new Date(),
+    sumCostParts: '',
+    sunCostService: ''
+  }
+
+  const dataToForm = (data: StateService): FormService => {
+    return {
+      startKm: String(data.startKm),
+      endKm: String(data.endKm),
+      startDate: data.startDate,
+      endDate: data.endData,
+      sumCostParts: data.sumCostParts === undefined || data.sumCostParts === 0 ? '' : String(data.sumCostParts),
+      sunCostService: data.sumCostService === undefined || data.sumCostService === 0 ? '' : String(data.sumCostService)
+    }
+  }
+
+  const formToData = (data: FormService): StateService => {
+    return {
+      id: isEdit ? itemService?.id : Date.now(),
+      title: typeService?.nameService,
+      startKm: Number(data.startKm),
+      endKm: Number(data.endKm),
+      startDate: data.startDate,
+      endData: data.endDate,
+      sumCostService: Number(data.sunCostService),
+      sumCostParts: Number(data.sumCostParts)
+    }
+  }
+
+  const [itemService, setItemService] = useState<StateService>(service != null ? service : formToData(tempNullService))
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    setFocus
+  } = useForm<FormService>({ mode: 'onBlur', defaultValues: tempNullService, values: dataToForm(itemService) })
 
   const listService = [
     { label: 'engineOil', value: 'engineOil' },
@@ -89,11 +137,16 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     }
   ) */
 
-  const [visibleModalService, setVisibleModalService] = useState(false)
   const [typeService, setTypeService] = useState<ListService>()
 
-  const showModalService = () => setVisibleModalService(true)
-  const hideModalService = () => setVisibleModalService(false)
+  const [visibleModalService, setVisibleModalService] = useState(false)
+  const [visibleModalAddParts, setVisibleModalAddParts] = useState(false)
+
+  const showModalAddParts = (): void => setVisibleModalAddParts(true)
+  const hideModalAddParts = (): void => setVisibleModalAddParts(false)
+
+  const showModalService = (): void => setVisibleModalService(true)
+  const hideModalService = (): void => setVisibleModalService(false)
   const okModalService = (item: ListService): void => {
     setTypeService(item)
     hideModalService()
@@ -120,8 +173,6 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 
   const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>()
   const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
-
-  const [isVisible, setIsVisible] = useState(false)
 
   const editDate = (date: string, increment: number): string => {
     const tempDate = new Date(date)
@@ -203,10 +254,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
         break
     }
   }
-  const inputMile = (value: number): void => {
-    setErrorMsg('')
-    setStartKmInput(value)
-  }
+
   const clearInput = (): void => {
     setValueDrop(null)
     setStartDateInput(new Date())
@@ -254,11 +302,8 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
   }
 
   const handleOk = (): void => {
-    if (valueDrop === null || startKmInput === 0) {
-      setErrorMsg('Введите необходимые данные')
-      return
-    }
-    const tempNewTask: StateService = {
+
+    /*  const tempNewTask: StateService = {
       id: Date.now(),
       startKm: startKmInput,
       endKm: endKmInput,
@@ -267,14 +312,14 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       title: String(valueDrop),
       sumCostService: costService,
       sumCostParts: sumCost,
-      /* isFinished: false, */
+      /!* isFinished: false, *!/
       addition:
         {
           parts: addModalParts,
           services: addServices
         }
     }
-
+ */
     /* createNewParts() */
 
     /* editableTask
@@ -282,19 +327,19 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       : setNewTask(addTask(state.numberCar, tempNewTask)) */
 
     /* handleOnPress() */
-    isOk(tempNewTask)
+    /* isOk(tempNewTask) */
   }
   // ---------------------------------------------------------------------------
   // ---------------------- handleModal ----------------------------------------
 
   const handleCancelModal = (): void => {
-    setIsVisible(false)
+    setVisibleModalAddParts(false)
   }
 
   const handleOkModal = (parts: [ModalPart]): void => {
     setAddModalParts(parts)
     /* setAddServices(services) */
-    setIsVisible(false)
+    setVisibleModalAddParts(false)
   }
   // ---------------------------------------------------------------------------
 
@@ -346,7 +391,24 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
             <View style={styles.viewAllInput}>
 
               <View style={styles.viewGroupInput}>
-                <ShadowBox style={{ margin: 5, flex: 1 }}>
+                <Surface elevation={2} style={styles.surface}>
+                  <Controller name={'startKm'}
+                              control={control}
+                              render={ ({ field: { onChange, value, ref, onBlur } }) => (
+                                <TextInput
+                                  ref={ref}
+                                  dense
+                                  style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                  label={'текущий пробег'}
+                                  value={value}
+                                  onChangeText={(value) => onChange(value)}
+                                  onBlur={onBlur}
+                                  /* onSubmitEditing={() => setFocus('numberPart')} */
+                                />
+                              )}
+                  />
+                </Surface>
+                {/* <ShadowBox style={{ margin: 5, flex: 1 }}>
                   <Input
                     placeholder={'введите пробег'}
                     placeholderTextColor={'red'}
@@ -357,107 +419,133 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                     keyboardType={'numeric'}
                     value={String(startKmInput)}
                   />
-                </ShadowBox>
-                <ShadowBox style={{ margin: 5, flex: 1 }}>
-                  <Input
-                    placeholder={'Пробег для замены'}
-                    containerStyle={{ flex: 1 }}
-                    inputStyle={styles.inputText}
-                    errorMessage={'пробег замены'}
-                    errorStyle={styles.errorInput}
-                    value = {String(endKmInput)}
+                </ShadowBox> */}
+                <Surface elevation={2} style={styles.surface}>
+                  <Controller name={'endKm'}
+                              control={control}
+                              render={ ({ field: { onChange, value, ref, onBlur } }) => (
+                                <TextInput
+                                  ref={ref}
+                                  dense
+                                  style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                  label={'пробег замены'}
+                                  value={value}
+                                  onChangeText={(value) => onChange(value)}
+                                  onBlur={onBlur}
+                                  /* onSubmitEditing={() => setFocus('numberPart')} */
+                                />
+                              )}
                   />
-                </ShadowBox>
+                </Surface>
               </View>
-
               <View style={styles.viewGroupInput}>
-                <ShadowBox style={{ margin: 5, flex: 1 }}>
-                  <Input
-                    placeholder={'Дата проведения'}
-                    containerStyle={{ flex: 1 }}
-                    inputStyle={styles.inputText}
-                    showSoftInputOnFocus={false}
-                    value = {startDateInput.toLocaleDateString()}
-                    onPressOut={inputDate}
-                    errorMessage={'текущая дата'}
-                    errorStyle={styles.errorInput}
+                <Surface elevation={2} style={styles.surface}>
+                  <Controller name={'startDate'}
+                              control={control}
+                              render={ ({ field: { value, ref } }) => (
+                                <TextInput
+                                  ref={ref}
+                                  dense
+                                  style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                  label={'дата сервиса'}
+                                  showSoftInputOnFocus={false}
+                                  value={new Date(value).toLocaleDateString()}
+                                  onPressOut={inputDate}
+                                  /* onSubmitEditing={() => setFocus('numberPart')} */
+                                />
+                              )}
                   />
-                </ShadowBox>
-                <ShadowBox style={{ margin: 5, flex: 1 }}>
-                  <Input
-                    placeholder={'Дата проведения'}
-                    inputStyle={styles.inputText}
-                    errorMessage={'конечная дата'}
-                    errorStyle={styles.errorInput}
-                    value = {endDateInput }
-                    editable={false}
+                </Surface>
+                <Surface elevation={2} style={styles.surface}>
+                  <Controller name={'endDate'}
+                              control={control}
+                              render={ ({ field: { value, ref } }) => (
+                                <TextInput
+                                  ref={ref}
+                                  dense
+                                  style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                  label={'дата замены'}
+                                  showSoftInputOnFocus={false}
+                                  value={new Date(value).toLocaleDateString()}
+                                  onPressOut={inputDate}
+                                  /* onSubmitEditing={() => setFocus('numberPart')} */
+                                />
+                              )}
                   />
-                </ShadowBox>
+                </Surface>
               </View>
-            </View>
-            {/*  <Button
-          title={ `Ввести комплектующие \n добавлено ${addParts?.length} шт`}
-          titleStyle={{ color: 'black' }}
-          onPress={() => { setIsVisible(true) }}
-          color= {'white'}
-          buttonStyle={ styles.buttonAddition }
-        /> */}
-            <ShadowBox style={{ margin: 5, flex: 1 }}>
-              <Pressable style={styles.textCost} onPress={() => {
-                setIsOpenAccordion(true)
-                setTimeout(() => {
-                  setIsVisible(true)
-                  setIsOpenAccordion(false)
-                }, 100)
-              }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Добавить комплектующие</Text>
+              </View>
+              <Surface style={{ margin: 5, flex: 1 }}>
+                <TouchableRipple style={styles.textCost} onPress={() => {
+                  showModalAddParts()
+                }}>
+                  <>
+                  <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Добавить комплектующие</Text>
+                  <Text >{`Добавлено деталей: ${amountPart} шт`}</Text>
+                  </>
+                </TouchableRipple>
+              </Surface>
+              <View style={styles.viewGroupInput}>
+                <Surface elevation={2} style={styles.surface}>
+                  <Controller name={'sumCostParts'}
+                              control={control}
+                              /* rules={{ required: 'цена деталей' }} */
+                              render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                                <TextInput
+                                  ref={ref}
+                                  dense
+                                  style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
+                                  label={'цена деталей'}
+                                  onChangeText={(value) => onChange(value)}
+                                  value={value}
+                                  onBlur={onBlur}
+                                  error={(error != null) && true}
+                                  /* onSubmitEditing={() => {
+                                    setFocus('dateBuy')
+                                  }} */
+                                />
+                              ) }
+                  />
+                </Surface>
+                <Surface elevation={2} style={styles.surface}>
+                  <Controller name={'sunCostService'}
+                              control={control}
+                              /* rules={{ required: 'введите название' }} */
+                              render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                                <TextInput
+                                  ref={ref}
+                                  dense
+                                  style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
+                                  label={'цена работы'}
+                                  onChangeText={(value) => onChange(value)}
+                                  value={value}
+                                  onBlur={onBlur}
+                                  error={(error != null) && true}
+                                  /* onSubmitEditing={() => {
+                                    setFocus('dateBuy')
+                                  }} */
+                                />
+                              ) }
+                  />
+                </Surface>
+              </View>
 
-                <Text >{`Добавлено деталей: ${amountPart} шт`}</Text>
-              </Pressable>
-            </ShadowBox>
-            <View style={styles.viewGroupInput}>
-              <ShadowBox style={{ margin: 5, flex: 1 }}>
-                <Input
-                  placeholder={'цена деталей'}
-                  /* placeholderTextColor={'red'} */
-                  inputStyle={styles.inputText}
-                  errorMessage={'цена деталей'}
-                  errorStyle={styles.errorInput}
-                  onChangeText={(value) => setCostParts(Number(value))}
-                  keyboardType={'numeric'}
-                  value={String(sumCost)}
-                />
-              </ShadowBox>
-              <ShadowBox style={{ margin: 5, flex: 1 }}>
-                <Input
-                  placeholder={'стоимость работы'}
-                  containerStyle={{ flex: 1 }}
-                  inputStyle={styles.inputText}
-                  errorMessage={'стоимость работы'}
-                  errorStyle={styles.errorInput}
-                  onChangeText={(value) => setCostService(Number(value))}
-                  keyboardType={'numeric'}
-                  value={String(costService)}
-                />
-              </ShadowBox>
-            </View>
-
-            <ShadowBox style={{ margin: 5, flex: 1 }}>
+            <Surface style={{ margin: 5, flex: 1 }}>
               <Text style={styles.textCost}>{`Итого затраты: ${sumCost + costService} грн`}</Text>
-            </ShadowBox>
-
-            <Dialog
-              isVisible={isVisible}
-              overlayStyle={{ width: '100%', padding: 0 }}
-              backdropStyle={{ backgroundColor: 'rgba(63,59,59,0.76)' }}
-            >
-              <AddPartModal
-                initialParts = {addModalParts}
-                onPressCancel = {handleCancelModal}
-                onPressOk={handleOkModal}
-              />
-            </Dialog>
-
+            </Surface>
+            <Portal>
+                <Modal
+                  visible={visibleModalAddParts} onDismiss={hideModalAddParts}
+                  dismissableBackButton
+                  contentContainerStyle={{ marginHorizontal: 5, backgroundColor: theme.colors.background, borderRadius: 5, padding: 3 }}
+                >
+                  <AddPartModal
+                    initialParts = {addModalParts}
+                    onPressCancel = {handleCancelModal}
+                    onPressOk={handleOkModal}
+                  />
+                </Modal>
+            </Portal>
             <View style={styles.viewButton}>
               <Button
                 containerStyle={styles.buttonStyle}
@@ -502,6 +590,10 @@ const styles = StyleSheet.create({
   },
   viewAllInput: {
 
+  },
+  surface: {
+    margin: 5,
+    flex: 1
   },
   viewGroupInput: {
     flexDirection: 'row',
