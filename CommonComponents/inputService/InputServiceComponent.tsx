@@ -1,40 +1,18 @@
 import {
   View,
-  StyleSheet,
-  SafeAreaView,
-  Pressable,
-  ImageBackground,
-  ScrollView,
-  KeyboardAvoidingView, Platform
+  StyleSheet
 } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Dialog, Divider, Icon, Input } from '@rneui/themed'
-import DropDownPicker from 'react-native-dropdown-picker'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useAppDispatch, useAppSelector } from '../../components/Redux/hook'
 import {
   BACK_INPUT,
-  COLOR_GREEN,
-  StatePart,
   ServiceList,
   StateService,
-  TEXT,
-  TEXT_WHITE,
-  ModalPart,
-  StateOther
+  ModalPart
 } from '../../type'
-import { RootStackParamList } from '../../components/Navigation/Navigation'
-import { addPart, addService, editService } from '../../components/Redux/actions'
 import { AddPartModal } from './AddPartModal'
-import ShadowBox from '../ShadowBox'
-import Accordion from '../../components/Accordion'
-import { Tasks } from '../../components/HomeScreenComponents/Tasks'
-import BackgroundView from '../BackgroundView'
-import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
-  IconButton,
   Modal,
   useTheme,
   Text,
@@ -97,7 +75,10 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       startDate: data.startDate,
       endData: data.endDate,
       sumCostService: Number(data.sunCostService),
-      sumCostParts: Number(data.sumCostParts)
+      sumCostParts: Number(data.sumCostParts),
+      addition: {
+        parts: addModalParts
+      }
     }
   }
 
@@ -136,26 +117,27 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       }
     }
   ) */
-
-  const [typeService, setTypeService] = useState<ListService>()
+  console.log('service', service?.title)
+  const [typeService, setTypeService] = useState < ListService >(service !== undefined ? service?.title : undefined)
+  const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>()
 
   const [visibleModalService, setVisibleModalService] = useState(false)
   const [visibleModalAddParts, setVisibleModalAddParts] = useState(false)
 
+  /* -------------------- function modal Add Parts --------------------------------------- */
   const showModalAddParts = (): void => setVisibleModalAddParts(true)
   const hideModalAddParts = (): void => setVisibleModalAddParts(false)
 
+  /* -------------------- function modal Pick Service ----------------------------------- */
   const showModalService = (): void => setVisibleModalService(true)
   const hideModalService = (): void => setVisibleModalService(false)
   const okModalService = (item: ListService): void => {
     setTypeService(item)
     hideModalService()
   }
+  /* --------------------------------------------------------------------------- */
 
   const [errorMsg, setErrorMsg] = useState('')
-  const [openDrop, setOpenDrop] = useState(false)
-  const [valueDrop, setValueDrop] = useState<null | string>(null)
-  const [itemsDrop, setItemsDrop] = useState(listService)
 
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isOpenAccordion, setIsOpenAccordion] = useState(false)
@@ -171,7 +153,6 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
   const [amountPart, setAmountPart] = useState(0)
   const [sumCost, setSumCost] = useState(0)
 
-  const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>()
   const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
 
   const editDate = (date: string, increment: number): string => {
@@ -187,30 +168,30 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     onChange: (event, date) => setStartDateInput(date)
   })
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (service !== null) {
       handleOpen(service)
     }
-  }, [])
+  }, []) */
 
-  const handleOpen = (item: StateService): void => {
+  /*  const handleOpen = (item: StateService): void => {
     if (!isOpenAccordion) {
       setStartKmInput(item.startKm)
       setAddModalParts(item.addition?.parts)
       setStartDateInput(new Date(item.startDate))
       setCostService(item.sumCostService !== undefined ? item.sumCostService : 0)
       setValueDrop(item.title)
-      /* handleOnPress() */
+      /!* handleOnPress() *!/
     }
-  }
+  } */
 
-  useEffect(() => {
+  /* useEffect(() => {
     setEndKmInput(startKmInput + kmToService)
-  }, [startKmInput, kmToService])
+  }, [startKmInput, kmToService]) */
 
-  useEffect(() => {
+  /* useEffect(() => {
     setEndDateInput(editDate(startDateInput.toLocaleDateString(), timeToService))
-  }, [startDateInput, timeToService])
+  }, [startDateInput, timeToService]) */
 
   useEffect(() => {
     counter(addModalParts)
@@ -227,7 +208,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     setSumCost(sum)
     setAmountPart(amount)
   }
-  const changeTask = (value: string | null): void => {
+  /* const changeTask = (value: string | null): void => {
     setErrorMsg('')
     switch (value) {
       case 'engineOil':
@@ -253,16 +234,15 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       default:
         break
     }
-  }
+  } */
 
-  const clearInput = (): void => {
-    setValueDrop(null)
+  /* const clearInput = (): void => {
     setStartDateInput(new Date())
     setStartKmInput(0)
     setCostParts(0)
     setCostService(0)
     setAddModalParts(undefined)
-  }
+  } */
 
   // ---------------------------Accordion --------------------------------------
   /* const isOpen = (open: boolean): void => {
@@ -297,11 +277,11 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 
   // ---------------------------handleButtons-----------------------------------
   const handleCancel = (): void => {
-    clearInput()
     isCancel()
   }
 
-  const handleOk = (): void => {
+  const handleOk = (dataForm: FormService): void => {
+    isOk(formToData(dataForm))
 
     /*  const tempNewTask: StateService = {
       id: Date.now(),
@@ -345,136 +325,119 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 
   return (
   <View>
+    {
+      // -------------------------- Modal for selecting type of service ---------------------------
+    }
     <Portal>
     <Modal visible={visibleModalService} onDismiss={hideModalService} dismissableBackButton
            contentContainerStyle={{ marginHorizontal: 20, backgroundColor: theme.colors.background, borderRadius: 5, padding: 3 }}>
-      <PickService typeService={typeService} cancelPress={hideModalService} okPress={okModalService}/>
+      <PickService
+        typeService={typeService}
+        cancelPress={hideModalService}
+        okPress={okModalService}
+      />
     </Modal>
     </Portal>
+    {
+      // -------------------------------------------------------------------------------------------
+    }
     <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
           <View>
+    {
+    // ----------------------------- Button for selecting type of service ---------------------------
+    }
             <Button mode={'elevated'} onPress={showModalService} >
               {typeService !== undefined
                 ? `${String(typeService?.nameService)} / ${String(typeService?.mileage)} km / ${String(typeService?.date)} год`
                 : 'Выберите тип ТО'
               }
             </Button>
-
-            {/*  <DropDownPicker
-              style={styles.dropDownPicker}
-              listMode={'SCROLLVIEW'}
-              dropDownContainerStyle={{
-                backgroundColor: theme.colors.background, // 'rgba(61,61,61,0.94)'
-                marginHorizontal: 5,
-                width: '97%',
-                borderColor: theme.colors.outline
-              }}
-              disableBorderRadius={true}
-              placeholder={'Выберите тип ТО'}
-              placeholderStyle={{ color: theme.colors.error, fontWeight: 'bold' }}
-              open={openDrop}
-              value={valueDrop}
-              items={itemsDrop}
-              setOpen={setOpenDrop}
-              setValue={setValueDrop}
-              setItems={setItemsDrop}
-              selectedItemLabelStyle={{ color: theme.colors.tertiary, fontWeight: 'bold' }}
-              onChangeValue={(value) => changeTask(value)}
-              textStyle={{ color: theme.colors.primary, textAlign: 'center', fontSize: 18 }}
-              arrowIconStyle={{
-                width: 30,
-                height: 30
-
-              }}
-              ArrowDownIconComponent={() => <Icon type={'material-community'} name={'chevron-down'} color={'grey'} size={30}/>}
-            /> */}
+    {
+      // -------------------------------------------------------------------------------------------
+    }
             <View style={styles.viewAllInput}>
-
-              <View style={styles.viewGroupInput}>
-                <Surface elevation={2} style={styles.surface}>
-                  <Controller name={'startKm'}
-                              control={control}
-                              render={ ({ field: { onChange, value, ref, onBlur } }) => (
-                                <TextInput
-                                  ref={ref}
-                                  dense
-                                  style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                  label={'текущий пробег'}
-                                  value={value}
-                                  onChangeText={(value) => onChange(value)}
-                                  onBlur={onBlur}
-                                  /* onSubmitEditing={() => setFocus('numberPart')} */
-                                />
-                              )}
-                  />
-                </Surface>
-                {/* <ShadowBox style={{ margin: 5, flex: 1 }}>
-                  <Input
-                    placeholder={'введите пробег'}
-                    placeholderTextColor={'red'}
-                    inputStyle={styles.inputText}
-                    errorMessage={'текущий пробег'}
-                    errorStyle={{ color: 'gray', marginTop: 1, textAlign: 'center' }}
-                    onChangeText={(value) => inputMile(Number(value))}
-                    keyboardType={'numeric'}
-                    value={String(startKmInput)}
-                  />
-                </ShadowBox> */}
-                <Surface elevation={2} style={styles.surface}>
-                  <Controller name={'endKm'}
-                              control={control}
-                              render={ ({ field: { onChange, value, ref, onBlur } }) => (
-                                <TextInput
-                                  ref={ref}
-                                  dense
-                                  style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                  label={'пробег замены'}
-                                  value={value}
-                                  onChangeText={(value) => onChange(value)}
-                                  onBlur={onBlur}
-                                  /* onSubmitEditing={() => setFocus('numberPart')} */
-                                />
-                              )}
-                  />
-                </Surface>
-              </View>
-              <View style={styles.viewGroupInput}>
-                <Surface elevation={2} style={styles.surface}>
-                  <Controller name={'startDate'}
-                              control={control}
-                              render={ ({ field: { value, ref } }) => (
-                                <TextInput
-                                  ref={ref}
-                                  dense
-                                  style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                  label={'дата сервиса'}
-                                  showSoftInputOnFocus={false}
-                                  value={new Date(value).toLocaleDateString()}
-                                  onPressOut={inputDate}
-                                  /* onSubmitEditing={() => setFocus('numberPart')} */
-                                />
-                              )}
-                  />
-                </Surface>
-                <Surface elevation={2} style={styles.surface}>
-                  <Controller name={'endDate'}
-                              control={control}
-                              render={ ({ field: { value, ref } }) => (
-                                <TextInput
-                                  ref={ref}
-                                  dense
-                                  style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                  label={'дата замены'}
-                                  showSoftInputOnFocus={false}
-                                  value={new Date(value).toLocaleDateString()}
-                                  onPressOut={inputDate}
-                                  /* onSubmitEditing={() => setFocus('numberPart')} */
-                                />
-                              )}
-                  />
-                </Surface>
-              </View>
-              </View>
+                {
+                  // --------------- Input miles of service ----------------------------------------
+                }
+                <View style={styles.viewGroupInput}>
+                  <Surface elevation={2} style={styles.surface}>
+                    <Controller name={'startKm'}
+                                control={control}
+                                render={ ({ field: { onChange, value, ref, onBlur } }) => (
+                                  <TextInput
+                                    ref={ref}
+                                    dense
+                                    style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                    label={'текущий пробег'}
+                                    value={value}
+                                    onChangeText={(value) => onChange(value)}
+                                    onBlur={onBlur}
+                                    /* onSubmitEditing={() => setFocus('numberPart')} */
+                                  />
+                                )}
+                    />
+                  </Surface>
+                  <Surface elevation={2} style={styles.surface}>
+                    <Controller name={'endKm'}
+                                control={control}
+                                render={ ({ field: { onChange, value, ref, onBlur } }) => (
+                                  <TextInput
+                                    ref={ref}
+                                    dense
+                                    style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                    label={'пробег замены'}
+                                    value={value}
+                                    onChangeText={(value) => onChange(value)}
+                                    onBlur={onBlur}
+                                    /* onSubmitEditing={() => setFocus('numberPart')} */
+                                  />
+                                )}
+                    />
+                  </Surface>
+                </View>
+                {
+                  // --------------- Input date of service ------------------------------------------
+                }
+                <View style={styles.viewGroupInput}>
+                  <Surface elevation={2} style={styles.surface}>
+                    <Controller name={'startDate'}
+                                control={control}
+                                render={ ({ field: { value, ref } }) => (
+                                  <TextInput
+                                    ref={ref}
+                                    dense
+                                    style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                    label={'дата сервиса'}
+                                    showSoftInputOnFocus={false}
+                                    value={new Date(value).toLocaleDateString()}
+                                    onPressOut={inputDate}
+                                    /* onSubmitEditing={() => setFocus('numberPart')} */
+                                  />
+                                )}
+                    />
+                  </Surface>
+                  <Surface elevation={2} style={styles.surface}>
+                    <Controller name={'endDate'}
+                                control={control}
+                                render={ ({ field: { value, ref } }) => (
+                                  <TextInput
+                                    ref={ref}
+                                    dense
+                                    style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                    label={'дата замены'}
+                                    showSoftInputOnFocus={false}
+                                    value={new Date(value).toLocaleDateString()}
+                                    onPressOut={inputDate}
+                                    /* onSubmitEditing={() => setFocus('numberPart')} */
+                                  />
+                                )}
+                    />
+                  </Surface>
+                </View>
+            </View>
+            {
+              // --------------- Button for modal adding parts --------------------------------------
+            }
               <Surface style={{ margin: 5, flex: 1 }}>
                 <TouchableRipple style={styles.textCost} onPress={() => {
                   showModalAddParts()
@@ -485,6 +448,9 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                   </>
                 </TouchableRipple>
               </Surface>
+            {
+              // --------------- Input cost parts and service --------------------------------------
+            }
               <View style={styles.viewGroupInput}>
                 <Surface elevation={2} style={styles.surface}>
                   <Controller name={'sumCostParts'}
@@ -529,10 +495,15 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                   />
                 </Surface>
               </View>
-
+            {
+              // --------------- Label sum cost service - ------------------------------------------
+            }
             <Surface style={{ margin: 5, flex: 1 }}>
               <Text style={styles.textCost}>{`Итого затраты: ${sumCost + costService} грн`}</Text>
             </Surface>
+            {
+              // --------------- Modal adding parts -------------------------------------------------
+            }
             <Portal>
                 <Modal
                   visible={visibleModalAddParts} onDismiss={hideModalAddParts}
@@ -546,28 +517,22 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                   />
                 </Modal>
             </Portal>
+            {
+              // --------------- Result buttons ------------------------------------------
+            }
             <View style={styles.viewButton}>
               <Button
-                containerStyle={styles.buttonStyle}
-                /* buttonStyle={{ borderColor: 'red' }}
-                titleStyle={{ color: 'red' }} */
-                title={'Cancel'}
-                color={'error'}
-                type={'solid'}
+                style={styles.buttonStyle}
+                labelStyle={{ color: 'white' }}
+                buttonColor={theme.colors.error}
                 onPress={() => { handleCancel() }}
-                raised
-                /* onPress={onPressCancel} */
-              />
+              >Cancel</Button>
               <Button
-                containerStyle={styles.buttonStyle}
-                /* buttonStyle={{ borderColor: COLOR_GREEN }}
-                titleStyle={{ color: COLOR_GREEN }} */
-                title={'Ok'}
-                color={'success'}
-                type={'solid'}
-                onPress={() => { handleOk() }}
-                raised
-              />
+                style={styles.buttonStyle}
+                labelStyle={{ color: 'white' }}
+                buttonColor={theme.colors.tertiary}
+                onPress={handleSubmit(handleOk)}
+              >Ok</Button>
             </View>
             {/* </ScrollView> */}
           </View>

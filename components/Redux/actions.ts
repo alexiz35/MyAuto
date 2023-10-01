@@ -35,12 +35,12 @@ export const updateMiles = (carId: number, currentMiles: CurrentMiles): ActionMi
     }
   })
 // ----------------------------- Action Task -----------------------------------
-export const addService = (carId: number, task: StateService): ActionAddService => (
+export const addService = (carId: number, service: StateService): ActionAddService => (
   {
     type: ActionType.ADD_SERVICE,
     payload: {
       carId,
-      task
+      service
     }
   })
 
@@ -64,13 +64,13 @@ export const delService = (carId: number, id: number): ActionDelService => (
   }
 ) */
 
-export const editService = (carId: number, id: number | undefined, task: StateService): ActionEditService => (
+export const editService = (carId: number, id: number | undefined, service: StateService): ActionEditService => (
   {
     type: ActionType.EDIT_SERVICE,
     payload: {
       carId,
       id,
-      task
+      service
     }
   })
 // -----------------------------------------------------------------------------

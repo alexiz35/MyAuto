@@ -80,7 +80,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     case ActionType.ADD_SERVICE: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
 
-      newArray[indexArray].services.push(action.payload.task)
+      newArray[indexArray].services.push(action.payload.service)
       return {
         ...state,
         cars: newArray
@@ -101,7 +101,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
       const { newArray, indexArray } = selectCar(action.payload.carId)
 
       const tempTasks = newArray[indexArray].services.filter(item => item.id !== action.payload.id)
-      newArray[indexArray].services = tempTasks.concat(action.payload.task)
+      newArray[indexArray].services = tempTasks.concat(action.payload.service)
       return {
         ...state,
         cars: newArray

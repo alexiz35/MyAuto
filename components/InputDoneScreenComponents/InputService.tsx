@@ -53,18 +53,19 @@ const InputService = (): JSX.Element => {
   }, [openAccordion])
 
   // ------------------------- control according -------------------------------
-  const handleOpen = (item: StateService): void => {
+  /* const handleOpen = (item: StateService): void => {
     setIsList(false)
     setOpenAccordion(true)
     setIsEditService(true)
     setItemService(item)
-  }
+  } */
 
   const handleOnPress = (): void => {
     if (!openAccordion) {
       setIsList(false)
     } else setTimeout(() => setIsList(true), 100)
     setOpenAccordion(!openAccordion)
+    console.log('OnPress')
     clearInput()
   }
 
@@ -121,7 +122,7 @@ const InputService = (): JSX.Element => {
           <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
         </ToggleButton.Row>
 
-        <OthersList handlePress={handleOpen} filterList={dateList}/>
+        {/* <OthersList handlePress={handleOpen} filterList={dateList}/> */}
 
       </View>
     }
@@ -130,11 +131,11 @@ const InputService = (): JSX.Element => {
     }
 
     <View style={{ marginTop: 10, height: '85%' }}>
-    {openAccordion
+    {/* {openAccordion
       ? null
       : <Tasks />
 
-    }
+    } */}
     </View>
   </View>
   )

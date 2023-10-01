@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
 
         <View style={(orientation < 3) ? { flex: 3 } : { flex: 1.5 }}>
           <Text style={{ textAlign: 'center' }}> Current Task</Text>
-          <Tasks />
+          {/* <Tasks /> */}
         </View>
 
       </View>

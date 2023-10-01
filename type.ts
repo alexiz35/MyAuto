@@ -214,7 +214,7 @@ export interface ActionAddService {
   type: ActionType.ADD_SERVICE
   payload: {
     carId: number
-    task: StateService
+    service: StateService
   }
 }
 export interface ActionDelService {
@@ -230,7 +230,7 @@ export interface ActionEditService {
   payload: {
     carId: number
     id: number | undefined
-    task: StateService
+    service: StateService
   }
 }
 
