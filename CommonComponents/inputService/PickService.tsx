@@ -6,17 +6,12 @@
 import { FlatList, View } from 'react-native'
 import { Button, Card, Divider, List, Text, TextInput } from 'react-native-paper'
 import { useState } from 'react'
-
-export interface ListService {
-  nameService: string
-  mileage: number
-  date: number
-}
+import { ListService } from '../../type'
 
 interface PickServiceProps {
   cancelPress: () => void
   okPress: (typeService: ListService) => void
-  typeService: ListService
+  typeService: ListService | undefined
 }
 
 export const PickService = ({ cancelPress, okPress, typeService }: PickServiceProps): JSX.Element => {

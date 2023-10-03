@@ -24,6 +24,8 @@ import { List, ToggleButton, useTheme } from 'react-native-paper'
 import { OthersList } from './OthersList'
 import { useNavigation } from '@react-navigation/native'
 import InputDocComponent from '../../CommonComponents/InputDocComponent'
+import { PartsList } from './PartsList'
+import { ServicesList } from './ServicesList'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 const InputService = (): JSX.Element => {
@@ -32,7 +34,6 @@ const InputService = (): JSX.Element => {
   const state = useAppSelector((state) => state)
   const { colors } = useTheme()
   const nav = useNavigation()
-
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isEditService, setIsEditService] = useState(false)
 
@@ -53,12 +54,12 @@ const InputService = (): JSX.Element => {
   }, [openAccordion])
 
   // ------------------------- control according -------------------------------
-  /* const handleOpen = (item: StateService): void => {
+  const handleOpen = (item: StateService): void => {
     setIsList(false)
     setOpenAccordion(true)
     setIsEditService(true)
     setItemService(item)
-  } */
+  }
 
   const handleOnPress = (): void => {
     if (!openAccordion) {
@@ -122,7 +123,7 @@ const InputService = (): JSX.Element => {
           <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
         </ToggleButton.Row>
 
-        {/* <OthersList handlePress={handleOpen} filterList={dateList}/> */}
+        <ServicesList handlePress={handleOpen} filterList={dateList}/>
 
       </View>
     }

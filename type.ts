@@ -60,6 +60,16 @@ export interface StateCar {
   tasks: StateTask[]
 }
 
+export interface StateListSeller {
+  name: string
+  phone: string
+  web: string
+  specialism: string
+  type: string
+}
+
+// ---------------------------------------------------------------------------------
+
 export interface StateFuel {
   id: number
   dateFuel: Date
@@ -109,7 +119,8 @@ export interface StateServiceTask {
 
 export interface StateService {
   id: number
-  title: string
+  typeService: ListService
+  /* title: string */
   startKm: number
   endKm: number
   startDate: Date
@@ -120,8 +131,14 @@ export interface StateService {
   addition?:
   {
     parts?: [ModalPart]
-    services?: [ServiceList]
+    services?: Seller
   }
+}
+
+export interface ListService {
+  nameService: string
+  mileage: number
+  date: number
 }
 
 export interface StatePart {

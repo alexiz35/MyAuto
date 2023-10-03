@@ -8,7 +8,7 @@ import {
   BACK_INPUT,
   ServiceList,
   StateService,
-  ModalPart
+  ModalPart, ListService
 } from '../../type'
 import { AddPartModal } from './AddPartModal'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -22,8 +22,9 @@ import {
   TextInput,
   TouchableRipple
 } from 'react-native-paper'
-import { ListService, PickService } from './PickService'
+import { PickService } from './PickService'
 import { Controller, useForm } from 'react-hook-form'
+import Accordion from '../../components/Accordion'
 
 interface InputServiceProps {
   isCancel: () => void
@@ -39,6 +40,9 @@ interface FormService {
   endDate: Date
   sumCostParts: string
   sunCostService: string
+  sellerName: string
+  sellerPhone: string
+  sellerWeb: string
 }
 
 const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServiceProps): JSX.Element => {
@@ -52,7 +56,10 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     startDate: new Date(),
     endDate: new Date(),
     sumCostParts: '',
-    sunCostService: ''
+    sunCostService: '',
+    sellerName: '',
+    sellerPhone: '',
+    sellerWeb: ''
   }
 
   const dataToForm = (data: StateService): FormService => {
@@ -62,14 +69,18 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       startDate: data.startDate,
       endDate: data.endData,
       sumCostParts: data.sumCostParts === undefined || data.sumCostParts === 0 ? '' : String(data.sumCostParts),
-      sunCostService: data.sumCostService === undefined || data.sumCostService === 0 ? '' : String(data.sumCostService)
+      sunCostService: data.sumCostService === undefined || data.sumCostService === 0 ? '' : String(data.sumCostService),
+      sellerName: data.addition?.services?.name === undefined ? '' : String(data.addition?.services?.name),
+      sellerPhone: data.addition?.services?.phone === undefined ? '' : String(data.addition?.services?.phone),
+      sellerWeb: data.addition?.services?.link === undefined ? '' : String(data.addition?.services?.link)
     }
   }
 
   const formToData = (data: FormService): StateService => {
     return {
       id: isEdit ? itemService?.id : Date.now(),
-      title: typeService?.nameService,
+      typeService,
+      /* title: typeService?.nameService, */
       startKm: Number(data.startKm),
       endKm: Number(data.endKm),
       startDate: data.startDate,
@@ -77,7 +88,12 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       sumCostService: Number(data.sunCostService),
       sumCostParts: Number(data.sumCostParts),
       addition: {
-        parts: addModalParts
+        parts: addModalParts,
+        services: {
+          name: data.sellerName,
+          phone: data.sellerPhone,
+          link: data.sellerWeb
+        }
       }
     }
   }
@@ -91,18 +107,16 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     setFocus
   } = useForm<FormService>({ mode: 'onBlur', defaultValues: tempNullService, values: dataToForm(itemService) })
 
-  const listService = [
+  /* const listService = [
     { label: 'engineOil', value: 'engineOil' },
     { label: 'gearOil', value: 'gearOil' },
     { label: 'airFilter', value: 'airFilter' },
     { label: 'fuelFilter', value: 'fuelFilter' },
     { label: 'driveBelt', value: 'driveBelt' },
     { label: 'timingBelt', value: 'timingBelt' }
-  ]
-
+  ] */
   /* const editableTask: boolean = route.params.editable
   const currentId: number | undefined = route.params.taskId */
-
   /* const [currentTask, setCurrentTask] = useState<StateTask>(
     {
       id: 0,
@@ -117,9 +131,9 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       }
     }
   ) */
-  console.log('service', service?.title)
-  const [typeService, setTypeService] = useState < ListService >(service !== undefined ? service?.title : undefined)
-  const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>()
+
+  const [typeService, setTypeService] = useState < ListService | undefined>(isEdit ? service?.typeService : undefined)
+  const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>(isEdit ? service?.addition?.parts : undefined)
 
   const [visibleModalService, setVisibleModalService] = useState(false)
   const [visibleModalAddParts, setVisibleModalAddParts] = useState(false)
@@ -369,6 +383,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                     label={'текущий пробег'}
+                                    keyboardType={'numeric'}
                                     value={value}
                                     onChangeText={(value) => onChange(value)}
                                     onBlur={onBlur}
@@ -386,6 +401,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                     label={'пробег замены'}
+                                    keyboardType={'numeric'}
                                     value={value}
                                     onChangeText={(value) => onChange(value)}
                                     onBlur={onBlur}
@@ -498,9 +514,90 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
             {
               // --------------- Label sum cost service - ------------------------------------------
             }
-            <Surface style={{ margin: 5, flex: 1 }}>
+            {/* <Surface style={{ margin: 5, flex: 1 }}>
               <Text style={styles.textCost}>{`Итого затраты: ${sumCost + costService} грн`}</Text>
+            </Surface> */}
+
+            <Surface elevation={2} style={styles.surface}>
+              <Accordion
+                /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
+                title={'Данные продавца'}
+                textBannerStyle={{
+                  fontSize: 14,
+                  color: theme.colors.secondary
+                }}
+                controlled={false}
+                insideView={
+                  <View style={{ flexDirection: 'column' }}>
+                    <Surface elevation={2} style={styles.surface}>
+                      <Controller name={'sellerName'}
+                                  control={control}
+                                  render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                    <TextInput
+                                      ref={ref}
+                                      style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                      label={'название'}
+                                      /* keyboardType={'phone-pad'} */
+                                      onChangeText={(value) => onChange(value)}
+                                      value={value}
+                                      onSubmitEditing={() => {
+                                        setFocus('sellerPhone')
+                                      }}
+                                      onBlur={onBlur}
+                                    />
+                                  )}
+                      />
+                    </Surface>
+
+                    <View style={styles.viewGroupInput}>
+                      <Surface elevation={2} style={styles.surface}>
+                        <Controller name={'sellerPhone'}
+                                    control={control}
+                                    render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                      <TextInput
+                                        ref={ref}
+                                        style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                        label={'телефон'}
+                                        keyboardType={'phone-pad'}
+                                        onChangeText={(value) => onChange(value)}
+                                        value={value}
+                                        onSubmitEditing={() => {
+                                          setFocus('sellerWeb')
+                                        }}
+                                        onBlur={onBlur}
+                                      />
+                                    )}
+                        />
+                      </Surface>
+                      <Surface elevation={2} style={styles.surface}>
+                        <Controller name={'sellerWeb'}
+                                    control={control}
+                                    render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                      <TextInput
+                                        ref={ref}
+                                        style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                        label={'интернет'}
+                                        keyboardType={'url'}
+                                        onChangeText={(value) => onChange(value)}
+                                        value={value}
+                                        /* onSubmitEditing={() => {
+                                          setFocus('numberPart2')
+                                        }} */
+                                        onBlur={onBlur}
+                                      />
+                                    )}
+                        />
+                      </Surface>
+                    </View>
+                    {
+                      // ---------------------- Seller ------------------------------------------
+                    }
+
+                  </View>
+                }
+              />
             </Surface>
+
             {
               // --------------- Modal adding parts -------------------------------------------------
             }
