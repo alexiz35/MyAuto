@@ -23,8 +23,10 @@ import {
   TouchableRipple
 } from 'react-native-paper'
 import { PickService } from './PickService'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import Accordion from '../../components/Accordion'
+import { useAppSelector } from '../../components/Redux/hook'
+import { color } from '@rneui/base'
 
 interface InputServiceProps {
   isCancel: () => void
@@ -49,6 +51,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
   /* const stateSecond = useAppSelector((state) => state) */
 
   const theme = useTheme()
+  const state = useAppSelector((state) => state.cars[state.numberCar])
 
   const tempNullService: FormService = {
     startKm: '',
@@ -64,7 +67,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 
   const dataToForm = (data: StateService): FormService => {
     return {
-      startKm: String(data.startKm),
+      startKm: isEdit ? String(data.startKm) : String(state.currentMiles.currentMileage),
       endKm: String(data.endKm),
       startDate: data.startDate,
       endDate: data.endData,
@@ -103,34 +106,14 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
   const {
     control,
     handleSubmit,
+    getValues,
     setValue,
     setFocus
   } = useForm<FormService>({ mode: 'onBlur', defaultValues: tempNullService, values: dataToForm(itemService) })
-
-  /* const listService = [
-    { label: 'engineOil', value: 'engineOil' },
-    { label: 'gearOil', value: 'gearOil' },
-    { label: 'airFilter', value: 'airFilter' },
-    { label: 'fuelFilter', value: 'fuelFilter' },
-    { label: 'driveBelt', value: 'driveBelt' },
-    { label: 'timingBelt', value: 'timingBelt' }
-  ] */
-  /* const editableTask: boolean = route.params.editable
-  const currentId: number | undefined = route.params.taskId */
-  /* const [currentTask, setCurrentTask] = useState<StateTask>(
-    {
-      id: 0,
-      title: '',
-      startKm: 0,
-      endKm: 0,
-      startDate: '',
-      endData: '',
-      addition: {
-        parts: [{ id: 0, namePart: '', costPart: 0, amountPart: 0, numberPart: '' }],
-        services: [{ id: 0, nameService: '', costService: 0 }]
-      }
-    }
-  ) */
+  const controlDateInput = useWatch({
+    control,
+    name: 'startDate'
+  })
 
   const [typeService, setTypeService] = useState < ListService | undefined>(isEdit ? service?.typeService : undefined)
   const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>(isEdit ? service?.addition?.parts : undefined)
@@ -169,43 +152,34 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 
   const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
 
-  const editDate = (date: string, increment: number): string => {
-    const tempDate = new Date(date)
-    tempDate.setMonth(tempDate.getMonth() + increment)
-    return tempDate.toLocaleDateString()
-  }
+  /* const controlDateInput = useWatch({ control, name: 'startDate' }) */
 
-  const inputDate = (): void => DateTimePickerAndroid.open({
+  const inputDate = (target: string): void => DateTimePickerAndroid.open({
     value: new Date(),
     /* display: 'spinner', */
     // @ts-expect-error date undefined
-    onChange: (event, date) => setStartDateInput(date)
+    onChange: (event, date) => setValue(target, date)
+
   })
+  const editDate = (start: Date, increment: number): Date => {
+    const tempDate = new Date(start)
+    tempDate.setMonth(tempDate.getMonth() + increment)
+    return tempDate
+  }
 
-  /* useEffect(() => {
-    if (service !== null) {
-      handleOpen(service)
+  const updateTypeService = (): void => {
+    if (typeService?.mileage !== undefined) {
+      setValue('endKm', String(Number(getValues('startKm')) + typeService?.mileage))
     }
-  }, []) */
-
-  /*  const handleOpen = (item: StateService): void => {
-    if (!isOpenAccordion) {
-      setStartKmInput(item.startKm)
-      setAddModalParts(item.addition?.parts)
-      setStartDateInput(new Date(item.startDate))
-      setCostService(item.sumCostService !== undefined ? item.sumCostService : 0)
-      setValueDrop(item.title)
-      /!* handleOnPress() *!/
+    if (typeService?.date !== undefined) {
+      const temp = getValues('startDate')
+      setValue('endDate', editDate(temp, typeService.date))
     }
-  } */
+  }
 
-  /* useEffect(() => {
-    setEndKmInput(startKmInput + kmToService)
-  }, [startKmInput, kmToService]) */
-
-  /* useEffect(() => {
-    setEndDateInput(editDate(startDateInput.toLocaleDateString(), timeToService))
-  }, [startDateInput, timeToService]) */
+  useEffect(() => {
+    updateTypeService()
+  }, [typeService, controlDateInput])
 
   useEffect(() => {
     counter(addModalParts)
@@ -250,45 +224,6 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     }
   } */
 
-  /* const clearInput = (): void => {
-    setStartDateInput(new Date())
-    setStartKmInput(0)
-    setCostParts(0)
-    setCostService(0)
-    setAddModalParts(undefined)
-  } */
-
-  // ---------------------------Accordion --------------------------------------
-  /* const isOpen = (open: boolean): void => {
-    setIsOpenAccordion(open)
-    if (!open) setOpenAccordion(false)
-    else setOpenAccordion(true)
-  } */
-  // ---------------------------------------------------------------------------
-  /* const createNewParts = (): void => {
-    // eslint-disable-next-line array-callback-return
-    addModalParts?.map((item) => {
-      const tempPart: StatePart = {
-        id: item.id,
-        dateBuy: startDateInput,
-        mileageInstall: startKmInput,
-        namePart: item.namePart,
-        dateInstall: startDateInput,
-        isInstall: true,
-        numberPart: item.numberPart,
-        costPart: item.costPart,
-        quantityPart: item.quantityPart,
-        amountCostPart: item.costPart * item.quantityPart,
-        seller: {
-          name: item.seller?.name,
-          link: item.seller?.link,
-          phone: item.seller?.phone
-        }
-      }
-      dispatch(addPart(state.numberCar, tempPart))
-    })
-  } */
-
   // ---------------------------handleButtons-----------------------------------
   const handleCancel = (): void => {
     isCancel()
@@ -296,32 +231,6 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 
   const handleOk = (dataForm: FormService): void => {
     isOk(formToData(dataForm))
-
-    /*  const tempNewTask: StateService = {
-      id: Date.now(),
-      startKm: startKmInput,
-      endKm: endKmInput,
-      startDate: startDateInput.toLocaleDateString(),
-      endData: endDateInput,
-      title: String(valueDrop),
-      sumCostService: costService,
-      sumCostParts: sumCost,
-      /!* isFinished: false, *!/
-      addition:
-        {
-          parts: addModalParts,
-          services: addServices
-        }
-    }
- */
-    /* createNewParts() */
-
-    /* editableTask
-      ? setNewTask(editTask(state.numberCar, currentId, tempNewTask))
-      : setNewTask(addTask(state.numberCar, tempNewTask)) */
-
-    /* handleOnPress() */
-    /* isOk(tempNewTask) */
   }
   // ---------------------------------------------------------------------------
   // ---------------------- handleModal ----------------------------------------
@@ -355,12 +264,12 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     {
       // -------------------------------------------------------------------------------------------
     }
-    <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
+    <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 5 }}>
           <View>
     {
     // ----------------------------- Button for selecting type of service ---------------------------
     }
-            <Button mode={'elevated'} onPress={showModalService} >
+            <Button mode={'elevated'} onPress={showModalService} style={{ marginHorizontal: 5, borderRadius: 1 }} >
               {typeService !== undefined
                 ? `${String(typeService?.nameService)} / ${String(typeService?.mileage)} km / ${String(typeService?.date)} год`
                 : 'Выберите тип ТО'
@@ -385,6 +294,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                                     label={'текущий пробег'}
                                     keyboardType={'numeric'}
                                     value={value}
+                                    onSubmitEditing={updateTypeService}
                                     onChangeText={(value) => onChange(value)}
                                     onBlur={onBlur}
                                     /* onSubmitEditing={() => setFocus('numberPart')} */
@@ -418,7 +328,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'startDate'}
                                 control={control}
-                                render={ ({ field: { value, ref } }) => (
+                                render={ ({ field: { value, onChange, ref } }) => (
                                   <TextInput
                                     ref={ref}
                                     dense
@@ -426,8 +336,9 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                                     label={'дата сервиса'}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
-                                    onPressOut={inputDate}
-                                    /* onSubmitEditing={() => setFocus('numberPart')} */
+                                    onChangeText={(value) => onChange(value)}
+                                    onPressOut={() => inputDate('startDate')}
+                                    /* onSubmitEditing={updateTypeService} */
                                   />
                                 )}
                     />
@@ -443,7 +354,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                                     label={'дата замены'}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
-                                    onPressOut={inputDate}
+                                    onPressOut={() => inputDate('endDate')}
                                     /* onSubmitEditing={() => setFocus('numberPart')} */
                                   />
                                 )}
@@ -459,7 +370,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                   showModalAddParts()
                 }}>
                   <>
-                  <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Добавить комплектующие</Text>
+                  <Text style={{ fontWeight: 'bold' }}>Добавить комплектующие</Text>
                   <Text >{`Добавлено деталей: ${amountPart} шт`}</Text>
                   </>
                 </TouchableRipple>
