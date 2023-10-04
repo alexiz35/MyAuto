@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { StatePart, StateService } from '../../type'
-import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
-import { useState } from 'react'
+import { Card, IconButton, Menu, ProgressBar, useTheme } from 'react-native-paper'
+import { useEffect, useState } from 'react'
 import { delPart, delService } from '../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { Icon } from '@rneui/themed'
@@ -12,11 +12,33 @@ interface propsRowService {
 }
 
 export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.Element => {
+  const { colors } = useTheme()
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
+  const state = useAppSelector((state) => state.cars[state.numberCar])
 
   const [visibleMenu, setVisibleMenu] = useState(false)
-  const { colors } = useTheme()
+  const [progress, setProgress] = useState(0)
+  const [colorProgress, setColorProgress] = useState(colors.tertiary)
+
+  const calcProgress = (): void => {
+    if (item.endKm !== undefined && item.startKm !== undefined && item.startKm < item.endKm) {
+      const currentProgress = state.currentMiles.currentMileage - item.startKm
+      const totalProgress = item.endKm - item.startKm
+      if (currentProgress > 0 && totalProgress > 0) {
+        setProgress(currentProgress / totalProgress)
+      }
+    }
+  }
+  const calcColor = (): void => {
+    if (progress > 0.8) setColorProgress(colors.error)
+    else if (progress < 0.8 && progress > 0.5) setColorProgress(colors.yellow)
+  }
+
+  useEffect(() => {
+    calcProgress()
+    calcColor()
+  }, [progress])
 
   const openMenu = (): void => {
     setVisibleMenu(true)
@@ -26,7 +48,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
   }
 
   return (
-
+<View>
     <View style={styles.listItem}>
 
       <Card
@@ -73,7 +95,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
           leftStyle={{ marginRight: 2 }}
           left={() =>
             <>
-              <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/>
+              <Icon name={'car-cog'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/>
             {/*   <Icon name={'check-decagram' } type='material-community' size={22}
                     color={ item.isInstall ? colors.tertiary : colors.secondary} /> */}
             </>
@@ -81,7 +103,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
           title={String(item.typeService.nameService)}
           titleStyle={{ paddingRight: 2 }}
           subtitleStyle={{ paddingRight: 2 }}
-          /* subtitle={item.isInstall ? 'установлено' : 'не установлено'} */
+          /* subtitle={() => <ProgressBar progress={0.5}/>} */
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodySmall'}
         />
@@ -101,19 +123,19 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
             : null}
 
           titleVariant={'bodyMedium'}
-          subtitleVariant={'bodySmall'}
+          subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}
           subtitleStyle={{ paddingRight: 2 }}
         />
 
         <Card.Title
-          style={{ flex: 2.2 }}
-          title={` ${String(item.sumCostParts)}`}
-         /*  subtitle={(item.mileageInstall != null) ? String(item.mileageInstall) : null} */
+          style={{ flex: 2.3 }}
+          title={`${String(item.startKm)} km`}
+          subtitle={`${String(item.endKm)} km`}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
-          titleStyle={{ paddingRight: 2 }}
-          subtitleStyle={{ paddingRight: 2 }}
+          titleStyle={{ paddingRight: 1, paddingLeft: 1 }}
+          subtitleStyle={{ paddingRight: 1 }}
         />
         <View style={{ justifyContent: 'flex-start' }}>
           <Menu
@@ -142,9 +164,10 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
           </Menu>
         </View>
       </Card>
-
+      <ProgressBar progress={progress} color={colorProgress}/>
     </View>
 
+</View>
   )
 }
 const styles = StyleSheet.create({

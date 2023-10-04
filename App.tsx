@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { createTheme, ThemeProvider } from '@rneui/themed'
 import { COLOR_GREEN } from './type'
+import { LogBox } from 'react-native'
 
 export default function App (): JSX.Element {
 /*   const theme = createTheme({
@@ -21,6 +22,10 @@ export default function App (): JSX.Element {
       }
     }
   }) */
+  // Ignore log notification by message
+  LogBox.ignoreLogs(['Warning: Selector unknown returned the root state when called.'])
+  // Ignore all log notifications
+  LogBox.ignoreAllLogs()
   return (
     <SafeAreaProvider>
     <Provider store={store}>

@@ -110,7 +110,8 @@ const CombinedDefaultTheme = {
     tertiary: 'rgb(46, 108, 0)',
     onTertiary: 'rgb(255, 255, 255)',
     tertiaryContainer: 'rgb(128, 255, 44)',
-    onTertiaryContainer: 'rgb(9, 33, 0)'
+    onTertiaryContainer: 'rgb(9, 33, 0)',
+    yellow: 'rgb(253,202,0)'
   }
 }
 const CombinedDarkTheme = {
@@ -121,7 +122,9 @@ const CombinedDarkTheme = {
     onTertiary: 'rgb(21, 56, 0)',
     tertiaryContainer: 'rgb(33, 81, 0)',
     onTertiaryContainer: 'rgb(128, 255, 44)',
-    error: 'rgb(186, 26, 26)'
+    error: 'rgb(186, 26, 26)',
+    yellow: 'rgb(253,202,0)'
+
   }
 }
 /* ----------------------------------------------------------------------------- */
