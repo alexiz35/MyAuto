@@ -434,7 +434,7 @@ export interface ModalPart {
 }
 
 export interface ModalAddPartsProps {
-  initialParts: ModalPart[]
+  initialParts: ModalPart[] | undefined
   onPressOk: (parts: [ModalPart]) => void
   onPressCancel: () => void
 }

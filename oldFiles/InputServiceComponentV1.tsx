@@ -1,37 +1,20 @@
 import {
   View,
   StyleSheet,
-  SafeAreaView,
   Pressable,
-  ImageBackground,
-  ScrollView,
-  KeyboardAvoidingView, Platform
 } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Button, Dialog, Divider, Icon, Input, Text, useTheme } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useAppDispatch, useAppSelector } from '../../components/Redux/hook'
 import {
   BACK_INPUT,
-  COLOR_GREEN,
-  StatePart,
   ServiceList,
   StateService,
-  TEXT,
-  TEXT_WHITE,
   ModalPart,
-  StateOther
-} from '../../type'
-import { RootStackParamList } from '../../components/Navigation/Navigation'
-import { addPart, addService, editService } from '../../components/Redux/actions'
-import { AddPartModal } from './AddPartModal'
-import ShadowBox from '../ShadowBox'
-import Accordion from '../../components/Accordion'
-import { Tasks } from '../../components/HomeScreenComponents/Tasks'
-import BackgroundView from '../BackgroundView'
-import { useFocusEffect } from '@react-navigation/native'
+} from '../type'
+import { AddPartModal } from '../components/InputDoneScreenComponents/inputService/AddPartModal'
+import ShadowBox from '../CommonComponents/ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 interface InputServiceProps {
@@ -484,20 +467,6 @@ const styles = StyleSheet.create({
   viewGroupInput: {
     flexDirection: 'row',
     justifyContent: 'space-around'
-  },
-  input: {
-    margin: 5,
-    backgroundColor: BACK_INPUT,
-    flex: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
   },
   inputText: {
     textAlign: 'center',

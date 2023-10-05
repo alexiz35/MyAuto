@@ -1,12 +1,12 @@
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
-import { COLOR_GREEN, StateOther, StatePart } from '../../type'
+import { COLOR_GREEN, StateOther, StatePart } from '../../../type'
 import { Button, Divider, Icon, ListItem, useTheme } from '@rneui/themed'
 import { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { delOther, delPart } from '../Redux/actions'
+import { useAppDispatch, useAppSelector } from '../../Redux/hook'
+import { delOther, delPart } from '../../Redux/actions'
 import { Shadow } from 'react-native-shadow-2'
 import { check } from 'react-native-permissions'
-import { BusyIndicator } from '../useIsReadyHook'
+import { BusyIndicator } from '../../useIsReadyHook'
 import { RenderRowOther } from './OtherRow'
 
 interface handleProp {

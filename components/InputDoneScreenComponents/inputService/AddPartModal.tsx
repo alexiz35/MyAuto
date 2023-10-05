@@ -3,10 +3,10 @@ import {
   StyleSheet,
   View, ScrollView
 } from 'react-native'
-import { StatePart, ModalAddPartsProps, ModalPart } from '../../type'
-import { useAppSelector } from '../../components/Redux/hook'
-import BackgroundView from '../BackgroundView'
-import Accordion from '../../components/Accordion'
+import { StatePart, ModalAddPartsProps, ModalPart } from '../../../type'
+import { useAppSelector } from '../../Redux/hook'
+import BackgroundView from '../../../CommonComponents/BackgroundView'
+import Accordion from '../../Accordion'
 import { Surface, TextInput, useTheme, TouchableRipple, Button, IconButton, Text, Divider } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -66,7 +66,6 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
   const {
     control,
     handleSubmit,
-    setValue,
     setFocus
   } = useForm<FormAddParts>({ mode: 'onBlur', defaultValues: tempNullAddParts, values: dataToForm(modalPart) })
 
@@ -107,9 +106,6 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
 
     setModalPart(tempSelectPart)
     setSearchPart(tempSelectPart.namePart)
-    /* setNamePart(selectPart[0].namePart)
-    setNumberPart(selectPart[0].numberPart)
-    setCostPart(selectPart[0].costPart) */
     setVisibleSearchList(false)
   }
 
@@ -164,7 +160,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
           <Surface style={{ margin: 5, flex: 1 }}>
             <TextInput
               dense
-              placeholder={'введите название'}
+              placeholder={'поиск на складе'}
               value={searchPart}
               onChangeText={(search) => setSearchPart(String(search))}
               onFocus={() => setVisibleSearchList(true)}
@@ -207,7 +203,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
           </Surface>
         </View>
         <Text style={styles.textPart} >
-          или добавьте новые
+          деталь
         </Text>
         <View style={styles.viewGroupInput}>
           <Surface elevation={2} style={styles.surface}>
@@ -280,7 +276,6 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                             value={value}
                             onChangeText={(value) => onChange(value)}
                             onBlur={onBlur}
-                            /* onSubmitEditing={() => setFocus('numberPart')} */
                           />
                         )}
             />
@@ -339,7 +334,6 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                               value={value}
                               onChangeText={(value) => onChange(value)}
                               onBlur={onBlur}
-                              /* onSubmitEditing={() => setFocus('numberPart')} */
                             />
                           )}
               />
@@ -402,10 +396,6 @@ const styles = StyleSheet.create({
   surface: {
     margin: 5,
     flex: 1
-  },
-  inputText: {
-    textAlign: 'center',
-    fontSize: 14
   },
   viewGroupInput: {
     flexDirection: 'row',

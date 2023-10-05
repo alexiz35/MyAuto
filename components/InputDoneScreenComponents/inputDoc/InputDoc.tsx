@@ -4,14 +4,14 @@ import {
   KeyboardAvoidingView, ScrollView
 } from 'react-native'
 import { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { StateOther } from '../../type'
-import { addOther, editOther } from '../Redux/actions'
+import { useAppDispatch, useAppSelector } from '../../Redux/hook'
+import { StateOther } from '../../../type'
+import { addOther, editOther } from '../../Redux/actions'
 import { OthersList } from './OthersList'
-import InputDocComponent from '../../CommonComponents/InputDocComponent'
+import InputDocComponent from './InputDocComponent'
 import { List, ToggleButton, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
-import { PartsList } from './PartsList'
+import { PartsList } from '../inputPart/PartsList'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 const InputDoc = (): JSX.Element => {

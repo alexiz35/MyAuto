@@ -4,12 +4,12 @@ import {
   StyleSheet,
   View
 } from 'react-native'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useEffect, useState } from 'react'
-import { StatePart } from '../../type'
-import { addPart, editPart } from '../Redux/actions'
+import { StatePart } from '../../../type'
+import { addPart, editPart } from '../../Redux/actions'
 
-import BackgroundView from '../../CommonComponents/BackgroundView'
+import BackgroundView from '../../../CommonComponents/BackgroundView'
 import {
   useTheme,
   List,
@@ -17,7 +17,7 @@ import {
 } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { PartsList } from './PartsList'
-import InputPartComponent from '../../CommonComponents/InputPartComponent'
+import InputPartComponent from './InputPartComponent'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 /* type Props = NativeStackScreenProps<RootStackParamList,'I'> */

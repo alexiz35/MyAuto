@@ -95,7 +95,7 @@ function LogoTitle (): JSX.Element {
   )
 } */
 
-/* ----------------------------------------------------------------------------- */
+/* -----------------------------    THEME   ---------------------------------- */
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
   reactNavigationDark: NavigationDarkTheme
@@ -127,6 +127,7 @@ const CombinedDarkTheme = {
 
   }
 }
+
 /* ----------------------------------------------------------------------------- */
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -140,6 +141,10 @@ export const Navigation = (): JSX.Element => {
   const [isThemeDark, setIsThemeDark] = useState(false)
 
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme
+
+  /* export type AppTheme = typeof theme
+
+  export const useAppTheme = () => useTheme<AppTheme>() */
 
   const toggleTheme = useCallback(() => {
     return setIsThemeDark(!isThemeDark)

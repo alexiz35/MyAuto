@@ -1,17 +1,17 @@
 import { StyleSheet, View } from 'react-native'
-import { StatePart } from '../../type'
+import { StateOther, StatePart } from '../../../type'
 import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
 import { useState } from 'react'
-import { delPart } from '../Redux/actions'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { delOther, delPart } from '../../Redux/actions'
+import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { Icon } from '@rneui/themed'
 
 interface propsRowPart {
-  handlePress: (item: StatePart) => void
-  item: StatePart
+  handlePress: (item: StateOther) => void
+  item: StateOther
 }
 
-export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element => {
+export const RenderRowOther = ({ item, handlePress }: propsRowPart): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
 
@@ -69,36 +69,23 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
       >
 
         <Card.Title
-          style={{ flex: 3.6, paddingLeft: 2 }}
-          leftStyle={{ marginRight: 2 }}
+          style={{ flex: 4, paddingLeft: 2 }}
+          leftStyle={{ marginRight: 10 }}
           left={() =>
-            <>
-              <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/>
-              <Icon name={'check-decagram' } type='material-community' size={22}
-                    color={ item.isInstall ? colors.tertiary : colors.secondary} />
-            </>
+              <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ }}/>
           }
-          title={String(item.namePart)}
+          title={String(item.nameOther)}
           titleStyle={{ paddingRight: 2 }}
           subtitleStyle={{ paddingRight: 2 }}
-          subtitle={item.isInstall ? 'установлено' : 'не установлено'}
+          subtitle={String(item.seller?.name)}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodySmall'}
         />
-        {/* <ListItem.Title style={{ fontSize: 14, color: colors.onSurface }}>
-              {String(new Date(item.dateFuel).toLocaleDateString())}
-            </ListItem.Title> */}
-        {/* <ListItem.Subtitle style={{ fontSize: 14, color: colors.onSurface }}>
-              {item.StationFuel}
-            </ListItem.Subtitle> */}
 
         <Card.Title
-          style={{ flex: 2.3 }}
+          style={{ flex: 2.6 }}
 
           title={String(new Date(item.dateBuy).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))}
-          subtitle = {(item.dateInstall != null)
-            ? String(new Date(item.dateInstall).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))
-            : null}
 
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodySmall'}
@@ -107,9 +94,8 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
         />
 
         <Card.Title
-          style={{ flex: 2.2 }}
-          title={` ${item.quantityPart} х ${item.amountCostPart}`}
-          subtitle={(item.mileageInstall != null) ? String(item.mileageInstall) : null}
+          style={{ flex: 2 }}
+          title={String(item.amountCostOther)}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}
@@ -128,7 +114,7 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delPart(carId, item.id))
+                         dispatch(delOther(carId, item.id))
                          closeMenu()
                        }}
             />

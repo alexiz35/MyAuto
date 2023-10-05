@@ -5,11 +5,9 @@ import {
 import { useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import {
-  BACK_INPUT,
-  ServiceList,
   StateService,
   ModalPart, ListService
-} from '../../type'
+} from '../../../type'
 import { AddPartModal } from './AddPartModal'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
@@ -20,13 +18,13 @@ import {
   Button,
   Surface,
   TextInput,
-  TouchableRipple
+  TouchableRipple,
+  Checkbox
 } from 'react-native-paper'
 import { PickService } from './PickService'
 import { Controller, useForm, useWatch } from 'react-hook-form'
-import Accordion from '../../components/Accordion'
-import { useAppSelector } from '../../components/Redux/hook'
-import { color } from '@rneui/base'
+import Accordion from '../../Accordion'
+import { useAppSelector } from '../../Redux/hook'
 
 interface InputServiceProps {
   isCancel: () => void
@@ -82,6 +80,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
   const formToData = (data: FormService): StateService => {
     return {
       id: isEdit ? itemService?.id : Date.now(),
+      // @ts-expect-error -typeService may be undefined-
       typeService,
       /* title: typeService?.nameService, */
       startKm: Number(data.startKm),
@@ -134,25 +133,8 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
   }
   /* --------------------------------------------------------------------------- */
 
-  const [errorMsg, setErrorMsg] = useState('')
-
-  const [openAccordion, setOpenAccordion] = useState(false)
-  const [isOpenAccordion, setIsOpenAccordion] = useState(false)
-
-  const [startKmInput, setStartKmInput] = useState(0)
-  const [startDateInput, setStartDateInput] = useState(new Date())
-  const [endKmInput, setEndKmInput] = useState(0)
-  const [endDateInput, setEndDateInput] = useState('')
-  const [timeToService, setTimeToService] = useState(0)
-  const [kmToService, setKmToService] = useState(0)
-  const [costParts, setCostParts] = useState(0)
-  const [costService, setCostService] = useState(0)
   const [amountPart, setAmountPart] = useState(0)
   const [sumCost, setSumCost] = useState(0)
-
-  const [addServices, setAddServices] = useState<[ServiceList] | undefined>()
-
-  /* const controlDateInput = useWatch({ control, name: 'startDate' }) */
 
   const inputDate = (target: string): void => DateTimePickerAndroid.open({
     value: new Date(),
@@ -196,33 +178,6 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     setSumCost(sum)
     setAmountPart(amount)
   }
-  /* const changeTask = (value: string | null): void => {
-    setErrorMsg('')
-    switch (value) {
-      case 'engineOil':
-        setKmToService(8000)
-        setTimeToService(12)
-        break
-      case 'airFilter':
-        setKmToService(8000)
-        setTimeToService(12)
-        break
-      case 'fuelFilter':
-        setKmToService(20000)
-        setTimeToService(12)
-        break
-      case 'driveBelt':
-        setKmToService(50000)
-        setTimeToService(48)
-        break
-      case 'timingBelt':
-        setKmToService(50000)
-        setTimeToService(60)
-        break
-      default:
-        break
-    }
-  } */
 
   // ---------------------------handleButtons-----------------------------------
   const handleCancel = (): void => {
@@ -241,7 +196,6 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 
   const handleOkModal = (parts: [ModalPart]): void => {
     setAddModalParts(parts)
-    /* setAddServices(services) */
     setVisibleModalAddParts(false)
   }
   // ---------------------------------------------------------------------------
@@ -363,6 +317,56 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                 </View>
             </View>
             {
+              // --------------- Input cost service and add Task--------------------------------------
+            }
+            <View style={styles.viewGroupInput}>
+              {/*  <Surface elevation={2} style={styles.surface}>
+                  <Controller name={'sumCostParts'}
+                              control={control}
+                              render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                                <TextInput
+                                  ref={ref}
+                                  dense
+                                  editable={amountPart === 0}
+                                  style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
+                                  label={'цена деталей'}
+                                  onChangeText={(value) => onChange(value)}
+                                  value={value}
+                                  onBlur={onBlur}
+                                  error={(error != null) && true}
+                                />
+                              ) }
+                  />
+                </Surface> */}
+              <Surface elevation={2} style={styles.surface}>
+                <Controller name={'sunCostService'}
+                            control={control}
+                  /* rules={{ required: 'введите название' }} */
+                            render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                              <TextInput
+                                ref={ref}
+                                dense
+                                style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
+                                label={'цена сервиса'}
+                                keyboardType={'numeric'}
+                                onChangeText={(value) => onChange(value)}
+                                value={value}
+                                onBlur={onBlur}
+                                error={(error != null) && true}
+                              />
+                            ) }
+                />
+              </Surface>
+              <Surface elevation={2} style={styles.surface}>
+                <Checkbox.Item
+                  status={'unchecked'}
+                  color={theme.colors.tertiary}
+                  label={'Создать \nнапоминание'}
+                  labelVariant={'bodySmall'}
+                />
+              </Surface>
+            </View>
+            {
               // --------------- Button for modal adding parts --------------------------------------
             }
               <Surface style={{ margin: 5, flex: 1 }}>
@@ -371,63 +375,14 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                 }}>
                   <>
                   <Text style={{ fontWeight: 'bold' }}>Добавить комплектующие</Text>
-                  <Text >{`Добавлено деталей: ${amountPart} шт`}</Text>
+                  <Text >{`Добавлено: ${amountPart} шт на сумму ${sumCost} грн`}</Text>
                   </>
                 </TouchableRipple>
               </Surface>
+
             {
-              // --------------- Input cost parts and service --------------------------------------
+              // --------------- ----Drop Input Seller ------------------------------------------
             }
-              <View style={styles.viewGroupInput}>
-                <Surface elevation={2} style={styles.surface}>
-                  <Controller name={'sumCostParts'}
-                              control={control}
-                              /* rules={{ required: 'цена деталей' }} */
-                              render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
-                                <TextInput
-                                  ref={ref}
-                                  dense
-                                  style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                  label={'цена деталей'}
-                                  onChangeText={(value) => onChange(value)}
-                                  value={value}
-                                  onBlur={onBlur}
-                                  error={(error != null) && true}
-                                  /* onSubmitEditing={() => {
-                                    setFocus('dateBuy')
-                                  }} */
-                                />
-                              ) }
-                  />
-                </Surface>
-                <Surface elevation={2} style={styles.surface}>
-                  <Controller name={'sunCostService'}
-                              control={control}
-                              /* rules={{ required: 'введите название' }} */
-                              render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
-                                <TextInput
-                                  ref={ref}
-                                  dense
-                                  style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                  label={'цена работы'}
-                                  onChangeText={(value) => onChange(value)}
-                                  value={value}
-                                  onBlur={onBlur}
-                                  error={(error != null) && true}
-                                  /* onSubmitEditing={() => {
-                                    setFocus('dateBuy')
-                                  }} */
-                                />
-                              ) }
-                  />
-                </Surface>
-              </View>
-            {
-              // --------------- Label sum cost service - ------------------------------------------
-            }
-            {/* <Surface style={{ margin: 5, flex: 1 }}>
-              <Text style={styles.textCost}>{`Итого затраты: ${sumCost + costService} грн`}</Text>
-            </Surface> */}
 
             <Surface elevation={2} style={styles.surface}>
               <Accordion
@@ -553,14 +508,6 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 export default InputService
 
 const styles = StyleSheet.create({
-  dropDownPicker: {
-    backgroundColor: BACK_INPUT,
-    margin: 5,
-    width: '97%',
-    borderWidth: 0,
-    borderRadius: 0
-
-  },
   viewAllInput: {
 
   },
@@ -572,55 +519,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around'
   },
-  input: {
-    margin: 5,
-    backgroundColor: BACK_INPUT,
-    flex: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
-  },
-  inputText: {
-    textAlign: 'center',
-    fontSize: 14
-  },
-  errorInput: {
-    color: 'gray',
-    marginTop: 1,
-    textAlign: 'center'
-  },
-  buttonAddition: {
-    margin: 5,
-    height: 50,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.20,
-    shadowRadius: 1.41,
-
-    elevation: 2
-  },
-
-  viewAdditional: {
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'grey',
-    borderRadius: 10
-  },
-  button: {
-    textAlign: 'center',
-    color: 'red'
-  },
-
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-around',

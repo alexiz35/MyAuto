@@ -2,34 +2,17 @@ import {
   View,
   StyleSheet, KeyboardAvoidingView, ScrollView
 } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import {
-  BACK_INPUT,
-  COLOR_GREEN,
-  StatePart,
-  ServiceList,
-  StateService,
-  TEXT,
-  TEXT_WHITE,
-  ModalPart,
-  StateOther
-} from '../../type'
-import { addOther, addPart, addService, editOther, editService } from '../Redux/actions'
-import Accordion from '../Accordion'
-import { Tasks } from '../HomeScreenComponents/Tasks'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import InputServiceComponent from '../../CommonComponents/inputService/InputServiceComponent'
+import { useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../Redux/hook'
+import { StateService } from '../../../type'
+import { addService, editService } from '../../Redux/actions'
+import InputServiceComponent from './InputServiceComponent'
 import { List, ToggleButton, useTheme } from 'react-native-paper'
-import { OthersList } from './OthersList'
 import { useNavigation } from '@react-navigation/native'
-import InputDocComponent from '../../CommonComponents/InputDocComponent'
-import { PartsList } from './PartsList'
 import { ServicesList } from './ServicesList'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 const InputService = (): JSX.Element => {
-  const setNewTask = useAppDispatch()
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { colors } = useTheme()
@@ -66,7 +49,6 @@ const InputService = (): JSX.Element => {
       setIsList(false)
     } else setTimeout(() => setIsList(true), 100)
     setOpenAccordion(!openAccordion)
-    console.log('OnPress')
     clearInput()
   }
 

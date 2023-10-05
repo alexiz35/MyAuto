@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native'
-import { StatePart, StateService } from '../../type'
+import { StatePart, StateService } from '../../../type'
 import { Card, IconButton, Menu, ProgressBar, useTheme } from 'react-native-paper'
 import { useEffect, useState } from 'react'
-import { delPart, delService } from '../Redux/actions'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { delPart, delService } from '../../Redux/actions'
+import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { Icon } from '@rneui/themed'
 
 interface propsRowService {
@@ -13,6 +13,8 @@ interface propsRowService {
 
 export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.Element => {
   const { colors } = useTheme()
+  /* const theme = useTheme() */
+
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
   const state = useAppSelector((state) => state.cars[state.numberCar])
