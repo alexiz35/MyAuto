@@ -4,7 +4,6 @@ import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
 import { useState } from 'react'
 import { delPart } from '../../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
-import { Icon } from '@rneui/themed'
 
 interface propsRowPart {
   handlePress: (item: StatePart) => void
@@ -69,14 +68,16 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
       >
 
         <Card.Title
-          style={{ flex: 3.6, paddingLeft: 2 }}
-          leftStyle={{ marginRight: 2 }}
-          left={() =>
-            <>
-              <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/>
-              <Icon name={'check-decagram' } type='material-community' size={22}
-                    color={ item.isInstall ? colors.tertiary : colors.secondary} />
-            </>
+          style={{ flex: 3.6, paddingLeft: 0 }}
+          leftStyle={{ marginRight: 2, padding: 0 }}
+          left={(props) =>
+            <View style={{ alignItems: 'center' }}>
+              <IconButton {...props} icon={'basket-check'} size={22} iconColor={colors.tertiary} style={{ height: 22, margin: 0, paddingTop: 2 }}/>
+              <IconButton icon={'check-decagram'} size={22} iconColor={item.isInstall ? colors.tertiary : colors.secondary} style={{ margin: 0, paddingTop: 2 }}/>
+              {/* <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/> */}
+              {/* <Icon name={'check-decagram' } type='material-community' size={22}
+                    color={ item.isInstall ? colors.tertiary : colors.secondary} /> */}
+            </View>
           }
           title={String(item.namePart)}
           titleStyle={{ paddingRight: 2 }}

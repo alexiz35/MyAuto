@@ -9,17 +9,16 @@ import { StateOther } from '../../../type'
 import { addOther, editOther } from '../../Redux/actions'
 import { OthersList } from './OthersList'
 import InputDocComponent from './InputDocComponent'
-import { List, ToggleButton, useTheme } from 'react-native-paper'
+import { List, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
-import { PartsList } from '../inputPart/PartsList'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 const InputDoc = (): JSX.Element => {
   const dispatch = useAppDispatch()
-  /* const state = useAppSelector((state) => state) */
   const carId = useAppSelector(state => state.numberCar)
 
-  const { colors } = useTheme()
+  const { colors } = useAppTheme()
   const nav = useNavigation()
 
   const [openAccordion, setOpenAccordion] = useState(false)

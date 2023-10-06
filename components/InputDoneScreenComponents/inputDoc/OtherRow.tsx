@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native'
-import { StateOther, StatePart } from '../../../type'
-import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
+import { StateOther } from '../../../type'
+import { Card, IconButton, Menu } from 'react-native-paper'
 import { useState } from 'react'
-import { delOther, delPart } from '../../Redux/actions'
+import { delOther } from '../../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
-import { Icon } from '@rneui/themed'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 interface propsRowPart {
   handlePress: (item: StateOther) => void
@@ -16,7 +16,7 @@ export const RenderRowOther = ({ item, handlePress }: propsRowPart): JSX.Element
   const carId = useAppSelector(state => state.numberCar)
 
   const [visibleMenu, setVisibleMenu] = useState(false)
-  const { colors } = useTheme()
+  const { colors } = useAppTheme()
 
   const openMenu = (): void => {
     setVisibleMenu(true)
@@ -71,8 +71,8 @@ export const RenderRowOther = ({ item, handlePress }: propsRowPart): JSX.Element
         <Card.Title
           style={{ flex: 4, paddingLeft: 2 }}
           leftStyle={{ marginRight: 10 }}
-          left={() =>
-              <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ }}/>
+          left={(props) =>
+            <IconButton {...props} icon={'basket-check'} size={22} iconColor={colors.tertiary} />
           }
           title={String(item.nameOther)}
           titleStyle={{ paddingRight: 2 }}
