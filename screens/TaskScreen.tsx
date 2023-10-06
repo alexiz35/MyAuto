@@ -1,8 +1,7 @@
 import { ActivityIndicator, View } from 'react-native'
-import { BottomSheet, Button, Dialog, Overlay, SpeedDial, Text } from '@rneui/themed'
+import { BottomSheet, Overlay, SpeedDial, Text } from '@rneui/themed'
 import {
   BACK_INPUT,
-  BACK_OPACITY,
   StateOther,
   StatePart,
   StateServiceTask,

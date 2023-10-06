@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native'
 import { StateFuel } from '../../type'
-import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Card, IconButton, Menu } from 'react-native-paper'
 import { useState } from 'react'
 import { delFuel } from '../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { useAppTheme } from '../../CommonComponents/Theme'
 
 interface propsRowFuel {
   handlePress: (item: StateFuel) => void
@@ -16,7 +16,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
   const carId = useAppSelector(state => state.numberCar)
 
   const [visibleMenu, setVisibleMenu] = useState(false)
-  const { colors } = useTheme()
+  const { colors } = useAppTheme()
 
   const openMenu = (): void => {
     setVisibleMenu(true)
@@ -69,10 +69,10 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
       >
 
         <Card.Title
-          style={{ flex: 3.6, paddingLeft: 12 }}
+          style={{ flex: 3.6, paddingLeft: 2 }}
           leftStyle={{ marginRight: 2 }}
-          left={() =>
-            <MaterialCommunityIcons name={'gas-station'} size={24} color={colors.tertiary} style={{}}/>
+          left={(props) =>
+            <IconButton {...props} icon={'gas-station'} size={22} iconColor={colors.tertiary} style={{ paddingRight: 6 }}/>
           }
           title={String(new Date(item.dateFuel).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))}
           titleStyle={{ paddingRight: 2 }}

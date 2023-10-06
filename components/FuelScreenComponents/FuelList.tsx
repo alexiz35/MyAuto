@@ -21,7 +21,6 @@ export const FuelList = ({ handlePress, filterList = 'last' }: handleProp): JSX.
       return Date.parse(b.dateFuel) - Date.parse(a.dateFuel)
     })
     setIsSortFuel(!isSortFuel)
-    console.log('render')
   }, [listFuel])
 
   useEffect(() => {

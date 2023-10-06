@@ -178,22 +178,16 @@ const styles = StyleSheet.create({
   containerView: {
     justifyContent: 'center',
     alignContent: 'center',
-    /* backgroundColor: BACK_CARD, */
-    /* borderRadius: 10, */
     padding: 7
 
   },
   carText: {
     fontSize: 17,
-    /* color: 'grey', */
     textAlign: 'center'
-    /* fontWeight: 'bold' */
   },
   infoView: {
     justifyContent: 'space-between',
     flexDirection: 'row'
-    /* marginTop: 2, */
-    /* padding: 7 */
   },
   kmView: {
     paddingTop: 3,
@@ -204,9 +198,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'grey',
     textAlign: 'center'
-    /* textShadowColor: COLOR_GREEN, */
-    /* textShadowOffset: { height: 2, width: 2 }, */
-    /* textShadowRadius: 10 */
   },
   costView: {
     flex: 1

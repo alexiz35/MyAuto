@@ -14,7 +14,6 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import {
-  useTheme,
   Text,
   Surface,
   TextInput,
@@ -27,6 +26,7 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { CompositeScreenProps } from '@react-navigation/native'
+import { useAppTheme } from '../CommonComponents/Theme'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'FuelScreen'>, NativeStackScreenProps<RootStackParamList>>
@@ -44,7 +44,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.cars[state.numberCar])
   const carId = useAppSelector(state => state.numberCar)
-  const { colors } = useTheme()
+  const { colors } = useAppTheme()
 
   const tempNullFuel: FormFuel = {
     dateFuel: new Date(),
@@ -400,7 +400,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     columnGap: 10
-    /* marginVertical: 10 */
   },
   surface: {
     margin: 5,

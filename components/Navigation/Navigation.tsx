@@ -1,13 +1,9 @@
 import 'react-native-gesture-handler'
 import {
-  CompositeScreenProps, NavigationContainer, NavigatorScreenParams,
-  DarkTheme as NavigationDarkTheme,
-  DefaultTheme as NavigationDefaultTheme
+  CompositeScreenProps, NavigationContainer, NavigatorScreenParams
 }
   from '@react-navigation/native'
-
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
-
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
 import { Alert, Image, Platform, Pressable, View } from 'react-native'
@@ -105,12 +101,13 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
+// ------------------------- Toggle Theme --------------------------------------
   const [isThemeDark, setIsThemeDark] = useState(false)
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme
   const toggleTheme = useCallback(() => {
     return setIsThemeDark(!isThemeDark)
   }, [isThemeDark])
-
+  // -----------------------------------------------------------------------------
   /*  const [initial, setInitial] = useState(true)
   const [location, setLocation] = useState(0)
   const [prevCoords, setPrevCoords] = useState({ latitude: 0, longitude: 0 })
@@ -228,47 +225,22 @@ export const Navigation = (): JSX.Element => {
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: theme.colors.background },
             headerTitle: () => (
-              /* <Pressable onPress={() => navigation.navigate('SettingScreen')}>
-              <LogoTitle />
-              </Pressable> */
-
-              <TouchableRipple
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onPress={() =>
-                  navigation.navigate('InputTaskPartScreen')
-                /* async () => {
-                  await AsyncStorage.clear()
-                } */}>
-                <LogoTitle />
-              </TouchableRipple>
-
+                  <TouchableRipple
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onPress={() =>
+                      navigation.navigate('InputTaskPartScreen')
+                    /* async () => {
+                      await AsyncStorage.clear()
+                    } */}>
+                    <LogoTitle />
+                  </TouchableRipple>
             ),
             headerLeft: () => (
-              <View>
-                <Text >Today: {/* {Math.trunc(distance)} */} m</Text>
-              </View>
+                  <View>
+                    <Text >Today: {/* {Math.trunc(distance)} */} m</Text>
+                  </View>
             ),
             title: 'title'
-            /* headerRight: () => (
-              <View style={{ flexDirection: 'row' }}>
-              <Button
-                type='outline'
-                buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.border }}
-                size='md'
-                icon={{
-                  name: 'theme-light-dark',
-                  type: 'material-community',
-                  size: 20,
-                  color: theme.colors.text
-                }}
-                onPress={
-                  () => {
-                    toggleTheme()
-                  }}
-              />
-
-              </View>
-            ) */
           }
           )}
         />
