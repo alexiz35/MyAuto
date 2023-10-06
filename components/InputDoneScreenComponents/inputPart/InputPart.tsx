@@ -24,7 +24,7 @@ import InputPartComponent from './InputPartComponent'
 
 const InputPart = (): JSX.Element => {
   const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state.cars[state.numberCar])
+  /* const state = useAppSelector((state) => state.cars[state.numberCar]) */
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useTheme()
   const nav = useNavigation()
@@ -76,12 +76,8 @@ const InputPart = (): JSX.Element => {
   }
 
   return (
-    <BackgroundView props={{ flex: 1 }}>
 
       <View style={{ flex: 1 }} >
-        {
-/* ----------------------- Top String --------------------------------------- */
-        }
 
         {
 /* ----------------------- Form Accordion ----------------------------------- */
@@ -125,7 +121,6 @@ const InputPart = (): JSX.Element => {
 /* -------------------------------------------------------------------------- */
         }
       </View>
-    </BackgroundView>
   )
 }
 

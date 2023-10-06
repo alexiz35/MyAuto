@@ -7,8 +7,9 @@ import { StatePart, ModalAddPartsProps, ModalPart } from '../../../type'
 import { useAppSelector } from '../../Redux/hook'
 import BackgroundView from '../../../CommonComponents/BackgroundView'
 import Accordion from '../../Accordion'
-import { Surface, TextInput, useTheme, TouchableRipple, Button, IconButton, Text, Divider } from 'react-native-paper'
+import { Surface, TextInput, TouchableRipple, Button, IconButton, Text, Divider } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 interface FormAddParts {
   namePart: string
@@ -22,7 +23,7 @@ interface FormAddParts {
 
 export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: ModalAddPartsProps): JSX.Element => {
   const state = useAppSelector(state => state.cars[0].parts)
-  const theme = useTheme()
+  const theme = useAppTheme()
 
   const tempNullAddParts: FormAddParts = {
     namePart: '',

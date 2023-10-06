@@ -1,6 +1,5 @@
 import { View, StyleSheet } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Tasks } from '../components/HomeScreenComponents/Tasks'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useCallback, useEffect, useState } from 'react'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
@@ -11,15 +10,16 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { Orientation } from 'expo-screen-orientation'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { Surface, useTheme, Text } from 'react-native-paper'
+import { Surface, Text } from 'react-native-paper'
+import { useAppTheme } from '../CommonComponents/Theme'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const setMiles = useAppDispatch()
-  const theme = useTheme()
-  const cars = useAppSelector((state) => state)
+  const theme = useAppTheme()
+  /* const cars = useAppSelector((state) => state) */
 
   // -----------------------------block orientation screen--------------------------
   const [orientation, setOrientation] = useState(0)
@@ -45,7 +45,6 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
 
   useEffect(() => {
     /* setMiles(updateMiles(15)) */
-    console.log('homelog', cars)
   }, [])
 
   return (

@@ -11,12 +11,12 @@ import {
   Text,
   Button,
   Divider,
-  useTheme,
   Portal,
   Dialog,
   TextInput
 } from 'react-native-paper'
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
+import { useAppTheme } from '../../CommonComponents/Theme'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -30,8 +30,9 @@ RootTabParamList,
 export const MainCard = (): JSX.Element => {
   const navStack = useNavigation<ProfileScreenNavigationProp>()
   const navTab = useNavigation<ProfileTabNavigationProp>()
-  const { colors } = useTheme()
-  const state = useAppSelector(state => state)
+  const { colors } = useAppTheme()
+  const carId = useAppSelector(state => state.numberCar)
+
   const infoCar: StateInfo = useAppSelector(state => (
     state.cars[state.numberCar].info === undefined
       ? initialStateInfo
@@ -155,7 +156,7 @@ export const MainCard = (): JSX.Element => {
                     currentMileage: valueMileage,
                     dateMileage: new Date()
                   }
-                  dispatch(updateMiles(state.numberCar, tempMileage))
+                  dispatch(updateMiles(carId, tempMileage))
                   toggleMileage()
                 }}
                 >Ok

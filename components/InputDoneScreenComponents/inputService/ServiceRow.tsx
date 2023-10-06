@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native'
-import { StatePart, StateService } from '../../../type'
-import { Card, IconButton, Menu, ProgressBar, useTheme } from 'react-native-paper'
+import { StateService } from '../../../type'
+import { Card, IconButton, Menu, ProgressBar } from 'react-native-paper'
 import { useEffect, useState } from 'react'
-import { delPart, delService } from '../../Redux/actions'
+import { delService } from '../../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
-import { Icon } from '@rneui/themed'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 interface propsRowService {
   handlePress: (item: StateService) => void
@@ -12,8 +12,7 @@ interface propsRowService {
 }
 
 export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.Element => {
-  const { colors } = useTheme()
-  /* const theme = useTheme() */
+  const { colors } = useAppTheme()
 
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
@@ -93,17 +92,18 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
       >
 
         <Card.Title
-          style={{ flex: 3.6, paddingLeft: 2 }}
+          style={{ flex: 3.6, paddingLeft: 0 }}
           leftStyle={{ marginRight: 2 }}
-          left={() =>
+          left={(props) =>
             <>
-              <Icon name={'car-cog'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/>
+              <IconButton {...props} icon={'car-cog'} size={22} iconColor={colors.tertiary}/>
+              {/* <Icon name={'car-cog'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/> */}
             {/*   <Icon name={'check-decagram' } type='material-community' size={22}
                     color={ item.isInstall ? colors.tertiary : colors.secondary} /> */}
             </>
           }
           title={String(item.typeService.nameService)}
-          titleStyle={{ paddingRight: 2 }}
+          titleStyle={{ paddingRight: 2, paddingTop: 4 }}
           subtitleStyle={{ paddingRight: 2 }}
           /* subtitle={() => <ProgressBar progress={0.5}/>} */
           titleVariant={'bodyMedium'}

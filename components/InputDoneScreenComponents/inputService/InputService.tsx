@@ -7,15 +7,17 @@ import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { StateService } from '../../../type'
 import { addService, editService } from '../../Redux/actions'
 import InputServiceComponent from './InputServiceComponent'
-import { List, ToggleButton, useTheme } from 'react-native-paper'
+import { List, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { ServicesList } from './ServicesList'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
+
 const InputService = (): JSX.Element => {
   const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state)
-  const { colors } = useTheme()
+  const carId = useAppSelector(state => state.numberCar)
+  const { colors } = useAppTheme()
   const nav = useNavigation()
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isEditService, setIsEditService] = useState(false)
@@ -60,8 +62,8 @@ const InputService = (): JSX.Element => {
   const handleOk = (dataForm: StateService): void => {
     setTimeout(() =>
       isEditService
-        ? dispatch(editService(state.numberCar, itemService?.id, dataForm))
-        : dispatch(addService(state.numberCar, dataForm))
+        ? dispatch(editService(carId, itemService?.id, dataForm))
+        : dispatch(addService(carId, dataForm))
     , 100)
     handleOnPress()
   }
@@ -71,7 +73,7 @@ const InputService = (): JSX.Element => {
   // ---------------------------------------------------------------------------
 
   return (
-  <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
 
     <KeyboardAvoidingView >
       <ScrollView style={{ marginTop: 5 }}>
@@ -113,13 +115,6 @@ const InputService = (): JSX.Element => {
       /* -------------------------------------------------------------------------- */
     }
 
-    <View style={{ marginTop: 10, height: '85%' }}>
-    {/* {openAccordion
-      ? null
-      : <Tasks />
-
-    } */}
-    </View>
   </View>
   )
 }

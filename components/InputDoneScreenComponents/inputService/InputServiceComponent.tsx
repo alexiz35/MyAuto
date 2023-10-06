@@ -12,7 +12,6 @@ import { AddPartModal } from './AddPartModal'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
   Modal,
-  useTheme,
   Text,
   Portal,
   Button,
@@ -25,6 +24,7 @@ import { PickService } from './PickService'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import Accordion from '../../Accordion'
 import { useAppSelector } from '../../Redux/hook'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 interface InputServiceProps {
   isCancel: () => void
@@ -48,7 +48,7 @@ interface FormService {
 const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServiceProps): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
 
-  const theme = useTheme()
+  const theme = useAppTheme()
   const state = useAppSelector((state) => state.cars[state.numberCar])
 
   const tempNullService: FormService = {

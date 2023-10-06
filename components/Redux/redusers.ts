@@ -3,6 +3,9 @@ import { ActionType, Dispatch, initialStateInfo, StateMain } from '../../type'
 export const initialState: StateMain = {
   numberCar: 0,
   token: '',
+  setting: {
+    themeSet: 'dark'
+  },
   cars: [
     {
       info: initialStateInfo,

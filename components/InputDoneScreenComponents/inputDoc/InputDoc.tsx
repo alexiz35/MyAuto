@@ -16,7 +16,9 @@ import { PartsList } from '../inputPart/PartsList'
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 const InputDoc = (): JSX.Element => {
   const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state)
+  /* const state = useAppSelector((state) => state) */
+  const carId = useAppSelector(state => state.numberCar)
+
   const { colors } = useTheme()
   const nav = useNavigation()
 
@@ -60,8 +62,8 @@ const InputDoc = (): JSX.Element => {
   const handleOk = (dataForm: StateOther): void => {
     setTimeout(() =>
       isEditOther
-        ? dispatch(editOther(state.numberCar, itemOther?.id, dataForm))
-        : dispatch(addOther(state.numberCar, dataForm))
+        ? dispatch(editOther(carId, itemOther?.id, dataForm))
+        : dispatch(addOther(carId, dataForm))
     , 100)
     handleOnPress()
   }

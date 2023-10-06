@@ -22,10 +22,10 @@ export default function App (): JSX.Element {
       }
     }
   }) */
-  // Ignore log notification by message
+  /* // Ignore log notification by message
   LogBox.ignoreLogs(['Warning: Selector unknown returned the root state when called.'])
   // Ignore all log notifications
-  LogBox.ignoreAllLogs()
+  LogBox.ignoreAllLogs() */
   return (
     <SafeAreaProvider>
     <Provider store={store}>

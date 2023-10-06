@@ -46,6 +46,10 @@ export interface StateMain {
   cars: StateCar[]
   numberCar: number
   token: string
+  setting: Setting
+}
+export interface Setting {
+  themeSet: string
 }
 
 export interface StateCar {

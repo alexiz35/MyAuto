@@ -17,7 +17,6 @@ import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
 import InfoScreen from '../../screens/InfoScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { BackgroundImage, color } from '@rneui/base'
 
 import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
@@ -47,6 +46,8 @@ import {
 } from 'react-native-paper'
 import merge from 'deepmerge'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
+import { useAppSelector } from '../Redux/hook'
+import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
@@ -96,37 +97,6 @@ function LogoTitle (): JSX.Element {
 } */
 
 /* -----------------------------    THEME   ---------------------------------- */
-const { LightTheme, DarkTheme } = adaptNavigationTheme({
-  reactNavigationLight: NavigationDefaultTheme,
-  reactNavigationDark: NavigationDarkTheme
-})
-
-const CombinedDefaultThemeBase = merge(MD3LightTheme, LightTheme)
-const CombinedDarkThemeBase = merge(MD3DarkTheme, DarkTheme)
-const CombinedDefaultTheme = {
-  ...CombinedDefaultThemeBase,
-  colors: {
-    ...CombinedDefaultThemeBase.colors,
-    tertiary: 'rgb(46, 108, 0)',
-    onTertiary: 'rgb(255, 255, 255)',
-    tertiaryContainer: 'rgb(128, 255, 44)',
-    onTertiaryContainer: 'rgb(9, 33, 0)',
-    yellow: 'rgb(253,202,0)'
-  }
-}
-const CombinedDarkTheme = {
-  ...CombinedDarkThemeBase,
-  colors: {
-    ...CombinedDarkThemeBase.colors,
-    tertiary: 'rgb(103, 225, 0)',
-    onTertiary: 'rgb(21, 56, 0)',
-    tertiaryContainer: 'rgb(33, 81, 0)',
-    onTertiaryContainer: 'rgb(128, 255, 44)',
-    error: 'rgb(186, 26, 26)',
-    yellow: 'rgb(253,202,0)'
-
-  }
-}
 
 /* ----------------------------------------------------------------------------- */
 
@@ -135,25 +105,12 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
-  /* const { mode, setMode } = useThemeMode() */
-  /* const { theme } = useTheme() */
-
   const [isThemeDark, setIsThemeDark] = useState(false)
-
   const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme
-
-  /* export type AppTheme = typeof theme
-
-  export const useAppTheme = () => useTheme<AppTheme>() */
-
   const toggleTheme = useCallback(() => {
     return setIsThemeDark(!isThemeDark)
   }, [isThemeDark])
 
-  /* const toggle = (): void => {
-    if (mode === 'dark') setMode('light')
-    else setMode('dark')
-  } */
   /*  const [initial, setInitial] = useState(true)
   const [location, setLocation] = useState(0)
   const [prevCoords, setPrevCoords] = useState({ latitude: 0, longitude: 0 })
@@ -216,7 +173,6 @@ export const Navigation = (): JSX.Element => {
     <PaperProvider theme={theme}>
     <NavigationContainer >
       <Stack.Navigator screenOptions={ {
-        /* headerStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_TOP */
         headerTransparent: false,
         statusBarStyle: 'dark',
 
@@ -320,28 +276,9 @@ export const Navigation = (): JSX.Element => {
           name='InputDoneScreen'
           component={InputDoneScreen}
           options={{
+            headerStyle: { backgroundColor: theme.colors.background },
             title: 'Edit Task',
-            headerTintColor: theme.colors.text,
-            headerRight: () => (
-              <View style={{ flexDirection: 'row' }}>
-                <Button
-                  type='outline'
-                  buttonStyle={{ marginRight: 3, width: 37, height: 37, paddingHorizontal: 0, borderColor: theme.colors.border }}
-                  size='md'
-                  icon={{
-                    name: 'theme-light-dark',
-                    type: 'material-community',
-                    size: 20,
-                    color: theme.colors.text
-                  }}
-                  onPress={
-                    () => {
-                      toggleTheme()
-                    }}
-                />
-
-              </View>
-            )
+            headerTintColor: theme.colors.text
           }} />
         {
 // ------------------------------CarInfoScreen----------------------------------
@@ -356,7 +293,7 @@ export const Navigation = (): JSX.Element => {
           }} />
         {
 // -----------------------------------------------------------------------------
-// ------------------------------CarInfoScreen----------------------------------
+// ------------------------------FuelScreen----------------------------------
         }
         <Stack.Screen
           name='FuelScreen'
@@ -367,7 +304,7 @@ export const Navigation = (): JSX.Element => {
             headerTintColor: theme.colors.onBackground
           }} />
         {
-// -----------------------------------------------------------------------------
+// ----------------------------TaskPartScreen-------------------------------
         }
         <Stack.Screen
           name='InputTaskPartScreen'
@@ -376,7 +313,9 @@ export const Navigation = (): JSX.Element => {
             title: 'Запланируйте покупку запчастей',
             headerTintColor: theme.colors.text
           }} />
-
+        {
+// ----------------------------SettingScreen-------------------------------
+        }
         <Stack.Screen
           name='SettingScreen'
           component={SettingScreen}
@@ -384,7 +323,9 @@ export const Navigation = (): JSX.Element => {
             title: 'Setting',
             headerTintColor: theme.colors.text
           }} />
-
+        {
+// ----------------------------InfoScreen-------------------------------
+        }
         <Stack.Screen
           name='Info'
           component={InfoScreen}
@@ -450,7 +391,6 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                     tabBarIcon: ({ color, focused }) => (
                       <MaterialCommunityIcons
                         name={focused ? 'home' : 'home-outline'}
-                        /* type='material-community' */
                         color={color}
                         size={focused ? 20 : 16}
                       />
@@ -458,7 +398,7 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                   }}
       />
       {
-        // ------------------------Fuel BotTab----------------------------------
+        // ------------------------Buy BotTab----------------------------------
       }
       <Tab.Screen name={'InputDoneScreen'} component={InputDoneScreen}
                   options={{
@@ -466,7 +406,6 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                     tabBarIcon: ({ color, focused }) => (
                       <MaterialCommunityIcons
                         name={focused ? 'cart' : 'cart-outline'}
-                        /* type='material-community' */
                         color={color}
                         size={focused ? 22 : 20}
                       />
@@ -474,7 +413,7 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                   }}
       />
       {
-        // ----------------------------------------------------------------------
+        // -----------------------Fuel BotTab----------------------------------
       }
       <Tab.Screen name={'Null'} component={FabTab}
                   options={{
@@ -512,19 +451,24 @@ const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
                     )
                   }}
       />
+      {
+// ---------------------------- TaskBotTab -------------------------------
+      }
       <Tab.Screen name={'Tasks'} component={TaskScreen}
                   options={{
                     tabBarLabel: 'Tasks',
                     tabBarIcon: ({ color, focused }) => (
                       <MaterialCommunityIcons
                         name='calendar-check'
-                        /* type='material-community' */
                         color={color}
                         size={focused ? 24 : 20}
                       />
                     )
                   }}
       />
+      {
+// ----------------------------Stat BotTab-------------------------------
+      }
       <Tab.Screen name={'StatScreen'} component={StatScreen}
                   options={{
                     tabBarLabel: 'Statistic',
