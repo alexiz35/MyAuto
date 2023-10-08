@@ -1,42 +1,33 @@
-import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
-import { COLOR_GREEN, StatePart, StateTask } from '../../type'
-import { Button, Divider, Icon, ListItem, useTheme, Text, CheckBox } from '@rneui/themed'
-import { useCallback, useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { delPart, delTask, finishTask } from '../Redux/actions'
-import { Shadow } from 'react-native-shadow-2'
-import { check } from 'react-native-permissions'
+import { FlatList } from 'react-native'
+import { useEffect, useState } from 'react'
+import { StateTask } from '../../type'
+import { useAppSelector } from '../Redux/hook'
+import { BusyIndicator } from '../useIsReadyHook'
+import { RenderRowTask } from './TaskRow'
 
 interface handleProp {
   handlePress: (item: StateTask) => void
+  filterList: string
+
 }
 
-export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
+export const TasksList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
   const listTasks = useAppSelector(state => state.cars[0].tasks)
-  const carId = useAppSelector(state => state.numberCar)
-  const { theme } = useTheme()
-  const dispatch = useAppDispatch()
-  const [isSortParts, setIsSortParts] = useState(false)
-  const [isChecked, setIsChecked] = useState(false)
+  const [isSortTasks, setIsSortTasks] = useState(false)
+  const [isLoad, setIsLoad] = useState(true)
 
-  const renderRow: ListRenderItem<StateTask> = useCallback(({ item }: { item: StateTask }) => {
-    const pressCheck = (): void => {
-      dispatch(finishTask(carId, item.id, !item.isFinished))
-      setIsChecked(!isChecked)
-    }
-
+  /* const renderRow: ListRenderItem<StatePart> = ({ item }: { item: StatePart }) => {
     return (
       <View style={styles.listItem}>
-         <Shadow stretch={true} >
+        <Surface elevation={1} >
 
         <ListItem.Swipeable
           animation={{ type: 'spring' }}
-          containerStyle={{ padding: 5, height: 70 }}
+          containerStyle={{ padding: 5, height: 70, backgroundColor: theme.colors.surface }}
           style={{ }}
-          onPress={() =>
-            handlePress(item)
-          }
+          Component={TouchableHighlight}
+
+          onPress={() => handlePress(item)}
           leftContent={() => (
             <Button
               title='info'
@@ -62,171 +53,109 @@ export const TasksList = ({ handlePress }: handleProp): JSX.Element => {
                 backgroundColor: 'red'
               }}
               onPress={() => {
-                dispatch(delTask(carId, item.id))
+                dispatch(delPart(carId, item.id))
               }}
             />
           )}
           bottomDivider
           topDivider
         >
-          {/*
-          -------------------------------first column -----------------------------
-          */}
-          <ListItem.CheckBox
-            checked={item.isFinished}
-            onPress={pressCheck}
-            center
-            style={{ flex: 0.5 }}
-          >
-            {
-              /* (() => {
-                switch (item.typeTask) {
-                  case 'part':
-                    return <Icon name={'car-cog'} type='material-community' size={22}
-                                 color={theme.colors.success}
-                                 style={{ paddingBottom: 3 }} />
+          <ListItem.Content style={{ flex: 0.5 }}>
+          <Icon name={'basket-check'} type='material-community' size={22} color={theme.colors.tertiary} style={{ paddingBottom: 3 }}/>
+          <Icon name={'check-decagram' } type='material-community' size={22}
+                  color={ item.isInstall ? theme.colors.tertiary : theme.colors.secondary} />
+          </ListItem.Content>
 
-                  case 'service':
-                    return <Icon name={'car-wrench'} type='material-community' size={22}
-                                 color={theme.colors.success}
-                                 style={{ paddingBottom: 3 }} />
-
-                  case 'other':
-                    return <Icon name={'account-cash'} type='material-community' size={22}
-                                 color={theme.colors.success}
-                                 style={{ paddingBottom: 3 }} />
-
-                  default:
-                    return null
-                }
-              })() */
-            }
-
-            {
-              /* <CheckBox
-                center
-                /!* title="Click Here" *!/
-                /!* checked={check1}
-                onPress={() => setCheck1(!check1)} *!/
-              /> */
-
-            }
-
-          </ListItem.CheckBox>
-          {/*
-          -------------------------------second column -----------------------------
-          */}
           <ListItem.Content style={{ flex: 3 }} >
-            <ListItem.Title >
-              <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-              {
-                (() => {
-                  switch (item.typeTask) {
-                    case 'part':
-                      return <Icon name={'car-cog'} type='material-community' size={22}
-                                   color={theme.colors.success}
-                                   containerStyle={{ paddingBottom: 0, paddingRight: 10 }} />
-
-                    case 'service':
-                      return <Icon name={'car-wrench'} type='material-community' size={22}
-                                   color={theme.colors.success}
-                                   containerStyle={{ paddingBottom: 0, paddingRight: 10 }} />
-
-                    case 'other':
-                      return <Icon name={'account-cash'} type='material-community' size={22}
-                                   color={theme.colors.success}
-                                   containerStyle={{ paddingBottom: 0, paddingRight: 10 }} />
-
-                    default:
-                      return null
-                  }
-                })()
-              }
-              <Text >
-              {String(item.typeTask)}
-              </Text>
-              </View>
+            <ListItem.Title style={{ paddingBottom: 5, color: theme.colors.onSurface }} lineBreakMode={'tail'} numberOfLines={1}>
+              {/!* {String(new Date(item.dateBuy).toLocaleDateString())} *!/}
+              {String(item.namePart)}
             </ListItem.Title>
-            <Divider color={theme.colors.success} width={2} inset insetType={'middle'}/>
-            <ListItem.Subtitle style={{ fontSize: 12 }} lineBreakMode={'tail'} numberOfLines={1} >
-              {String(item.name)}
+           {/!*  <Divider color={theme.colors.tertiary} width={2} inset insetType={'middle'}/> *!/}
+            <ListItem.Subtitle style={{ fontSize: 12, color: theme.colors.onSurface }} lineBreakMode={'tail'} numberOfLines={1} >
+              {item.isInstall ? 'установлено' : 'не установлено'}
             </ListItem.Subtitle>
 
-            {/*
-          -------------------------------third column -----------------------------
-          */}
           </ListItem.Content>
           <ListItem.Content style={{ flex: 1.5 }}>
-            <ListItem.Title style={{ paddingBottom: 5 }} >
-              {String(new Date(item.dateEndTask).toLocaleDateString())}
+            <ListItem.Title style={{ paddingBottom: 5, fontSize: 12, color: theme.colors.onSurface }} >
+              {String(new Date(item.dateBuy).toLocaleDateString())}
             </ListItem.Title>
 
-            <ListItem.Subtitle style={{ fontSize: 12 }}>
-              {String(Math.floor((new Date(item.dateEndTask).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)).toString()) + '  д'}
+            <ListItem.Subtitle style={{ fontSize: 12, color: theme.colors.onSurface }}>
+              {(item.dateInstall != null) ? String(new Date(item.dateInstall).toLocaleDateString()) : null}
             </ListItem.Subtitle>
           </ListItem.Content>
 
-          <ListItem.Content style={{ flex: 1.2 }}>
-            <ListItem.Title style={{ paddingBottom: 5 }}>
-              {item.amount}
+          <ListItem.Content style={{ flex: 1.5 }}>
+            <ListItem.Title style={{ paddingBottom: 5, fontSize: 12, color: theme.colors.onSurface }}>
+              {item.quantityPart} х {item.amountCostPart}
             </ListItem.Title>
-            {/* <ListItem.Subtitle style={{ fontSize: 12 }}>
+            <ListItem.Subtitle style={{ fontSize: 12, color: theme.colors.onSurface }}>
               {(item.mileageInstall != null) ? String(item.mileageInstall) : null}
-            </ListItem.Subtitle> */}
+
+            </ListItem.Subtitle>
           </ListItem.Content>
-          {/*
-          -------------------------------end column -----------------------------
-          */}
-          {/*  <ListItem.Content style={{ flex: 1 }}>
+
+         {/!*  <ListItem.Content style={{ flex: 1 }}>
             <ListItem.Title style={{ fontSize: 14 }}>
               {item.amountCostPart}
             </ListItem.Title>
             <ListItem.Subtitle style={{ fontSize: 14 }}>
               {item.costPart} грн
             </ListItem.Subtitle>
-          </ListItem.Content> */}
+          </ListItem.Content> *!/}
 
         </ListItem.Swipeable>
 
-        </Shadow>
+        </Surface>
       </View>
     )
-  }, [])
+  } */
 
   useEffect(() => {
-    if (listTasks !== undefined) {
-      if (listTasks.length > 1) {
-        listTasks.sort(function (a, b) {
-          // @ts-expect-error date
-          return Date.parse(a.dateEndTask) - Date.parse(b.dateEndTask)
-        })
-        setIsSortParts(!isSortParts)
-      }
+    if (listTasks.length > 1) {
+      listTasks.sort(function (a, b) {
+        // @ts-expect-error date
+        return Date.parse(a.dateBuy) - Date.parse(b.dateBuy)
+      })
+      setIsSortTasks(!isSortTasks)
     }
   }, [listTasks])
 
+  useEffect(() => {
+    setTimeout(() => setIsLoad(false), 10)
+    return setIsLoad(true)
+  }, [filterList])
+
+  const filter = (): StateTask[] => {
+    switch (filterList) {
+      case 'last': return listTasks.slice(0, 3)
+      case 'ten': return listTasks.slice(0, 10)
+      default: return listTasks
+    }
+  }
+
   return (
     <>
-       {
-          listTasks !== undefined
-            ? <FlatList
-        data={listTasks}
-        extraData={isSortParts}
-        renderItem={renderRow}
+
+    { isLoad
+      ? <BusyIndicator />
+      : <FlatList
+        data={filter()}
+        extraData={isSortTasks}
+        renderItem={({ item }) => <RenderRowTask handlePress={handlePress} item={item}/>}
         keyExtractor={(item, index) => index.toString()}
-      />
-            : <Text style={{ textAlign: 'center' }}>Запланируйте что-то</Text>
-      }
+        getItemLayout={(data, index) => (
+          {
+            length: 70,
+            offset: 70 * index,
+            index
+          }
+        )}
+        initialNumToRender={6}
+        />
+    }
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  listItem: {
-    height: 70,
-    paddingRight: 0,
-    marginHorizontal: 5,
-    marginVertical: 5,
-    flex: 1
-  }
-})

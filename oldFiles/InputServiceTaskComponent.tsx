@@ -11,13 +11,13 @@ import React, {
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { RootStackParamList } from '../Navigation/Navigation'
-import { addPart, editPart } from '../Redux/actions'
-import Accordion from '../Accordion'
-import ShadowBox from '../../CommonComponents/ShadowBox'
+import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { RootStackParamList } from '../components/Navigation/Navigation'
+import { addPart, editPart } from '../components/Redux/actions'
+import Accordion from '../components/Accordion'
+import ShadowBox from '../CommonComponents/ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { StateService, StateServiceTask } from '../../type'
+import { StateService, StateServiceTask } from '../type'
 
 interface InputServiceProps {
   isCancel: () => void

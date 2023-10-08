@@ -1,9 +1,9 @@
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
 import { BottomSheet, Overlay, SpeedDial, Text } from '@rneui/themed'
 import {
   BACK_INPUT,
   StateOther,
-  StatePart,
+  StatePart, StateService,
   StateServiceTask,
   StateTask
 } from '../type'
@@ -16,290 +16,131 @@ import InputPartComponent from '../components/InputDoneScreenComponents/inputPar
 import InputDocComponent from '../components/InputDoneScreenComponents/inputDoc/InputDocComponent'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { TasksList } from '../components/TaskScreenComponents/TasksList'
-import { addTask, editTask } from '../components/Redux/actions'
-import { useFocusEffect } from '@react-navigation/native'
-import InputServiceTaskComponents from '../components/TaskScreenComponents/InputServiceTaskComponent'
+import { addService, addTask, editService, editTask } from '../components/Redux/actions'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import InputServiceTaskComponents from '../oldFiles/InputServiceTaskComponent'
 import Spinner from 'react-native-loading-spinner-overlay'
-import InputTaskPartScreen from '../components/TaskScreenComponents/InputTaskPartScreen'
-import { useTheme } from 'react-native-paper'
+import InputTaskPartScreen from '../oldFiles/InputTaskPartScreen'
+import { List, ToggleButton, useTheme } from 'react-native-paper'
+import { useAppTheme } from '../CommonComponents/Theme'
+import InputServiceComponent from '../components/InputDoneScreenComponents/inputService/InputServiceComponent'
+import { ServicesList } from '../components/InputDoneScreenComponents/inputService/ServicesList'
+import InputTaskComponent from '../components/TaskScreenComponents/InputTaskComponent'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
 
 const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
-  const theme = useTheme()
-  const listTasks = useAppSelector(state => state.cars[0].tasks)
-  const carId = useAppSelector(state => state.numberCar)
   const dispatch = useAppDispatch()
-  const [openFab, setOpenFab] = useState(false)
-  const [visiblePart, setVisiblePart] = useState(false)
-  const [visibleService, setVisibleService] = useState(false)
-  const [visibleOther, setVisibleOther] = useState(false)
-  const [statePart, setStatePart] = useState<StatePart>()
-  const [stateService, setStateService] = useState<StateServiceTask>()
-  const [stateOther, setStateOther] = useState<StateOther>()
+  const carId = useAppSelector(state => state.numberCar)
+  const { colors } = useAppTheme()
+  const nav = useNavigation()
+  const [openAccordion, setOpenAccordion] = useState(false)
+  const [isEditTask, setIsEditSTask] = useState(false)
 
-  const [isEditTask, setIsEditTask] = useState(false)
+  const [itemTasks, setItemTasks] = useState<StateTask | undefined>()
 
-  const [isActivity, setIsActivity] = useState(false)
+  const [isList, setIsList] = useState(true)
+  const [dateList, setDateList] = useState('last')
 
-  // ----------------------------------- handle pressing FAB -----------------------------
-  const pressPartFab = (): void => {
-    /* setIsActivity(true) */
-    /* setIsEditTask(false) */
-    navigation.navigate('CarInfoScreen')
-    /* setStatePart(undefined)
-    setTimeout(() => {
-      setVisiblePart(true)
-      setIsActivity(false)
-    }, 1) */
-    setOpenFab(false)
+  const clearInput = (): void => {
+    setIsEditSTask(false)
+    setItemTasks(undefined)
   }
 
-  const pressServiceFab = (): void => {
-    setIsEditTask(false)
-    setStateService(undefined)
-    setVisibleService(true)
-    setOpenFab(false)
+  // --------------------------Hide tabBottom when openAccordion-----------------
+  useEffect(() => {
+    if (openAccordion) nav.setOptions({ tabBarStyle: { display: 'none', backgroundColor: colors.background } })
+    else nav.setOptions({ tabBarStyle: { display: 'flex', backgroundColor: colors.background } })
+  }, [openAccordion])
+
+  // ------------------------- control according -------------------------------
+  const handleOpen = (item: StateTask): void => {
+    setIsList(false)
+    setOpenAccordion(true)
+    setIsEditSTask(true)
+    setItemTasks(item)
   }
 
-  const pressOtherFab = (): void => {
-    setIsEditTask(false)
-    setStateOther(undefined)
-    setVisibleOther(true)
-    setOpenFab(false)
-  }
-  // --------------------------------------------------------------------------------
-  // ------------------------- handle modal button ----------------------------------
-  const handleOkPart = (resultPart: StatePart): void => {
-    setVisiblePart(false)
-    const tempOtherPart: StateTask = {
-      id: resultPart.id,
-      typeTask: 'part',
-      name: resultPart.namePart,
-      numberPart1: resultPart.numberPart,
-      numberPart2: resultPart.numberPart1,
-      numberPart3: resultPart.numberPart2,
-      dateStartTask: new Date(),
-      dateEndTask: resultPart.dateBuy,
-      cost: resultPart.costPart,
-      quantity: resultPart.quantityPart,
-      amount: resultPart.amountCostPart,
-      isFinished: false,
-      seller: resultPart.seller
-    }
-
-    isEditTask
-      ? dispatch(editTask(carId, statePart?.id, tempOtherPart))
-      : dispatch(addTask(carId, tempOtherPart))
-  }
-  const handleOkService = (resultService: StateServiceTask): void => {
-    setVisibleService(false)
-    const tempServiceTask: StateTask = {
-      id: resultService.id,
-      typeTask: 'service',
-      name: resultService.title,
-      dateEndTask: resultService.dateService,
-      milesEndTask: resultService.milesService,
-      amount: resultService.amountCostService,
-      isFinished: false,
-      seller: resultService.seller
-    }
-
-    isEditTask
-      ? dispatch(editTask(carId, stateService?.id, tempServiceTask))
-      : dispatch(addTask(carId, tempServiceTask))
-  }
-  const handleOkOther = (resultOther: StateOther): void => {
-    setVisibleOther(false)
-    const tempOtherTask: StateTask = {
-      id: resultOther.id,
-      typeTask: 'other',
-      name: resultOther.nameOther,
-      dateEndTask: resultOther.dateBuy,
-      amount: resultOther.amountCostPart,
-      isFinished: false,
-      seller: resultOther.seller
-    }
-
-    isEditTask
-      ? dispatch(editTask(carId, stateOther?.id, tempOtherTask))
-      : dispatch(addTask(carId, tempOtherTask))
-  }
-  const handleCancelPart = (): void => {
-    setStatePart(undefined)
-    setVisiblePart(false)
-  }
-  const handleCancelService = (): void => {
-    setStateService(undefined)
-    setVisibleService(false)
-  }
-  const handleCancelOther = (): void => {
-    setStateOther(undefined)
-    setVisibleOther(false)
+  const handleOnPress = (): void => {
+    if (!openAccordion) {
+      setIsList(false)
+    } else setTimeout(() => setIsList(true), 100)
+    setOpenAccordion(!openAccordion)
+    clearInput()
   }
 
-  // ----------------handle click on item List----------------------------------
-  const handleClick = (item: StateTask): void => {
-    setIsEditTask(true)
-    switch (item.typeTask) {
-      case 'part':
-        setIsActivity(true)
-        setStatePart(formPart(item))
-        setTimeout(() => {
-          setVisiblePart(true)
-          setIsActivity(false)
-        }, 1)
-        break
-      case 'service':
-        setStateService(formService(item))
-        setVisibleService(true)
-        break
-      case 'other':
-        setStateOther(formOther(item))
-        setVisibleOther(true)
-        break
-      default: break
-    }
+  // ---------------------------button result-----------------------------------
+  const handleCancel = (): void => {
+    handleOnPress()
   }
 
-  const formPart = (item: StateTask): StatePart => {
-    return {
-      id: item.id,
-      namePart: item.name,
-      numberPart: item.numberPart1 ?? '',
-      numberPart1: item.numberPart2,
-      numberPart2: item.numberPart3,
-      dateBuy: item.dateEndTask,
-      costPart: item.cost ?? 0,
-      quantityPart: item.quantity ?? 0,
-      amountCostPart: item.amount,
-      seller: item.seller,
-      isInstall: false
-    }
+  const handleOk = (dataForm: StateTask): void => {
+    setTimeout(() =>
+      isEditTask
+        ? dispatch(editTask(carId, itemTasks?.id, dataForm))
+        : dispatch(addTask(carId, dataForm))
+    , 100)
+    handleOnPress()
   }
-  const formService = (item: StateTask): StateServiceTask => {
-    return {
-      id: item.id,
-      title: item.name,
-      dateService: item.dateEndTask,
-      milesService: item.milesEndTask ?? 0,
-      amountCostService: item.amount,
-      seller: item.seller
-    }
-  }
-  const formOther = (item: StateTask): StateOther => {
-    return {
-      id: item.id,
-      nameOther: item.name,
-      seller: item.seller,
-      dateBuy: item.dateEndTask,
-      numberPart: item.numberPart1 ?? '',
-      amountCostPart: item.amount
-    }
-  }
-  // --------------------------------------------------------------------------------
-  /*  useFocusEffect(
-    useCallback(() => {
-    }, [])) */
+
+  // ---------------------------------------------------------------------------
 
   return (
-    <>
-    <BackgroundView >
-      {/* <Dialog isVisible={isActivity} overlayStyle={{ backgroundColor: theme.colors.background }}>
-        <Dialog.Loading loadingProps={{ size: 'large', color: theme.colors.success }}/>
-      </Dialog> */}
-      <Spinner visible={isActivity}
-               textContent={'wait...'}
-               color={theme.colors.error}
-               textStyle={{ color: theme.colors.error }}
-               overlayColor={'rgba(0, 0, 0, 0.7)'}
-      />
+    <BackgroundView props={{ flex: 1 }}>
 
-        <View style={{ height: '100%' }}>
-         {/*  <Text style={{ textAlign: 'center' }}>Запланируйте</Text> */}
-  {
-    // ------------------------------ flatTask -------------------------------------------------------
-  }
-          <View style={{ marginTop: 20 }}>
-            {/* <TasksList handlePress={handleClick}/> */}
-          </View>
-  {
-    // ------------------------------ flatTask -------------------------------------------------------
-  }
-          {/* <BottomSheet isVisible={visiblePart} modalProps={{ animationType: 'slide' }} >
-            <BackgroundView>
-              <Text style={{ textAlign: 'center' }}>Запланируйте покупку детали</Text>
-              <Button title={'ok'} onPress={() => setVisiblePart(false)}/>
-              <InputPartComponent isCancel={handleCancelPart} isOk={handleOkPart} part={statePart}/>
-            </BackgroundView>
-          </BottomSheet> */}
-          <BottomSheet isVisible={visiblePart} modalProps={{ animationType: 'slide' }} >
-            <BackgroundView>
-              <Text style={{ textAlign: 'center' }}>Запланируйте покупку детали</Text>
-              {/* <Button title={'ok'} onPress={() => setVisiblePart(false)}/> */}
-              <InputPartComponent isCancel={handleCancelPart} isOk={handleOkPart} part={statePart}/>
-            </BackgroundView>
-          </BottomSheet>
+    <View style={{ flex: 1 }}>
 
-          <Overlay isVisible={visibleService}
-                   fullScreen
-                   overlayStyle={{ justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.50)' }}
+      <KeyboardAvoidingView >
+        <ScrollView style={{ marginTop: 5 }}>
+          <List.Accordion
+            title={isEditTask ? 'Редактируйте задачу' : 'Добавьте задачу'}
+            /* description={ state.info.fuel } */
+            style={{ backgroundColor: colors.secondaryContainer }}
+            /* left={props => <List.Icon {...props} icon="car-cog" />} */
+            expanded={openAccordion}
+            onPress={handleOnPress}
           >
-            <BackgroundView>
-              <View style={{ margin: 10 }} >
-              <Text style={{ textAlign: 'center' }}>Запланируйте service</Text>
-              <InputServiceTaskComponents isCancel={handleCancelService} isOk={handleOkService} service={stateService}/>
-              </View>
-            </BackgroundView>
-          </Overlay>
 
-          <Overlay isVisible={visibleOther}
-                   fullScreen
-                   overlayStyle={{ justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.50)' }}
+            <InputTaskComponent isCancel={handleCancel} isOk={handleOk} task={itemTasks} isEdit={isEditTask}/>
+
+          </List.Accordion>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      {
+        /* ----------------------- List Fuel ---------------------------------------- */
+      }
+
+      {isList &&
+        <View style={styles.flatList}>
+          <ToggleButton.Row onValueChange={value => setDateList(value)}
+                            value={dateList}
+                            style={{ alignSelf: 'flex-end', marginBottom: 10 }}
           >
-            <BackgroundView >
-              <View style={{ margin: 10 }} >
-                <Text style={{ textAlign: 'center' }}>Запланируйте покупку other</Text>
-                <InputDocComponent isCancel={handleCancelOther} isOk={handleOkOther} other={stateOther}/>
-              </View>
-            </BackgroundView>
-          </Overlay>
+            <ToggleButton icon="numeric-3" value="last" size={20} style={{ height: 20 }}/>
+            <ToggleButton icon="numeric-10" value="ten" size={20} style={{ height: 20 }}/>
+            <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
+          </ToggleButton.Row>
+
+          <TasksList handlePress={handleOpen} filterList={dateList}/>
 
         </View>
-      <SpeedDial
-        color={theme.colors.secondary}
-        placement={'right'}
-        icon={{
-          type: 'material-community',
-          name: 'table-large-plus',
-          color: 'white'
-        }}
-        openIcon={{ name: 'close', color: '#fff' }}
-        onOpen={() => setOpenFab(!openFab)}
-        onClose={() => setOpenFab(!openFab)}
-        isOpen={openFab}
-        overlayColor={BACK_INPUT}
-      >
-        <SpeedDial.Action
-          icon={{ name: 'cog', type: 'material-community', color: '#fff' }}
-          title="детали"
-          onPress={() => pressPartFab()}
-        />
-        <SpeedDial.Action
-          icon={{ name: 'car-wrench', type: 'material-community', color: '#fff' }}
-          title="сервис"
-          onPress={() => pressServiceFab()}
-        />
-        <SpeedDial.Action
-          icon={{ name: 'account-cash', type: 'material-community', color: '#fff' }}
-          title="другое "
-          onPress={() => pressOtherFab()}
-        />
-      </SpeedDial>
-    </BackgroundView>
+      }
+      {
+        /* -------------------------------------------------------------------------- */
+      }
 
-  </>
+    </View>
+    </BackgroundView>
   )
 }
 
 export default TaskScreen
+
+const styles = StyleSheet.create({
+
+  flatList: {
+    marginTop: 15,
+    height: 400
+  }
+})

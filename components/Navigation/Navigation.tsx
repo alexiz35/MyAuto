@@ -28,7 +28,7 @@ import { current } from '@reduxjs/toolkit'
 import CarInfoScreen from '../../screens/CarInfoScreen'
 import SettingScreen from '../../screens/SettingScreen'
 import createStackNavigator, { StackScreenProps } from '@react-navigation/stack'
-import InputTaskPartScreen from '../TaskScreenComponents/InputTaskPartScreen'
+import InputTaskPartScreen from '../../oldFiles/InputTaskPartScreen'
 
 import {
   useTheme,

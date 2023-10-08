@@ -10,9 +10,9 @@ import React, {
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 /* import { useAppDispatch, useAppSelector } from '../components/Redux/hook' */
-import { StatePart } from '../../type'
-import Accordion from '../Accordion'
-import ShadowBox from '../../CommonComponents/ShadowBox'
+import { StatePart } from '../type'
+import Accordion from '../components/Accordion'
+import ShadowBox from '../CommonComponents/ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
 
