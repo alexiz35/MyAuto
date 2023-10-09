@@ -8,7 +8,7 @@ import {
   Surface,
   TextInput,
   TouchableRipple,
-  Checkbox, RadioButton, IconButton, SegmentedButtons
+  Checkbox, RadioButton, IconButton, SegmentedButtons, Switch
 } from 'react-native-paper'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import Accordion from '../Accordion'
@@ -16,8 +16,11 @@ import Accordion from '../Accordion'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { StateTask } from '../../type'
 import { useAppSelector } from '../Redux/hook'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../Navigation/Navigation'
 
 interface InputTaskProps {
   isCancel: () => void
@@ -41,12 +44,16 @@ interface FormTask {
   sellerPhone: string
   sellerWeb: string
 }
+type ProfileScreenNavigationProp = NativeStackNavigationProp<
+RootStackParamList,
+'InputDoneScreen'>
 
 const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskProps): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
 
   const theme = useAppTheme()
   const state = useAppSelector(state => state.cars[state.numberCar])
+  const nav = useNavigation<ProfileScreenNavigationProp>()
 
   const tempNullTask: FormTask = {
     typeTask: 'part',
@@ -105,6 +112,8 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
   }
 
   const [itemTask, setItemTask] = useState<StateTask>(task != null ? task : formToData(tempNullTask))
+  const [finishTask, setFinishTask] = useState(false)
+  const [createPurchase, setCreatePurchase] = useState(false)
 
   const {
     control,
@@ -143,8 +152,20 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
   }
 
   const handleOk = (dataForm: FormTask): void => {
-    isOk(formToData(dataForm))
+    console.log('nav1', dataForm)
+
+    if (createPurchase) {
+      console.log('nav', dataForm)
+      nav.navigate('InputDoneScreen', { editable: true, taskId: itemTask.id, typeTask: 1 })
+    }
+    /* isOk(formToData(dataForm)) */
   }
+
+  // --------------------------- function FinishTask ----------------------------
+  useEffect(() => {
+    if (createPurchase) setFinishTask(true)
+  }, [createPurchase])
+
   // ---------------------------------------------------------------------------
 
   return (
@@ -396,6 +417,30 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                 }
               />
             </Surface>
+
+            {
+              // --------------- Block finishTaskCheck ------------------------------------------
+            }
+            {isEdit
+              ? <View style={styles.viewGroupInput}>
+                <Surface elevation={2} style={styles.surface}>
+                  <Checkbox.Item status={finishTask ? 'checked' : 'unchecked'} label={'Выполнено'}
+                                 onPress={() => setFinishTask(!finishTask)}
+                                 color={theme.colors.tertiary}
+                                 style={{ paddingVertical: 1 }}
+                                 labelVariant={'bodyMedium'}
+
+                  />
+                  <Checkbox.Item status={createPurchase ? 'checked' : 'unchecked'} label={'Создать покупку'}
+                                 onPress={() => setCreatePurchase(!createPurchase)}
+                                 color={theme.colors.tertiary}
+                                 style={{ paddingVertical: 1 }}
+                                 labelVariant={'bodyMedium'}
+                  />
+                </Surface>
+              </View>
+              : null
+            }
 
             {
               // --------------- Result buttons ------------------------------------------
