@@ -43,6 +43,8 @@ interface FormTask {
   sellerName: string
   sellerPhone: string
   sellerWeb: string
+  isFinished: boolean
+  isCreated: boolean
 }
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -68,7 +70,9 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
     amount: '',
     sellerName: '',
     sellerPhone: '',
-    sellerWeb: ''
+    sellerWeb: '',
+    isFinished: false,
+    isCreated: false
   }
 
   const dataToForm = (data: StateTask): FormTask => {
@@ -85,7 +89,9 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
       amount: data.amount === undefined || data.amount === 0 ? '' : String(data.amount),
       sellerName: data.seller?.name === undefined ? '' : String(data.seller?.name),
       sellerPhone: data.seller?.phone === undefined ? '' : String(data.seller?.phone),
-      sellerWeb: data.seller?.link === undefined ? '' : String(data.seller?.link)
+      sellerWeb: data.seller?.link === undefined ? '' : String(data.seller?.link),
+      isFinished: data.isFinished,
+      isCreated: false
     }
   }
 
@@ -107,7 +113,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
         phone: data.sellerPhone,
         link: data.sellerWeb
       },
-      isFinished: false
+      isFinished: data.isFinished
     }
   }
 
@@ -122,10 +128,10 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
     setValue,
     setFocus
   } = useForm<FormTask>({ mode: 'onBlur', defaultValues: tempNullTask, values: dataToForm(itemTask) })
-  /* const controlDateInput = useWatch({
+  const controlIsCreated = useWatch({
     control,
-    name: 'startDate'
-  }) */
+    name: 'isCreated'
+  })
 
   /* const [typeService, setTypeService] = useState < ListService | undefined>(isEdit ? service?.typeService : undefined)
   const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>(isEdit ? service?.addition?.parts : undefined) */
@@ -152,19 +158,16 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
   }
 
   const handleOk = (dataForm: FormTask): void => {
-    console.log('nav1', dataForm)
-
-    if (createPurchase) {
-      console.log('nav', dataForm)
-      nav.navigate('InputDoneScreen', { editable: true, taskId: itemTask.id, typeTask: 1 })
-    }
-    /* isOk(formToData(dataForm)) */
+    /*  if (createPurchase) {
+      nav.navigate('InputDoneScreen', { editable: true, taskId: itemTask.id, typeTask: 'service' })
+    } */
+    isOk(formToData(dataForm))
   }
 
   // --------------------------- function FinishTask ----------------------------
   useEffect(() => {
-    if (createPurchase) setFinishTask(true)
-  }, [createPurchase])
+    if (getValues('isCreated')) setValue('isFinished', true)
+  }, [controlIsCreated])
 
   // ---------------------------------------------------------------------------
 
@@ -424,19 +427,31 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
             {isEdit
               ? <View style={styles.viewGroupInput}>
                 <Surface elevation={2} style={styles.surface}>
-                  <Checkbox.Item status={finishTask ? 'checked' : 'unchecked'} label={'Выполнено'}
-                                 onPress={() => setFinishTask(!finishTask)}
-                                 color={theme.colors.tertiary}
-                                 style={{ paddingVertical: 1 }}
-                                 labelVariant={'bodyMedium'}
+                  <Controller name={'isFinished'}
+                              control={control}
+                              render={ ({ field: { value, ref, onChange } }) => (
+                                <Checkbox.Item status={value ? 'checked' : 'unchecked'} label={'Выполнено'}
+                                               onPress={() => onChange(!value)}
+                                               color={theme.colors.tertiary}
+                                               style={{ paddingVertical: 1 }}
+                                               labelVariant={'bodyMedium'}
 
+                                />
+                              )}
                   />
-                  <Checkbox.Item status={createPurchase ? 'checked' : 'unchecked'} label={'Создать покупку'}
-                                 onPress={() => setCreatePurchase(!createPurchase)}
-                                 color={theme.colors.tertiary}
-                                 style={{ paddingVertical: 1 }}
-                                 labelVariant={'bodyMedium'}
-                  />
+
+                 {/*  <Controller name={'isCreated'}
+                              control={control}
+                              render={ ({ field: { value, ref, onChange } }) => (
+                                <Checkbox.Item status={value ? 'checked' : 'unchecked'} label={'Создать покупку'}
+                                               onPress={() => onChange(!value)}
+                                               color={theme.colors.tertiary}
+                                               style={{ paddingVertical: 1 }}
+                                               labelVariant={'bodyMedium'}
+                                />
+                              )}
+                  /> */}
+
                 </Surface>
               </View>
               : null

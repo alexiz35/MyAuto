@@ -48,7 +48,7 @@ import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
   BottomTabNav: NavigatorScreenParams<RootTabParamList>
-  InputDoneScreen: { editable: boolean, taskId?: number, typeTask: number }
+  InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
   Info: { taskId: number, typeTask: number }
   CarInfoScreen: undefined
   SettingScreen: undefined
@@ -65,7 +65,7 @@ export type RootTabParamList = {
   Tasks: undefined
   StatScreen: undefined
   FuelScreen: undefined
-  InputDoneScreen: { editable: boolean, taskId?: number, typeTask: number }
+  InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
 }
 
 function LogoTitle (): JSX.Element {

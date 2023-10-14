@@ -61,7 +61,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
           left={(props) =>
             <View style={{ alignItems: 'center' }}>
               <IconButton {...props} icon={icon} size={22} iconColor={colors.tertiary} style={{ height: 22, margin: 0, paddingTop: 2 }}/>
-              <IconButton icon={'check-decagram'} size={22} iconColor={visibleMenu ? colors.tertiary : colors.secondary} style={{ margin: 0, paddingTop: 2 }}/>
+              <IconButton icon={'check-decagram'} size={22} iconColor={item.isFinished ? colors.tertiary : colors.secondary} style={{ margin: 0, paddingTop: 2 }}/>
               {/* <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/> */}
               {/* <Icon name={'check-decagram' } type='material-community' size={22}
                     color={ item.isInstall ? colors.tertiary : colors.secondary} /> */}

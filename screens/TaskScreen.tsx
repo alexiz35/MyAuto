@@ -1,5 +1,5 @@
 import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
-import { BottomSheet, Overlay, SpeedDial, Text } from '@rneui/themed'
+import { BottomSheet, Overlay, SpeedDial } from '@rneui/themed'
 import {
   BACK_INPUT,
   StateOther,
@@ -8,7 +8,7 @@ import {
   StateTask
 } from '../type'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { RootTabParamList } from '../components/Navigation/Navigation'
+import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 /* import { printToFile } from '../components/Print/Print' */
 import React, { useCallback, useEffect, useState } from 'react'
@@ -21,17 +21,23 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import InputServiceTaskComponents from '../oldFiles/InputServiceTaskComponent'
 import Spinner from 'react-native-loading-spinner-overlay'
 import InputTaskPartScreen from '../oldFiles/InputTaskPartScreen'
-import { List, ToggleButton, useTheme } from 'react-native-paper'
+import { Button, Dialog, List, Portal, ToggleButton, Text, useTheme } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import InputServiceComponent from '../components/InputDoneScreenComponents/inputService/InputServiceComponent'
 import { ServicesList } from '../components/InputDoneScreenComponents/inputService/ServicesList'
 import InputTaskComponent from '../components/TaskScreenComponents/InputTaskComponent'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
-type Props = BottomTabScreenProps<RootTabParamList, 'Tasks'>
+type Props = BottomTabScreenProps<RootTabParamList, 'InputDoneScreen'>
+type ProfileScreenNavigationProp = NativeStackNavigationProp<
+RootStackParamList,
+'InputDoneScreen'>
 
 const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
+  /* const nav2 = useNavigation<ProfileScreenNavigationProp>() */
+  const nav2 = useNavigation<Props>()
   const { colors } = useAppTheme()
   const nav = useNavigation()
   const [openAccordion, setOpenAccordion] = useState(false)
@@ -41,6 +47,9 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
   const [isList, setIsList] = useState(true)
   const [dateList, setDateList] = useState('last')
+
+  const [isDialog, setIsDialog] = useState(false)
+  const [typeTask, setTypeTask] = useState('part')
 
   const clearInput = (): void => {
     setIsEditSTask(false)
@@ -75,14 +84,31 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   }
 
   const handleOk = (dataForm: StateTask): void => {
-    setTimeout(() =>
+    setTimeout(() => {
       isEditTask
         ? dispatch(editTask(carId, itemTasks?.id, dataForm))
         : dispatch(addTask(carId, dataForm))
+      if (dataForm.isFinished) {
+        setTypeTask(dataForm.typeTask)
+        showDialog()
+      }
+    }
     , 100)
     handleOnPress()
   }
 
+  // ---------------------------------------------------------------------------
+  // -----------------------Dialog Functions------------------------------------
+  const showDialog = (): void => {
+    setIsDialog(true)
+  }
+  const hideDialog = (): void => {
+    setIsDialog(false)
+  }
+  const okDialog = (): void => {
+    setTimeout(() => hideDialog(), 100)
+    navigation.navigate('InputDoneScreen', { editable: true, typeTask })
+  }
   // ---------------------------------------------------------------------------
 
   return (
@@ -126,6 +152,22 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
         </View>
       }
+      {
+        /* -------------------------------------------------------------------------- */
+      }
+        <Portal >
+          <Dialog visible={isDialog} onDismiss={hideDialog} dismissableBackButton style={{ borderWidth: 1 }}>
+              <Dialog.Title>Hello</Dialog.Title>
+              <Dialog.Content>
+                <Text>Задача завершена.</Text>
+                <Text> Создать покупку?</Text>
+                </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={hideDialog}>Cancel</Button>
+              <Button onPress={okDialog}>Done</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       {
         /* -------------------------------------------------------------------------- */
       }

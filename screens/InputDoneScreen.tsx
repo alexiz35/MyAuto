@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { RootTabParamList } from '../components/Navigation/Navigation'
 import InputService from '../components/InputDoneScreenComponents/inputService/InputService'
 import InputPart from '../components/InputDoneScreenComponents/inputPart/InputPart'
@@ -7,11 +7,19 @@ import BackgroundView from '../CommonComponents/BackgroundView'
 import InputDoc from '../components/InputDoneScreenComponents/inputDoc/InputDoc'
 import { SegmentedButtons } from 'react-native-paper'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { useFocusEffect } from '@react-navigation/native'
 
   type Props = BottomTabScreenProps<RootTabParamList, 'InputDoneScreen'>
 const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
   const [typeBuy, setTypeBuy] = useState('part')
 
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params.editable) {
+        setTypeBuy(route.params.typeTask)
+      }
+    }, [route.params.typeTask])
+  )
   return (
     <BackgroundView props={{ flex: 1, paddingTop: 10 }}>
 
