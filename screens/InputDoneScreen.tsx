@@ -15,10 +15,12 @@ const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
 
   useFocusEffect(
     useCallback(() => {
-      if (route.params.editable) {
-        setTypeBuy(route.params.typeTask)
+      if (route.params !== undefined) {
+        if (route.params.editable) {
+          setTypeBuy(route.params.typeTask)
+        }
       }
-    }, [route.params.typeTask])
+    }, [route.params])
   )
   return (
     <BackgroundView props={{ flex: 1, paddingTop: 10 }}>

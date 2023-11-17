@@ -68,7 +68,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
             </View>
           }
           title={String(item.name)}
-          subtitle={item.isFinished ? 'установлено' : 'не установлено'}
+          subtitle={item.isFinished ? 'выполнено' : 'не выполнено'}
 
           titleStyle={{ paddingRight: 2 }}
           subtitleStyle={{ paddingRight: 2 }}

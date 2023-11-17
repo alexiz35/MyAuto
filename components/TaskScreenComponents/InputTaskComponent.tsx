@@ -44,7 +44,6 @@ interface FormTask {
   sellerPhone: string
   sellerWeb: string
   isFinished: boolean
-  isCreated: boolean
 }
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -71,8 +70,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
     sellerName: '',
     sellerPhone: '',
     sellerWeb: '',
-    isFinished: false,
-    isCreated: false
+    isFinished: false
   }
 
   const dataToForm = (data: StateTask): FormTask => {
@@ -90,8 +88,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
       sellerName: data.seller?.name === undefined ? '' : String(data.seller?.name),
       sellerPhone: data.seller?.phone === undefined ? '' : String(data.seller?.phone),
       sellerWeb: data.seller?.link === undefined ? '' : String(data.seller?.link),
-      isFinished: data.isFinished,
-      isCreated: false
+      isFinished: data.isFinished
     }
   }
 
@@ -118,8 +115,6 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
   }
 
   const [itemTask, setItemTask] = useState<StateTask>(task != null ? task : formToData(tempNullTask))
-  const [finishTask, setFinishTask] = useState(false)
-  const [createPurchase, setCreatePurchase] = useState(false)
 
   const {
     control,
@@ -128,10 +123,10 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
     setValue,
     setFocus
   } = useForm<FormTask>({ mode: 'onBlur', defaultValues: tempNullTask, values: dataToForm(itemTask) })
-  const controlIsCreated = useWatch({
+  /*  const controlIsCreated = useWatch({
     control,
     name: 'isCreated'
-  })
+  }) */
 
   /* const [typeService, setTypeService] = useState < ListService | undefined>(isEdit ? service?.typeService : undefined)
   const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>(isEdit ? service?.addition?.parts : undefined) */
@@ -140,9 +135,6 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
   const [visibleModalAddParts, setVisibleModalAddParts] = useState(false) */
 
   /* --------------------------------------------------------------------------- */
-
-  const [amountPart, setAmountPart] = useState(0)
-  const [sumCost, setSumCost] = useState(0)
 
   const inputDate = (target: string): void => DateTimePickerAndroid.open({
     value: new Date(),
@@ -165,9 +157,9 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
   }
 
   // --------------------------- function FinishTask ----------------------------
-  useEffect(() => {
+  /* useEffect(() => {
     if (getValues('isCreated')) setValue('isFinished', true)
-  }, [controlIsCreated])
+  }, [controlIsCreated]) */
 
   // ---------------------------------------------------------------------------
 
@@ -242,7 +234,93 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                     />
                   </Surface>
                 </View>
-                {
+              {
+                // --------------- ----Drop Input number part ------------------------------------------
+              }
+
+              <Surface elevation={2} style={styles.surface}>
+                <Accordion
+                  /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
+                  title={'Комплектующие'}
+                  textBannerStyle={{
+                    fontSize: 14,
+                    color: theme.colors.secondary
+                  }}
+                  controlled={false}
+                  insideView={
+                    <View style={{ flexDirection: 'column' }}>
+                      <View style={styles.viewGroupInput}>
+
+                      <Surface elevation={2} style={styles.surface}>
+                        <Controller name={'numberPart1'}
+                                    control={control}
+                                    render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                      <TextInput
+                                        dense
+                                        ref={ref}
+                                        style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                        label={'Номер детали'}
+                                        /* keyboardType={'phone-pad'} */
+                                        onChangeText={(value) => onChange(value)}
+                                        value={value}
+                                        onSubmitEditing={() => {
+                                          setFocus('numberPart2')
+                                        }}
+                                        onBlur={onBlur}
+                                      />
+                                    )}
+                        />
+                      </Surface>
+
+                        <Surface elevation={2} style={styles.surface}>
+                          <Controller name={'numberPart2'}
+                                      control={control}
+                                      render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                        <TextInput
+                                          ref={ref}
+                                          dense
+                                          style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                          label={'аналог'}
+                                          onChangeText={(value) => onChange(value)}
+                                          value={value}
+                                          onSubmitEditing={() => {
+                                            setFocus('numberPart3')
+                                          }}
+                                          onBlur={onBlur}
+                                        />
+                                      )}
+                          />
+                        </Surface>
+                      </View>
+
+                      <Surface elevation={2} style={styles.surface}>
+                          <Controller name={'numberPart3'}
+                                      control={control}
+                                      render={ ({ field: { onChange, value, onBlur, ref } }) => (
+                                        <TextInput
+                                          ref={ref}
+                                          multiline={true}
+                                          dense
+                                          numberOfLines={2}
+                                          style={{ flex: 1, backgroundColor: theme.colors.surface }}
+                                          label={'дополнительно'}
+                                          onChangeText={(value) => onChange(value)}
+                                          value={value}
+                                          /* onSubmitEditing={() => {
+                                            setFocus('numberPart2')
+                                          }} */
+                                          onBlur={onBlur}
+                                        />
+                                      )}
+                          />
+                        </Surface>
+
+                    </View>
+                  }
+                />
+              </Surface>
+
+              {
                   // --------------- Input date and miles Task ------------------------------------------
                 }
                 <View style={styles.viewGroupInput}>
@@ -293,6 +371,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                             render={ ({ field: { onChange, value, onBlur, ref } }) => (
                               <TextInput
                                 ref={ref}
+                                dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                 label={'цена'}
                                 onChangeText={(value) => onChange(value)}
@@ -310,6 +389,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                             render={ ({ field: { onChange, value, onBlur, ref } }) => (
                               <TextInput
                                 ref={ref}
+                                dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                 label={'кол-во'}
                                 onChangeText={(value) => onChange(value)}
@@ -327,6 +407,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                             render={ ({ field: { onChange, value, onBlur, ref } }) => (
                               <TextInput
                                 ref={ref}
+                                dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                 label={'сумма'}
                                 onChangeText={(value) => onChange(value)}
@@ -361,6 +442,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                   render={ ({ field: { onChange, value, onBlur, ref } }) => (
                                     <TextInput
                                       ref={ref}
+                                      dense
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                       label={'Продавец'}
                                       /* keyboardType={'phone-pad'} */
@@ -382,6 +464,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     render={ ({ field: { onChange, value, onBlur, ref } }) => (
                                       <TextInput
                                         ref={ref}
+                                        dense
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                         label={'телефон'}
                                         keyboardType={'phone-pad'}
@@ -401,6 +484,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     render={ ({ field: { onChange, value, onBlur, ref } }) => (
                                       <TextInput
                                         ref={ref}
+                                        dense
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                         label={'интернет'}
                                         keyboardType={'url'}
