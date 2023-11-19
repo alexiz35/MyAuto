@@ -1,10 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../components/Navigation/Navigation'
-import { Alert, Button, Pressable, StyleSheet, TouchableHighlight, View, ScrollView } from 'react-native'
-import { CheckBox, Divider, Icon, Text, useTheme } from '@rneui/themed'
+import { Alert, StyleSheet, TouchableHighlight, View, ScrollView } from 'react-native'
+import { Button, Text, Divider, Checkbox, Icon } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
-import { BACK_OPACITY, COLOR_GREEN, TEXT_WHITE } from '../type'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
 import { addToken, updateState } from '../components/Redux/actions'
@@ -18,6 +17,7 @@ import {
 } from '../components/GoogleAPI'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
+import { useAppTheme } from '../CommonComponents/Theme'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -25,7 +25,7 @@ WebBrowser.maybeCompleteAuthSession()
 const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const state = useAppSelector(state => state)
   const dispatch = useAppDispatch()
-  const { theme } = useTheme()
+  const { colors } = useAppTheme()
 
   const [token, setToken] = useState('')
   const [userInfo, setUserInfo] = useState<GDUserInfo | null>(null)
@@ -235,13 +235,12 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   return (
     <BackgroundView >
       <ScrollView nestedScrollEnabled={true} style={{ paddingHorizontal: 10, height: '100%' }}>
-        <Divider style={{ marginTop: 10 }}/>
-        <View>
-          <Icon type={'material-community'} name={'circle'} color={theme.colors.success} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
-          <Text style={{ padding: 10, textAlign: 'center' }}>Машины</Text>
+        <Divider style={{ marginTop: 10 }} bold/>
+        <View style={styles.iconText}>
+          <Icon source={'circle'} color={colors.tertiary} size={10} />
+          <Text style={styles.text}>Мои машины</Text>
         </View>
-        <Divider />
-        {
+         {
           state.cars.map((item, index) => (
             <View key={index} style={styles.viewText}>
             <Text >{item.info.model}</Text>
@@ -249,46 +248,49 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
             </View>
           ))
         }
-        <Divider inset insetType={'middle'}/>
-        <Pressable onPress={() => navigation.navigate('CarInfoScreen')}>
-          <Text style={{ padding: 10, textAlign: 'center' }}>Добавить машину</Text>
-        </Pressable>
-        <Divider/>
-        <Pressable >
-          <Icon type={'material-community'} name={'circle'} color={theme.colors.success} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
+        <Divider horizontalInset/>
+          <Button onPress={() => navigation.navigate('CarInfoScreen')}>
+            Добавить машину
+          </Button>
+        <Divider bold/>
+        <View style={styles.iconText}>
+
+          <Icon source={'circle'} color={colors.tertiary} size={10} />
           {userInfo === null
             ? (
-              <Text style={{ padding: 10, textAlign: 'center' }}>Подключить GoogleDisk для бэкапа</Text>
+              <Text style={styles.text}>Подключить GoogleDisk для бэкапа</Text>
               )
             : (
-              <Text style={{ padding: 10, textAlign: 'center' }}>{userInfo.name}</Text>
+              <Text style={styles.text}>{userInfo.name}</Text>
               )
           }
-        </Pressable>
+        </View>
         {!auth
           ? (
               <Button
-                title="Log in with Google"
                 disabled={request == null}
                 onPress={() => {
                   void promptAsync()
                 }}
-              />
+              >
+                Log in with Google
+              </Button>
             )
           : (
              <Button
-              title="Log Out from Google"
               disabled={request == null}
               onPress={() => {
                 void handleDeleteGoogleAuth()
               }}
-             />
+             >
+               Log Out from Google
+             </Button>
             )
         }
-        <Divider/>
-        <Pressable onPress={() => { void importData() }} disabled={!auth} >
-          <Text style={[{ padding: 10, textAlign: 'center' }, auth ? { color: theme.colors.black } : { color: theme.colors.grey3 }]} >Импорт данных</Text>
-        </Pressable>
+        <Divider horizontalInset/>
+        <Button onPress={() => { void importData() }} disabled={!auth}>
+          Импорт данных
+        </Button>
         {/* <Button
           title="Refresh Token"
           disabled={request == null}
@@ -333,32 +335,23 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
             void importData()
           }}
         /> */}
-        <Divider inset insetType={'middle'}/>
-        <Pressable onPress={() => { void backup() }} disabled={!auth}>
-          <Text style={[{ padding: 10, textAlign: 'center' }, auth ? { color: theme.colors.black } : { color: theme.colors.grey3 }]}>Экспорт данных</Text>
-        </Pressable>
-        <Divider/>
-        <View>
-          <Icon type={'material-community'} name={'circle'} color={theme.colors.success} size={10} containerStyle={{ position: 'absolute', paddingLeft: 5, top: 5 }}/>
-          <Text style={{ padding: 10, textAlign: 'center' }}>Контроль пробега</Text>
+        <Divider horizontalInset/>
+        <Button onPress={() => { void backup() }} disabled={!auth}>
+          Экспорт данных
+        </Button>
+        <Divider bold/>
+        <View style={styles.iconText}>
+          <Icon source={'circle'} color={colors.tertiary} size={10} />
+          <Text style={styles.text}>Контроль пробега</Text>
         </View>
-        <Divider />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ padding: 10, textAlign: 'center' }}>Напоминание при входе в приложении</Text>
-        <CheckBox containerStyle={{ backgroundColor: BACK_OPACITY, paddingVertical: 3 }} checked={true} checkedColor={COLOR_GREEN}/>
-        </View>
-        <Divider inset insetType={'middle'}/>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ padding: 10, textAlign: 'center' }}>Периодическое напоминание в фоне</Text>
-          <CheckBox containerStyle={{ backgroundColor: BACK_OPACITY, paddingVertical: 3 }} checked={true} checkedColor={COLOR_GREEN}/>
-        </View>
-        <Divider inset insetType={'middle'}/>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ padding: 10, textAlign: 'center' }}>Синхронизация пробега с авто</Text>
-          <CheckBox containerStyle={{ backgroundColor: BACK_OPACITY, paddingVertical: 3 }} checked={true} checkedColor={COLOR_GREEN}/>
-        </View>
-        <Divider inset insetType={'middle'}/>
+        <Checkbox.Item status={'checked'} label={'Напоминание при входе в приложении'} labelVariant={'bodyMedium'}/>
+        <Divider horizontalInset/>
+        <Checkbox.Item status={'unchecked'} label={'Периодическое напоминание в фоне'} labelVariant={'bodyMedium'} disabled/>
+        <Divider horizontalInset/>
+        <Checkbox.Item status={'unchecked'} label={'Синхронизация пробега с авто'} labelVariant={'bodyMedium'} disabled/>
+        <Divider bold/>
 
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <TouchableHighlight onPress={async () => {
           await AsyncStorage.clear()
         }}>
@@ -372,6 +365,14 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
 export default SettingScreen
 
 const styles = StyleSheet.create({
+  iconText: {
+    flexDirection: 'row',
+    padding: 10,
+    alignItems: 'center'
+  },
+  text: {
+    paddingHorizontal: 5
+  },
   viewText: {
     padding: 10,
     justifyContent: 'center',

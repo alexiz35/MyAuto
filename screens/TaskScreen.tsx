@@ -1,30 +1,16 @@
-import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
-import { BottomSheet, Overlay, SpeedDial } from '@rneui/themed'
-import {
-  BACK_INPUT,
-  StateOther,
-  StatePart, StateService,
-  StateServiceTask,
-  StateTask
-} from '../type'
+import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
+import { StateTask } from '../type'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 /* import { printToFile } from '../components/Print/Print' */
-import React, { useCallback, useEffect, useState } from 'react'
-import InputPartComponent from '../components/InputDoneScreenComponents/inputPart/InputPartComponent'
-import InputDocComponent from '../components/InputDoneScreenComponents/inputDoc/InputDocComponent'
+import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { TasksList } from '../components/TaskScreenComponents/TasksList'
-import { addService, addTask, editService, editTask } from '../components/Redux/actions'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import InputServiceTaskComponents from '../oldFiles/InputServiceTaskComponent'
-import Spinner from 'react-native-loading-spinner-overlay'
-import InputTaskPartScreen from '../oldFiles/InputTaskPartScreen'
-import { Button, Dialog, List, Portal, ToggleButton, Text, useTheme } from 'react-native-paper'
+import { addTask, editTask } from '../components/Redux/actions'
+import { useNavigation } from '@react-navigation/native'
+import { Button, Dialog, List, Portal, ToggleButton, Text } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
-import InputServiceComponent from '../components/InputDoneScreenComponents/inputService/InputServiceComponent'
-import { ServicesList } from '../components/InputDoneScreenComponents/inputService/ServicesList'
 import InputTaskComponent from '../components/TaskScreenComponents/InputTaskComponent'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 

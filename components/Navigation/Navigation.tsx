@@ -228,7 +228,7 @@ export const Navigation = (): JSX.Element => {
                   <TouchableRipple
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     onPress={() =>
-                      navigation.navigate('InputTaskPartScreen')
+                      navigation.navigate('SettingScreen')
                     /* async () => {
                       await AsyncStorage.clear()
                     } */}>
