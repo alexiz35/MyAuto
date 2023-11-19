@@ -14,10 +14,10 @@ import { useAppTheme } from '../CommonComponents/Theme'
 import InputTaskComponent from '../components/TaskScreenComponents/InputTaskComponent'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
-type Props = BottomTabScreenProps<RootTabParamList, 'InputDoneScreen'>
-type ProfileScreenNavigationProp = NativeStackNavigationProp<
+type Props = BottomTabScreenProps<RootTabParamList, 'TaskScreen'>
+/* type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
-'InputDoneScreen'>
+'TaskScreen'> */
 
 const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()

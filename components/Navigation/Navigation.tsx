@@ -46,27 +46,24 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
 import { changeTheme } from '../Redux/actions'
 
+type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
+
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
   BottomTabNav: NavigatorScreenParams<RootTabParamList>
   InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
-  Info: { taskId: number, typeTask: number }
+  /* Info: { taskId: number, typeTask: number } */
   CarInfoScreen: undefined
   SettingScreen: undefined
-  InputTaskPartScreen: undefined
   FuelScreen: undefined
-
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootTabParamList = {
   Home: undefined
-  Null: undefined
-  CarInfoScreen: undefined
-  InputTaskPartScreen: undefined
-  Tasks: undefined
-  StatScreen: undefined
-  FuelScreen: undefined
   InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
+  Fuel: undefined
+  TaskScreen: undefined
+  StatScreen: undefined
 }
 
 function LogoTitle (): JSX.Element {
@@ -102,18 +99,132 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
-// ------------------------- Toggle Theme --------------------------------------
+  const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
+    const theme = useTheme()
+    const FabTab = (): any => null
+    /* const Tab = createMaterialBottomTabNavigator() */
+
+    return (
+      <Tab.Navigator
+        initialRouteName={'Home'}
+        screenOptions={{
+          headerShown: false,
+          /* tabBarActiveBackgroundColor: theme.colors.backdrop, */
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarInactiveTintColor: theme.colors.secondary,
+          tabBarStyle: { backgroundColor: theme.colors.background },
+          tabBarIconStyle: { paddingVertical: 0 },
+          tabBarLabelStyle: { fontSize: 14 },
+          tabBarHideOnKeyboard: Platform.OS !== 'ios'
+        }}
+      >
+        <Tab.Screen name={'Home'} component={HomeScreen}
+                    options={{
+                      tabBarLabel: 'Home',
+                      tabBarIcon: ({ color, focused }) => (
+                        <MaterialCommunityIcons
+                          name={focused ? 'home' : 'home-outline'}
+                          color={color}
+                          size={focused ? 20 : 16}
+                        />
+                      )
+                    }}
+        />
+        {
+          // ------------------------Buy BotTab----------------------------------
+        }
+        <Tab.Screen name={'InputDoneScreen'} component={InputDoneScreen}
+                    options={{
+                      tabBarLabel: 'Buy',
+                      tabBarIcon: ({ color, focused }) => (
+                        <MaterialCommunityIcons
+                          name={focused ? 'cart' : 'cart-outline'}
+                          color={color}
+                          size={focused ? 22 : 20}
+                        />
+                      )
+                    }}
+        />
+        {
+          // -----------------------Fuel BotTab----------------------------------
+        }
+        <Tab.Screen name={'Fuel'} component={FabTab}
+                    options={{
+                      tabBarLabel: 'Fuel',
+                      /* tabBarIcon: ({ color, focused }) => (
+                        <MaterialCommunityIcons
+                          name={focused ? 'gas-station' : 'gas-station-outline'}
+                          /!* type='material-community' *!/
+                          color={color}
+                          size={focused ? 22 : 20}
+                        />
+                      ), */
+                      tabBarButton: () => (
+                        <IconButton
+                          mode={'contained'}
+                          style={{
+                            bottom: 35,
+                            elevation: 5,
+                            borderWidth: 5,
+                            borderColor: theme.colors.primary,
+                            backgroundColor: theme.colors.background,
+                            height: 65,
+                            width: 65
+                          }}
+                          /* containerStyle={{
+                            borderWidth: 5,
+                            borderColor: /!* 'rgba(68,67,67,0.49)' *!/ theme.colors.primary
+                          }} */
+                          icon={ 'gas-station'}
+                          onPress={() => {
+                            navigation.navigate('FuelScreen')
+                            /* navigation.navigate('InputDoneScreen', { editable: false, typeTask: 0 }) */
+                          }}
+                        ></IconButton>
+                      )
+                    }}
+        />
+        {
+// ---------------------------- TaskBotTab -------------------------------
+        }
+        <Tab.Screen name={'TaskScreen'} component={TaskScreen}
+                    options={{
+                      tabBarLabel: 'Tasks',
+                      tabBarIcon: ({ color, focused }) => (
+                        <MaterialCommunityIcons
+                          name='calendar-check'
+                          color={color}
+                          size={focused ? 24 : 20}
+                        />
+                      )
+                    }}
+        />
+        {
+// ----------------------------Stat BotTab-------------------------------
+        }
+        <Tab.Screen name={'StatScreen'} component={StatScreen}
+                    options={{
+                      tabBarLabel: 'Statistic',
+                      tabBarIcon: ({ color, focused }) => (
+                        <MaterialCommunityIcons
+                          name={focused ? 'chart-box' : 'chart-box-outline'}
+                          color={color}
+                          size={focused ? 22 : 20}
+                        />
+                      )
+                      /* tabBarButton: () => (<FAB style={{ marginBottom: 30 }}/>) */
+                    }}
+        />
+      </Tab.Navigator>
+    )
+  }
+
+  // ------------------------- Toggle Theme --------------------------------------
   const theme2 = useAppSelector(state => state.setting.themeSet)
   const dispatch = useAppDispatch()
 
   const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme
-  /* console.log(theme2) */
-  /* const [isThemeDark, setIsThemeDark] = useState(false) */
-  /* const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme */
-  /*
-  const toggleTheme = useCallback(() => {
-    return setIsThemeDark(!isThemeDark)
-  }, [isThemeDark]) */
+
   const toggleTheme = useCallback(() => {
     (theme2 === 'dark')
       ? dispatch(changeTheme('light'))
@@ -230,7 +341,7 @@ export const Navigation = (): JSX.Element => {
           } /> */}
         <Stack.Screen
           name='BottomTabNav'
-          // @ts-expect-error jjj
+          // @ts-expect-error typeBottomTabNav
           component={BottomTabNav}
           options={({ navigation }) => ({
             headerTitleAlign: 'center',
@@ -255,14 +366,14 @@ export const Navigation = (): JSX.Element => {
           }
           )}
         />
-        <Stack.Screen
+   {/*      <Stack.Screen
           name='InputDoneScreen'
           component={InputDoneScreen}
           options={{
             headerStyle: { backgroundColor: theme.colors.background },
             title: 'Edit Task',
             headerTintColor: theme.colors.text
-          }} />
+          }} /> */}
         {
 // ------------------------------CarInfoScreen----------------------------------
         }
@@ -289,13 +400,13 @@ export const Navigation = (): JSX.Element => {
         {
 // ----------------------------TaskPartScreen-------------------------------
         }
-        <Stack.Screen
+        {/* <Stack.Screen
           name='InputTaskPartScreen'
           component={InputTaskPartScreen}
           options={{
             title: 'Запланируйте покупку запчастей',
             headerTintColor: theme.colors.text
-          }} />
+          }} /> */}
         {
 // ----------------------------SettingScreen-------------------------------
         }
@@ -304,12 +415,13 @@ export const Navigation = (): JSX.Element => {
           component={SettingScreen}
           options={{
             title: 'Setting',
-            headerTintColor: theme.colors.text
+            headerStyle: { backgroundColor: theme.colors.background },
+            headerTintColor: theme.colors.onBackground
           }} />
         {
 // ----------------------------InfoScreen-------------------------------
         }
-        <Stack.Screen
+        {/* <Stack.Screen
           name='Info'
           component={InfoScreen}
           initialParams={{ taskId: 0 }}
@@ -334,7 +446,7 @@ export const Navigation = (): JSX.Element => {
                 }}
               />
             )
-          })} />
+          })} /> */}
       </Stack.Navigator>
 
     </NavigationContainer>
@@ -343,129 +455,3 @@ export const Navigation = (): JSX.Element => {
 }
 
 /* type PropsTab = NativeStackScreenProps<RootTabParamList, 'Home'> */
-type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
-
-const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
-  const theme = useTheme()
-  const FabTab = (): any => null
-  /* const Tab = createMaterialBottomTabNavigator() */
-
-  return (
-    <Tab.Navigator
-      initialRouteName={'Home'}
-     /*  barStyle={{ backgroundColor: theme.colors.background }} */
-      /* activeColor={theme.colors.onBackground} */
-      /* inactiveColor={theme.colors.secondary} */
-
-      screenOptions={{
-        headerShown: false,
-        /* tabBarActiveBackgroundColor: theme.colors.backdrop, */
-        tabBarActiveTintColor: theme.colors.primary, // 'white',
-        tabBarInactiveTintColor: theme.colors.secondary, // 'gray',
-        tabBarStyle: { backgroundColor: theme.colors.background }, // BACK_TAB_BOTTOM
-        tabBarIconStyle: { paddingVertical: 0 },
-        tabBarLabelStyle: { fontSize: 14 },
-        tabBarHideOnKeyboard: Platform.OS !== 'ios'
-      }}
-    >
-      <Tab.Screen name={'Home'} component={HomeScreen}
-                  options={{
-                    tabBarLabel: 'Home',
-                    tabBarIcon: ({ color, focused }) => (
-                      <MaterialCommunityIcons
-                        name={focused ? 'home' : 'home-outline'}
-                        color={color}
-                        size={focused ? 20 : 16}
-                      />
-                    )
-                  }}
-      />
-      {
-        // ------------------------Buy BotTab----------------------------------
-      }
-      <Tab.Screen name={'InputDoneScreen'} component={InputDoneScreen}
-                  options={{
-                    tabBarLabel: 'Buy',
-                    tabBarIcon: ({ color, focused }) => (
-                      <MaterialCommunityIcons
-                        name={focused ? 'cart' : 'cart-outline'}
-                        color={color}
-                        size={focused ? 22 : 20}
-                      />
-                    )
-                  }}
-      />
-      {
-        // -----------------------Fuel BotTab----------------------------------
-      }
-      <Tab.Screen name={'Null'} component={FabTab}
-                  options={{
-                    tabBarLabel: 'Fuel',
-                    /* tabBarIcon: ({ color, focused }) => (
-                      <MaterialCommunityIcons
-                        name={focused ? 'gas-station' : 'gas-station-outline'}
-                        /!* type='material-community' *!/
-                        color={color}
-                        size={focused ? 22 : 20}
-                      />
-                    ), */
-                    tabBarButton: () => (
-                       <IconButton
-                         mode={'contained'}
-                      style={{
-                        bottom: 35,
-                        elevation: 5,
-                        borderWidth: 5,
-                        borderColor: theme.colors.primary,
-                        backgroundColor: theme.colors.background,
-                        height: 65,
-                        width: 65
-                      }}
-                      /* containerStyle={{
-                        borderWidth: 5,
-                        borderColor: /!* 'rgba(68,67,67,0.49)' *!/ theme.colors.primary
-                      }} */
-                      icon={ 'gas-station'}
-                      onPress={() => {
-                        navigation.navigate('FuelScreen')
-                        /* navigation.navigate('InputDoneScreen', { editable: false, typeTask: 0 }) */
-                      }}
-                       ></IconButton>
-                    )
-                  }}
-      />
-      {
-// ---------------------------- TaskBotTab -------------------------------
-      }
-      <Tab.Screen name={'Tasks'} component={TaskScreen}
-                  options={{
-                    tabBarLabel: 'Tasks',
-                    tabBarIcon: ({ color, focused }) => (
-                      <MaterialCommunityIcons
-                        name='calendar-check'
-                        color={color}
-                        size={focused ? 24 : 20}
-                      />
-                    )
-                  }}
-      />
-      {
-// ----------------------------Stat BotTab-------------------------------
-      }
-      <Tab.Screen name={'StatScreen'} component={StatScreen}
-                  options={{
-                    tabBarLabel: 'Statistic',
-                    tabBarIcon: ({ color, focused }) => (
-                          <MaterialCommunityIcons
-                            name={focused ? 'chart-box' : 'chart-box-outline'}
-                            /* type='material-community' */
-                            color={color}
-                            size={focused ? 22 : 20}
-                          />
-                    )
-                    /* tabBarButton: () => (<FAB style={{ marginBottom: 30 }}/>) */
-                  }}
-      />
-    </Tab.Navigator>
-  )
-}
