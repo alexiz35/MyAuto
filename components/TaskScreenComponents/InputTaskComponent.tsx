@@ -1,14 +1,10 @@
 import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
-  Modal,
-  Text,
-  Portal,
   Button,
   Surface,
   TextInput,
-  TouchableRipple,
-  Checkbox, RadioButton, IconButton, SegmentedButtons, Switch
+  Checkbox, SegmentedButtons
 } from 'react-native-paper'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import Accordion from '../Accordion'

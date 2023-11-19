@@ -1,6 +1,8 @@
 import { Dimensions, ImageBackground, ScrollView, StyleSheet, Switch, View } from 'react-native'
 import { BACK_INPUT, COLOR_GREEN, StateFuel, TEXT_WHITE } from '../type'
-import { Button, ButtonGroup, Icon, Text, useTheme } from '@rneui/themed'
+import { Button, ButtonGroup, useTheme } from '@rneui/themed'
+import { TextInput, Divider, Text, Icon, SegmentedButtons } from 'react-native-paper'
+
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit'
 import { useAppSelector } from '../components/Redux/hook'
 import { useCallback, useEffect, useReducer, useState } from 'react'
@@ -11,6 +13,7 @@ import WheelPickerExpo from 'react-native-wheel-picker-expo'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import { yearDataFuelChart, yearDataPartsChart } from '../components/StatScreenComponents/FunctionStatistic'
 import BackgroundView from '../CommonComponents/BackgroundView'
+import { useAppTheme } from '../CommonComponents/Theme'
 
 export interface TypeSelect {
   type: string
@@ -26,7 +29,7 @@ export interface TypeSelect {
 
 const StatScreen = (): JSX.Element => {
   const state = useAppSelector((state) => state.cars[state.numberCar])
-  const { theme } = useTheme()
+  const theme = useAppTheme()
 
   const GREEN_BAR = '0,255,0'
   const RED_BAR = '0,255,255'
@@ -44,15 +47,17 @@ const StatScreen = (): JSX.Element => {
   const [checked, setChecked] = useState(true)
   const [checkedSelected, setCheckedSelected] = useState(false)
 
+  const [typeChart, setTypeChart] = useState('pie')
+
   const calcSum = (targetArray: number[]): number => {
     if (targetArray.length !== 0) {
       return targetArray.reduce((accumulator, currentValue) => accumulator + currentValue)
     } else { return 0 }
   }
 
-  const calcMileage = () => {
+  /* const calcMileage = () => {
 
-  }
+  } */
 
   const handleCancel = (): void => {
     setCheckedSelected(false)
@@ -81,9 +86,9 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
     }
   }
 
-  useFocusEffect(
+  /*   useFocusEffect(
     useCallback(() => {
-    }, []))
+    }, [])) */
 
   return (
     <BackgroundView>
@@ -93,8 +98,8 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           Статистика за {}
           {/* {calcSum(dataChartFuel)}{calcSum(dataChartParts)} */}
         </Text>
-        <Button type={'outline'} title={textButtonDate} titleStyle={{ color: theme.colors.success }}
-                buttonStyle={[styles.button, { borderColor: theme.colors.success }]}
+        <Button type={'outline'} title={textButtonDate} titleStyle={{ color: theme.colors.tertiary }}
+                buttonStyle={[styles.button, { borderColor: theme.colors.tertiary }]}
                 onPress={() => {
                   setCheckedSelected(!checkedSelected)
                 }} />
@@ -104,16 +109,18 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           <SelectDateModal visible={checkedSelected} handleCancel={handleCancel} handleOk={handleOk}/>
         </View>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <Icon type={'material-community'} name={'chart-arc'} color={checked ? TEXT_WHITE : 'grey'} size={28}
-                onPress={() => setChecked(!checked)}/>
-          <Icon type={'material-community'} name={'arrow-left-right'} color={COLOR_GREEN} size={28}
-                onPress={() => setChecked(!checked)}/>
-          <Icon type={'material-community'} name={'chart-bar'} color={checked ? 'grey' : TEXT_WHITE} size={28}
-                onPress={() => setChecked(!checked)}/>
-        </View>
+        <SegmentedButtons
+          value={typeChart} onValueChange={setTypeChart}
+          density={'small'}
+          style={{ width: '50%', alignSelf: 'center' }}
+          buttons={[
+            { value: 'pie', label: '', icon: () => <Icon source={'chart-arc'} size={28}/> },
+            { value: 'bar', label: '', icon: () => <Icon source={'chart-bar'} size={28}/> }
+          ]}
+        />
+
       <View style={styles.viewAllInput}>
-        {checked
+        {typeChart === 'pie'
           ? <PieChartComponent dataProps={state} selectDate={selectedDate}/>
           : <BarChartComponent selectDate={Number(selectedDate.valueYear)} dataProps={state} />}
       </View>
