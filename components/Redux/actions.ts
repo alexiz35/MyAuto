@@ -2,7 +2,7 @@ import {
   ActionAddCar,
   ActionAddFuel, ActionAddOthers, ActionAddParts,
   ActionAddService, ActionAddTask,
-  ActionAddToken,
+  ActionAddToken, ActionChangeTheme,
   ActionDelFuel, ActionDelOthers, ActionDelParts,
   ActionDelService, ActionDelTask,
   ActionDelToken,
@@ -33,6 +33,12 @@ export const updateMiles = (carId: number, currentMiles: CurrentMiles): ActionMi
       carId,
       currentMiles
     }
+  })
+// -------------------------- Action ChangeTheme -----------------------------------
+export const changeTheme = (typeTheme: string): ActionChangeTheme => (
+  {
+    type: ActionType.CHANGE_THEME,
+    typeTheme
   })
 // ----------------------------- Action Task -----------------------------------
 export const addService = (carId: number, service: StateService): ActionAddService => (

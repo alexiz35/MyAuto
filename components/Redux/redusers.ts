@@ -44,6 +44,13 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
         token: action.token
       }
     }
+    // ------------------------------------------------------------------
+    case ActionType.CHANGE_THEME:{
+      return {
+        ...state,
+        setting: { themeSet: action.typeTheme }
+      }
+    }
     // -------------------------------------------------------------------
     case ActionType.CHANGE_CAR: {
       return {

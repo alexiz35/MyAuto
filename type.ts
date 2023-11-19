@@ -24,6 +24,7 @@ export enum ActionType {
   ADD_CAR = 'ADD_CAR',
   UPDATE_CAR = 'UPDATE_CAR',
   DEL_CAR = 'DEL_CAR',
+  CHANGE_THEME = 'CHANGE_THEME',
   ADD_TOKEN = 'ADD_TOKEN',
   DEL_TOKEN = 'DEL_TOKEN',
   ADD_FUEL = 'ADD_FUEL',
@@ -215,6 +216,13 @@ export interface ActionDelToken {
   type: ActionType.DEL_TOKEN
   token: string
 }
+// ----------------------------- interface ActionTheme -------------------------
+
+export interface ActionChangeTheme {
+  type: ActionType.CHANGE_THEME
+  typeTheme: string
+}
+
 // ----------------------------- interface Action ------------------------------
 
 export interface ActionChangeCar {
@@ -413,7 +421,7 @@ ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken |
 ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel |
 ActionAddParts | ActionDelParts | ActionEditParts | ActionInstallPart |
 ActionAddOthers | ActionDelOthers | ActionEditOthers |
-ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask
+ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask | ActionChangeTheme
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

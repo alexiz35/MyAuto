@@ -42,8 +42,9 @@ import {
 } from 'react-native-paper'
 import merge from 'deepmerge'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { useAppSelector } from '../Redux/hook'
+import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
+import { changeTheme } from '../Redux/actions'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
@@ -102,11 +103,23 @@ type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
 // ------------------------- Toggle Theme --------------------------------------
-  const [isThemeDark, setIsThemeDark] = useState(false)
-  const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme
+  const theme2 = useAppSelector(state => state.setting.themeSet)
+  const dispatch = useAppDispatch()
+
+  const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme
+  /* console.log(theme2) */
+  /* const [isThemeDark, setIsThemeDark] = useState(false) */
+  /* const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme */
+  /*
   const toggleTheme = useCallback(() => {
     return setIsThemeDark(!isThemeDark)
-  }, [isThemeDark])
+  }, [isThemeDark]) */
+  const toggleTheme = useCallback(() => {
+    (theme2 === 'dark')
+      ? dispatch(changeTheme('light'))
+      : dispatch(changeTheme('dark'))
+  }, [theme2])
+
   // -----------------------------------------------------------------------------
   /*  const [initial, setInitial] = useState(true)
   const [location, setLocation] = useState(0)
@@ -179,9 +192,7 @@ export const Navigation = (): JSX.Element => {
               rippleColor={theme.colors.primary}
               icon={'theme-light-dark'}
               size={20}
-              onPress={() => {
-                toggleTheme()
-              }}/>
+              onPress={() => toggleTheme()}/>
 
         )
       }}>
