@@ -1,9 +1,9 @@
 import { Dimensions, ImageBackground, ScrollView, StyleSheet, Switch, View } from 'react-native'
 import { BACK_INPUT, COLOR_GREEN, StateFuel, TEXT_WHITE } from '../type'
-import { Button, ButtonGroup, useTheme } from '@rneui/themed'
-import { TextInput, Divider, Text, Icon, SegmentedButtons } from 'react-native-paper'
+import { TextInput, Divider, Text, Icon, SegmentedButtons, Surface, Button } from 'react-native-paper'
 
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit'
+
 import { useAppSelector } from '../components/Redux/hook'
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
@@ -14,6 +14,8 @@ import { SelectDateModal } from '../components/StatScreenComponents/SelectDateMo
 import { yearDataFuelChart, yearDataPartsChart } from '../components/StatScreenComponents/FunctionStatistic'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
+import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
+import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
 
 export interface TypeSelect {
   type: string
@@ -86,6 +88,12 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
     }
   }
 
+  const pieData = [
+    { value: 54, color: '#177AD5', text: '200 fuel' },
+    { value: 30, color: '#79D2DE', text: '30%' },
+    { value: 26, color: '#ED6665', text: '26%' }
+  ]
+
   /*   useFocusEffect(
     useCallback(() => {
     }, [])) */
@@ -95,14 +103,14 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
       <ScrollView>
       <View style={styles.viewTitleStat}>
         <Text style={styles.titleStat}>
-          Статистика за {}
+          Статистика за
           {/* {calcSum(dataChartFuel)}{calcSum(dataChartParts)} */}
         </Text>
-        <Button type={'outline'} title={textButtonDate} titleStyle={{ color: theme.colors.tertiary }}
-                buttonStyle={[styles.button, { borderColor: theme.colors.tertiary }]}
+        <Button
                 onPress={() => {
                   setCheckedSelected(!checkedSelected)
-                }} />
+                }} >выберите
+        </Button>
       </View>
 
         <View>
@@ -114,19 +122,21 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           density={'small'}
           style={{ width: '50%', alignSelf: 'center' }}
           buttons={[
-            { value: 'pie', label: '', icon: () => <Icon source={'chart-arc'} size={28}/> },
-            { value: 'bar', label: '', icon: () => <Icon source={'chart-bar'} size={28}/> }
+            { value: 'pie', label: '', icon: () => <Icon source={'chart-arc'} size={26}/> },
+            { value: 'bar', label: '', icon: () => <Icon source={'chart-bar'} size={26}/> }
           ]}
         />
 
-      <View style={styles.viewAllInput}>
-        {typeChart === 'pie'
-          ? <PieChartComponent dataProps={state} selectDate={selectedDate}/>
-          : <BarChartComponent selectDate={Number(selectedDate.valueYear)} dataProps={state} />}
-      </View>
+        <Surface elevation={3} style={styles.viewAllInput} >
+         {typeChart === 'pie'
+           ? <PieGiftChartComponent dataProps={state} selectDate={selectedDate}/>
+           : <BarGiftChartComponent selectDate={Number(selectedDate.valueYear)} dataProps={state} />}
+
+      </Surface>
+
         <View style={styles.viewAllInput}>
           <View style={{ flexDirection: 'row' }}>
-            <Icon type={'material-community'} name={'circle'} color={COLOR_GREEN} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
+            <Icon source={'circle'} color= {theme.colors.tertiary} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
             <Text style={styles.textKm}>Пробег за {textButtonDate}</Text>
             <Text style={styles.textKm}>{sumMileage} km</Text>
           </View>
@@ -166,10 +176,6 @@ const styles = StyleSheet.create({
   },
   viewAllInput: {
     margin: 10,
-    backgroundColor: BACK_INPUT,
-    /* borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'grey', */
     borderRadius: 10,
     paddingBottom: 5
   },

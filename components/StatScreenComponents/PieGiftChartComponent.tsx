@@ -1,5 +1,6 @@
-import { Dimensions } from 'react-native'
-import { BarChart, PieChart } from 'react-native-chart-kit'
+import { Dimensions, View } from 'react-native'
+import { BarChart } from 'react-native-chart-kit'
+import { PieChart } from 'react-native-gifted-charts'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../Redux/hook'
 import { StateCar, StateFuel, StateService } from '../../type'
@@ -12,17 +13,19 @@ import {
   yearDataPartsChart
 } from './FunctionStatistic'
 import { useAppTheme } from '../../CommonComponents/Theme'
+import { List, Text } from 'react-native-paper'
 
 interface PropsBarChat {
   selectDate: TypeSelect
   dataProps: StateCar
 }
+export const ALL_BAR = '#23C50AFF'
+export const FUEL_BAR = '#177AD5'
+export const PART_BAR = '#79D2DE'
+export const OTHER_BAR = '#ED6665'
 
-const PieChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
+const PieGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
   const { colors } = useAppTheme()
-  const GREEN_BAR = 'rgb(0,255,0)'
-  const CYAN_BAR = 'rgb(0,255,255)'
-  const YELLOW_BAR = 'rgb(255,255,0)'
 
   const [dataChartFuel, setDataChartFuel] = useState<number>(50)
   const [dataChartParts, setDataChartParts] = useState<number>(30)
@@ -30,25 +33,10 @@ const PieChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
   const [colorBar, setColorBar] = useState('255,255,255')
   const [dataChart, setDataChart] = useState(0)
 
-  const dataPieChart = [
-    {
-      name: 'fuel',
-      amount: 5000,
-      color: colors.error,
-      legendFontColor: colors.text
-    },
-    {
-      name: 'parts',
-      amount: dataChartParts,
-      color: colors.yellow,
-      legendFontColor: colors.text
-    },
-    {
-      name: 'other',
-      amount: dataChartOther,
-      color: colors.tertiary,
-      legendFontColor: colors.text
-    }
+  const pieData = [
+    { value: 54, color: FUEL_BAR, text: '54%' },
+    { value: 30, color: PART_BAR, text: '30%' },
+    { value: 26, color: OTHER_BAR, text: '26%' }
   ]
 
   // --------------------------------------------------------------------------------------------------
@@ -84,27 +72,39 @@ const PieChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
   }, [selectData]) */
 
   return (
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
     <PieChart
-      data={dataPieChart}
-      accessor={'amount'}
-      width={Dimensions.get('window').width}
-      height={250}
-      backgroundColor={'transparent'}
-      absolute
-      chartConfig={
-        {
-          color: (opacity = 1) => `rgba(${colorBar}, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`
-        }}
-      style={{
-        marginTop: 20,
-        borderRadius: 10
-      }}
-
-     paddingLeft={'35'}
-    /* center={[10, 50]} */
+      donut
+      showText
+      textColor="black"
+      innerRadius={30}
+      radius={100}
+      showTextBackground={false}
+      textBackgroundColor="white"
+      textBackgroundRadius={22}
+      data={pieData}
+      focusOnPress
+      sectionAutoFocus
+      /* labelsPosition={'mid'} */
     />
+    <View>
+      <List.Item title={'fuel'}
+                 left={() => <List.Icon color={'#177AD5'} icon="circle"/>}
+                 description={'2000 грн'}
+      />
+      <List.Item title={'parts'}
+                 left={() => <List.Icon color={'#79D2DE'} icon="circle"/>}
+                 description={'2000 грн'}
+
+      />
+      <List.Item title={'other'}
+                 left={() => <List.Icon color={'#ED6665'} icon="circle"/>}
+                 description={'2000 грн'}
+
+      />
+    </View>
+    </View>
   )
 }
 
-export default PieChartComponent
+export default PieGiftChartComponent

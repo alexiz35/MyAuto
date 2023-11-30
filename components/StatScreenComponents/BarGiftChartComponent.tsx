@@ -1,21 +1,22 @@
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native'
-import { BarChart } from 'react-native-chart-kit'
+/* import { BarChart } from 'react-native-chart-kit' */
+import { BarChart } from 'react-native-gifted-charts'
+
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../Redux/hook'
 import { Button, Text } from '@rneui/themed'
 import { COLOR_GREEN, StateCar, TEXT_WHITE } from '../../type'
+import { color } from '@rneui/base'
+import { ALL_BAR, FUEL_BAR, OTHER_BAR, PART_BAR } from './PieGiftChartComponent'
+import { Icon, SegmentedButtons } from 'react-native-paper'
 
 interface PropsBarChat {
   selectDate: number
   dataProps: StateCar
 }
 
-const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
+const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
   /* const state = useAppSelector((state) => state.cars[state.numberCar]) */
-
-  const GREEN_BAR = '0,255,0'
-  const CYAN_BAR = '0,255,255'
-  const YELLOW_BAR = '255,255,0'
 
   const [dataChartFuel, setDataChartFuel] = useState<number[]>([])
   const [dataChartParts, setDataChartParts] = useState<number[]>([])
@@ -61,19 +62,19 @@ const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
   }, [])
 
   useEffect(() => {
-    console.log('eff', dataChart, dataChartAll)
+    console.log('eff', colorBar)
     switch (selectData) {
       case 'all':
-        setColorBar(GREEN_BAR)
+        setColorBar(ALL_BAR)
         setDataChart(dataChartAll)
         break
       case 'fuel':
-        setColorBar(CYAN_BAR)
+        setColorBar(FUEL_BAR)
         setDataChart(dataChartFuel)
         console.log('selectfuel', dataChart)
         break
       case 'parts':
-        setColorBar(YELLOW_BAR)
+        setColorBar(PART_BAR)
         setDataChart(dataChartParts)
         break
       default: break
@@ -81,70 +82,68 @@ const BarChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element
     console.log('effect', dataChart)
   }, [selectData, dataChart])
 
+  const barData1 = [
+    { value: 250, label: 'Jan' },
+    { value: 500, label: 'Feb', frontColor: colorBar },
+    { value: 745, label: 'Mar', frontColor: colorBar },
+    { value: 320, label: 'Apr' },
+    { value: 600, label: 'Jun', frontColor: colorBar },
+    { value: 256, label: 'Jul' },
+    { value: 300, label: 'Aug' },
+    { value: 300, label: 'Sep' },
+    { value: 300, label: 'Oct' },
+    { value: 300, label: 'Nov' },
+    { value: 300, label: 'Dec' }
+  ]
+
+  useEffect(()=>{
+    barData1.
+  },[])
+
   return (
     <View>
+
       <View style={styles.viewButtons}>
-        <Button type={'outline'} title={'Всего'} titleStyle={{ color: COLOR_GREEN }} buttonStyle={[styles.button, { borderColor: GREEN_BAR }]}
+        <Button type={'outline'} title={'Всего'} titleStyle={{ color: COLOR_GREEN }} buttonStyle={[styles.button, { borderColor: ALL_BAR }]}
                 onPress={() => {
                   setSelectData('all')
                 }}/>
-        <Button type={'outline'} title={'Заправка'} titleStyle={{ color: 'cyan' }} buttonStyle={[styles.button, { borderColor: CYAN_BAR }]}
+        <Button type={'outline'} title={'Заправка'} titleStyle={{ color: '#177AD5' }} buttonStyle={[styles.button, { borderColor: FUEL_BAR }]}
                 onPress={() => setSelectData('fuel')}/>
-        <Button type={'outline'} title={'Ремонт'} titleStyle={{ color: 'yellow' }} buttonStyle={[styles.button, { borderColor: YELLOW_BAR }]}
+        <Button type={'outline'} title={'Ремонт'} titleStyle={{ color: '#79D2DE' }} buttonStyle={[styles.button, { borderColor: PART_BAR }]}
                 onPress={() => setSelectData('parts')}/>
-        <Button type={'outline'} title={'Другое'} titleStyle={{ color: 'blue' }} buttonStyle={[styles.button, { borderColor: 'blue' }]}
+        <Button type={'outline'} title={'Другое'} titleStyle={{ color: '#ED6665' }} buttonStyle={[styles.button, { borderColor: OTHER_BAR }]}
                 onPress={() => setSelectData('other')}/>
       </View>
       <Text style={{ color: TEXT_WHITE }}>Hello {String(dataChart)}</Text>
       <BarChart
-        yAxisLabel={''}
-        yAxisSuffix={'$'}
-        verticalLabelRotation={70}
-        withHorizontalLabels={true}
-        fromZero={true}
-        data={{
-          labels: ['Jan', 'Feb', 'March', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
-          datasets: [
-            {
-              data: dataChart
-            }
-          ]
-        }}
-        width={Dimensions.get('window').width - 16}
-        /* width={320} */
-        height={250}
-        showValuesOnTopOfBars={false}
-        chartConfig={
-          {
-            backgroundColor: '#177AD5',
-            /* backgroundColor: '#e26a00',
-            backgroundGradientFrom: '#0032fb',
-            backgroundGradientTo: '#e226ff', */
-            decimalPlaces: 0, // optional, defaults to 2dp
-            color: (opacity) => `rgba(${colorBar}, 0.5)`,
-            labelColor: (opacity) => 'rgba(255, 255, 255, 1)',
-            paddingTop: 20,
-            style: {},
-            barPercentage: 0.3
-            /* propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              stroke: '#7dff26'
-            } */
-          }}
-        style={{
-          marginTop: 10,
-          borderRadius: 10
-        }}
-        yLabelsOffset={0}
-
+        barWidth={22}
+        noOfSections={3}
+        barBorderRadius={4}
+        frontColor={colorBar}
+        data={barData1}
+        yAxisThickness={1}
+        xAxisThickness={1}
+        isAnimated={true}
+        scrollAnimation={true}
+      />
+      <SegmentedButtons
+        value={selectData} onValueChange={setSelectData}
+        density={'small'}
+        style={{ width: '90%', alignSelf: 'center' }}
+        buttons={[
+          { value: 'all', label: '', icon: () => <Icon source={'chart-arc'} size={14}/> },
+          { value: 'fuel', label: '', icon: () => <Icon source={'chart-bar'} size={14}/> },
+          { value: 'parts', label: '', icon: () => <Icon source={'chart-bar'} size={14}/> },
+          { value: 'other', label: '', icon: () => <Icon source={'chart-bar'} size={14}/> }
+        ]}
       />
      {/*  {isActivity ? <ActivityIndicator style={{ position: 'absolute', zIndex: 1, alignSelf: 'center', paddingTop: 130 }}/> : null} */}
     </View>
   )
 }
 
-export default BarChartComponent
+export default BarGiftChartComponent
 
 const styles = StyleSheet.create({
   viewTitleStat: {},
