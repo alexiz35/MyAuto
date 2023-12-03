@@ -9,14 +9,22 @@ import { COLOR_GREEN, StateCar, TEXT_WHITE } from '../../type'
 import { color } from '@rneui/base'
 import { ALL_BAR, FUEL_BAR, OTHER_BAR, PART_BAR } from './PieGiftChartComponent'
 import { Icon, SegmentedButtons } from 'react-native-paper'
+import { useAppTheme } from '../../CommonComponents/Theme'
 
 interface PropsBarChat {
   selectDate: number
   dataProps: StateCar
 }
+interface BarChartData {
+  value: number
+  label: string
+}
 
 const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
   /* const state = useAppSelector((state) => state.cars[state.numberCar]) */
+  const { colors } = useAppTheme()
+
+  const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Oct', 'Nov', 'Dec']
 
   const [dataChartFuel, setDataChartFuel] = useState<number[]>([])
   const [dataChartParts, setDataChartParts] = useState<number[]>([])
@@ -61,6 +69,16 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
     setDataChartAll(yearDataAllChart())
   }, [])
 
+  const formBarChartData = (data: number[]) => {
+    const tempData: BarChartData[] = data.map((value, index) => (
+      {
+        value,
+        label: MONTH[index]
+      }
+    ))
+    return tempData
+  }
+
   useEffect(() => {
     console.log('eff', colorBar)
     switch (selectData) {
@@ -96,13 +114,13 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
     { value: 300, label: 'Dec' }
   ]
 
-  useEffect(()=>{
+  /*  useEffect(()=>{
     barData1.
-  },[])
+  },[]) */
 
   return (
     <View>
-
+      {/*
       <View style={styles.viewButtons}>
         <Button type={'outline'} title={'Всего'} titleStyle={{ color: COLOR_GREEN }} buttonStyle={[styles.button, { borderColor: ALL_BAR }]}
                 onPress={() => {
@@ -115,29 +133,39 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
         <Button type={'outline'} title={'Другое'} titleStyle={{ color: '#ED6665' }} buttonStyle={[styles.button, { borderColor: OTHER_BAR }]}
                 onPress={() => setSelectData('other')}/>
       </View>
-      <Text style={{ color: TEXT_WHITE }}>Hello {String(dataChart)}</Text>
-      <BarChart
-        barWidth={22}
-        noOfSections={3}
-        barBorderRadius={4}
-        frontColor={colorBar}
-        data={barData1}
-        yAxisThickness={1}
-        xAxisThickness={1}
-        isAnimated={true}
-        scrollAnimation={true}
-      />
+      <Text style={{ color: TEXT_WHITE }}>Hello {String(dataChart)}</Text> */}
       <SegmentedButtons
         value={selectData} onValueChange={setSelectData}
         density={'small'}
-        style={{ width: '90%', alignSelf: 'center' }}
+        style={{ width: '90%', alignSelf: 'center', paddingBottom: 10, paddingTop: 15, borderRadius: 0 }}
+
         buttons={[
-          { value: 'all', label: '', icon: () => <Icon source={'chart-arc'} size={14}/> },
-          { value: 'fuel', label: '', icon: () => <Icon source={'chart-bar'} size={14}/> },
-          { value: 'parts', label: '', icon: () => <Icon source={'chart-bar'} size={14}/> },
-          { value: 'other', label: '', icon: () => <Icon source={'chart-bar'} size={14}/> }
+          { value: 'all', label: 'all', icon: () => <Icon source={'cart'} size={20} color={ALL_BAR} />, style: { borderRadius: 0, borderWidth: 0 } },
+          { value: 'fuel', label: 'fuel', icon: () => <Icon source={'gas-station'} size={20} color={FUEL_BAR}/>, style: { borderRadius: 0, borderWidth: 0 } },
+          { value: 'parts', label: 'part', icon: () => <Icon source={'car-wrench'} size={20} color={PART_BAR}/>, style: { borderRadius: 0, borderWidth: 0 } },
+          { value: 'other', label: 'other', icon: () => <Icon source={'account-cash'} size={20} color={OTHER_BAR}/>, style: { borderRadius: 0, borderWidth: 0 } }
         ]}
       />
+      <View style={{ paddingTop: 10 }}>
+      <BarChart
+        barWidth={22}
+        noOfSections={5}
+        barBorderRadius={4}
+        frontColor={colorBar}
+        data={formBarChartData(dataChart)}
+        yAxisThickness={1}
+        xAxisThickness={1}
+        isAnimated={true}
+        rulesColor={colors.secondary}
+        yAxisColor={colors.secondary}
+        xAxisColor={colors.secondary}
+        xAxisLabelTextStyle={{ color: colors.secondary }}
+        yAxisTextStyle={{ color: colors.secondary }}
+        yAxisLabelWidth={40}
+
+      />
+      </View>
+
      {/*  {isActivity ? <ActivityIndicator style={{ position: 'absolute', zIndex: 1, alignSelf: 'center', paddingTop: 130 }}/> : null} */}
     </View>
   )

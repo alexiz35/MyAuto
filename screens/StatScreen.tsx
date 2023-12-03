@@ -127,16 +127,15 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           ]}
         />
 
-        <Surface elevation={3} style={styles.viewAllInput} >
+        {/* <Surface elevation={3} style={styles.viewAllInput} > */}
          {typeChart === 'pie'
            ? <PieGiftChartComponent dataProps={state} selectDate={selectedDate}/>
            : <BarGiftChartComponent selectDate={Number(selectedDate.valueYear)} dataProps={state} />}
 
-      </Surface>
-
-        <View style={styles.viewAllInput}>
+      {/* </Surface> */}
+        <Divider horizontalInset bold />
+        <View style={{ paddingTop: 20 }}>
           <View style={{ flexDirection: 'row' }}>
-            <Icon source={'circle'} color= {theme.colors.tertiary} size={10} style={{ paddingLeft: 5, paddingTop: 5 }}/>
             <Text style={styles.textKm}>Пробег за {textButtonDate}</Text>
             <Text style={styles.textKm}>{sumMileage} km</Text>
           </View>
