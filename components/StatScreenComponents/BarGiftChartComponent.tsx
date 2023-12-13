@@ -146,7 +146,7 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
           { value: 'other', label: 'other', icon: () => <Icon source={'account-cash'} size={20} color={OTHER_BAR}/>, style: { borderRadius: 0, borderWidth: 0 } }
         ]}
       />
-      <View style={{ paddingTop: 10 }}>
+      <View style={{ paddingVertical: 10 }}>
       <BarChart
         barWidth={22}
         noOfSections={5}

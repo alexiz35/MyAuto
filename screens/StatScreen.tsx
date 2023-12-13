@@ -11,7 +11,11 @@ import BarChartComponent from '../components/StatScreenComponents/BarChartCompon
 import PieChartComponent from '../components/StatScreenComponents/PieChartComponent'
 import WheelPickerExpo from 'react-native-wheel-picker-expo'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
-import { yearDataFuelChart, yearDataPartsChart } from '../components/StatScreenComponents/FunctionStatistic'
+import {
+  yearDataFuelChart,
+  yearDataMilesChart,
+  yearDataPartsChart
+} from '../components/StatScreenComponents/FunctionStatistic'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
 import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
@@ -41,10 +45,14 @@ const StatScreen = (): JSX.Element => {
   const [dataChartFuel, setDataChartFuel] = useState<number[]>([])
   const [dataChartParts, setDataChartParts] = useState<number[]>([])
   const [sumParts, setSumParts] = useState(0)
+  // топливо за период
   const [sumFuel, setSumFuel] = useState<number>(0)
+  const [volumeFuel, setVolumeFuel] = useState<number>(0)
   const [sumMileage, setSumMileage] = useState<number>(0)
-  const [selectedDate, setSelectedDate] = useState<TypeSelect>({ type: 'year', valueYear: String(new Date().getFullYear()) })
-  const [textButtonDate, setButtonDate] = useState<string | undefined>('выберите')
+  // выбранная дата
+  const [selectedDate, setSelectedDate] = useState<TypeSelect>(
+    { type: 'year', valueYear: String(new Date().getFullYear()) })
+  const [textButtonDate, setButtonDate] = useState<string | undefined>(undefined)
 
   const [checked, setChecked] = useState(true)
   const [checkedSelected, setCheckedSelected] = useState(false)
@@ -70,8 +78,7 @@ const StatScreen = (): JSX.Element => {
     switch (selectModal.type) {
       case 'year':
         setButtonDate(selectModal.valueYear)
-        setSumFuel(yearDataFuelChart(Number(selectModal.valueYear), state))
-        setSumParts(yearDataPartsChart(Number(selectModal.valueYear), state))
+
         break
       case 'month':
         if (selectModal.valueMonth !== undefined) {
@@ -94,12 +101,21 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
     { value: 26, color: '#ED6665', text: '26%' }
   ]
 
+  useEffect(() => {
+    if (textButtonDate !== undefined) {
+      setSumFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).amountFuel)
+      setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
+      setSumMileage(yearDataMilesChart(Number(selectedDate.valueYear), state))
+      setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
+    }
+  }, [selectedDate])
+
   /*   useFocusEffect(
     useCallback(() => {
     }, [])) */
 
   return (
-    <BackgroundView>
+    <BackgroundView props={{ height: Dimensions.get('window').height }}>
       <ScrollView>
       <View style={styles.viewTitleStat}>
         <Text style={styles.titleStat}>
@@ -109,7 +125,8 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
         <Button
                 onPress={() => {
                   setCheckedSelected(!checkedSelected)
-                }} >выберите
+                }} >
+          {textButtonDate ?? '-- --'}
         </Button>
       </View>
 
@@ -134,15 +151,26 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
 
       {/* </Surface> */}
         <Divider horizontalInset bold />
-        <View style={{ paddingTop: 20 }}>
+        <Surface elevation={3} style={styles.viewAllInput} >
+        <View style={{ paddingTop: 10 }}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textKm}>Пробег за {textButtonDate}</Text>
+            <Text style={styles.textKm}>Пробег за  {textButtonDate ?? ' -- --'}</Text>
             <Text style={styles.textKm}>{sumMileage} km</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textKm}>Использовано топлива {sumFuel}</Text>
+            <Text style={styles.textKm}>Использовано топлива {volumeFuel} L</Text>
+            <Text style={styles.textKm}>на {sumFuel} грн</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.textKm}>Использовано на ремонт {sumParts} грн</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.textKm}>Использовано на другое {sumFuel} грн</Text>
           </View>
         </View>
+        </Surface>
+        <Divider horizontalInset bold />
+
       </ScrollView>
     </BackgroundView>
   )
@@ -179,8 +207,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5
   },
   textKm: {
-    fontSize: 12,
-    fontStyle: 'italic',
     textAlign: 'left',
     marginVertical: 5,
     marginHorizontal: 10

@@ -10023,10 +10023,10 @@ react-native-element-dropdown@^2.5.3:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
-react-native-gifted-charts@^1.3.18:
-  version "1.3.18"
-  resolved "https://registry.npmjs.org/react-native-gifted-charts/-/react-native-gifted-charts-1.3.18.tgz"
-  integrity sha512-Q8UYP+pvmsX09I3IfyT3i6mTn/vr79HzD/dZq60/0T4i4yqjHm6Ay61lPw9PLHnDd8hnCN9WJwm3AwGiaTCOdQ==
+react-native-gifted-charts@^1.3.23:
+  version "1.3.23"
+  resolved "https://registry.npmjs.org/react-native-gifted-charts/-/react-native-gifted-charts-1.3.23.tgz"
+  integrity sha512-90CSfDreFztfYeZHrg5GBKQiF653/JWS6dhqEYM+x2YvUP3eCzhahQ9i+MQfjNiA6LDS0KgwDKBoV0Uvv34ZZA==
 
 react-native-gradle-plugin@^0.70.2:
   version "0.70.3"

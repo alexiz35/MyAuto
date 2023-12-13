@@ -1,5 +1,5 @@
 
-import { StateCar, StateService } from '../../type'
+import { CurrentMiles, StateCar, StateService } from '../../type'
 import { TypeSelect } from '../../screens/StatScreen'
 
 const calcSumCostParts = (targetArray: StateService[]): number => {
@@ -15,12 +15,29 @@ const calcSumCostParts = (targetArray: StateService[]): number => {
 }
 
 // ------------------------------------ function select Year date ----------------------------------
-export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
+export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataState: StateCar): any => {
   const selectYear = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
-  return selectYear.reduce((accumulator, currentValue) => accumulator + currentValue.AmountFuel, 0)
-
+  console.log(selectYear)
+  const amountFuel = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.AmountFuel), 0)
+  const volumeFuel = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.volumeFuel), 0)
+  console.log(volumeFuel, amountFuel)
+  return { amountFuel, volumeFuel }
   /* setDataChartFuel(tempData) */
 }
+
+export const yearDataMilesChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
+  const selectYear = dataState.mileage.filter((value) => new Date(value.dateMileage).getFullYear() === searchYear)
+  const selectMiles = selectYear.map(item => item.currentMileage)
+  if (selectMiles.length === 0) return 0
+  //* *****************************************************************************
+  selectMiles.splice(0, 1) // temp string
+  //* *****************************************************************************
+
+  const minMiles = (arr: number[]): number => Math.min(...arr)
+  const maxMiles = (arr: number[]): number => Math.max(...arr)
+  return maxMiles(selectMiles) - minMiles(selectMiles)
+}
+
 export const yearDataPartsChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
   const selectYear = dataState.services.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
   return calcSumCostParts(selectYear)
