@@ -1,63 +1,50 @@
-import { Dimensions, View } from 'react-native'
-import { BarChart } from 'react-native-chart-kit'
+import { View } from 'react-native'
 import { PieChart } from 'react-native-gifted-charts'
-import { useEffect, useState } from 'react'
-import { useAppSelector } from '../Redux/hook'
-import { StateCar, StateFuel, StateService } from '../../type'
-import { TypeSelect } from '../../screens/StatScreen'
-import {
-  monthDataFuelChart,
-  monthDataPartsChart,
-  periodDataFuelChart, periodDataPartsChart,
-  yearDataFuelChart,
-  yearDataPartsChart
-} from './FunctionStatistic'
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { List, Text } from 'react-native-paper'
+import { List } from 'react-native-paper'
+import { FUEL_BAR, OTHER_BAR, PART_BAR } from './FunctionStatistic'
 
 interface PropsBarChat {
-  selectDate: TypeSelect
-  dataProps: StateCar
+  dataProps: {
+    fuel: number
+    parts: number
+    other: number
+  }
 }
-export const ALL_BAR = '#23C50AFF'
-export const FUEL_BAR = '#177AD5'
-export const PART_BAR = '#79D2DE'
-export const OTHER_BAR = '#ED6665'
 
-const PieGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
+const PieGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
   const { colors } = useAppTheme()
 
-  const [dataChartFuel, setDataChartFuel] = useState<number>(50)
+  /*  const [dataChartFuel, setDataChartFuel] = useState<number>(50)
   const [dataChartParts, setDataChartParts] = useState<number>(30)
   const [dataChartOther, setDataChartOther] = useState<number>(70)
   const [colorBar, setColorBar] = useState('255,255,255')
-  const [dataChart, setDataChart] = useState(0)
+  const [dataChart, setDataChart] = useState(0) */
 
   const pieData = [
-    { value: 54, color: FUEL_BAR, text: '54%' },
-    { value: 30, color: PART_BAR, text: '30%' },
+    { value: dataProps.fuel, color: FUEL_BAR, text: String(dataProps.fuel) },
+    { value: dataProps.parts, color: PART_BAR, text: String(dataProps.parts) },
     { value: 26, color: OTHER_BAR, text: '26%' }
   ]
 
   // --------------------------------------------------------------------------------------------------
-  useEffect(() => {
+  /*  useEffect(() => {
     switch (selectDate.type) {
       case 'year':
-        setDataChartFuel(yearDataFuelChart(Number(selectDate.valueYear), dataProps))
-        setDataChartParts(yearDataPartsChart(Number(selectDate.valueYear), dataProps))
+        /!* setDataChartFuel(yearDataFuelChart(Number(selectDate.valueYear), dataProps))
+        setDataChartParts(yearDataPartsChart(Number(selectDate.valueYear), dataProps)) *!/
         break
       case 'month':
-        setDataChartFuel(monthDataFuelChart(selectDate, dataProps))
-        setDataChartParts(monthDataPartsChart(selectDate, dataProps))
+        /!* setDataChartFuel(monthDataFuelChart(selectDate, dataProps))
+        setDataChartParts(monthDataPartsChart(selectDate, dataProps)) *!/
         break
       case 'period':
-        setDataChartFuel(periodDataFuelChart(selectDate, dataProps))
-        setDataChartParts(periodDataPartsChart(selectDate, dataProps))
+        /!* setDataChartFuel(periodDataFuelChart(selectDate, dataProps))
+        setDataChartParts(periodDataPartsChart(selectDate, dataProps)) *!/
         break
       default: break
     }
-    console.log('effPie')
-  }, [selectDate])
+  }, [selectDate]) */
 
   /* useEffect(() => {
     switch (selectData) {
@@ -90,11 +77,11 @@ const PieGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
     <View>
       <List.Item title={'fuel'}
                  left={() => <List.Icon color={'#177AD5'} icon="circle"/>}
-                 description={'2000 грн'}
+                 description={dataProps.fuel}
       />
       <List.Item title={'parts'}
                  left={() => <List.Icon color={'#79D2DE'} icon="circle"/>}
-                 description={'2000 грн'}
+                 description={dataProps.parts}
 
       />
       <List.Item title={'other'}

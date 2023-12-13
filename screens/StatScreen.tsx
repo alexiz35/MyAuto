@@ -146,7 +146,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
 
         {/* <Surface elevation={3} style={styles.viewAllInput} > */}
          {typeChart === 'pie'
-           ? <PieGiftChartComponent dataProps={state} selectDate={selectedDate}/>
+           ? <PieGiftChartComponent dataProps={{ fuel: sumFuel, parts: sumParts, other: 100 }}/>
            : <BarGiftChartComponent selectDate={Number(selectedDate.valueYear)} dataProps={state} />}
 
       {/* </Surface> */}

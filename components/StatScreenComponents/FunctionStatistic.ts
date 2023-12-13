@@ -2,6 +2,11 @@
 import { CurrentMiles, StateCar, StateService } from '../../type'
 import { TypeSelect } from '../../screens/StatScreen'
 
+export const ALL_BAR = '#23C50AFF'
+export const FUEL_BAR = '#177AD5'
+export const PART_BAR = '#79D2DE'
+export const OTHER_BAR = '#ED6665'
+
 const calcSumCostParts = (targetArray: StateService[]): number => {
   const temp: number[] = []
   targetArray.forEach((item, index) => {
