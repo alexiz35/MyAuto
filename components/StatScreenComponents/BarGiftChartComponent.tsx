@@ -1,13 +1,17 @@
-import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 /* import { BarChart } from 'react-native-chart-kit' */
 import { BarChart } from 'react-native-gifted-charts'
 
 import { useEffect, useState } from 'react'
-import { useAppSelector } from '../Redux/hook'
-import { Button, Text } from '@rneui/themed'
-import { COLOR_GREEN, StateCar, TEXT_WHITE } from '../../type'
-import { color } from '@rneui/base'
-import { ALL_BAR, FUEL_BAR, OTHER_BAR, PART_BAR } from './PieGiftChartComponent'
+import { StateCar, TEXT_WHITE } from '../../type'
+import {
+  ALL_BAR,
+  FUEL_BAR,
+  OTHER_BAR,
+  PART_BAR,
+  yearDataFuelBarChart,
+  yearDataPartsBarChart
+} from './FunctionStatistic'
 import { Icon, SegmentedButtons } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
 
@@ -26,61 +30,36 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
 
   const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Oct', 'Nov', 'Dec']
 
-  const [dataChartFuel, setDataChartFuel] = useState<number[]>([])
-  const [dataChartParts, setDataChartParts] = useState<number[]>([])
+  const [dataChartFuel, setDataChartFuel] = useState<number[]>(() => yearDataFuelBarChart(selectDate, dataProps))
+  const [dataChartParts, setDataChartParts] = useState<number[]>(() => yearDataPartsBarChart(selectDate, dataProps))
+  const yearDataAllChart = (): number[] => {
+    /* const fuel = yearDataFuelChart()
+    const parts = yearDataPartsChart() */
+    const tempAllData = dataChartFuel.map((value, index) => (value + dataChartParts[index]))
+    /* setDataChartFuel(fuel)
+    setDataChartParts(parts) */
+    console.log('all')
+    return tempAllData
+  }
+
   const [dataChartOther, setDataChartOther] = useState<number[]>([])
-  const [dataChartAll, setDataChartAll] = useState<number[]>([])
+  const [dataChartAll, setDataChartAll] = useState<number[]>(() => yearDataAllChart())
+
   const [colorBar, setColorBar] = useState('255,255,255')
   const [dataChart, setDataChart] = useState<number[]>([1, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   const [selectData, setSelectData] = useState('all')
   /* const [isActivity, setIsActivity] = useState(true) */
 
-  const yearDataFuelChart = (searchYear = new Date().getFullYear()): number[] => {
-    const selectYear = dataProps.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
-    const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    selectYear.forEach((item) => {
-      tempData[new Date(item.dateFuel).getMonth()] += item.AmountFuel
-    })
-    console.log('fuel', tempData)
-    return tempData
-  }
-  const yearDataPartsChart = (searchYear = new Date().getFullYear()): number[] => {
-    const selectYear = dataProps.services.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
-    const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    selectYear.forEach((item) => {
-      if (item.sumCostParts === undefined)item.sumCostParts = 0
-      if (item.sumCostService === undefined)item.sumCostService = 0
-      tempData[new Date(item.startDate).getMonth()] += (item.sumCostParts + item.sumCostService)
-    })
-    console.log('parts', tempData)
-    return tempData
-  }
-  const yearDataAllChart = (): number[] => {
-    const fuel = yearDataFuelChart()
-    const parts = yearDataPartsChart()
-    const tempAllData = fuel.map((value, index) => (value + parts[index]))
-    console.log('all', tempAllData)
-    setDataChartFuel(fuel)
-    setDataChartParts(parts)
-    return tempAllData
-  }
-
-  useEffect(() => {
-    setDataChartAll(yearDataAllChart())
-  }, [])
-
-  const formBarChartData = (data: number[]) => {
-    const tempData: BarChartData[] = data.map((value, index) => (
+  const formBarChartData = (data: number[]): BarChartData[] => {
+    return data.map((value, index) => (
       {
         value,
         label: MONTH[index]
       }
     ))
-    return tempData
   }
 
-  useEffect(() => {
-    console.log('eff', colorBar)
+  const selectionTypeChart = () => {
     switch (selectData) {
       case 'all':
         setColorBar(ALL_BAR)
@@ -89,7 +68,6 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
       case 'fuel':
         setColorBar(FUEL_BAR)
         setDataChart(dataChartFuel)
-        console.log('selectfuel', dataChart)
         break
       case 'parts':
         setColorBar(PART_BAR)
@@ -97,8 +75,21 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
         break
       default: break
     }
-    console.log('effect', dataChart)
-  }, [selectData, dataChart])
+  }
+
+  useEffect(() => {
+    setDataChartFuel(yearDataFuelBarChart(selectDate, dataProps))
+    setDataChartParts(yearDataPartsBarChart(selectDate, dataProps))
+    setDataChartAll(yearDataAllChart())
+    selectionTypeChart()
+    console.log('stateFuel', selectDate)
+  }, [selectDate])
+
+  useEffect(() => {
+    console.log('eff1', colorBar)
+    selectionTypeChart()
+    console.log('eff2', dataChart, selectDate)
+  }, [selectData])
 
   const barData1 = [
     { value: 250, label: 'Jan' },
