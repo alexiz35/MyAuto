@@ -7,6 +7,8 @@ export const FUEL_BAR = '#177AD5'
 export const PART_BAR = '#79D2DE'
 export const OTHER_BAR = '#ED6665'
 
+export const initialBarChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 const calcSumCostParts = (targetArray: StateService[]): number => {
   const temp: number[] = []
   targetArray.forEach((item, index) => {
@@ -26,7 +28,6 @@ export const yearDataFuelBarChart = (searchYear = new Date().getFullYear(), data
   selectYear.forEach((item) => {
     tempData[new Date(item.dateFuel).getMonth()] += item.AmountFuel
   })
-  console.log('fuel', tempData)
   return tempData
 }
 
@@ -38,7 +39,6 @@ export const yearDataPartsBarChart = (searchYear = new Date().getFullYear(), dat
     if (item.sumCostService === undefined)item.sumCostService = 0
     tempData[new Date(item.startDate).getMonth()] += (item.sumCostParts + item.sumCostService)
   })
-  console.log('parts', tempData)
   return tempData
 }
 
@@ -48,17 +48,14 @@ export const yearDataAllChart = (searchYear = new Date().getFullYear(), dataStat
   const all = fuel.map((value, index) => (value + parts[index]))
   /* setDataChartFuel(fuel)
   setDataChartParts(parts) */
-  console.log('all', all)
   return { all, fuel, parts }
 }
 
 // ------------------------------------ function select Year date ----------------------------------
 export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataState: StateCar): any => {
   const selectYear = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
-  console.log(selectYear)
   const amountFuel = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.AmountFuel), 0)
   const volumeFuel = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.volumeFuel), 0)
-  console.log(volumeFuel, amountFuel)
   return { amountFuel, volumeFuel }
   /* setDataChartFuel(tempData) */
 }
