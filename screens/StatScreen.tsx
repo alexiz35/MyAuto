@@ -12,6 +12,7 @@ import PieChartComponent from '../components/StatScreenComponents/PieChartCompon
 import WheelPickerExpo from 'react-native-wheel-picker-expo'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import {
+  yearDataAllChart,
   yearDataFuelChart,
   yearDataMilesChart,
   yearDataPartsChart
@@ -19,7 +20,10 @@ import {
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
 import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
-import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
+import BarGiftChartComponent, {
+  initialBarChart,
+  PropsBarChat
+} from '../components/StatScreenComponents/BarGiftChartComponent'
 
 export interface TypeSelect {
   type: string
@@ -41,6 +45,8 @@ const StatScreen = (): JSX.Element => {
   const RED_BAR = '0,255,255'
   const YELLOW_BAR = '255,255,0'
   const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
+
+  const [dataBarChart, setDataBarChart] = useState<PropsBarChat>({ all: initialBarChart, fuel: initialBarChart, parts: initialBarChart })
 
   const [dataChartFuel, setDataChartFuel] = useState<number[]>([])
   const [dataChartParts, setDataChartParts] = useState<number[]>([])
@@ -103,12 +109,21 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
 
   useEffect(() => {
     if (textButtonDate !== undefined) {
-      setSumFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).amountFuel)
-      setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
-      setSumMileage(yearDataMilesChart(Number(selectedDate.valueYear), state))
-      setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
+      if (typeChart === 'pie') {
+        setSumFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).amountFuel)
+        setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
+        setSumMileage(yearDataMilesChart(Number(selectedDate.valueYear), state))
+        setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
+      } else if (typeChart === 'bar') {
+        setDataBarChart(yearDataAllChart(Number(selectedDate.valueYear), state))
+        setSumFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).amountFuel)
+        setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
+        setSumMileage(yearDataMilesChart(Number(selectedDate.valueYear), state))
+        setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
+        console.log('checkTypechart', dataBarChart)
+      }
     }
-  }, [selectedDate])
+  }, [selectedDate, typeChart])
 
   /*   useFocusEffect(
     useCallback(() => {
@@ -147,7 +162,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
         {/* <Surface elevation={3} style={styles.viewAllInput} > */}
          {typeChart === 'pie'
            ? <PieGiftChartComponent dataProps={{ fuel: sumFuel, parts: sumParts, other: 100 }}/>
-           : <BarGiftChartComponent selectDate={Number(selectedDate.valueYear)} dataProps={state} />}
+           : <BarGiftChartComponent dataProps={ { all: dataBarChart.all, fuel: dataBarChart.fuel, parts: dataBarChart.parts } } />}
 
       {/* </Surface> */}
         <Divider horizontalInset bold />

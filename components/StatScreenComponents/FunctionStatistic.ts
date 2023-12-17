@@ -42,6 +42,16 @@ export const yearDataPartsBarChart = (searchYear = new Date().getFullYear(), dat
   return tempData
 }
 
+export const yearDataAllChart = (searchYear = new Date().getFullYear(), dataState: StateCar): any => {
+  const fuel = yearDataFuelBarChart(searchYear, dataState)
+  const parts = yearDataPartsBarChart(searchYear, dataState)
+  const all = fuel.map((value, index) => (value + parts[index]))
+  /* setDataChartFuel(fuel)
+  setDataChartParts(parts) */
+  console.log('all', all)
+  return { all, fuel, parts }
+}
+
 // ------------------------------------ function select Year date ----------------------------------
 export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataState: StateCar): any => {
   const selectYear = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)

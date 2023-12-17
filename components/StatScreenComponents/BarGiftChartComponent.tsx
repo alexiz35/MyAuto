@@ -15,42 +15,36 @@ import {
 import { Icon, SegmentedButtons } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
 
-interface PropsBarChat {
-  selectDate: number
-  dataProps: StateCar
+export interface PropsBarChat {
+  dataProps: {
+    all: number[]
+    fuel: number[]
+    parts: number[]
+  }
 }
 interface BarChartData {
   value: number
   label: string
 }
+export const initialBarChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Element => {
+const BarGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
   /* const state = useAppSelector((state) => state.cars[state.numberCar]) */
   const { colors } = useAppTheme()
+  console.log('first', dataProps)
 
   const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Oct', 'Nov', 'Dec']
 
-  const [dataChartFuel, setDataChartFuel] = useState<number[]>(() => yearDataFuelBarChart(selectDate, dataProps))
-  const [dataChartParts, setDataChartParts] = useState<number[]>(() => yearDataPartsBarChart(selectDate, dataProps))
-  const yearDataAllChart = (): number[] => {
-    /* const fuel = yearDataFuelChart()
-    const parts = yearDataPartsChart() */
-    const tempAllData = dataChartFuel.map((value, index) => (value + dataChartParts[index]))
-    /* setDataChartFuel(fuel)
-    setDataChartParts(parts) */
-    console.log('all')
-    return tempAllData
-  }
+  /* const [dataChartFuel, setDataChartFuel] = useState<number[]>(() => yearDataFuelBarChart(selectDate, dataProps))
+  const [dataChartParts, setDataChartParts] = useState<number[]>(() => yearDataPartsBarChart(selectDate, dataProps)) */
 
-  const [dataChartOther, setDataChartOther] = useState<number[]>([])
-  const [dataChartAll, setDataChartAll] = useState<number[]>(() => yearDataAllChart())
+  /* const [dataChartAll, setDataChartAll] = useState<number[]>(() => yearDataAllChart()) */
 
   const [colorBar, setColorBar] = useState('255,255,255')
-  const [dataChart, setDataChart] = useState<number[]>([1, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+  const [dataChart, setDataChart] = useState<BarChartData[]>()
   const [selectData, setSelectData] = useState('all')
-  /* const [isActivity, setIsActivity] = useState(true) */
 
-  const formBarChartData = (data: number[]): BarChartData[] => {
+  const formBarChartData = (data: number[] = initialBarChart): BarChartData[] => {
     return data.map((value, index) => (
       {
         value,
@@ -59,37 +53,39 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
     ))
   }
 
+  /* useEffect(() => {
+    console.log('start', dataChart)
+  }, []) */
+
   const selectionTypeChart = () => {
     switch (selectData) {
       case 'all':
         setColorBar(ALL_BAR)
-        setDataChart(dataChartAll)
+        setDataChart(formBarChartData(dataProps.all))
         break
       case 'fuel':
         setColorBar(FUEL_BAR)
-        setDataChart(dataChartFuel)
+        setDataChart(formBarChartData(dataProps.fuel))
         break
       case 'parts':
         setColorBar(PART_BAR)
-        setDataChart(dataChartParts)
+        setDataChart(formBarChartData(dataProps.parts))
         break
       default: break
     }
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     setDataChartFuel(yearDataFuelBarChart(selectDate, dataProps))
     setDataChartParts(yearDataPartsBarChart(selectDate, dataProps))
     setDataChartAll(yearDataAllChart())
     selectionTypeChart()
     console.log('stateFuel', selectDate)
-  }, [selectDate])
+  }, [selectDate]) */
 
   useEffect(() => {
-    console.log('eff1', colorBar)
     selectionTypeChart()
-    console.log('eff2', dataChart, selectDate)
-  }, [selectData])
+  }, [selectData, dataProps])
 
   const barData1 = [
     { value: 250, label: 'Jan' },
@@ -143,7 +139,7 @@ const BarGiftChartComponent = ({ selectDate, dataProps }: PropsBarChat): JSX.Ele
         noOfSections={5}
         barBorderRadius={4}
         frontColor={colorBar}
-        data={formBarChartData(dataChart)}
+        data={dataChart}
         yAxisThickness={1}
         xAxisThickness={1}
         isAnimated={true}
