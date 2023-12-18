@@ -2,6 +2,7 @@ import { View } from 'react-native'
 import { PieChart } from 'react-native-gifted-charts'
 import { List } from 'react-native-paper'
 import { FUEL_BAR, OTHER_BAR, PART_BAR } from './FunctionStatistic'
+import { useEffect } from 'react'
 
 interface PropsBarChat {
   dataProps: {
@@ -15,7 +16,12 @@ const PieGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
   const pieData = [
     { value: dataProps.fuel, color: FUEL_BAR, text: String(dataProps.fuel) },
     { value: dataProps.parts, color: PART_BAR, text: String(dataProps.parts) },
-    { value: 26, color: OTHER_BAR, text: '26%' }
+    { value: dataProps.other, color: OTHER_BAR, text: String(dataProps.other) }
+  ]
+  const pieDataNull = [
+    { value: 1, color: FUEL_BAR, text: String('нет трат') },
+    { value: 0, color: PART_BAR, text: String(dataProps.parts) },
+    { value: 0, color: OTHER_BAR, text: String(dataProps.other) }
   ]
 
   return (
@@ -29,7 +35,7 @@ const PieGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
       showTextBackground={false}
       textBackgroundColor="white"
       textBackgroundRadius={22}
-      data={pieData}
+      data={(dataProps.fuel === 0 && dataProps.parts === 0 && dataProps.other === 0) ? pieDataNull : pieData}
       focusOnPress
       sectionAutoFocus
       /* labelsPosition={'mid'} */
@@ -46,7 +52,7 @@ const PieGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
       />
       <List.Item title={'other'}
                  left={() => <List.Icon color={'#ED6665'} icon="circle"/>}
-                 description={'2000 грн'}
+                 description={dataProps.other}
 
       />
     </View>

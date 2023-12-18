@@ -16,6 +16,7 @@ export interface PropsBarChat {
     all: number[]
     fuel: number[]
     parts: number[]
+    other: number[]
   }
 }
 interface BarChartData {
@@ -54,6 +55,10 @@ const BarGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
       case 'parts':
         setColorBar(PART_BAR)
         setDataChart(formBarChartData(dataProps.parts))
+        break
+      case 'other':
+        setColorBar(OTHER_BAR)
+        setDataChart(formBarChartData(dataProps.other))
         break
       default: break
     }

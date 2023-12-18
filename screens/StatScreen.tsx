@@ -8,7 +8,7 @@ import {
   initialBarChart,
   yearDataAllChart,
   yearDataFuelChart,
-  yearDataMilesChart,
+  yearDataMilesChart, yearDataOtherChart,
   yearDataPartsChart
 } from '../components/StatScreenComponents/FunctionStatistic'
 import BackgroundView from '../CommonComponents/BackgroundView'
@@ -34,12 +34,13 @@ const StatScreen = (): JSX.Element => {
 
   const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
 
-  const [dataBarChart, setDataBarChart] = useState({ all: initialBarChart, fuel: initialBarChart, parts: initialBarChart })
+  const [dataBarChart, setDataBarChart] = useState({ all: initialBarChart, fuel: initialBarChart, parts: initialBarChart, other: initialBarChart })
 
-  const [sumParts, setSumParts] = useState(0)
   // топливо за период
   const [sumFuel, setSumFuel] = useState<number>(0)
   const [volumeFuel, setVolumeFuel] = useState<number>(0)
+  const [sumParts, setSumParts] = useState(0)
+  const [sumOther, setSumOther] = useState(0)
   const [sumMileage, setSumMileage] = useState<number>(0)
   // выбранная дата
   const [selectedDate, setSelectedDate] = useState<TypeSelect>(
@@ -88,6 +89,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
       setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
       setSumMileage(yearDataMilesChart(Number(selectedDate.valueYear), state))
       setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
+      setSumOther(yearDataOtherChart(Number(selectedDate.valueYear), state))
 
       if (typeChart === 'bar') setDataBarChart(yearDataAllChart(Number(selectedDate.valueYear), state))
     }
@@ -131,8 +133,8 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
         />
 
          {typeChart === 'pie'
-           ? <PieGiftChartComponent dataProps={{ fuel: sumFuel, parts: sumParts, other: 100 }}/>
-           : <BarGiftChartComponent dataProps={ { all: dataBarChart.all, fuel: dataBarChart.fuel, parts: dataBarChart.parts } } />}
+           ? <PieGiftChartComponent dataProps={{ fuel: sumFuel, parts: sumParts, other: sumOther }}/>
+           : <BarGiftChartComponent dataProps={ { all: dataBarChart.all, fuel: dataBarChart.fuel, parts: dataBarChart.parts, other: dataBarChart.other } } />}
 
         <Divider horizontalInset bold />
         <Surface elevation={3} style={styles.viewAllInput} >
@@ -149,7 +151,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
             <Text style={styles.textKm}>Использовано на ремонт {sumParts} грн</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textKm}>Использовано на другое {sumFuel} грн</Text>
+            <Text style={styles.textKm}>Использовано на другое {sumOther} грн</Text>
           </View>
         </View>
         </Surface>
