@@ -180,3 +180,9 @@ export const periodDataMilesChart = (searchDate: TypeSelect, dataState: StateCar
   const maxMiles = (arr: number[]): number => Math.max(...arr)
   return maxMiles(selectMiles) - minMiles(selectMiles)
 }
+// ----------------------------------- function fuel/miles ------------------------------------------
+export const fuelMiles = (fuel: number, miles: number): number => {
+  return Number(((fuel / miles) * 100).toFixed(2))
+}
+
+// ----------------------------------- function fuel/miles ------------------------------------------

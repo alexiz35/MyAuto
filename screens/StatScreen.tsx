@@ -5,6 +5,7 @@ import { useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import {
+  fuelMiles,
   initialBarChart,
   monthDataFuelChart,
   monthDataMilesChart,
@@ -50,7 +51,8 @@ const StatScreen = (): JSX.Element => {
   const [sumMileage, setSumMileage] = useState<number>(0)
   // выбранная дата
   const [selectedDate, setSelectedDate] = useState<TypeSelect>(
-    { type: 'year', valueYear: String(new Date().getFullYear()) })
+    { type: 'year', valueYear: String(new Date().getFullYear()) }
+  )
   const [textButtonDate, setButtonDate] = useState<string | undefined>(undefined)
 
   const [checkedSelected, setCheckedSelected] = useState(false)
@@ -120,8 +122,9 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
     }, [])) */
 
   return (
+    <ScrollView>
+
     <BackgroundView props={{ height: Dimensions.get('window').height }}>
-      <ScrollView>
       <View style={styles.viewTitleStat}>
         <Text style={styles.titleStat}>
           Статистика за
@@ -155,26 +158,33 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
         <Divider horizontalInset bold />
         <Surface elevation={3} style={styles.viewAllInput} >
         <View style={{ paddingTop: 10 }}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>Пробег за  {textButtonDate ?? ' -- --'}</Text>
-            <Text style={styles.textKm}>{sumMileage} km</Text>
+            <Text style={styles.textKm}>{sumMileage} (km)</Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textKm}>Использовано топлива {volumeFuel} L</Text>
-            <Text style={styles.textKm}>на {sumFuel} грн</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.textKm}>Использовано топлива {volumeFuel} (l)</Text>
+            <Text style={styles.textKm}>на {sumFuel} (грн)</Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textKm}>Использовано на ремонт {sumParts} грн</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.textKm}>Средний расход </Text>
+            <Text style={styles.textKm}>{String(fuelMiles(volumeFuel, sumMileage))} (l/100km)</Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textKm}>Использовано на другое {sumOther} грн</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.textKm}>Использовано на ремонт</Text>
+            <Text style={styles.textKm}>{sumParts} (грн)</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.textKm}>Использовано на другое, грн</Text>
+            <Text style={styles.textKm}>{sumOther} (грн)</Text>
           </View>
         </View>
         </Surface>
         <Divider horizontalInset bold />
 
-      </ScrollView>
     </BackgroundView>
+    </ScrollView>
+
   )
 }
 
