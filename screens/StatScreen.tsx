@@ -6,9 +6,15 @@ import { useEffect, useState } from 'react'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import {
   initialBarChart,
+  monthDataFuelChart,
+  monthDataMilesChart,
+  monthDataOtherChart,
+  monthDataPartsChart,
+  periodDataFuelChart, periodDataMilesChart, periodDataOtherChart, periodDataPartsChart,
   yearDataAllChart,
   yearDataFuelChart,
-  yearDataMilesChart, yearDataOtherChart,
+  yearDataMilesChart,
+  yearDataOtherChart,
   yearDataPartsChart
 } from '../components/StatScreenComponents/FunctionStatistic'
 import BackgroundView from '../CommonComponents/BackgroundView'
@@ -57,42 +63,52 @@ const StatScreen = (): JSX.Element => {
     } else { return 0 }
   }
 
-  const handleCancel = (): void => {
-    setCheckedSelected(false)
-  }
-  const handleOk = (selectModal: TypeSelect): void => {
-    setCheckedSelected(false)
-    setSelectedDate(selectModal)
+  const selectTypeDate = (selectModal: TypeSelect): void => {
     switch (selectModal.type) {
       case 'year':
         setButtonDate(selectModal.valueYear)
-
+        setSumFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).amountFuel)
+        setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
+        setSumMileage(yearDataMilesChart(Number(selectedDate.valueYear), state))
+        setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
+        setSumOther(yearDataOtherChart(Number(selectedDate.valueYear), state))
         break
       case 'month':
         if (selectModal.valueMonth !== undefined) {
           setButtonDate(`${String(NAME_MONTH[selectModal.valueMonth])} ${String(selectModal.valueYear)}`)
+          setSumFuel(monthDataFuelChart(selectedDate, state).amountFuel)
+          setVolumeFuel(monthDataFuelChart(selectedDate, state).volumeFuel)
+          setSumMileage(monthDataMilesChart(selectedDate, state))
+          setSumParts(monthDataPartsChart(selectedDate, state))
+          setSumOther(monthDataOtherChart(selectedDate, state))
         }
         break
       case 'period':
         if (selectModal.period?.valueStartMonth !== undefined) {
           setButtonDate(`${String(NAME_MONTH[selectModal.period?.valueStartMonth])} ${String(selectModal.period?.valueStartYear)}-
 ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.period?.valueEndYear)}`)
+          setSumFuel(periodDataFuelChart(selectedDate, state).amountFuel)
+          setVolumeFuel(periodDataFuelChart(selectedDate, state).volumeFuel)
+          setSumMileage(periodDataMilesChart(selectedDate, state))
+          setSumParts(periodDataPartsChart(selectedDate, state))
+          setSumOther(periodDataOtherChart(selectedDate, state))
         }
         break
       default: break
     }
   }
 
-  useEffect(() => {
-    if (textButtonDate !== undefined) {
-      setSumFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).amountFuel)
-      setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
-      setSumMileage(yearDataMilesChart(Number(selectedDate.valueYear), state))
-      setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
-      setSumOther(yearDataOtherChart(Number(selectedDate.valueYear), state))
+  const handleCancel = (): void => {
+    setCheckedSelected(false)
+  }
+  const handleOk = (selectModal: TypeSelect): void => {
+    setCheckedSelected(false)
+    setSelectedDate(selectModal)
+  }
 
-      if (typeChart === 'bar') setDataBarChart(yearDataAllChart(Number(selectedDate.valueYear), state))
-    }
+  useEffect(() => {
+    selectTypeDate(selectedDate)
+    if (typeChart === 'bar') setDataBarChart(yearDataAllChart(Number(selectedDate.valueYear), state))
   }, [selectedDate])
 
   useEffect(() => {

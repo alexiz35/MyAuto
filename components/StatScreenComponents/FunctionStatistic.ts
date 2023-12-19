@@ -20,7 +20,6 @@ const calcSumCostParts = (targetArray: StateService[]): number => {
   ), 0)
 }
 // ************************************ function barChart ******************************************
-
 export const yearDataFuelBarChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number[] => {
   const selectYear = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
   const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -29,7 +28,6 @@ export const yearDataFuelBarChart = (searchYear = new Date().getFullYear(), data
   })
   return tempData
 }
-
 export const yearDataOtherBarChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number[] => {
   const selectYear = dataState.others.filter((value) => new Date(value.dateBuy).getFullYear() === searchYear)
   const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -38,7 +36,6 @@ export const yearDataOtherBarChart = (searchYear = new Date().getFullYear(), dat
   })
   return tempData
 }
-
 export const yearDataPartsBarChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number[] => {
   const selectYear = dataState.services.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
   const tempData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -49,7 +46,6 @@ export const yearDataPartsBarChart = (searchYear = new Date().getFullYear(), dat
   })
   return tempData
 }
-
 export const yearDataAllChart = (searchYear = new Date().getFullYear(), dataState: StateCar): any => {
   const fuel = yearDataFuelBarChart(searchYear, dataState)
   const parts = yearDataPartsBarChart(searchYear, dataState)
@@ -57,7 +53,7 @@ export const yearDataAllChart = (searchYear = new Date().getFullYear(), dataStat
   const all = fuel.map((value, index) => (Number(value) + Number(parts[index]) + Number(other[index])))
   return { all, fuel, parts, other }
 }
-
+// *************************************************************************************************
 // ------------------------------------ function select Year date ----------------------------------
 export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataState: StateCar): any => {
   const selectYear = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
@@ -66,7 +62,6 @@ export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataSta
   return { amountFuel, volumeFuel }
   /* setDataChartFuel(tempData) */
 }
-
 export const yearDataMilesChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
   const selectYear = dataState.mileage.filter((value) => new Date(value.dateMileage).getFullYear() === searchYear)
   const selectMiles = selectYear.map(item => item.currentMileage)
@@ -79,26 +74,24 @@ export const yearDataMilesChart = (searchYear = new Date().getFullYear(), dataSt
   const maxMiles = (arr: number[]): number => Math.max(...arr)
   return maxMiles(selectMiles) - minMiles(selectMiles)
 }
-
 export const yearDataPartsChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
   const selectYear = dataState.services.filter((value) => new Date(value.startDate).getFullYear() === searchYear)
   return calcSumCostParts(selectYear)
 }
-
 export const yearDataOtherChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
   const selectYear = dataState.others.filter((value) => new Date(value.dateBuy).getFullYear() === searchYear)
   return selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.amountCostOther), 0)
 }
-
-// ----------------------------------- function select Month Date ---------------------------------
-export const monthDataFuelChart = (searchDate: TypeSelect, dataState: StateCar): number => {
+// ----------------------------------- function select Month Date ----------------------------------
+export const monthDataFuelChart = (searchDate: TypeSelect, dataState: StateCar): any => {
   const selectYear = dataState.fuel.filter((value) =>
     // @ts-expect-error valueYear?undefined
     new Date(value.dateFuel).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
     new Date(value.dateFuel).getMonth() === searchDate.valueMonth
   )
-  return selectYear.reduce((accumulator, currentValue) => accumulator + currentValue.AmountFuel, 0)
-  /* setDataChartFuel(tempData) */
+  const amountFuel = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.AmountFuel), 0)
+  const volumeFuel = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.volumeFuel), 0)
+  return { amountFuel, volumeFuel }
 }
 export const monthDataPartsChart = (searchDate: TypeSelect, dataState: StateCar): number => {
   const selectYear = dataState.services.filter((value) =>
@@ -109,6 +102,31 @@ export const monthDataPartsChart = (searchDate: TypeSelect, dataState: StateCar)
   return calcSumCostParts(selectYear)
   /* setDataChartParts(temp) */
 }
+export const monthDataOtherChart = (searchDate: TypeSelect, dataState: StateCar): number => {
+  const selectYear = dataState.others.filter((value) =>
+    // @ts-expect-error valueYear?undefined
+    new Date(value.dateBuy).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
+    new Date(value.dateBuy).getMonth() === searchDate.valueMonth
+  )
+
+  return selectYear.reduce((accumulator, currentValue) => accumulator + currentValue.amountCostOther, 0)
+}
+export const monthDataMilesChart = (searchDate: TypeSelect, dataState: StateCar): number => {
+  const selectYear = dataState.mileage.filter((value) =>
+    // @ts-expect-error valueYear?undefined
+    new Date(value.dateMileage).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
+    new Date(value.dateMileage).getMonth() === searchDate.valueMonth
+  )
+  const selectMiles = selectYear.map(item => item.currentMileage)
+  if (selectMiles.length === 0) return 0
+  //* *****************************************************************************
+  selectMiles.splice(0, 1) // temp string
+  //* *****************************************************************************
+
+  const minMiles = (arr: number[]): number => Math.min(...arr)
+  const maxMiles = (arr: number[]): number => Math.max(...arr)
+  return maxMiles(selectMiles) - minMiles(selectMiles)
+}
 // ----------------------------------- function period Date -----------------------------------------
 const createPeriodDate = (searchDate: TypeSelect): { startDate: Date, endDate: Date } => {
   const startDate = new Date(Number(searchDate.period?.valueStartYear), Number(searchDate.period?.valueStartMonth))
@@ -118,13 +136,15 @@ const createPeriodDate = (searchDate: TypeSelect): { startDate: Date, endDate: D
     endDate
   }
 }
-export const periodDataFuelChart = (searchDate: TypeSelect, dataState: StateCar): number => {
+export const periodDataFuelChart = (searchDate: TypeSelect, dataState: StateCar): any => {
   const { startDate, endDate } = createPeriodDate(searchDate)
   const filterDate = dataState.fuel.filter((value) => {
     const tempDate = new Date(value.dateFuel)
     return startDate <= tempDate && tempDate <= endDate
   })
-  return filterDate.reduce((accumulator, currentValue) => accumulator + currentValue.AmountFuel, 0)
+  const amountFuel = filterDate.reduce((accumulator, currentValue) => accumulator + Number(currentValue.AmountFuel), 0)
+  const volumeFuel = filterDate.reduce((accumulator, currentValue) => accumulator + Number(currentValue.volumeFuel), 0)
+  return { amountFuel, volumeFuel }
   /* setDataChartFuel(tempData) */
 }
 export const periodDataPartsChart = (searchDate: TypeSelect, dataState: StateCar): number => {
@@ -135,4 +155,28 @@ export const periodDataPartsChart = (searchDate: TypeSelect, dataState: StateCar
   })
   return calcSumCostParts(filterDate)
   /* setDataChartParts(tempData) */
+}
+export const periodDataOtherChart = (searchDate: TypeSelect, dataState: StateCar): number => {
+  const { startDate, endDate } = createPeriodDate(searchDate)
+  const filterDate = dataState.others.filter((value) => {
+    const tempDate = new Date(value.dateBuy)
+    return startDate <= tempDate && tempDate <= endDate
+  })
+  return filterDate.reduce((accumulator, currentValue) => accumulator + currentValue.amountCostOther, 0)
+}
+export const periodDataMilesChart = (searchDate: TypeSelect, dataState: StateCar): number => {
+  const { startDate, endDate } = createPeriodDate(searchDate)
+  const filterDate = dataState.mileage.filter((value) => {
+    const tempDate = new Date(value.dateMileage)
+    return startDate <= tempDate && tempDate <= endDate
+  })
+  const selectMiles = filterDate.map(item => item.currentMileage)
+  if (selectMiles.length === 0) return 0
+  //* *****************************************************************************
+  selectMiles.splice(0, 1) // temp string
+  //* *****************************************************************************
+
+  const minMiles = (arr: number[]): number => Math.min(...arr)
+  const maxMiles = (arr: number[]): number => Math.max(...arr)
+  return maxMiles(selectMiles) - minMiles(selectMiles)
 }
