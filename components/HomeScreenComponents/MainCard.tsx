@@ -13,10 +13,12 @@ import {
   Divider,
   Portal,
   Dialog,
-  TextInput
+  TextInput, Modal, HelperText
 } from 'react-native-paper'
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 import { useAppTheme } from '../../CommonComponents/Theme'
+import { PickService } from '../InputDoneScreenComponents/inputService/PickService'
+import { handlePress } from 'react-native-paper/lib/typescript/components/RadioButton/utils'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -48,6 +50,7 @@ export const MainCard = (): JSX.Element => {
   const [visibleMileage, setVisibleMileage] = useState(false)
   const [isNeedUpdate, setIsNeedUpdate] = useState(false)
   const [valueMileage, setValueMileage] = useState<number>(0)
+  const [errorInput, setErrorInput] = useState(false)
   const toggleMileage = (): void => {
     setVisibleMileage(!visibleMileage)
   }
@@ -56,6 +59,11 @@ export const MainCard = (): JSX.Element => {
     periodTimeMileage()
   }, [currentMiles])
 
+  useEffect(() => {
+    setVisibleMileage(true)
+  }, [isNeedUpdate])
+
+  // period alarm to update mileage
   const periodTimeMileage = (): void => {
     const tempState = new Date(currentMiles.dateMileage)
     if (tempState !== undefined) {
@@ -70,9 +78,27 @@ export const MainCard = (): JSX.Element => {
     }
   }
 
+  const handlePressOkMileage = (): void => {
+    if (currentMiles.currentMileage < valueMileage) {
+      const tempMileage: CurrentMiles = {
+        currentMileage: valueMileage,
+        dateMileage: new Date()
+      }
+      dispatch(updateMiles(carId, tempMileage))
+      setErrorInput(false)
+      setVisibleMileage(false)
+      // toggleMileage()
+    } else setErrorInput(true)
+  }
+  const handleCancelMileage = (): void => {
+    setVisibleMileage(false)
+    setErrorInput(false)
+  }
+
   return (
     /* <ImageBackground source={require('../../assets/whiteBack2.jpg')} resizeMethod={'auto'} resizeMode={'cover'} > */
     <View>
+
     <View>
       <TouchableRipple style={styles.containerView}
                        rippleColor={colors.primary}
@@ -111,12 +137,12 @@ export const MainCard = (): JSX.Element => {
 
           <Button icon={({ size, color }) => (<Icon name='car-wrench' size={20} color={colors.onBackground}/>)}
                   textColor={colors.onBackground} labelStyle={{ fontSize: 16 }} rippleColor={colors.primary}
-                  onPress={() => { /* navTab.navigate('StatScreen') */ }}>
+                  onPress={() => { navTab.navigate('InputDoneScreen', { editable: false, typeTask: 'part' }) }}>
           2200 грн
           </Button>
           <Button icon={({ size }) => (<Icon name='gas-station' size={20} color={colors.onBackground}/>)}
                   textColor={colors.onBackground} labelStyle={{ fontSize: 16 }} rippleColor={colors.primary}
-                  onPress={() => { /* navTab.navigate('StatScreen') */ }}>
+                  onPress={() => { navStack.navigate('FuelScreen') }}>
             2200 грн
           </Button>
 
@@ -136,7 +162,7 @@ export const MainCard = (): JSX.Element => {
             visible={visibleMileage}
             onDismiss={toggleMileage}
           >
-            <Dialog.Title >Current Mileage</Dialog.Title>
+            <Dialog.Title >Обновите пробег</Dialog.Title>
             <Dialog.Content>
               <TextInput
                 label={'введите пробег'}
@@ -146,19 +172,16 @@ export const MainCard = (): JSX.Element => {
                 onChangeText={(value) => setValueMileage(Number(value))}
                 keyboardType={'numeric'}
                 value={String(valueMileage)}
+                error={errorInput}
               />
+              <HelperText type="error" visible={errorInput}>
+                Пробег меньше текущего!
+              </HelperText>
             </Dialog.Content>
               <Dialog.Actions >
-                <Button onPress={toggleMileage}>Cancel</Button>
+                <Button onPress={handleCancelMileage}>Cancel</Button>
               <Button
-                onPress={() => {
-                  const tempMileage: CurrentMiles = {
-                    currentMileage: valueMileage,
-                    dateMileage: new Date()
-                  }
-                  dispatch(updateMiles(carId, tempMileage))
-                  toggleMileage()
-                }}
+                onPress={() => handlePressOkMileage()}
                 >Ok
               </Button>
 

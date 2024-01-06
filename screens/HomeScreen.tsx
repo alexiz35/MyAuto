@@ -12,6 +12,7 @@ import { Orientation } from 'expo-screen-orientation'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { Surface, Text } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
+import { TasksList } from '../components/TaskScreenComponents/TasksList'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
@@ -41,7 +42,12 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
         ScreenOrientation.removeOrientationChangeListener(subscription)
       }
     }, []))
-  // ------------------------------------------------------------------------------
+  // --------------------------------------------
+
+  const pressList = () => {
+    return 1
+  }
+  // ----------------------------------
 
   useEffect(() => {
     /* setMiles(updateMiles(15)) */
@@ -64,9 +70,9 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
             </Surface>
           </View>
 
-        <View style={(orientation < 3) ? { flex: 3 } : { flex: 1.5 }}>
+        <View style={(orientation < 3) ? { flex: 4 } : { flex: 1.5 }}>
           <Text style={{ textAlign: 'center' }}> Current Task</Text>
-          {/* <Tasks /> */}
+          <TasksList handlePress={pressList} filterList={'last'}/>
         </View>
 
       </View>
@@ -87,7 +93,7 @@ const styles = StyleSheet.create({
   viewContainerVertical: {
     flexDirection: 'column',
     height: '100%',
-    marginHorizontal: 40
+    marginHorizontal: 20
   },
   containerMainCard: {
     margin: 20,
