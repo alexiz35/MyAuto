@@ -8,6 +8,7 @@ import { Button, Card, Divider, List, Text, TextInput } from 'react-native-paper
 import { useState } from 'react'
 import { ListService } from '../../../type'
 import { listService } from './ListServices'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 interface PickServiceProps {
   cancelPress: () => void
@@ -21,6 +22,8 @@ export const PickService = ({ cancelPress, okPress, typeService }: PickServicePr
     mileage: 0,
     date: 0
   }
+
+  const { colors } = useAppTheme()
 
   const [service, setService] = useState<ListService >(
     typeService !== undefined
@@ -39,7 +42,7 @@ export const PickService = ({ cancelPress, okPress, typeService }: PickServicePr
       data={listService}
       /* extraData={isSortOthers} */
       ListHeaderComponent={
-        <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
+        <View style={{ flexDirection: 'row', backgroundColor: colors.background }}>
           <List.Item title={'service'} style={{ flex: 2 }}/>
           <List.Item title={'| км |'} style={{ flex: 1 }}/>
           <List.Item title={'| лет |'} style={{ flex: 1 }}/>
