@@ -1,10 +1,14 @@
 import { ActionType, Dispatch, initialStateInfo, StateMain } from '../../type'
+import { settings } from 'eslint-config-standard-with-typescript'
 
 export const initialState: StateMain = {
   numberCar: 0,
   token: '',
   setting: {
-    themeSet: 'dark'
+    themeSet: 'dark',
+    alarmMileageStart: true,
+    alarmMileagePeriod: true,
+    alarmMileagePeriodNumber: 6
   },
   cars: [
     {
@@ -48,7 +52,28 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     case ActionType.CHANGE_THEME:{
       return {
         ...state,
-        setting: { themeSet: action.typeTheme }
+        setting: { ...state.setting, themeSet: action.typeTheme }
+      }
+    }
+    // ------------------------------------------------------------------
+    case ActionType.CHANGE_ALARM_START:{
+      return {
+        ...state,
+        setting: { ...state.setting, alarmMileageStart: action.alarmStart }
+      }
+    }
+    // ------------------------------------------------------------------
+    case ActionType.CHANGE_ALARM_PERIOD:{
+      return {
+        ...state,
+        setting: { ...state.setting, alarmMileagePeriod: action.alarmPeriod }
+      }
+    }
+    // ------------------------------------------------------------------
+    case ActionType.CHANGE_ALARM_PERIOD_NUMBER:{
+      return {
+        ...state,
+        setting: { alarmMileagePeriodNumber: action.alarmPeriodNumber }
       }
     }
     // -------------------------------------------------------------------

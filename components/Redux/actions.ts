@@ -2,7 +2,7 @@ import {
   ActionAddCar,
   ActionAddFuel, ActionAddOthers, ActionAddParts,
   ActionAddService, ActionAddTask,
-  ActionAddToken, ActionChangeTheme,
+  ActionAddToken, ActionAlarmMileagePeriod, ActionAlarmMileagePeriodNumber, ActionAlarmMileageStart, ActionChangeTheme,
   ActionDelFuel, ActionDelOthers, ActionDelParts,
   ActionDelService, ActionDelTask,
   ActionDelToken,
@@ -39,6 +39,24 @@ export const changeTheme = (typeTheme: string): ActionChangeTheme => (
   {
     type: ActionType.CHANGE_THEME,
     typeTheme
+  })
+// -------------------------- Action ChangeTheme -----------------------------------
+export const changeAlarmStart = (alarmStart: boolean): ActionAlarmMileageStart => (
+  {
+    type: ActionType.CHANGE_ALARM_START,
+    alarmStart
+  })
+// -------------------------- Action ChangeTheme -----------------------------------
+export const changeAlarmPeriod = (alarmPeriod: boolean): ActionAlarmMileagePeriod => (
+  {
+    type: ActionType.CHANGE_ALARM_PERIOD,
+    alarmPeriod
+  })
+// -------------------------- Action ChangeTheme -----------------------------------
+export const changeAlarmPeriodNumber = (alarmPeriodNumber: number): ActionAlarmMileagePeriodNumber => (
+  {
+    type: ActionType.CHANGE_ALARM_PERIOD_NUMBER,
+    alarmPeriodNumber
   })
 // ----------------------------- Action Task -----------------------------------
 export const addService = (carId: number, service: StateService): ActionAddService => (

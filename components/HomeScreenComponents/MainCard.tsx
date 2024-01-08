@@ -34,6 +34,7 @@ export const MainCard = (): JSX.Element => {
   const navTab = useNavigation<ProfileTabNavigationProp>()
   const { colors } = useAppTheme()
   const carId = useAppSelector(state => state.numberCar)
+  const state = useAppSelector(state => state)
 
   const infoCar: StateInfo = useAppSelector(state => (
     state.cars[state.numberCar].info === undefined
@@ -56,12 +57,21 @@ export const MainCard = (): JSX.Element => {
   }
 
   useEffect(() => {
-    periodTimeMileage()
+    /* periodTimeMileage() */
   }, [currentMiles])
 
-  useEffect(() => {
+  /* useEffect(() => {
     setVisibleMileage(true)
-  }, [isNeedUpdate])
+    console.log('alarm3', visibleMileage)
+  }, [isNeedUpdate]) */
+
+  useEffect(() => {
+    if (state.setting.alarmMileageStart) setVisibleMileage(true)
+    if (state.setting.alarmMileagePeriod) {
+      periodTimeMileage()
+    }
+    console.log(isNeedUpdate)
+  }, [])
 
   // period alarm to update mileage
   const periodTimeMileage = (): void => {
@@ -70,11 +80,15 @@ export const MainCard = (): JSX.Element => {
       const currentDate = new Date()
       if (currentDate.getFullYear() === (tempState.getFullYear())) {
         if (currentDate.getMonth() === tempState.getMonth()) {
-          if ((currentDate.getDate() - tempState.getDate()) > 7) {
+          if ((currentDate.getDate() - tempState.getDate()) > 0) {
             setIsNeedUpdate(true)
           } else setIsNeedUpdate(false)
-        } else setIsNeedUpdate(true)
-      } else setIsNeedUpdate(true)
+        } else {
+          setIsNeedUpdate(true)
+        }
+      } else {
+        setIsNeedUpdate(true)
+      }
     }
   }
 

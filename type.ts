@@ -25,6 +25,9 @@ export enum ActionType {
   UPDATE_CAR = 'UPDATE_CAR',
   DEL_CAR = 'DEL_CAR',
   CHANGE_THEME = 'CHANGE_THEME',
+  CHANGE_ALARM_START = 'CHANGE_ALARM_START',
+  CHANGE_ALARM_PERIOD = 'CHANGE_ALARM_PERIOD',
+  CHANGE_ALARM_PERIOD_NUMBER = 'CHANGE_ALARM_PERIOD_NUMBER',
   ADD_TOKEN = 'ADD_TOKEN',
   DEL_TOKEN = 'DEL_TOKEN',
   ADD_FUEL = 'ADD_FUEL',
@@ -51,6 +54,9 @@ export interface StateMain {
 }
 export interface Setting {
   themeSet: string
+  alarmMileageStart: boolean
+  alarmMileagePeriod: boolean
+  alarmMileagePeriodNumber: number
 }
 
 export interface StateCar {
@@ -221,6 +227,24 @@ export interface ActionDelToken {
 export interface ActionChangeTheme {
   type: ActionType.CHANGE_THEME
   typeTheme: string
+}
+// --------------------------- interface ActionAlarmMileageStart --------------
+
+export interface ActionAlarmMileageStart {
+  type: ActionType.CHANGE_ALARM_START
+  alarmStart: boolean
+}
+// --------------------------- interface ActionAlarmMileagePeriod --------------
+
+export interface ActionAlarmMileagePeriod {
+  type: ActionType.CHANGE_ALARM_PERIOD
+  alarmPeriod: boolean
+}
+// --------------------- interface ActionAlarmMileagePeriodNumber --------------
+
+export interface ActionAlarmMileagePeriodNumber {
+  type: ActionType.CHANGE_ALARM_PERIOD_NUMBER
+  alarmPeriodNumber: number
 }
 
 // ----------------------------- interface Action ------------------------------
@@ -421,7 +445,8 @@ ActionAddCar | ActionEditCar | ActionDelCar | ActionAddToken | ActionDelToken |
 ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel |
 ActionAddParts | ActionDelParts | ActionEditParts | ActionInstallPart |
 ActionAddOthers | ActionDelOthers | ActionEditOthers |
-ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask | ActionChangeTheme
+ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask | ActionChangeTheme |
+ActionAlarmMileageStart | ActionAlarmMileagePeriod | ActionAlarmMileagePeriodNumber
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

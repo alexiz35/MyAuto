@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
-import { addToken, updateState } from '../components/Redux/actions'
+import { addToken, changeAlarmPeriod, changeAlarmStart, updateState } from '../components/Redux/actions'
 import {
   deleteGoogleAuth,
   GDCreateFileJson,
@@ -31,6 +31,36 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const [userInfo, setUserInfo] = useState<GDUserInfo | null>(null)
   const [auth, setAuth] = useState(!(state.token === ''))
   const [idParent, setIdParent] = useState('')
+
+  const [checkAlarmStart, setCheckAlarmStart] =
+    useState<'checked' | 'unchecked' | 'indeterminate'>(state.setting.alarmMileageStart ? 'checked' : 'unchecked')
+  const [checkAlarmPeriod, setCheckAlarmPeriod] =
+    useState<'checked' | 'unchecked' | 'indeterminate'>(state.setting.alarmMileagePeriod ? 'checked' : 'unchecked')
+  const pressAlarm = (typeCheck: string): void => {
+    switch (typeCheck) {
+      case 'alarmStart':
+        if
+        (checkAlarmStart === 'checked') {
+          setCheckAlarmStart('unchecked')
+          dispatch(changeAlarmStart(false))
+        } else if (checkAlarmStart === 'unchecked') {
+          setCheckAlarmStart('checked')
+          dispatch(changeAlarmStart(true))
+        }
+        break
+      case 'alarmPeriod':
+
+        if
+        (checkAlarmPeriod === 'checked') {
+          setCheckAlarmPeriod('unchecked')
+          dispatch(changeAlarmPeriod(false))
+        } else if (checkAlarmPeriod === 'unchecked') {
+          setCheckAlarmPeriod('checked')
+          dispatch(changeAlarmPeriod(true))
+        }
+        break
+    }
+  }
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: '192692660431-2is6dth1j1d4c8j6mnfa91arctkgksnm.apps.googleusercontent.com',
@@ -344,9 +374,11 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           <Icon source={'circle'} color={colors.tertiary} size={10} />
           <Text style={styles.text}>Контроль пробега</Text>
         </View>
-        <Checkbox.Item status={'checked'} label={'Напоминание при входе в приложении'} labelVariant={'bodyMedium'}/>
+        <Checkbox.Item status={checkAlarmStart} label={'Напоминание при входе в приложении'}
+                       onPress={() => pressAlarm('alarmStart')} labelVariant={'bodyMedium'}/>
         <Divider horizontalInset/>
-        <Checkbox.Item status={'unchecked'} label={'Периодическое напоминание в фоне'} labelVariant={'bodyMedium'} disabled/>
+        <Checkbox.Item status={checkAlarmPeriod} label={'Периодическое напоминание в фоне'}
+                       onPress={() => pressAlarm('alarmPeriod')} labelVariant={'bodyMedium'} />
         <Divider horizontalInset/>
         <Checkbox.Item status={'unchecked'} label={'Синхронизация пробега с авто'} labelVariant={'bodyMedium'} disabled/>
         <Divider bold/>
