@@ -1,5 +1,7 @@
 // --------------------------------constant Color --------------------------------------------
 
+import { listService } from './components/InputDoneScreenComponents/inputService/ListServices'
+
 export const BACKGROUND = '#13171A'
 export const BACK_OPACITY = 'rgba(0,0,0,0)'
 export const BACK_CARD = '#3d3d3d'
@@ -104,6 +106,7 @@ export interface StateInfo {
   vin?: string
   dateBuy: Date
   buyMileage: number
+  regMaintenance?: ListService[]
 }
 export const initialStateInfo = {
   brand: '',
@@ -116,7 +119,8 @@ export const initialStateInfo = {
   gear: '',
   vin: '',
   dateBuy: new Date(),
-  buyMileage: 0
+  buyMileage: 0,
+  regMaintenance: listService
 }
 
 export interface StateServiceTask {

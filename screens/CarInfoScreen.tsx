@@ -1,16 +1,32 @@
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView, FlatList } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
-import { StateInfo } from '../type'
-import { editCar, updateMiles } from '../components/Redux/actions'
+import { ListService, StateInfo } from '../type'
+import { delService, editCar, updateMiles } from '../components/Redux/actions'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { cars } from '../cars.json'
 import { Dropdown } from 'react-native-element-dropdown'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { BusyIndicator, useIsReady } from '../components/useIsReadyHook'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { TextInput, useTheme, Button, Divider } from 'react-native-paper'
+import {
+  TextInput,
+  useTheme,
+  Button,
+  Divider,
+  Portal,
+  Modal,
+  List,
+  Card,
+  Menu,
+  IconButton,
+  Text
+} from 'react-native-paper'
+import { PickService } from '../components/InputDoneScreenComponents/inputService/PickService'
+import { useAppTheme } from '../CommonComponents/Theme'
+import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
+import { RegMaintenance } from '../components/HomeScreenComponents/RegMaintenance'
 
 interface ListCar {
   label: string
@@ -22,8 +38,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const setCar = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
   const car = useAppSelector(state => state.cars)
-  /* const state = useAppSelector(state => state) */
-  const { colors } = useTheme()
+  const state = useAppSelector(state => state)
+  const { colors } = useAppTheme()
 
   const itemsFuel = [
     { label: 'Дизель', value: 'Дизель' },
@@ -120,7 +136,9 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
   const [valueEngine, setValueEngine] = useState<string | undefined>('')
   const [valueGear, setValueGear] = useState<string | undefined>('')
-  /* const [valueCapacity, setValueCapacity] = useState<number>(0) */
+  const [regMaintenance, setMaintenance] = useState((car[numberCar].info.regMaintenance === undefined)
+    ? listService
+    : car[numberCar].info.regMaintenance)
 
   // ----------------------------------------------------------------------
   const inputDateBuy = (): void => DateTimePickerAndroid.open({
@@ -189,8 +207,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     }
     return tempList
   }
-  // ----------------------------------------------------------------------
-
+  // ---------------------Pick Service-----------------------------------
+  const [visibleModalService, setVisibleModalService] = useState(false)
   // --------------------DropEffect----------------------------------------
   useEffect(() => {
     setItemsBrand(listBrand())
@@ -405,7 +423,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             </View>
           </View>
         <Divider horizontalInset bold style={{ marginTop: 8, marginBottom: 6 }} />
-          <View style={[styles.input, { width: '50%', alignSelf: 'center' }]}>
+          <View style={styles.viewGroupEngine}>
             <TextInput
               mode={'outlined'}
               /* ref={inputSellerLink} */
@@ -415,6 +433,9 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               value={String(valueCurrentMileage)}
               onChangeText={(value) => setValueCurrentMileage(Number(value))}
             />
+            <Button mode={'outlined'} onPress={() => setVisibleModalService(true)}>
+              Регламент ТО
+            </Button>
           </View>
         <View style={styles.viewButton}>
 
@@ -440,6 +461,19 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           </Button>
         </View>
     </ScrollView>
+
+      {
+        // -------------------------- Modal for selecting type of service ---------------------------
+      }
+      <Portal>
+        <Modal visible={visibleModalService} onDismiss={() => setVisibleModalService(false)} dismissableBackButton
+               contentContainerStyle={{ marginHorizontal: 20, backgroundColor: colors.background, borderRadius: 5, padding: 3 }}>
+            <RegMaintenance listMaintenance={regMaintenance} />
+        </Modal>
+      </Portal>
+      {
+        // -------------------------------------------------------------------------------------------
+      }
 
     </BackgroundView>
 
