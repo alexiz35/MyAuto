@@ -13,12 +13,10 @@ import {
   Divider,
   Portal,
   Dialog,
-  TextInput, Modal, HelperText
+  TextInput, HelperText
 } from 'react-native-paper'
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { PickService } from '../InputDoneScreenComponents/inputService/PickService'
-import { handlePress } from 'react-native-paper/lib/typescript/components/RadioButton/utils'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,

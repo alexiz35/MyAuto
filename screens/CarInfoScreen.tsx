@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ListService, StateInfo } from '../type'
 import { editCar, updateMiles } from '../components/Redux/actions'
 import { RootStackParamList } from '../components/Navigation/Navigation'
@@ -15,9 +15,7 @@ import {
   Button,
   Divider,
   Portal,
-  Modal,
-  Surface,
-  IconButton, Text
+  Modal
 } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
