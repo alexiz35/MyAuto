@@ -1,9 +1,9 @@
-import { View, StyleSheet, ScrollView, FlatList } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ListService, StateInfo } from '../type'
-import { delService, editCar, updateMiles } from '../components/Redux/actions'
+import { editCar, updateMiles } from '../components/Redux/actions'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { cars } from '../cars.json'
 import { Dropdown } from 'react-native-element-dropdown'
@@ -12,18 +12,13 @@ import { BusyIndicator, useIsReady } from '../components/useIsReadyHook'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import {
   TextInput,
-  useTheme,
   Button,
   Divider,
   Portal,
   Modal,
-  List,
-  Card,
-  Menu,
-  IconButton,
-  Text
+  Surface,
+  IconButton, Text
 } from 'react-native-paper'
-import { PickService } from '../components/InputDoneScreenComponents/inputService/PickService'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
 import { RegMaintenance } from '../components/HomeScreenComponents/RegMaintenance'
@@ -107,7 +102,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     viewButton: {
       flexDirection: 'row',
       justifyContent: 'space-around',
-      marginTop: 30,
+      marginTop: 20,
       columnGap: 25
     },
     buttonStyle: {
@@ -136,7 +131,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
   const [valueEngine, setValueEngine] = useState<string | undefined>('')
   const [valueGear, setValueGear] = useState<string | undefined>('')
-  const [regMaintenance, setMaintenance] = useState((car[numberCar].info.regMaintenance === undefined)
+  const [regMaintenance, setRegMaintenance] = useState<ListService[]>(car[numberCar].info.regMaintenance === undefined
     ? listService
     : car[numberCar].info.regMaintenance)
 
@@ -157,7 +152,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       gear: valueGear,
       vin: valueVin,
       dateBuy: valueDateBuy,
-      buyMileage: valueBuyMileage
+      buyMileage: valueBuyMileage,
+      regMaintenance
     }
     setCar(editCar(numberCar, carInfo))
     const tempCurrentMileage = { currentMileage: valueCurrentMileage, dateMileage: new Date() }
@@ -209,6 +205,15 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   }
   // ---------------------Pick Service-----------------------------------
   const [visibleModalService, setVisibleModalService] = useState(false)
+
+  const okModalMaintenance = (listMaintenance: ListService[]): void => {
+    setVisibleModalService(false)
+    setRegMaintenance(listMaintenance)
+  }
+  const cancelModalMaintenance = (): void => {
+    setVisibleModalService(false)
+  }
+
   // --------------------DropEffect----------------------------------------
   useEffect(() => {
     setItemsBrand(listBrand())
@@ -369,6 +374,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           <View style={{ flex: 1 }}>
                     <TextInput
                       mode={'outlined'}
+                      dense
                       /* ref={inputSellerName} */
                       placeholder={'тип двигателя'}
                       label={'тип двигателя'}
@@ -379,6 +385,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           <View style={{ flex: 1 }}>
                     <TextInput
                       mode={'outlined'}
+                      dense
                       /* ref={inputSellerPhone} */
                       label={'трансмиссия'}
                       placeholder={'трансмиссия'}
@@ -391,6 +398,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         <View style={styles.input}>
             <TextInput
               mode={'outlined'}
+              dense
               /* ref={inputSellerLink} */
               placeholder={'VIN код автомобиля'}
               label={'VIN код автомобиля'}
@@ -402,6 +410,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             <View style={styles.input}>
               <TextInput
                 mode={'outlined'}
+                dense
                 /* ref={inputSellerName} */
                 placeholder={'дата покупки'}
                 showSoftInputOnFocus={false}
@@ -413,6 +422,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             <View style={styles.input}>
               <TextInput
                 mode={'outlined'}
+                dense
                 /* ref={inputSellerPhone} */
                 placeholder={'пробег при покупке'}
                 label={'пробег при покупке'}
@@ -423,19 +433,32 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             </View>
           </View>
         <Divider horizontalInset bold style={{ marginTop: 8, marginBottom: 6 }} />
-          <View style={styles.viewGroupEngine}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 5, columnGap: 10 }}>
+          <Button mode={'outlined'} style={{ borderRadius: 5, backgroundColor: colors.surface, flex: 1 }}
+                  onPress={() => setVisibleModalService(true)}>
+            Регламент ТО
+          </Button>
+          <Button
+            icon={'restore'} mode={'outlined'}
+            style={{ borderRadius: 5, height: 45, backgroundColor: colors.surface, flex: 1 }}
+            onPress={() => setRegMaintenance(listService)}>
+            Сброс ТО
+          </Button>
+        </View>
+        <Divider horizontalInset bold style={{ marginTop: 8, marginBottom: 6 }} />
+
+        <View style={styles.viewGroupEngine}>
             <TextInput
               mode={'outlined'}
+              /* style={{ backgroundColor: colors.surface }} */
+              dense
               /* ref={inputSellerLink} */
               placeholder={'текущий пробег'}
-              label={'текуший пробег'}
+              label={'текущий пробег'}
               keyboardType={'numeric'}
               value={String(valueCurrentMileage)}
               onChangeText={(value) => setValueCurrentMileage(Number(value))}
             />
-            <Button mode={'outlined'} onPress={() => setVisibleModalService(true)}>
-              Регламент ТО
-            </Button>
           </View>
         <View style={styles.viewButton}>
 
@@ -468,7 +491,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       <Portal>
         <Modal visible={visibleModalService} onDismiss={() => setVisibleModalService(false)} dismissableBackButton
                contentContainerStyle={{ marginHorizontal: 20, backgroundColor: colors.background, borderRadius: 5, padding: 3 }}>
-            <RegMaintenance listMaintenance={regMaintenance} />
+            <RegMaintenance listMaintenance={regMaintenance} okPress={okModalMaintenance} cancelPress={cancelModalMaintenance}/>
         </Modal>
       </Portal>
       {

@@ -106,7 +106,7 @@ export interface StateInfo {
   vin?: string
   dateBuy: Date
   buyMileage: number
-  regMaintenance?: ListService[]
+  regMaintenance: ListService[]
 }
 export const initialStateInfo = {
   brand: '',
