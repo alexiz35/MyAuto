@@ -29,7 +29,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { useAppTheme } from '../CommonComponents/Theme'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
-type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'FuelScreen'>, NativeStackScreenProps<RootStackParamList>>
+type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
 
 interface FormFuel {
   dateFuel: Date
@@ -356,7 +356,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
                       mode={'elevated'}
                       buttonColor={colors.secondaryContainer}
                       textColor={colors.primary}
-                      onPress={handleSubmit(handleOk) }
+                      onPress={handleSubmit(handleOk)}
                     >
                       Ok
                     </Button>

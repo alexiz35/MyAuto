@@ -1,12 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { Alert, StyleSheet, TouchableHighlight, View, ScrollView } from 'react-native'
-import { Button, Text, Divider, Checkbox, Icon } from 'react-native-paper'
+import { Button, Text, Divider, Checkbox, Icon, List, Switch, IconButton } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
-import { addToken, changeAlarmPeriod, changeAlarmStart, updateState } from '../components/Redux/actions'
+import { addToken, changeAlarmPeriod, changeAlarmStart, changeTheme, updateState } from '../components/Redux/actions'
 import {
   deleteGoogleAuth,
   GDCreateFileJson,
@@ -14,10 +14,10 @@ import {
   GDGetUserInfo, GDUpdateFileJson,
   GDUserInfo,
   getRefreshToken
-} from '../components/GoogleAPI'
+} from '../components/GoogleAccount/GoogleAPI'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { useAppTheme } from '../CommonComponents/Theme'
+import { CombinedDarkTheme, CombinedDefaultTheme, useAppTheme } from '../CommonComponents/Theme'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -31,6 +31,25 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const [userInfo, setUserInfo] = useState<GDUserInfo | null>(null)
   const [auth, setAuth] = useState(!(state.token === ''))
   const [idParent, setIdParent] = useState('')
+
+  // ****************************** THEME change *********************************
+  // ------------------------- Toggle Theme --------------------------------------
+  const theme2 = useAppSelector(state => state.setting.themeSet)
+  /* const [switchTheme, setSwitchTheme] = useState(false)
+  const toggleSwitchTheme = (): void => {
+    setSwitchTheme(!switchTheme)
+    toggleTheme()
+  } */
+  /*   const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme */
+
+  const toggleTheme = useCallback(() => {
+    (theme2 === 'dark')
+      ? dispatch(changeTheme('light'))
+      : dispatch(changeTheme('dark'))
+  }, [theme2])
+
+  // -----------------------------------------------------------------------------
+  // ****************************** ALARM section *********************************
 
   const [checkAlarmStart, setCheckAlarmStart] =
     useState<'checked' | 'unchecked' | 'indeterminate'>(state.setting.alarmMileageStart ? 'checked' : 'unchecked')
@@ -61,7 +80,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         break
     }
   }
-
+  // ****************************** GOOGLE account *********************************
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: '192692660431-2is6dth1j1d4c8j6mnfa91arctkgksnm.apps.googleusercontent.com',
     webClientId: '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
@@ -114,7 +133,6 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    console.log('useEff', auth)
     if (token !== '') {
       void getUserInfo()
     }
@@ -261,11 +279,29 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         console.log(res)
       })
   }
+  // ******************************  *********************************
 
   return (
     <BackgroundView >
       <ScrollView nestedScrollEnabled={true} style={{ paddingHorizontal: 10, height: '100%' }}>
+  {/*
+  *************************** Change THEME ******************************************
+  */}
         <Divider style={{ marginTop: 10 }} bold/>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={styles.iconText}>
+          <Icon source={'circle'} color={colors.tertiary} size={10} />
+          <Text style={styles.text}>Переключение темы</Text>
+        </View>
+          <View style={{ paddingRight: 10 }}>
+          <IconButton icon={'theme-light-dark'} size={18} mode={'outlined'} onPress={toggleTheme} />
+          {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
+          </View>
+        </View>
+  {/*
+  *************************** GOOGLE account ******************************************
+  */}
+        <Divider bold/>
         <View style={styles.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
           <Text style={styles.text}>Мои машины</Text>

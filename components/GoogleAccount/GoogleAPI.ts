@@ -1,4 +1,4 @@
-import { StateMain } from '../type'
+import { StateMain } from '../../type'
 
 export interface ResponseFolder {
   kind: string

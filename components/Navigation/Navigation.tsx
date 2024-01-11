@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler'
 import {
-  CompositeScreenProps, NavigationContainer, NavigatorScreenParams
+  CompositeScreenProps, NavigationContainer, NavigatorScreenParams, useNavigation, useNavigationContainerRef
 }
   from '@react-navigation/native'
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -222,7 +222,6 @@ export const Navigation = (): JSX.Element => {
   // ------------------------- Toggle Theme --------------------------------------
   const theme2 = useAppSelector(state => state.setting.themeSet)
   const dispatch = useAppDispatch()
-
   const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme
 
   const toggleTheme = useCallback(() => {
@@ -295,17 +294,17 @@ export const Navigation = (): JSX.Element => {
     <NavigationContainer >
       <Stack.Navigator screenOptions={ {
         headerTransparent: false,
-        statusBarStyle: 'dark',
+        statusBarStyle: 'dark'
 
-        headerRight: () => (
+        /* headerRight: (navigation) => (
             <IconButton
               mode='outlined'
               rippleColor={theme.colors.primary}
-              icon={'theme-light-dark'}
+              icon={'tune'}
               size={20}
-              onPress={() => toggleTheme()}/>
-
-        )
+              onPress={() => toggleTheme
+                }/>
+        ) */
       }}>
         {/* <Stack.Screen
           name='Home'
@@ -348,12 +347,9 @@ export const Navigation = (): JSX.Element => {
             headerStyle: { backgroundColor: theme.colors.background },
             headerTitle: () => (
                   <TouchableRipple
-                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     onPress={() =>
                       navigation.navigate('SettingScreen')
-                    /* async () => {
-                      await AsyncStorage.clear()
-                    } */}>
+                    }>
                     <LogoTitle />
                   </TouchableRipple>
             ),
@@ -361,6 +357,17 @@ export const Navigation = (): JSX.Element => {
                   <View>
                     <Text >Today: {/* {Math.trunc(distance)} */} m</Text>
                   </View>
+            ),
+            headerRight: () => (
+                <IconButton
+                  mode='outlined'
+                  rippleColor={theme.colors.primary}
+                  icon={'tune'}
+                  size={20}
+                  onPress={() =>
+                    navigation.navigate('SettingScreen')
+                  }
+                  />
             ),
             title: 'title'
           }
@@ -392,11 +399,22 @@ export const Navigation = (): JSX.Element => {
         <Stack.Screen
           name='FuelScreen'
           component={FuelScreen}
-          options={{
+          options={({ navigation }) => ({
             headerStyle: { backgroundColor: theme.colors.background },
             title: 'Fuel',
-            headerTintColor: theme.colors.onBackground
-          }} />
+            headerTintColor: theme.colors.onBackground,
+            headerRight: () => (
+              <IconButton
+                mode='outlined'
+                rippleColor={theme.colors.primary}
+                icon={'tune'}
+                size={20}
+                onPress={() =>
+                  navigation.navigate('SettingScreen')
+                }
+              />
+            )
+          })} />
         {
 // ----------------------------TaskPartScreen-------------------------------
         }
