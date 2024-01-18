@@ -1,9 +1,8 @@
 import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
 import { StateTask } from '../type'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
+import { RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-/* import { printToFile } from '../components/Print/Print' */
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { TasksList } from '../components/TaskScreenComponents/TasksList'
@@ -12,18 +11,12 @@ import { useNavigation } from '@react-navigation/native'
 import { Button, Dialog, List, Portal, ToggleButton, Text } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import InputTaskComponent from '../components/TaskScreenComponents/InputTaskComponent'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'TaskScreen'>
-/* type ProfileScreenNavigationProp = NativeStackNavigationProp<
-RootStackParamList,
-'TaskScreen'> */
 
-const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
+const TaskScreen = ({ navigation }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
-  /* const nav2 = useNavigation<ProfileScreenNavigationProp>() */
-  const nav2 = useNavigation<Props>()
   const { colors } = useAppTheme()
   const nav = useNavigation()
   const [openAccordion, setOpenAccordion] = useState(false)

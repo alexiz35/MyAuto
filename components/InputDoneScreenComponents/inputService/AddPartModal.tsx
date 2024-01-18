@@ -43,7 +43,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
       quantityPart: String(data.quantityPart),
       sellerName: data.seller?.name === undefined ? '' : data.seller.name,
       sellerPhone: data.seller?.phone === undefined ? '' : data.seller.phone,
-      sellerLink: data.seller?.link === undefined ? '' : data.seller.link
+      sellerLink: data.seller?.web === undefined ? '' : data.seller.web
     }
   }
 
@@ -57,7 +57,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
       seller: {
         name: data.sellerName,
         phone: data.sellerPhone,
-        link: data.sellerLink
+        web: data.sellerLink
       }
     }
   }

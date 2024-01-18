@@ -17,7 +17,7 @@ import {
 } from '../components/GoogleAccount/GoogleAPI'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { CombinedDarkTheme, CombinedDefaultTheme, useAppTheme } from '../CommonComponents/Theme'
+import { useAppTheme } from '../CommonComponents/Theme'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -251,8 +251,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     }
   }
 
-  const handleCreateFile = async (): Promise<void> => {
-    /*
+  /* const handleCreateFile = async (): Promise<void> => {
+    /!*
     const fileContent = JSON.stringify(state)// As a sample, upload a text file.
     const file = new Blob([fileContent], { type: 'application/json' })
     const metadata = {
@@ -272,13 +272,13 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     })
 
     const user = await response.json()
-    console.log('createFile', user) */
+    console.log('createFile', user) *!/
 
     void await GDCreateFileJson(state, 'rere', 'root', token)
       .then(res => {
         console.log(res)
       })
-  }
+  } */
   // ******************************  *********************************
 
   return (
@@ -296,6 +296,20 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           <View style={{ paddingRight: 10 }}>
           <IconButton icon={'theme-light-dark'} size={18} mode={'outlined'} onPress={toggleTheme} />
           {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
+          </View>
+        </View>
+  {/*
+  *************************** Seller List ******************************************
+  */}
+        <Divider style={{ marginTop: 1 }} bold/>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={styles.iconText}>
+            <Icon source={'circle'} color={colors.tertiary} size={10} />
+            <Button style={styles.text} onPress={() => navigation.navigate('SellerScreen')}>Список поставщиков</Button>
+          </View>
+          <View style={{ paddingRight: 10 }}>
+            {/* <IconButton icon={'theme-light-dark'} size={18} mode={'outlined'} onPress={toggleTheme} /> */}
+            {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
           </View>
         </View>
   {/*

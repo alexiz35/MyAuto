@@ -10,6 +10,7 @@ export const initialState: StateMain = {
     alarmMileagePeriod: true,
     alarmMileagePeriodNumber: 6
   },
+  sellerList: [],
   cars: [
     {
       info: initialStateInfo,
@@ -172,6 +173,36 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
       return {
         ...state,
         cars: newArray
+      }
+    }
+
+    // -------------------------------------------------------------------
+    case ActionType.ADD_SELLER: {
+      const tempSeller = state.sellerList
+      tempSeller.push(action.payload.seller)
+      return {
+        ...state,
+        sellerList: tempSeller
+      }
+    }
+
+    case ActionType.DEL_SELLER: {
+      const tempSellerList = state.sellerList
+      const tempSeller = tempSellerList.filter(item => item.id !== action.payload.id)
+
+      return {
+        ...state,
+        sellerList: tempSeller
+      }
+    }
+
+    case ActionType.EDIT_SELLER: {
+      const tempSellerList = state.sellerList
+      const tempSeller = tempSellerList.filter(item => item.id !== action.payload.id)
+      const editSeller = tempSeller.concat(action.payload.seller)
+      return {
+        ...state,
+        sellerList: editSeller
       }
     }
 

@@ -46,7 +46,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
 
   const addPart = (): void => {
     if (namePart === '') return
-    setSeller({ ...seller, name: sellerName, phone: sellerPhone, link: sellerLink })
+    setSeller({ ...seller, name: sellerName, phone: sellerPhone, web: sellerLink })
     setParts([...parts, { id: Date.now(), namePart, costPart, quantityPart, numberPart, seller }])
     setNamePart('')
     setCostPart(0)

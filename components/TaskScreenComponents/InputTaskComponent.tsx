@@ -83,7 +83,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
       amount: data.amount === undefined || data.amount === 0 ? '' : String(data.amount),
       sellerName: data.seller?.name === undefined ? '' : String(data.seller?.name),
       sellerPhone: data.seller?.phone === undefined ? '' : String(data.seller?.phone),
-      sellerWeb: data.seller?.link === undefined ? '' : String(data.seller?.link),
+      sellerWeb: data.seller?.web === undefined ? '' : String(data.seller?.web),
       isFinished: data.isFinished
     }
   }
@@ -104,7 +104,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
       seller: {
         name: data.sellerName,
         phone: data.sellerPhone,
-        link: data.sellerWeb
+        web: data.sellerWeb
       },
       isFinished: data.isFinished
     }

@@ -35,6 +35,9 @@ export enum ActionType {
   ADD_FUEL = 'ADD_FUEL',
   DEL_FUEL = 'DEL_FUEL',
   EDIT_FUEL = 'EDIT_FUEL',
+  ADD_SELLER = 'ADD_SELLER',
+  DEL_SELLER = 'DEL_SELLER',
+  EDIT_SELLER = 'EDIT_SELLER',
   ADD_PARTS = 'ADD_PARTS',
   DEL_PARTS = 'DEL_PARTS',
   EDIT_PARTS = 'EDIT_PARTS',
@@ -53,6 +56,7 @@ export interface StateMain {
   numberCar: number
   token: string
   setting: Setting
+  sellerList: Seller[]
 }
 export interface Setting {
   themeSet: string
@@ -73,13 +77,13 @@ export interface StateCar {
   tasks: StateTask[]
 }
 
-export interface StateListSeller {
+/* export interface StateListSeller {
   name: string
   phone: string
   web: string
   specialism: string
   type: string
-}
+} */
 
 // ---------------------------------------------------------------------------------
 
@@ -180,9 +184,12 @@ export interface StateOther {
   seller?: Seller
 }
 export interface Seller {
+  id?: number
   name: string
   phone?: string
-  link?: string
+  web?: string
+  type?: string
+  specialism?: string
 }
 
 export interface StateTask {
@@ -346,6 +353,29 @@ export interface ActionEditFuel {
     fuel: StateFuel
   }
 }
+
+// ----------------------------- interface ActionSeller -------------------------
+
+export interface ActionAddSeller {
+  type: ActionType.ADD_SELLER
+  payload: {
+    seller: Seller
+  }
+}
+export interface ActionDelSeller {
+  type: ActionType.DEL_SELLER
+  payload: {
+    id: number
+  }
+}
+
+export interface ActionEditSeller {
+  type: ActionType.EDIT_SELLER
+  payload: {
+    id: number | undefined
+    seller: Seller
+  }
+}
 // ----------------------------- interface ActionParts -------------------------
 export interface ActionAddParts {
   type: ActionType.ADD_PARTS
@@ -450,7 +480,8 @@ ActionUpdateState | ActionAddFuel | ActionDelFuel | ActionEditFuel |
 ActionAddParts | ActionDelParts | ActionEditParts | ActionInstallPart |
 ActionAddOthers | ActionDelOthers | ActionEditOthers |
 ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask | ActionChangeTheme |
-ActionAlarmMileageStart | ActionAlarmMileagePeriod | ActionAlarmMileagePeriodNumber
+ActionAlarmMileageStart | ActionAlarmMileagePeriod | ActionAlarmMileagePeriodNumber |
+ActionAddSeller | ActionEditSeller | ActionDelSeller
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

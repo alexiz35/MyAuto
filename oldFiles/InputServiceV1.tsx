@@ -200,7 +200,7 @@ const InputService = ({ navigation, route }: Props): JSX.Element => {
           amountCostPart: item.costPart * item.quantityPart,
           seller: {
             name: item.seller?.name,
-            link: item.seller?.link,
+            web: item.seller?.web,
             phone: item.seller?.phone
           }
         }

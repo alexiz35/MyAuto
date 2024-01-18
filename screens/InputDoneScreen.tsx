@@ -10,7 +10,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { useFocusEffect } from '@react-navigation/native'
 
   type Props = BottomTabScreenProps<RootTabParamList, 'InputDoneScreen'>
-const InputDoneScreen = ({ navigation, route }: Props): JSX.Element => {
+const InputDoneScreen = ({ route }: Props): JSX.Element => {
   const [typeBuy, setTypeBuy] = useState('part')
 
   useFocusEffect(

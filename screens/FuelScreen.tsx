@@ -25,11 +25,11 @@ import {
 } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { CompositeScreenProps } from '@react-navigation/native'
+import { CompositeScreenProps, useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../CommonComponents/Theme'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
-type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
+type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'StatScreen'>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
 
 interface FormFuel {
   dateFuel: Date
@@ -174,7 +174,9 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
               Cумма заправок в текущем месяце {sumFuel}
 
             </Text>
-            <IconButton icon={'calendar-month'} onPress={() => { navigation.navigate('StatScreen') }} />
+            <IconButton icon={'calendar-month'} onPress={() => {
+              navigation.navigate('StatScreen')
+            }} />
         </View>
         {
 /* ----------------------- Form Accordion ----------------------------------- */
@@ -191,9 +193,9 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
 
               <View style={{ backgroundColor: colors.background, rowGap: 10 }}>
 
-                {
+    {
 /* ----------------------- Date and Miles ----------------------------------- */
-                }
+    }
                 <View style={[styles.viewGroupInput, { marginTop: 20 }]}>
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'dateFuel'}
@@ -356,7 +358,8 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
                       mode={'elevated'}
                       buttonColor={colors.secondaryContainer}
                       textColor={colors.primary}
-                      onPress={handleSubmit(handleOk)}
+                      /* eslint-disable-next-line */
+                      onPress={handleSubmit(handleOk) }
                     >
                       Ok
                     </Button>

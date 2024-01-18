@@ -44,7 +44,7 @@ const InputTaskPartScreen = ({ isCancel, isOk, part }: InputPartProps): JSX.Elem
     seller: {
       name: '',
       phone: '',
-      link: ''
+      web: ''
     }
   }
 

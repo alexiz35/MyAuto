@@ -20,7 +20,7 @@ export const ModalInfoPart = ({ currentTask, currentPart, onPressCancel }: Modal
   const initSeller: Seller = {
     name: '',
     phone: '',
-    link: ''
+    web: ''
   }
   const setEditTask = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
@@ -203,9 +203,9 @@ export const ModalInfoPart = ({ currentTask, currentPart, onPressCancel }: Modal
         inputStyle={styles.inputText}
         errorMessage={'данные продавца'}
         errorStyle={styles.errorInput}
-        value={String(seller?.link)}
+        value={String(seller?.web)}
         onChangeText={
-          (value) => setSeller({ ...seller, link: value })
+          (value) => setSeller({ ...seller, web: value })
         }
       />
     </View>

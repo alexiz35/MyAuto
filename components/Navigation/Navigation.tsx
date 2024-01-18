@@ -20,7 +20,6 @@ import TaskScreen from '../../screens/TaskScreen'
 /* import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs' */
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FuelScreen from '../../screens/FuelScreen'
-import { Shadow } from 'react-native-shadow-2'
 import * as Print from 'expo-print'
 import { shareAsync } from 'expo-sharing'
 import { printToFile } from '../Print/Print'
@@ -45,6 +44,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
 import { changeTheme } from '../Redux/actions'
+import SellerScreen from '../../screens/SellerScreen'
 
 type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
@@ -56,6 +56,7 @@ export type RootStackParamList = {
   CarInfoScreen: undefined
   SettingScreen: undefined
   FuelScreen: undefined
+  SellerScreen: undefined
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootTabParamList = {
@@ -393,8 +394,30 @@ export const Navigation = (): JSX.Element => {
             headerTintColor: theme.colors.onBackground
           }} />
         {
-// -----------------------------------------------------------------------------
-// ------------------------------FuelScreen----------------------------------
+  // ------------------------------SellerScreen--------------------------------
+        }
+        <Stack.Screen
+          name='SellerScreen'
+          component={SellerScreen}
+          options={({ navigation }) => ({
+            headerStyle: { backgroundColor: theme.colors.background },
+            title: 'Список поставщиков',
+            headerTintColor: theme.colors.onBackground
+            /*  headerRight: () => (
+              <IconButton
+                mode='outlined'
+                rippleColor={theme.colors.primary}
+                icon={'tune'}
+                size={20}
+                onPress={() =>
+                  navigation.navigate('SettingScreen')
+                }
+              />
+            ) */
+          })} />
+        {
+  // ---------------------------------------------------------------------------
+  // ------------------------------FuelScreen-----------------------------------
         }
         <Stack.Screen
           name='FuelScreen'

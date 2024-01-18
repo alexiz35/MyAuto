@@ -45,7 +45,7 @@ const InputPartComponent = ({ isCancel, isOk, part }: InputPartProps): JSX.Eleme
     seller: {
       name: '',
       phone: '',
-      link: ''
+      web: ''
     }
   }
 

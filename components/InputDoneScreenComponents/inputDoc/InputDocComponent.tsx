@@ -62,7 +62,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
       seller: {
         name: data.seller?.name === undefined ? '' : data.seller?.name,
         phone: data.seller?.phone === undefined ? '' : data.seller?.phone,
-        link: data.seller?.link === undefined ? '' : data.seller.link
+        link: data.seller?.web === undefined ? '' : data.seller.web
       }
     }
   }
@@ -77,7 +77,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
       seller: {
         name: data.seller.name,
         phone: data.seller.phone,
-        link: data.seller.link
+        web: data.seller.link
       }
     }
   }

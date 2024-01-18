@@ -73,7 +73,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
       sunCostService: data.sumCostService === undefined || data.sumCostService === 0 ? '' : String(data.sumCostService),
       sellerName: data.addition?.services?.name === undefined ? '' : String(data.addition?.services?.name),
       sellerPhone: data.addition?.services?.phone === undefined ? '' : String(data.addition?.services?.phone),
-      sellerWeb: data.addition?.services?.link === undefined ? '' : String(data.addition?.services?.link)
+      sellerWeb: data.addition?.services?.web === undefined ? '' : String(data.addition?.services?.web)
     }
   }
 
@@ -94,7 +94,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
         services: {
           name: data.sellerName,
           phone: data.sellerPhone,
-          link: data.sellerWeb
+          web: data.sellerWeb
         }
       }
     }

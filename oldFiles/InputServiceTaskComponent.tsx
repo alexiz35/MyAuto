@@ -97,7 +97,7 @@ const InputServiceTaskComponents = ({ isCancel, isOk, service = null }: InputSer
     setAmountCostServiceTask(item.amountCostService)
     if (item.seller?.name !== undefined) setSeller(item.seller?.name)
     if (item.seller?.phone !== undefined) setSellerPhone(item.seller?.phone)
-    if (item.seller?.link !== undefined) setSellerWeb(item.seller?.link)
+    if (item.seller?.web !== undefined) setSellerWeb(item.seller?.web)
     setIsEditPart(true)
     /* setItemPart(item) */
     /* handleOnPress() */
@@ -122,7 +122,7 @@ const InputServiceTaskComponents = ({ isCancel, isOk, service = null }: InputSer
       seller: {
         name: seller,
         phone: sellerPhone,
-        link: sellerWeb
+        web: sellerWeb
       }
     }
 

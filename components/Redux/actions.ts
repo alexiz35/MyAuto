@@ -1,18 +1,18 @@
 import {
   ActionAddCar,
-  ActionAddFuel, ActionAddOthers, ActionAddParts,
+  ActionAddFuel, ActionAddOthers, ActionAddParts, ActionAddSeller,
   ActionAddService, ActionAddTask,
   ActionAddToken, ActionAlarmMileagePeriod, ActionAlarmMileagePeriodNumber, ActionAlarmMileageStart, ActionChangeTheme,
-  ActionDelFuel, ActionDelOthers, ActionDelParts,
+  ActionDelFuel, ActionDelOthers, ActionDelParts, ActionDelSeller,
   ActionDelService, ActionDelTask,
   ActionDelToken,
-  ActionEditCar, ActionEditFuel, ActionEditOthers, ActionEditParts,
+  ActionEditCar, ActionEditFuel, ActionEditOthers, ActionEditParts, ActionEditSeller,
   ActionEditService, ActionEditTask,
   ActionFinishTask, ActionInstallPart,
   ActionMiles,
   ActionType,
   ActionUpdateState,
-  CurrentMiles,
+  CurrentMiles, Seller,
   StateCar,
   StateFuel,
   StateInfo,
@@ -155,6 +155,31 @@ export const editFuel = (carId: number, id: number | undefined, fuel: StateFuel)
       carId,
       id,
       fuel
+    }
+  })
+// ----------------------------- Action Seller -----------------------------------
+export const addSeller = (seller: Seller): ActionAddSeller => (
+  {
+    type: ActionType.ADD_SELLER,
+    payload: {
+      seller
+    }
+  })
+
+export const delSeller = (id: number): ActionDelSeller => (
+  {
+    type: ActionType.DEL_SELLER,
+    payload: {
+      id
+    }
+  })
+
+export const editSeller = (id: number, seller: Seller): ActionEditSeller => (
+  {
+    type: ActionType.EDIT_SELLER,
+    payload: {
+      id,
+      seller
     }
   })
 // -----------------------------------------------------------------------------
