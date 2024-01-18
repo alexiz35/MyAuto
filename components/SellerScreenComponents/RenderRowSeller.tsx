@@ -1,17 +1,18 @@
-import { Seller, StateFuel } from '../type'
-import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { Seller, StateFuel } from '../../type'
+import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useState } from 'react'
-import { useAppTheme } from '../CommonComponents/Theme'
+import { useAppTheme } from '../../CommonComponents/Theme'
 import { StyleSheet, View } from 'react-native'
-import { Card, IconButton, Menu } from 'react-native-paper'
-import { delFuel, delSeller } from '../components/Redux/actions'
+import { Card, Icon, IconButton, Menu } from 'react-native-paper'
+import { delSeller } from '../Redux/actions'
 
 interface propsRowSeller {
   handlePress: (item: Seller) => void
+  editPress: (item: Seller) => void
   item: Seller
 }
 
-export const RenderRowSeller = ({ item, handlePress }: propsRowSeller): JSX.Element => {
+export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
 
@@ -36,13 +37,13 @@ export const RenderRowSeller = ({ item, handlePress }: propsRowSeller): JSX.Elem
       >
 
         <Card.Title
-          style={{ flex: 3.6, paddingLeft: 2 }}
+          style={{ flex: 3.6, paddingLeft: 2, minHeight: 20 }}
           leftStyle={{ marginRight: 2 }}
-          /* left={(props) =>
-            <IconButton {...props} icon={'gas-station'} size={22} iconColor={colors.tertiary} style={{ paddingRight: 6 }}/>
-          } */
+          left={(props) =>
+            <Icon {...props} source={item.type === 'seller' ? 'car-cog' : 'car-wrench'} size={22} color={colors.tertiary} />
+          }
           title={String(item.name)}
-          titleStyle={{ paddingRight: 2 }}
+          titleStyle={{ paddingRight: 2, textAlignVertical: 'center' }}
           subtitleStyle={{ paddingRight: 2 }}
           /* subtitle={item.StationFuel} */
           titleVariant={'bodyMedium'}
@@ -93,7 +94,7 @@ export const RenderRowSeller = ({ item, handlePress }: propsRowSeller): JSX.Elem
             />
             <Menu.Item title={'edit'}
                        onPress={() => {
-                         handlePress(item)
+                         editPress(item)
                        }}
                        dense
                        leadingIcon={'file-document-edit'}

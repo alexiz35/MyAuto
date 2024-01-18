@@ -1,6 +1,6 @@
 import { FlatList, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
 import { RenderRowFuel } from '../components/FuelScreenComponents/fuelRow'
-import { SellerList } from './SellerList'
+import { SellerList } from '../components/SellerScreenComponents/SellerList'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { Seller, StateFuel } from '../type'
@@ -9,8 +9,20 @@ import { Controller, useForm } from 'react-hook-form'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, addSeller, editFuel, editSeller } from '../components/Redux/actions'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { Button, HelperText, IconButton, List, RadioButton, Surface, Text, TextInput, ToggleButton } from 'react-native-paper'
+import {
+  Button,
+  HelperText,
+  IconButton,
+  List,
+  Portal,
+  RadioButton,
+  Surface,
+  Text,
+  TextInput,
+  ToggleButton
+} from 'react-native-paper'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
+import { ModalInfoSeller } from '../components/SellerScreenComponents/ModalInfoSeller'
 
 interface FormSeller {
   name: string
@@ -61,6 +73,8 @@ const SellerScreen = (): JSX.Element => {
   const [isList, setIsList] = useState(true)
   const [dateList, setDateList] = useState('last')
 
+  const [visibleInfo, setVisibleInfo] = useState(false)
+
   // ------------------------- Controller Form-----------------------------------
   const {
     control,
@@ -82,6 +96,13 @@ const SellerScreen = (): JSX.Element => {
       setValueDrop(state.info.fuel)
     }, [state.info.fuel])) */
 
+  const pressRowSeller = (item: Seller): void => {
+    setItemSeller(item)
+    setVisibleInfo(true)
+  }
+  const closeModalInfo = (): void => {
+    setVisibleInfo(false)
+  }
   // ------------------------- control according -------------------------------
   const handleOpen = (item: Seller): void => {
     setIsList(false)
@@ -328,13 +349,16 @@ const SellerScreen = (): JSX.Element => {
               <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
             </ToggleButton.Row>
 
-            <SellerList handlePress={handleOpen} filterList={dateList} />
+            <SellerList handlePress={pressRowSeller} filterList={dateList} editPress={handleOpen} />
 
           </View>
         }
         {
           /* -------------------------------------------------------------------------- */
         }
+        <Portal>
+          <ModalInfoSeller item={itemSeller} visible={visibleInfo} close={closeModalInfo} />
+        </Portal>
       </View>
     </BackgroundView>
   )

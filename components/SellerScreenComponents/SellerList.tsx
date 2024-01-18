@@ -1,17 +1,18 @@
-import { Seller, StateFuel } from '../type'
-import { useAppSelector } from '../components/Redux/hook'
+import { Seller, StateFuel } from '../../type'
+import { useAppSelector } from '../Redux/hook'
 import { useEffect, useState } from 'react'
-import { BusyIndicator } from '../components/useIsReadyHook'
+import { BusyIndicator } from '../useIsReadyHook'
 import { FlatList } from 'react-native'
-import { RenderRowFuel } from '../components/FuelScreenComponents/fuelRow'
+import { RenderRowFuel } from '../FuelScreenComponents/fuelRow'
 import { RenderRowSeller } from './RenderRowSeller'
 
 interface handleProp {
   handlePress: (item: Seller) => void
+  editPress: (item: Seller) => void
   filterList: string
 }
 
-export const SellerList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
+export const SellerList = ({ handlePress, editPress, filterList = 'last' }: handleProp): JSX.Element => {
   const listSeller = useAppSelector(state => state.sellerList)
   const [isSortFuel, setIsSortFuel] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
@@ -45,7 +46,7 @@ export const SellerList = ({ handlePress, filterList = 'last' }: handleProp): JS
           scrollEnabled
           data={filter()}
           extraData={isSortFuel}
-          renderItem={({ item }) => <RenderRowSeller item={item} handlePress={handlePress} />}
+          renderItem={({ item }) => <RenderRowSeller item={item} handlePress={handlePress} editPress={editPress}/>}
           keyExtractor={(item, index) => index.toString()}
           getItemLayout={(data, index) => (
             {

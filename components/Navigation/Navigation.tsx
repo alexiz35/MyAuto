@@ -361,6 +361,7 @@ export const Navigation = (): JSX.Element => {
             ),
             headerRight: () => (
                 <IconButton
+                  style={{ borderRadius: 5 }}
                   mode='outlined'
                   rippleColor={theme.colors.primary}
                   icon={'tune'}
@@ -428,6 +429,7 @@ export const Navigation = (): JSX.Element => {
             headerTintColor: theme.colors.onBackground,
             headerRight: () => (
               <IconButton
+                style={{ borderRadius: 5 }}
                 mode='outlined'
                 rippleColor={theme.colors.primary}
                 icon={'tune'}
