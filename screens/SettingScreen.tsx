@@ -6,7 +6,14 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useCallback, useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
-import { addToken, changeAlarmPeriod, changeAlarmStart, changeTheme, updateState } from '../components/Redux/actions'
+import {
+  addToken,
+  changeAlarmPeriod, changeAlarmPeriodNumber,
+  changeAlarmStart,
+  changeTheme,
+  delAllSeller,
+  updateState
+} from '../components/Redux/actions'
 import {
   deleteGoogleAuth,
   GDCreateFileJson,
@@ -18,6 +25,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
+import { store } from '../components/Redux/store'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -26,7 +34,6 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const state = useAppSelector(state => state)
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
-
   const [token, setToken] = useState('')
   const [userInfo, setUserInfo] = useState<GDUserInfo | null>(null)
   const [auth, setAuth] = useState(!(state.token === ''))
@@ -55,6 +62,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     useState<'checked' | 'unchecked' | 'indeterminate'>(state.setting.alarmMileageStart ? 'checked' : 'unchecked')
   const [checkAlarmPeriod, setCheckAlarmPeriod] =
     useState<'checked' | 'unchecked' | 'indeterminate'>(state.setting.alarmMileagePeriod ? 'checked' : 'unchecked')
+  const [checkAlarmPeriodNumber, setCheckAlarmPeriodNumber] =
+    useState<'checked' | 'unchecked' | 'indeterminate'>(state.setting.alarmMileagePeriodNumber === 2 ? 'unchecked' : 'checked')
   const pressAlarm = (typeCheck: string): void => {
     switch (typeCheck) {
       case 'alarmStart':
@@ -76,6 +85,17 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         } else if (checkAlarmPeriod === 'unchecked') {
           setCheckAlarmPeriod('checked')
           dispatch(changeAlarmPeriod(true))
+        }
+        break
+      case 'alarmPeriodNumber':
+
+        if
+        (checkAlarmPeriodNumber === 'checked') {
+          setCheckAlarmPeriodNumber('unchecked')
+          dispatch(changeAlarmPeriodNumber(2))
+        } else if (checkAlarmPeriodNumber === 'unchecked') {
+          setCheckAlarmPeriodNumber('checked')
+          dispatch(changeAlarmPeriodNumber(1))
         }
         break
     }
@@ -306,6 +326,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           <View style={styles.iconText}>
             <Icon source={'circle'} color={colors.tertiary} size={10} />
             <Button style={styles.text} onPress={() => navigation.navigate('SellerScreen')}>Список поставщиков</Button>
+            <Button style={styles.text} onPress={() => dispatch(delAllSeller())}>RESET</Button>
           </View>
           <View style={{ paddingRight: 10 }}>
             {/* <IconButton icon={'theme-light-dark'} size={18} mode={'outlined'} onPress={toggleTheme} /> */}
@@ -430,7 +451,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         <Checkbox.Item status={checkAlarmPeriod} label={'Периодическое напоминание в фоне'}
                        onPress={() => pressAlarm('alarmPeriod')} labelVariant={'bodyMedium'} />
         <Divider horizontalInset/>
-        <Checkbox.Item status={'unchecked'} label={'Синхронизация пробега с авто'} labelVariant={'bodyMedium'} disabled/>
+        <Checkbox.Item status={checkAlarmPeriodNumber} label={'Синхронизация пробега с авто'}
+                       onPress={() => pressAlarm('alarmPeriodNumber')} labelVariant={'bodyMedium'} />
         <Divider bold/>
 
         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}

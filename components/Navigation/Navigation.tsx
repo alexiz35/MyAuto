@@ -102,6 +102,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 export const Navigation = (): JSX.Element => {
   const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
     const theme = useTheme()
+    const listSeller = useAppSelector(state => state.sellerList)
     const FabTab = (): any => null
     /* const Tab = createMaterialBottomTabNavigator() */
 

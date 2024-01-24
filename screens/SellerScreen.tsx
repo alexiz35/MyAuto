@@ -123,10 +123,11 @@ const SellerScreen = (): JSX.Element => {
   }
 
   const handleOk = (dataForm: FormSeller): void => {
-    setTimeout(() =>
+    setTimeout(() => {
       isEditSeller
         ? dispatch(editSeller(itemSeller.id, formToData(dataForm)))
         : dispatch(addSeller(formToData(dataForm)))
+    }
     , 100)
     handleOnPress()
   }

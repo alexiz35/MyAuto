@@ -1,23 +1,46 @@
 import {
   ActionAddCar,
-  ActionAddFuel, ActionAddOthers, ActionAddParts, ActionAddSeller,
-  ActionAddService, ActionAddTask,
-  ActionAddToken, ActionAlarmMileagePeriod, ActionAlarmMileagePeriodNumber, ActionAlarmMileageStart, ActionChangeTheme,
-  ActionDelFuel, ActionDelOthers, ActionDelParts, ActionDelSeller,
-  ActionDelService, ActionDelTask,
+  ActionAddFuel,
+  ActionAddOthers,
+  ActionAddParts,
+  ActionAddSeller,
+  ActionAddService,
+  ActionAddTask,
+  ActionAddToken,
+  ActionAlarmMileagePeriod,
+  ActionAlarmMileagePeriodNumber,
+  ActionAlarmMileageStart,
+  ActionChangeTheme,
+  ActionDelAllSeller,
+  ActionDelFuel,
+  ActionDelOthers,
+  ActionDelParts,
+  ActionDelSeller,
+  ActionDelService,
+  ActionDelTask,
   ActionDelToken,
-  ActionEditCar, ActionEditFuel, ActionEditOthers, ActionEditParts, ActionEditSeller,
-  ActionEditService, ActionEditTask,
-  ActionFinishTask, ActionInstallPart,
+  ActionEditCar,
+  ActionEditFuel,
+  ActionEditOthers,
+  ActionEditParts,
+  ActionEditSeller,
+  ActionEditService,
+  ActionEditTask,
+  ActionFinishTask,
+  ActionInstallPart,
   ActionMiles,
   ActionType,
   ActionUpdateState,
-  CurrentMiles, Seller,
+  CurrentMiles,
+  Seller,
   StateCar,
   StateFuel,
   StateInfo,
-  StateMain, StateOther, StatePart,
-  StateService, StateTask
+  StateMain,
+  StateOther,
+  StatePart,
+  StateService,
+  StateTask
 } from '../../type'
 // -------------------------- Action State -------------------------------------
 export const updateState = (newState: StateMain): ActionUpdateState => (
@@ -161,26 +184,24 @@ export const editFuel = (carId: number, id: number | undefined, fuel: StateFuel)
 export const addSeller = (seller: Seller): ActionAddSeller => (
   {
     type: ActionType.ADD_SELLER,
-    payload: {
-      seller
-    }
+    seller
   })
 
 export const delSeller = (id: number): ActionDelSeller => (
   {
     type: ActionType.DEL_SELLER,
-    payload: {
-      id
-    }
+    id
+  })
+export const delAllSeller = (): ActionDelAllSeller => (
+  {
+    type: ActionType.DELALL_SELLER
   })
 
 export const editSeller = (id: number, seller: Seller): ActionEditSeller => (
   {
     type: ActionType.EDIT_SELLER,
-    payload: {
-      id,
-      seller
-    }
+    id,
+    seller
   })
 // -----------------------------------------------------------------------------
 // ----------------------------- Action Parts -----------------------------------

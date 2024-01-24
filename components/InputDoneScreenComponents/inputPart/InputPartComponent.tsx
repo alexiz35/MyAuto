@@ -1,6 +1,6 @@
 import {
   View,
-  StyleSheet
+  StyleSheet, FlatList
 } from 'react-native'
 import { useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
@@ -9,7 +9,12 @@ import { StatePart } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
-import { Button, Surface, TextInput, useTheme } from 'react-native-paper'
+import { Button, Dialog, IconButton, Portal, Surface, Text, TextInput, useTheme } from 'react-native-paper'
+import { RenderRowSeller } from '../../SellerScreenComponents/RenderRowSeller'
+import { useAppSelector } from '../../Redux/hook'
+import { useNavigation } from '@react-navigation/native'
+import { RootStackParamList } from '../../Navigation/Navigation'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 interface InputPartProps {
   isCancel: () => void
@@ -39,7 +44,21 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
   const state = useAppSelector((state) => state) */
 
   const theme = useTheme()
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
+  // ----------------------------------------------------------------------------
+  const [visibleSeller, setVisibleSeller] = useState(false)
+  const handlePress = (): void => {
+
+  }
+  const editPress = (): void => {
+
+  }
+  const pressEditSeller = (): void => {
+    setVisibleSeller(false)
+    navigation.navigate('SellerScreen')
+  }
+  // ----------------------------------------------------------------------------
   const tempNullPart: FormPart = {
     namePart: '',
     numberPart: '',
@@ -287,6 +306,8 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     label={'продавец'}
                                     onChangeText={(value) => onChange(value)}
                                     value={value}
+                                    showSoftInputOnFocus={false}
+                                    onPressIn={() => setVisibleSeller(true)}
                                     /* onSubmitEditing={() => {
                                       setFocus('numberPart2')
                                     }} */
@@ -391,7 +412,31 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
             </View>
 
       </KeyboardAwareScrollView>
-
+      <Portal>
+        <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+            <Dialog.Title>Hello</Dialog.Title>
+          <Dialog.Content>
+            <FlatList
+              scrollEnabled
+              data={useAppSelector((state) => state.sellerList)}
+              /* extraData={isSortFuel} */
+              renderItem={({ item }) => <RenderRowSeller item={item} handlePress={handlePress} editPress={editPress}/>}
+              keyExtractor={(item, index) => index.toString()}
+              getItemLayout={(data, index) => (
+                {
+                  length: 40,
+                  offset: 40 * index,
+                  index
+                }
+              )}
+              initialNumToRender={6}
+            />
+          </Dialog.Content>
+          <Dialog.Content>
+            <Button icon={'file-edit'} onPress={pressEditSeller} >Добавить/изменить продавца</Button>
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
     </View>
 
   )

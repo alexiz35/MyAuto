@@ -60,7 +60,6 @@ export const MainCard = (): JSX.Element => {
 
   /* useEffect(() => {
     setVisibleMileage(true)
-    console.log('alarm3', visibleMileage)
   }, [isNeedUpdate]) */
 
   useEffect(() => {
@@ -68,7 +67,6 @@ export const MainCard = (): JSX.Element => {
     if (state.setting.alarmMileagePeriod) {
       periodTimeMileage()
     }
-    console.log(isNeedUpdate)
   }, [])
 
   // period alarm to update mileage

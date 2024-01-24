@@ -3,48 +3,59 @@
 import { listService } from './components/InputDoneScreenComponents/inputService/ListServices'
 
 export const BACKGROUND = '#13171A'
-export const BACK_OPACITY = 'rgba(0,0,0,0)'
+/* export const BACK_OPACITY = 'rgba(0,0,0,0)' */
 export const BACK_CARD = '#3d3d3d'
 export const TEXT_CARD = '#191a1e'
 export const BACK_INPUT = 'rgba(61,61,61,0.35)'
 export const TEXT = '#F7F8FB'
 export const TEXT_WHITE = '#ffffff'
-export const HEADER_TINT_COLOR = '#a2a2a2'
+/* export const HEADER_TINT_COLOR = '#a2a2a2'
 export const BACK_TAB_BOTTOM = 'rgba(0,0,0,0.94)'
 export const BACK_TAB_TOP = 'rgba(0,0,0,0.94)'
 export const COLOR_GREEN = '#23c50a'
-export const INPUT_BACK = 'rgba(61,61,61,0.35)'
+export const INPUT_BACK = 'rgba(61,61,61,0.35)' */
 
 // --------------------------------type for redux --------------------------------------------
 export enum ActionType {
   UPDATE_STATE = 'UPDATE_STATE',
+  // -------------------------------
   CHANGE_CAR = 'CHANGE_CAR',
-  UPDATE_MILES = 'UPDATE_MILES',
-  ADD_SERVICE = 'ADD_SERVICE',
-  DEL_SERVICE = 'DEL_SERVICE',
-  EDIT_SERVICE = 'EDIT_SERVICE',
   ADD_CAR = 'ADD_CAR',
   UPDATE_CAR = 'UPDATE_CAR',
   DEL_CAR = 'DEL_CAR',
+  // -------------------------------
+  UPDATE_MILES = 'UPDATE_MILES',
+  // -------------------------------
+  ADD_SERVICE = 'ADD_SERVICE',
+  DEL_SERVICE = 'DEL_SERVICE',
+  EDIT_SERVICE = 'EDIT_SERVICE',
+  // -------------------------------
   CHANGE_THEME = 'CHANGE_THEME',
   CHANGE_ALARM_START = 'CHANGE_ALARM_START',
   CHANGE_ALARM_PERIOD = 'CHANGE_ALARM_PERIOD',
   CHANGE_ALARM_PERIOD_NUMBER = 'CHANGE_ALARM_PERIOD_NUMBER',
+  // -------------------------------
   ADD_TOKEN = 'ADD_TOKEN',
   DEL_TOKEN = 'DEL_TOKEN',
+  // -------------------------------
   ADD_FUEL = 'ADD_FUEL',
   DEL_FUEL = 'DEL_FUEL',
   EDIT_FUEL = 'EDIT_FUEL',
+  // -------------------------------
   ADD_SELLER = 'ADD_SELLER',
   DEL_SELLER = 'DEL_SELLER',
+  DELALL_SELLER = 'DELALL_SELLER',
   EDIT_SELLER = 'EDIT_SELLER',
+  // -------------------------------
   ADD_PARTS = 'ADD_PARTS',
   DEL_PARTS = 'DEL_PARTS',
   EDIT_PARTS = 'EDIT_PARTS',
   INSTALL_PART = 'INSTALL_PART',
+  // -------------------------------
   ADD_OTHERS = 'ADD_OTHERS',
   DEL_OTHERS = 'DEL_OTHERS',
   EDIT_OTHERS = 'EDIT_OTHERS',
+  // -------------------------------
   ADD_TASK = 'ADD_TASK',
   DEL_TASK = 'DEL_TASK',
   EDIT_TASK = 'EDIT_TASK',
@@ -58,12 +69,6 @@ export interface StateMain {
   setting: Setting
   sellerList: Seller[]
 }
-export interface Setting {
-  themeSet: string
-  alarmMileageStart: boolean
-  alarmMileagePeriod: boolean
-  alarmMileagePeriodNumber: number
-}
 
 export interface StateCar {
   carId: number
@@ -75,6 +80,20 @@ export interface StateCar {
   mileage: CurrentMiles[]
   others: StateOther[]
   tasks: StateTask[]
+}
+export interface Setting {
+  themeSet: string
+  alarmMileageStart: boolean
+  alarmMileagePeriod: boolean
+  alarmMileagePeriodNumber: number
+}
+export interface Seller {
+  id?: number
+  name: string
+  phone?: string
+  web?: string
+  type?: string
+  specialism?: string
 }
 
 /* export interface StateListSeller {
@@ -182,14 +201,6 @@ export interface StateOther {
   amountCostOther: number
   numberPart: string
   seller?: Seller
-}
-export interface Seller {
-  id?: number
-  name: string
-  phone?: string
-  web?: string
-  type?: string
-  specialism?: string
 }
 
 export interface StateTask {
@@ -358,23 +369,20 @@ export interface ActionEditFuel {
 
 export interface ActionAddSeller {
   type: ActionType.ADD_SELLER
-  payload: {
-    seller: Seller
-  }
+  seller: Seller
 }
 export interface ActionDelSeller {
   type: ActionType.DEL_SELLER
-  payload: {
-    id: number
-  }
+  id: number
 }
 
 export interface ActionEditSeller {
   type: ActionType.EDIT_SELLER
-  payload: {
-    id: number | undefined
-    seller: Seller
-  }
+  id: number | undefined
+  seller: Seller
+}
+export interface ActionDelAllSeller {
+  type: ActionType.DELALL_SELLER
 }
 // ----------------------------- interface ActionParts -------------------------
 export interface ActionAddParts {
@@ -481,7 +489,7 @@ ActionAddParts | ActionDelParts | ActionEditParts | ActionInstallPart |
 ActionAddOthers | ActionDelOthers | ActionEditOthers |
 ActionAddTask | ActionDelTask | ActionEditTask | ActionFinishTask | ActionChangeTheme |
 ActionAlarmMileageStart | ActionAlarmMileagePeriod | ActionAlarmMileagePeriodNumber |
-ActionAddSeller | ActionEditSeller | ActionDelSeller
+ActionAddSeller | ActionEditSeller | ActionDelSeller | ActionDelAllSeller
 
 /* export type DispatchMiles = (state: StateCar, action: ActionMiles) => ActionMiles */
 

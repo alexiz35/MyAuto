@@ -14,7 +14,7 @@ interface handleProp {
 
 export const SellerList = ({ handlePress, editPress, filterList = 'last' }: handleProp): JSX.Element => {
   const listSeller = useAppSelector(state => state.sellerList)
-  const [isSortFuel, setIsSortFuel] = useState(false)
+  const [isSortSeller, setIsSortSeller] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const SellerList = ({ handlePress, editPress, filterList = 'last' }: hand
       // @ts-expect-error data
       return Date.parse(b.dateFuel) - Date.parse(a.dateFuel)
     })
-    setIsSortFuel(!isSortFuel)
+    setIsSortSeller(!isSortSeller)
   }, [listSeller])
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export const SellerList = ({ handlePress, editPress, filterList = 'last' }: hand
         : <FlatList
           scrollEnabled
           data={filter()}
-          extraData={isSortFuel}
+          extraData={isSortSeller}
           renderItem={({ item }) => <RenderRowSeller item={item} handlePress={handlePress} editPress={editPress}/>}
           keyExtractor={(item, index) => index.toString()}
           getItemLayout={(data, index) => (

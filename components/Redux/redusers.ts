@@ -3,6 +3,13 @@ import { settings } from 'eslint-config-standard-with-typescript'
 
 export const initialState: StateMain = {
   numberCar: 0,
+  sellerList: [{
+    name: 'rere',
+    phone: '1'
+  }, {
+    name: 'rerere',
+    phone: '2'
+  }],
   token: '',
   setting: {
     themeSet: 'dark',
@@ -10,7 +17,6 @@ export const initialState: StateMain = {
     alarmMileagePeriod: true,
     alarmMileagePeriodNumber: 6
   },
-  sellerList: [],
   cars: [
     {
       info: initialStateInfo,
@@ -74,7 +80,7 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     case ActionType.CHANGE_ALARM_PERIOD_NUMBER:{
       return {
         ...state,
-        setting: { alarmMileagePeriodNumber: action.alarmPeriodNumber }
+        setting: { ...state.setting, alarmMileagePeriodNumber: action.alarmPeriodNumber }
       }
     }
     // -------------------------------------------------------------------
@@ -179,27 +185,32 @@ export const milesReducer: Dispatch = (state = initialState, action) => {
     // -------------------------------------------------------------------
     case ActionType.ADD_SELLER: {
       const tempSeller = state.sellerList
-      tempSeller.push(action.payload.seller)
       return {
         ...state,
-        sellerList: tempSeller
+        sellerList: tempSeller.concat(action.seller)
       }
     }
 
     case ActionType.DEL_SELLER: {
       const tempSellerList = state.sellerList
-      const tempSeller = tempSellerList.filter(item => item.id !== action.payload.id)
-
+      const tempSeller = tempSellerList.filter(item => item.id !== action.id)
       return {
         ...state,
         sellerList: tempSeller
       }
     }
 
+    case ActionType.DELALL_SELLER: {
+      return {
+        ...state,
+        sellerList: []
+      }
+    }
+
     case ActionType.EDIT_SELLER: {
       const tempSellerList = state.sellerList
-      const tempSeller = tempSellerList.filter(item => item.id !== action.payload.id)
-      const editSeller = tempSeller.concat(action.payload.seller)
+      const tempSeller = tempSellerList.filter(item => item.id !== action.id)
+      const editSeller = tempSeller.concat(action.seller)
       return {
         ...state,
         sellerList: editSeller
