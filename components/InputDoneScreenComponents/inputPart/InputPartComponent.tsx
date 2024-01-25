@@ -5,7 +5,7 @@ import {
 import { useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 /* import { useAppDispatch, useAppSelector } from '../components/Redux/hook' */
-import { StatePart } from '../../../type'
+import { Seller, StatePart } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
@@ -15,6 +15,7 @@ import { useAppSelector } from '../../Redux/hook'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../../Navigation/Navigation'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 
 interface InputPartProps {
   isCancel: () => void
@@ -40,16 +41,20 @@ interface FormPart {
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 
 const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): JSX.Element => {
-  /*  const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state) */
+  /*  const dispatch = useAppDispatch() */
+  const state = useAppSelector((state) => state)
 
   const theme = useTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   // ----------------------------------------------------------------------------
   const [visibleSeller, setVisibleSeller] = useState(false)
-  const handlePress = (): void => {
+  const handlePress = (item: Seller): void => {
+    setVisibleSeller(false)
 
+    setValue('seller.name', item.name)
+    setValue('seller.phone', String(item.phone))
+    setValue('seller.link', String(item.web))
   }
   const editPress = (): void => {
 
@@ -306,8 +311,14 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     label={'продавец'}
                                     onChangeText={(value) => onChange(value)}
                                     value={value}
-                                    showSoftInputOnFocus={false}
-                                    onPressIn={() => setVisibleSeller(true)}
+                                    showSoftInputOnFocus={true}
+                                    /* onPressIn={() => setVisibleSeller(true)} */
+                                    right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
+                                                           color={theme.colors.tertiary}
+                                                           onPress={() => setVisibleSeller(true)
+                                    }
+                                    />
+                                    }
                                     /* onSubmitEditing={() => {
                                       setFocus('numberPart2')
                                     }} */
@@ -316,6 +327,9 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                 )}
                     />
                   </Surface>
+                  {/* <Surface elevation={2} style={{ flex: 0.2, margin: 5 }}>
+                    <IconButton icon={'notebook'} onPress={() => setVisibleSeller(true)}/>
+                  </Surface> */}
                 </View>
 
                 {
@@ -412,31 +426,23 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
             </View>
 
       </KeyboardAwareScrollView>
+      {
+        // -------------------------------- ModalPickSeller -----------------------
+      }
       <Portal>
         <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
-            <Dialog.Title>Hello</Dialog.Title>
+            <Dialog.Title>Список поставщиков/сервисов</Dialog.Title>
           <Dialog.Content>
-            <FlatList
-              scrollEnabled
-              data={useAppSelector((state) => state.sellerList)}
-              /* extraData={isSortFuel} */
-              renderItem={({ item }) => <RenderRowSeller item={item} handlePress={handlePress} editPress={editPress}/>}
-              keyExtractor={(item, index) => index.toString()}
-              getItemLayout={(data, index) => (
-                {
-                  length: 40,
-                  offset: 40 * index,
-                  index
-                }
-              )}
-              initialNumToRender={6}
-            />
+            <ModalPickSeller handlePress={handlePress} editPress={editPress}/>
           </Dialog.Content>
-          <Dialog.Content>
-            <Button icon={'file-edit'} onPress={pressEditSeller} >Добавить/изменить продавца</Button>
-          </Dialog.Content>
+          <Dialog.Actions>
+            <Button icon={'file-edit'} onPress={pressEditSeller} >Редактировать список продавцов</Button>
+          </Dialog.Actions>
         </Dialog>
       </Portal>
+      {
+        // ------------------------------------------------------------------------
+      }
     </View>
 
   )

@@ -46,7 +46,7 @@ import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/
 import { changeTheme } from '../Redux/actions'
 import SellerScreen from '../../screens/SellerScreen'
 
-type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
+export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
