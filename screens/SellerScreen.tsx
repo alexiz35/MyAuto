@@ -4,7 +4,7 @@ import { SellerList } from '../components/SellerScreenComponents/SellerList'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { Seller, StateFuel } from '../type'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, addSeller, editFuel, editSeller } from '../components/Redux/actions'
@@ -23,6 +23,10 @@ import {
 } from 'react-native-paper'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
 import { ModalInfoSeller } from '../components/SellerScreenComponents/ModalInfoSeller'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
+import { StackScreenProps } from '@react-navigation/stack'
+import { useFocusEffect } from '@react-navigation/native'
 
 interface FormSeller {
   name: string
@@ -32,7 +36,9 @@ interface FormSeller {
   specialism: string
 }
 
-const SellerScreen = (): JSX.Element => {
+type Props = StackScreenProps<RootStackParamList, 'SellerScreen'>
+
+const SellerScreen = ({ route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.cars[state.numberCar])
   const carId = useAppSelector(state => state.numberCar)
@@ -103,7 +109,16 @@ const SellerScreen = (): JSX.Element => {
   const closeModalInfo = (): void => {
     setVisibleInfo(false)
   }
+  // -------- navigation by another screen with item param ---------------------
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params !== undefined) {
+        handleOpen(route.params.item)
+      }
+    }, [route.params])
+  )
   // ------------------------- control according -------------------------------
+
   const handleOpen = (item: Seller): void => {
     setIsList(false)
     setOpenAccordion(true)

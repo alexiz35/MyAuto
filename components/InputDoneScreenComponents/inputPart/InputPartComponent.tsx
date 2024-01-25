@@ -56,8 +56,9 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
     setValue('seller.phone', String(item.phone))
     setValue('seller.link', String(item.web))
   }
-  const editPress = (): void => {
-
+  const editPress = (item: Seller): void => {
+    setVisibleSeller(false)
+    navigation.navigate('SellerScreen', { item })
   }
   const pressEditSeller = (): void => {
     setVisibleSeller(false)

@@ -45,6 +45,7 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
 import { changeTheme } from '../Redux/actions'
 import SellerScreen from '../../screens/SellerScreen'
+import { Seller } from '../../type'
 
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
@@ -56,7 +57,7 @@ export type RootStackParamList = {
   CarInfoScreen: undefined
   SettingScreen: undefined
   FuelScreen: undefined
-  SellerScreen: undefined
+  SellerScreen: undefined | { item: Seller }
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootTabParamList = {
