@@ -11,14 +11,16 @@ import { PropsTab, RootStackParamList } from '../Navigation/Navigation'
 interface PropsPickSeller {
   handlePress: (item: Seller) => void
   editPress: (item: Seller) => void
-  /* navigation: StackNavigationProp<RootStackParamList> */
+  navigation: () => void/* StackNavigationProp<RootStackParamList> */
 }
 
-export const ModalPickSeller = ({ handlePress, editPress }: PropsPickSeller): JSX.Element => {
+export const ModalPickSeller = ({ handlePress, editPress, navigation }: PropsPickSeller): JSX.Element => {
   /*  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>() */
 
   return (
-    <View >
+    <>
+    <Dialog.Title>Список поставщиков/сервисов</Dialog.Title>
+  <Dialog.Content>
               <FlatList
           scrollEnabled
           data={useAppSelector((state) => state.sellerList)}
@@ -35,6 +37,11 @@ export const ModalPickSeller = ({ handlePress, editPress }: PropsPickSeller): JS
           initialNumToRender={6}
         />
 
-    </View>
+  </Dialog.Content>
+      <Dialog.Actions>
+        <Button icon={'file-edit'} onPress={navigation} >Редактировать список продавцов</Button>
+      </Dialog.Actions>
+    </>
+
   )
 }

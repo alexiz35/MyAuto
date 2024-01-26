@@ -431,14 +431,8 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
         // -------------------------------- ModalPickSeller -----------------------
       }
       <Portal>
-        <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
-            <Dialog.Title>Список поставщиков/сервисов</Dialog.Title>
-          <Dialog.Content>
-            <ModalPickSeller handlePress={handlePress} editPress={editPress}/>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button icon={'file-edit'} onPress={pressEditSeller} >Редактировать список продавцов</Button>
-          </Dialog.Actions>
+         <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+            <ModalPickSeller handlePress={handlePress} editPress={editPress} navigation={pressEditSeller}/>
         </Dialog>
       </Portal>
       {
