@@ -47,11 +47,10 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
   const theme = useTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
-  // ----------------------------------------------------------------------------
+  // ---------------------- handle ModalPickSeller -----------------------------
   const [visibleSeller, setVisibleSeller] = useState(false)
   const handlePress = (item: Seller): void => {
     setVisibleSeller(false)
-
     setValue('seller.name', item.name)
     setValue('seller.phone', String(item.phone))
     setValue('seller.link', String(item.web))
@@ -64,7 +63,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
     setVisibleSeller(false)
     navigation.navigate('SellerScreen')
   }
-  // ----------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
   const tempNullPart: FormPart = {
     namePart: '',
     numberPart: '',

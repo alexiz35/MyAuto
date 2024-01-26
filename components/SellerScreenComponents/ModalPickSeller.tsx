@@ -3,10 +3,6 @@ import { FlatList, View } from 'react-native'
 import { useAppSelector } from '../Redux/hook'
 import { RenderRowSeller } from './RenderRowSeller'
 import { Seller } from '../../type'
-import { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
-import { PropsTab, RootStackParamList } from '../Navigation/Navigation'
 
 interface PropsPickSeller {
   handlePress: (item: Seller) => void
@@ -15,8 +11,6 @@ interface PropsPickSeller {
 }
 
 export const ModalPickSeller = ({ handlePress, editPress, navigation }: PropsPickSeller): JSX.Element => {
-  /*  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>() */
-
   return (
     <>
     <Dialog.Title>Список поставщиков/сервисов</Dialog.Title>
