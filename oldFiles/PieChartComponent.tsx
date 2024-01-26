@@ -1,17 +1,17 @@
 import { Dimensions } from 'react-native'
 import { BarChart, PieChart } from 'react-native-chart-kit'
 import { useEffect, useState } from 'react'
-import { useAppSelector } from '../Redux/hook'
-import { StateCar, StateFuel, StateService } from '../../type'
-import { TypeSelect } from '../../screens/StatScreen'
+import { useAppSelector } from '../components/Redux/hook'
+import { StateCar, StateFuel, StateService } from '../type'
+import { TypeSelect } from '../screens/StatScreen'
 import {
   monthDataFuelChart,
   monthDataPartsChart,
   periodDataFuelChart, periodDataPartsChart,
   yearDataFuelChart,
   yearDataPartsChart
-} from './FunctionStatistic'
-import { useAppTheme } from '../../CommonComponents/Theme'
+} from '../components/StatScreenComponents/FunctionStatistic'
+import { useAppTheme } from '../CommonComponents/Theme'
 
 interface PropsBarChat {
   selectDate: TypeSelect

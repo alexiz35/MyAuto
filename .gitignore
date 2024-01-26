@@ -16,4 +16,4 @@ web-build/
 
 android/keystores/release.keystore
 
-!/oldFiles/
+/oldFiles/

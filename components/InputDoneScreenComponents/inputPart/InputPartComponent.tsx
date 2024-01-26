@@ -1,6 +1,6 @@
 import {
   View,
-  StyleSheet, FlatList
+  StyleSheet
 } from 'react-native'
 import { useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
@@ -408,7 +408,6 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                   style={styles.buttonStyle}
                   labelStyle={{ color: 'white' }}
                   buttonColor={theme.colors.error}
-                  /* type={'solid'} */
                   onPress={() => {
                     handleCancel()
                   }}
@@ -417,10 +416,6 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                   style={styles.buttonStyle}
                   labelStyle={{ color: 'white' }}
                   buttonColor={theme.colors.tertiary}
-                  /* type={'solid'} */
-                  /* onPress={() => {
-                    handleOk()
-                  }} */
                   onPress={handleSubmit(handleOk)}
                 >Ok</Button>
               </View>

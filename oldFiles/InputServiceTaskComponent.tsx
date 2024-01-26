@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { RootStackParamList } from '../components/Navigation/Navigation'
 import { addPart, editPart } from '../components/Redux/actions'
 import Accordion from '../components/Accordion'
-import ShadowBox from '../CommonComponents/ShadowBox'
+import ShadowBox from './ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { StateService, StateServiceTask } from '../type'
 

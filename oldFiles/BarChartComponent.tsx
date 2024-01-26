@@ -1,9 +1,9 @@
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
 import { useEffect, useState } from 'react'
-import { useAppSelector } from '../Redux/hook'
+import { useAppSelector } from '../components/Redux/hook'
 import { Button, Text } from '@rneui/themed'
-import { COLOR_GREEN, StateCar, TEXT_WHITE } from '../../type'
+import { COLOR_GREEN, StateCar, TEXT_WHITE } from '../type'
 
 interface PropsBarChat {
   selectDate: number

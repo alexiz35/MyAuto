@@ -5,20 +5,17 @@ import {
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  BACK_INPUT,
-  StateFuel, StatePart
+  StateFuel
 } from '../../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, editFuel } from '../Redux/actions'
-import { Dialog, Icon, Input, LinearProgress, ListItem } from '@rneui/themed'
-import { RootStackParamList, RootTabParamList } from '../Navigation/Navigation'
+import { RootTabParamList } from '../Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { useFocusEffect } from '@react-navigation/native'
-import { useTheme, Text, Surface, TextInput, List, Button, HelperText } from 'react-native-paper'
-import { Controller, useController, useForm } from 'react-hook-form'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useTheme, Surface, TextInput, List, Button } from 'react-native-paper'
+import { Controller, useForm } from 'react-hook-form'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'Fuel'>
 

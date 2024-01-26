@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { ImageBackground } from 'react-native'
-import { useThemeMode } from '@rneui/themed'
 import React, { useEffect, useState } from 'react'
 import { useTheme } from 'react-native-paper'
 export const LightBack = require('../assets/whiteBack.jpg')

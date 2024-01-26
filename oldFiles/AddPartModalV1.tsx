@@ -9,7 +9,7 @@ import { Button, Text, Divider, Icon, Input } from '@rneui/themed'
 import { BACK_INPUT, StatePart, ModalAddPartsProps, Seller, ModalPart } from '../type'
 import { useAppSelector } from '../components/Redux/hook'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import ShadowBox from '../CommonComponents/ShadowBox'
+import ShadowBox from './ShadowBox'
 import Accordion from '../components/Accordion'
 import { useTheme } from 'react-native-paper'
 

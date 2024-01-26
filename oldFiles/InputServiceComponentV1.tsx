@@ -14,7 +14,7 @@ import {
   ModalPart,
 } from '../type'
 import { AddPartModal } from '../components/InputDoneScreenComponents/inputService/AddPartModal'
-import ShadowBox from '../CommonComponents/ShadowBox'
+import ShadowBox from './ShadowBox'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 interface InputServiceProps {

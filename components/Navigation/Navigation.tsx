@@ -11,7 +11,6 @@ import { useCallback, useEffect, useState } from 'react'
 import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
-import InfoScreen from '../../screens/InfoScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -53,7 +52,6 @@ export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamLis
 export type RootStackParamList = {
   BottomTabNav: NavigatorScreenParams<RootTabParamList>
   InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
-  /* Info: { taskId: number, typeTask: number } */
   CarInfoScreen: undefined
   SettingScreen: undefined
   FuelScreen: undefined
