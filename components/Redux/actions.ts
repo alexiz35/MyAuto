@@ -187,7 +187,7 @@ export const addSeller = (seller: Seller): ActionAddSeller => (
     seller
   })
 
-export const delSeller = (id: number): ActionDelSeller => (
+export const delSeller = (id: number | undefined): ActionDelSeller => (
   {
     type: ActionType.DEL_SELLER,
     id

@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, editFuel } from '../components/Redux/actions'
-import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
+import { PropsTab, RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
 import BackgroundView from '../CommonComponents/BackgroundView'
@@ -27,6 +27,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { CompositeScreenProps, useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../CommonComponents/Theme'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'StatScreen'>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
@@ -40,11 +41,12 @@ interface FormFuel {
   StationFuel: string
 }
 
-const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
+const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.cars[state.numberCar])
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
+  const navigation = useNavigation<Props>()
 
   const tempNullFuel: FormFuel = {
     dateFuel: new Date(),
@@ -175,7 +177,7 @@ const FuelScreen = ({ navigation, route }: Props): JSX.Element => {
 
             </Text>
             <IconButton icon={'calendar-month'} onPress={() => {
-              navigation.navigate('StatScreen')
+              navigation.navigation.navigate('StatScreen')
             }} />
         </View>
         {

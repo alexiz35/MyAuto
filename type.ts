@@ -373,7 +373,7 @@ export interface ActionAddSeller {
 }
 export interface ActionDelSeller {
   type: ActionType.DEL_SELLER
-  id: number
+  id: number | undefined
 }
 
 export interface ActionEditSeller {
