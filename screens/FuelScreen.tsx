@@ -174,7 +174,6 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontStyle: 'italic' }}>
               Cумма заправок в текущем месяце {sumFuel}
-
             </Text>
             <IconButton icon={'calendar-month'} onPress={() => {
               navigation.navigation.navigate('StatScreen')
