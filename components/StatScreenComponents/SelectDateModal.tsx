@@ -1,24 +1,23 @@
-import { Button, CheckBox, Dialog, Divider } from '@rneui/themed'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import WheelPickerExpo from 'react-native-wheel-picker-expo'
+import { StyleSheet, Text, View } from 'react-native'
 import { useState } from 'react'
-import { BACK_INPUT } from '../../type'
 import { useAppSelector } from '../Redux/hook'
 import { TypeSelect } from '../../screens/StatScreen'
 import WheelPickerSelectDate from './WheelPickerSelectDate'
 import WheelPickerSelectDouble, { TypeResultPicker } from './WheelPickerSelectDouble'
+import { Dialog, Divider, Button, RadioButton, Portal, Modal } from 'react-native-paper'
+import { useAppTheme } from '../../CommonComponents/Theme'
 
 interface Props {
-  visible: boolean
   handleOk: (selectModal: TypeSelect) => void
   handleCancel: () => void
 }
 
-export const SelectDateModal = ({ visible, handleOk, handleCancel }: Props): JSX.Element => {
+export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element => {
   const state = useAppSelector((state) => state.cars[state.numberCar])
   const MONTH = 'Январь,февраль,Март,Апрель,Май,Июнь,Июль, Август, Сентябрь, Октябрь, Ноябрь, Декабрь'.split(',')
+  const { colors } = useAppTheme()
 
-  const [checked, setChecked] = useState('year')
+  const [checked, setChecked] = useState<'year' | 'month' | 'period' | string>('year')
   const [visibleYear, setVisibleYear] = useState(false)
   const [visibleMonth, setVisibleMonth] = useState(false)
   const [visibleStartDate, setVisibleStartDate] = useState(false)
@@ -33,14 +32,12 @@ export const SelectDateModal = ({ visible, handleOk, handleCancel }: Props): JSX
   const [checkedEndMonth, setCheckedEndMonth] = useState<string>(String(MONTH[new Date().getMonth()]))
   const [checkedEndYear, setCheckedEndYear] = useState<string>(String(new Date().getFullYear()))
 
-  const [visibleMonthYear, setVisibleMonthYear] = useState(false)
-
   const createListYears = (): string[] => {
     const minYear = new Date(state.info.dateBuy).getFullYear()
     const maxYear = new Date().getFullYear()
     const YEAR = []
     let tempIndex = 0
-    for (let i = minYear; i < maxYear + 1; i++) {
+    for (let i = minYear - 1; i < maxYear + 1; i++) {
       YEAR[tempIndex] = String(i)
       tempIndex++
     }
@@ -70,103 +67,90 @@ export const SelectDateModal = ({ visible, handleOk, handleCancel }: Props): JSX
 
   return (
     <View>
-      <Dialog
-        isVisible={visible}
-        /* onBackdropPress={toggleDialog5} */
-      >
-        <Dialog.Title title="Выберите период"/>
+
+        <Dialog.Title>Выберите дату</Dialog.Title>
         {
           // ------------------------------------ select Year ---------------------------------------------------------
         }
-        <View style={styles.viewRowChecked}>
-          <CheckBox
-            title={'год'}
-            containerStyle={{ backgroundColor: 'white', borderWidth: 0 }}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={checked === 'year'}
-            onPress={() => {
-              setChecked('year')
-            }}
+        <Dialog.Content >
+          <RadioButton.Group onValueChange={(item) => setChecked(item)} value={checked} >
+            <View style={styles.viewRowChecked}>
+          <RadioButton.Item
+            label={'год'}
+            value={'year'}
+            position={'leading'}
           />
-          <Pressable onPress={ () => setVisibleYear(true)} disabled={checked !== 'year'} style={styles.pressable}>
-          <Text>{String(checkedYear)}</Text>
-          </Pressable>
-        </View>
-        <View style={{ position: 'absolute', zIndex: 3, justifyContent: 'center', alignSelf: 'center' }}>
-          {visibleYear
-            ? <WheelPickerSelectDate list={createListYears()} handlerEnterPicker={resultPickerYear}/>
-            : null}
-        </View>
-        <Divider/>
+              <Button onPress={ () => setVisibleYear(true)} disabled={checked !== 'year'} mode={'elevated'}>
+                <Text>{String(checkedYear)}</Text>
+              </Button>
+        <Portal>
+          <Modal visible={visibleYear} style={{ alignItems: 'center' }} onDismiss={() => setVisibleYear(false)}>
+            <WheelPickerSelectDate list={createListYears()} handlerEnterPicker={resultPickerYear}/>
+          </Modal>
+        </Portal>
+            </View>
+        <Divider horizontalInset bold/>
         {
           // -------------------------------------- select Month -------------------------------------------------------
         }
         <View style={styles.viewRowChecked}>
-        <CheckBox
-            title={'месяц'}
-            containerStyle={{ backgroundColor: 'white', borderWidth: 0 }}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={checked === 'month'}
-            onPress={() => {
-              setChecked('month')
-            }}
-          />
-          <Pressable onPress={() => setVisibleMonth(true)} disabled={checked !== 'month'} style={[styles.pressable, { flexDirection: 'row' }]}>
-        <Text>{String(checkedMonth)} </Text>
+        <RadioButton.Item
+          position={'leading'}
+          label={'месяц'}
+          value={'month'}
+        />
+          <Button onPress={ () => setVisibleMonth(true)} disabled={checked !== 'month'} mode={'elevated'}>
+            <Text>{String(checkedMonth)} </Text>
             <Text> {String(checkedMonthYear)}</Text>
-          </Pressable>
-          {/* <Pressable onPress={() => setVisibleMonthYear(true)}>
-        <Text> {String(checkedMonthYear)}</Text>
-          </Pressable> */}
+          </Button>
+
         </View>
-        <View style={{ position: 'absolute', zIndex: 3, justifyContent: 'center', alignSelf: 'center' }}>
-          {visibleMonth
-            ? <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerMonth}/>
-            : null}
-        </View>
+        <Portal>
+          <Modal visible={visibleMonth} style={{ alignItems: 'center' }} onDismiss={() => setVisibleMonth(false)}>
+            <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerMonth}/>
+          </Modal>
+        </Portal>
         <Divider style={{ marginBottom: 20 }}/>
         {
           // -------------------------------------- select Period ------------------------------------------------------}
         }
         <View style={styles.viewRowChecked}>
-        <CheckBox
-            title={'свой'}
-            containerStyle={{ backgroundColor: 'white', borderWidth: 0 }}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={checked === 'period'}
-            onPress={() => setChecked('period')}
+        <RadioButton.Item
+          position={'leading'}
+          label={'свой'}
+          value={'period'}
           />
-          <View style={{ flexDirection: 'column' }}>
-            <Pressable onPress={() => setVisibleStartDate(true)} disabled={checked !== 'period'} style={[styles.pressable, { flexDirection: 'row', marginBottom: 10 }]}>
+          <View style={{ flexDirection: 'column', gap: 10 }}>
+            <Button onPress={() => setVisibleStartDate(true)} disabled={checked !== 'period'} mode={'elevated'}>
               <Text>{`с  ${String(checkedStartMonth)}`}</Text>
               <Text style={{ paddingHorizontal: 2 }}>{` ${String(checkedStartYear)}`}</Text>
-            </Pressable>
+            </Button>
 
-            <Pressable onPress={() => setVisibleEndDate(true)} disabled={checked !== 'period'} style={[styles.pressable, { flexDirection: 'row' }]}>
+            <Button onPress={() => setVisibleEndDate(true)} disabled={checked !== 'period'} mode={'elevated'}>
               <Text>{`до ${String(checkedEndMonth)}`}</Text>
               <Text style={{ paddingHorizontal: 2 }}>{` ${String(checkedEndYear)}`}</Text>
-            </Pressable>
+            </Button>
           </View>
         </View>
-        <View style={{ position: 'absolute', zIndex: 3, justifyContent: 'center', alignSelf: 'center' }}>
-          {visibleStartDate
-            ? <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerStartDate}/>
-            : null}
-        </View>
-        <View style={{ position: 'absolute', zIndex: 3, justifyContent: 'center', alignSelf: 'center' }}>
-          {visibleEndDate
-            ? <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerEndDate}/>
-            : null}
-        </View>
-        {
+            <Portal>
+              <Modal visible={visibleStartDate} style={{ alignItems: 'center' }} onDismiss={() => setVisibleStartDate(false)}>
+                <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerStartDate}/>
+              </Modal>
+            </Portal>
+            <Portal>
+              <Modal visible={visibleEndDate} style={{ alignItems: 'center' }} onDismiss={() => setVisibleEndDate(false)}>
+                <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerEndDate}/>
+              </Modal>
+            </Portal>
+          </RadioButton.Group>
+        </Dialog.Content>
+
+      {
           // -----------------------------------------------------------------------------------------------------------}
         }
         <Dialog.Actions>
-          <Dialog.Button
-            title="CONFIRM"
+          <Button
+            /* title="CONFIRM" */
             onPress={() => {
               switch (checked) {
                 case 'year': handleOk({ type: checked, valueYear: checkedYear })
@@ -186,12 +170,16 @@ export const SelectDateModal = ({ visible, handleOk, handleCancel }: Props): JSX
                 default: break
               }
             }}
-          />
-          <Dialog.Button title="CANCEL" onPress={() => {
-            handleCancel()
-          }}/>
+            textColor={colors.tertiary}
+
+          >CONFIRM</Button>
+          <Button
+            textColor={colors.error}
+                  onPress={() => {
+                    handleCancel()
+                  }}
+                  >CANCEL</Button>
         </Dialog.Actions>
-      </Dialog>
     </View>
   )
 }
@@ -201,21 +189,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
-  },
-  pressable: {
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 5
   }
 })
-
-/*
-
-<WheelPickerExpo
-height={300}
-width={150}
-initialSelectedIndex={3}
-haptics={true}
-items={CITIES.map(name => ({ label: name, value: '' }))}
-onChange={({ item }) => setSelectedDate(item.label)} /> */

@@ -1,7 +1,8 @@
 import WheelPickerExpo from 'react-native-wheel-picker-expo'
-import { Button } from '@rneui/themed'
 import { View } from 'react-native'
 import { useState } from 'react'
+import { Button } from 'react-native-paper'
+import { useAppTheme } from '../../CommonComponents/Theme'
 
 interface PropsPicker {
   list: string[]
@@ -10,13 +11,14 @@ interface PropsPicker {
 
 const WheelPickerSelectDate = ({ list, handlerEnterPicker }: PropsPicker): JSX.Element => {
   const [checked, setChecked] = useState('')
+  const { colors } = useAppTheme()
 
   return (
-    <View style={{ backgroundColor: 'grey' }}>
+    <View style={{ backgroundColor: colors.background }}>
       <WheelPickerExpo
-      backgroundColor={'#8f8b8b'}
+      /* backgroundColor={'#FFFFFF'} */
       height={300}
-      width={150}
+      /* width={150} */
       initialSelectedIndex={3}
       haptics={true}
       items={list.map(name => ({ label: name, value: '' }))}
@@ -24,9 +26,11 @@ const WheelPickerSelectDate = ({ list, handlerEnterPicker }: PropsPicker): JSX.E
         setChecked(item.label)
         /* setVisibleYear(false) */
       }} />
-      <Button title={'Ok'} onPress={() => {
+      <Button onPress={() => {
         handlerEnterPicker(checked)
-      }}/>
+      }} mode={'text'}>
+        Ok
+      </Button>
     </View>
   )
 }

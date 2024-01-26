@@ -1,5 +1,5 @@
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native'
-import { Divider, Text, Icon, SegmentedButtons, Surface, Button } from 'react-native-paper'
+import { Divider, Text, Icon, SegmentedButtons, Surface, Button, Portal, Dialog } from 'react-native-paper'
 
 import { useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
@@ -55,7 +55,7 @@ const StatScreen = (): JSX.Element => {
   )
   const [textButtonDate, setButtonDate] = useState<string | undefined>(undefined)
 
-  const [checkedSelected, setCheckedSelected] = useState(false)
+  const [visiblePickDate, setVisiblePickDate] = useState(false)
 
   const [typeChart, setTypeChart] = useState('pie')
 
@@ -101,10 +101,10 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
   }
 
   const handleCancel = (): void => {
-    setCheckedSelected(false)
+    setVisiblePickDate(false)
   }
   const handleOk = (selectModal: TypeSelect): void => {
-    setCheckedSelected(false)
+    setVisiblePickDate(false)
     setSelectedDate(selectModal)
   }
 
@@ -131,15 +131,20 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
         </Text>
         <Button
                 onPress={() => {
-                  setCheckedSelected(!checkedSelected)
+                  setVisiblePickDate(!visiblePickDate)
                 }} >
           {textButtonDate ?? '-- --'}
         </Button>
       </View>
 
-        <View>
-          <SelectDateModal visible={checkedSelected} handleCancel={handleCancel} handleOk={handleOk}/>
-        </View>
+      {
+        // -------------------------------- ModalPickSeller -----------------------
+      }
+      <Portal>
+        <Dialog visible={visiblePickDate} onDismiss={() => setVisiblePickDate(false)}>
+          <SelectDateModal handleCancel={handleCancel} handleOk={handleOk}/>
+        </Dialog>
+        </Portal>
 
         <SegmentedButtons
           value={typeChart} onValueChange={setTypeChart}

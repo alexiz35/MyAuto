@@ -1,7 +1,8 @@
 import WheelPickerExpo from 'react-native-wheel-picker-expo'
-import { Button } from '@rneui/themed'
 import { View } from 'react-native'
 import { useState } from 'react'
+import { useAppTheme } from '../../CommonComponents/Theme'
+import { Button } from 'react-native-paper'
 
 interface PropsPicker {
   listLeft: string[]
@@ -14,14 +15,16 @@ export interface TypeResultPicker {
 }
 
 const WheelPickerSelectDouble = ({ listLeft, listRight, handlerEnterPicker }: PropsPicker): JSX.Element => {
+  const { colors } = useAppTheme()
+
   const [checkedLeft, setCheckedLeft] = useState('')
   const [checkedRight, setCheckedRight] = useState('')
 
   return (
-    <View style={{ backgroundColor: 'grey' }}>
+    <View style={{ backgroundColor: colors.background }}>
       <View style={{ flexDirection: 'row' }}>
       <WheelPickerExpo
-      backgroundColor={'#8f8b8b'}
+      /* backgroundColor={'#8f8b8b'} */
       height={300}
       width={150}
       initialSelectedIndex={3}
@@ -32,7 +35,7 @@ const WheelPickerSelectDouble = ({ listLeft, listRight, handlerEnterPicker }: Pr
         /* setVisibleYear(false) */
       }} />
         <WheelPickerExpo
-      backgroundColor={'#8f8b8b'}
+      /* backgroundColor={'#8f8b8b'} */
       height={300}
       width={150}
       initialSelectedIndex={3}
@@ -43,9 +46,11 @@ const WheelPickerSelectDouble = ({ listLeft, listRight, handlerEnterPicker }: Pr
         /* setVisibleYear(false) */
       }} />
       </View>
-      <Button title={'Ok'} onPress={() => {
+      <Button onPress={() => {
         handlerEnterPicker({ left: checkedLeft, right: checkedRight })
-      }}/>
+      }} mode={'text'}>
+        Ok
+      </Button>
     </View>
   )
 }
