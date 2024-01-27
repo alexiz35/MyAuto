@@ -2,19 +2,17 @@ import {
   View,
   StyleSheet
 } from 'react-native'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 /* import { useAppDispatch, useAppSelector } from '../components/Redux/hook' */
-import { Seller, StatePart } from '../../../type'
+import { type Seller, type StatePart } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
 import { Button, Dialog, Portal, Surface, TextInput, useTheme } from 'react-native-paper'
-import { RenderRowSeller } from '../../SellerScreenComponents/RenderRowSeller'
-import { useAppSelector } from '../../Redux/hook'
 import { useNavigation } from '@react-navigation/native'
-import { RootStackParamList } from '../../Navigation/Navigation'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { type RootStackParamList } from '../../Navigation/Navigation'
+import { type StackNavigationProp } from '@react-navigation/stack'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 
 interface InputPartProps {
@@ -37,13 +35,8 @@ interface FormPart {
     link: string
   }
 }
-/* type Props = BottomTabScreenProps<RootTabParamList, 'InputDoneScreen'> */
-/* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 
 const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): JSX.Element => {
-  /*  const dispatch = useAppDispatch() */
-  const state = useAppSelector((state) => state)
-
   const theme = useTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
@@ -113,8 +106,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
 
     }
   }
-
-  const [itemPart, setItemPart] = useState<StatePart>((part != null) ? part : formToData(tempNullPart))
+  const [itemPart, setItemPart] = useState<StatePart>((part !== undefined) ? part : formToData(tempNullPart))
 
   const {
     control,
@@ -135,11 +127,13 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
     ref.current?.setNativeProps({ style: { borderBottomWidth: 0, borderBottomColor: theme.colors.primary } })
   } */
 
-  const inputDate = (): void => DateTimePickerAndroid.open({
-    value: new Date(),
-    // @ts-expect-error date
-    onChange: (event, date) => setValue('dateBuy', date)
-  })
+  const inputDate = (): void => {
+    DateTimePickerAndroid.open({
+      value: new Date(),
+      // @ts-expect-error date
+      onChange: (event, date) => { setValue('dateBuy', date) }
+    })
+  }
 
   // ------------------------- function calc input -----------------------------
   /*  const handleOnSubmitQuantity = (): void => {
@@ -185,7 +179,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                     label={'название'}
-                                    onChangeText={(value) => onChange(value)}
+                                    onChangeText={(value) => { onChange(value) }}
                                     value={value}
                                     onBlur={onBlur}
                                     error={(error != null) && true}
@@ -208,7 +202,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
                                     onPressOut={inputDate}
-                                    onSubmitEditing={() => setFocus('numberPart')}
+                                    onSubmitEditing={() => { setFocus('numberPart') }}
                                   />
                                 )}
                     />
@@ -227,10 +221,10 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                       dense
                       style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                       label={'артикул'}
-                      onChangeText={(value) => onChange(value)}
+                      onChangeText={(value) => { onChange(value) }}
                       value={value}
                       onBlur={onBlur}
-                      onSubmitEditing={() => setFocus('costPart')}
+                      onSubmitEditing={() => { setFocus('costPart') }}
 
                     />
                                 )}
@@ -251,11 +245,11 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                       label={'цена'}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       keyboardType={'numeric'}
                                       onBlur={onBlur}
-                                      onSubmitEditing={() => setFocus('quantityPart')}
+                                      onSubmitEditing={() => { setFocus('quantityPart') }}
                                     />
                                   )}
                       />
@@ -268,11 +262,11 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                       label={'кол-во'}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       keyboardType={'numeric'}
                                       onBlur={onBlur}
-                                      onSubmitEditing={() => setFocus('amountCostPart')}
+                                      onSubmitEditing={() => { setFocus('amountCostPart') }}
                                     />
                                   )}
                       />
@@ -285,7 +279,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                       label={'сумма'}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       keyboardType={'numeric'}
                                       onBlur={onBlur}
@@ -309,13 +303,13 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     ref={ref}
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                     label={'продавец'}
-                                    onChangeText={(value) => onChange(value)}
+                                    onChangeText={(value) => { onChange(value) }}
                                     value={value}
                                     showSoftInputOnFocus={true}
                                     /* onPressIn={() => setVisibleSeller(true)} */
                                     right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
                                                            color={theme.colors.tertiary}
-                                                           onPress={() => setVisibleSeller(true)
+                                                           onPress={() => { setVisibleSeller(true) }
                                     }
                                     />
                                     }
@@ -358,7 +352,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                 style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                 label={'телефон'}
                                 keyboardType={'phone-pad'}
-                                onChangeText={(value) => onChange(value)}
+                                onChangeText={(value) => { onChange(value) }}
                                 value={value}
                                 onSubmitEditing={() => {
                                   setFocus('seller.link')
@@ -377,7 +371,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                               style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                               label={'интернет'}
                                               keyboardType={'url'}
-                                              onChangeText={(value) => onChange(value)}
+                                              onChangeText={(value) => { onChange(value) }}
                                               value={value}
                                               /* onSubmitEditing={() => {
                                                 setFocus('numberPart2')
@@ -425,7 +419,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
         // -------------------------------- ModalPickSeller -----------------------
       }
       <Portal>
-         <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+         <Dialog visible={visibleSeller} onDismiss={() => { setVisibleSeller(false) }}>
             <ModalPickSeller handlePress={handlePress} editPress={editPress} navigation={pressEditSeller}/>
         </Dialog>
       </Portal>

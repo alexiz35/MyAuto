@@ -6,15 +6,15 @@ import {
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { Seller, StateOther } from '../../../type'
+import { type Seller, type StateOther } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useTheme, Surface, TextInput, Button, Portal, Dialog } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParamList } from '../../Navigation/Navigation'
+import { type StackNavigationProp } from '@react-navigation/stack'
+import { type RootStackParamList } from '../../Navigation/Navigation'
 
 interface InputDocProps {
   isCancel: () => void
@@ -80,7 +80,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
     }
   }
 
-  const [itemOther, setItemOther] = useState<StateOther>((other != null) ? other : formToData(tempNullOther))
+  const [itemOther, setItemOther] = useState<StateOther>((other !== undefined) ? other : formToData(tempNullOther))
 
   const {
     control,
@@ -89,11 +89,13 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
     setFocus
   } = useForm<FormOther>({ mode: 'onBlur', defaultValues: tempNullOther, values: dataToForm(itemOther) })
 
-  const inputDate = (): void => DateTimePickerAndroid.open({
-    value: new Date(),
-    // @ts-expect-error date
-    onChange: (event, date) => setValue('dateBuy', date)
-  })
+  const inputDate = (): void => {
+    DateTimePickerAndroid.open({
+      value: new Date(),
+      // @ts-expect-error date
+      onChange: (event, date) => { setValue('dateBuy', date) }
+    })
+  }
 
   // ---------------------- handle ModalPickSeller -----------------------------
   const [visibleSeller, setVisibleSeller] = useState(false)
@@ -141,7 +143,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                               dense
                               style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                               label={'название'}
-                              onChangeText={(value) => onChange(value)}
+                              onChangeText={(value) => { onChange(value) }}
                               value={value}
                               onBlur={onBlur}
                               error={(error != null) && true}
@@ -164,7 +166,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                               showSoftInputOnFocus={false}
                               value={new Date(value).toLocaleDateString()}
                               onPressOut={inputDate}
-                              onSubmitEditing={() => setFocus('numberPart')}
+                              onSubmitEditing={() => { setFocus('numberPart') }}
                             />
                           )}
               />
@@ -183,11 +185,11 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                               ref={ref}
                               style={{ flex: 1, backgroundColor: theme.colors.surface }}
                               label={'продавец'}
-                              onChangeText={(value) => onChange(value)}
+                              onChangeText={(value) => { onChange(value) }}
                               value={value}
                               right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
                                                      color={theme.colors.tertiary}
-                                                     onPress={() => setVisibleSeller(true)
+                                                     onPress={() => { setVisibleSeller(true) }
                                                      }
                               />
                               }
@@ -227,7 +229,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                       label={'телефон'}
                                       keyboardType={'phone-pad'}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       onSubmitEditing={() => {
                                         setFocus('seller.link')
@@ -246,7 +248,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                       label={'интернет'}
                                       keyboardType={'url'}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       /* onSubmitEditing={() => {
                                         setFocus('numberPart2')
@@ -279,7 +281,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                               ref={ref}
                               style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                               label={'сумма'}
-                              onChangeText={(value) => onChange(value)}
+                              onChangeText={(value) => { onChange(value) }}
                               value={value}
                               keyboardType={'numeric'}
                               onBlur={onBlur}
@@ -323,7 +325,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
         // -------------------------------- ModalPickSeller -----------------------
       }
       <Portal>
-        <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+        <Dialog visible={visibleSeller} onDismiss={() => { setVisibleSeller(false) }}>
           <ModalPickSeller handlePress={handlePress} editPress={editPress} navigation={pressEditSeller}/>
         </Dialog>
       </Portal>

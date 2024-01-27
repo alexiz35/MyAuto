@@ -7,7 +7,6 @@ export const BACKGROUND = '#13171A'
 export const BACK_CARD = '#3d3d3d'
 export const TEXT_CARD = '#191a1e'
 export const BACK_INPUT = 'rgba(61,61,61,0.35)'
-export const TEXT = '#F7F8FB'
 export const TEXT_WHITE = '#ffffff'
 /* export const HEADER_TINT_COLOR = '#a2a2a2'
 export const BACK_TAB_BOTTOM = 'rgba(0,0,0,0.94)'
@@ -498,12 +497,6 @@ export type Dispatch = (state: StateMain, action: AppAction) => StateMain
 // -------------------------------------------------------------------------------------------
 // ----------------------------------BottomSheet----------------------------------------------
 
-export interface ServiceList {
-  id: number
-  nameService: string
-  costService: number
-}
-
 export interface ModalPart {
   id: number
   namePart: string
@@ -524,8 +517,3 @@ export interface ModalAddPartsProps {
   partName: string
   costName: number
 } */
-
-export interface PropsModalInput {
-  onPressOk: (partName: string, costName: string) => void
-  onPressCancel: () => void
-}

@@ -26,6 +26,7 @@
         "react"
     ],
     "rules": {
-
+        "@typescript-eslint/no-misused-promises": "warn",
+        "@typescript-eslint/consistent-type-definitions": "off"
     }
 }

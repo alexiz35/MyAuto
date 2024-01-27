@@ -1,54 +1,42 @@
 import 'react-native-gesture-handler'
 import {
-  CompositeScreenProps, NavigationContainer, NavigatorScreenParams, useNavigation, useNavigationContainerRef
+  CompositeScreenProps, NavigationContainer, NavigatorScreenParams
 }
   from '@react-navigation/native'
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
-import { Alert, Image, Platform, Pressable, View } from 'react-native'
-import { useCallback, useEffect, useState } from 'react'
-import * as TaskManager from 'expo-task-manager'
+import { Image, Platform, View } from 'react-native'
+/* import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage' */
 
 import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
 import TaskScreen from '../../screens/TaskScreen'
 /* import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs' */
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FuelScreen from '../../screens/FuelScreen'
-import * as Print from 'expo-print'
+/* import * as Print from 'expo-print'
 import { shareAsync } from 'expo-sharing'
 import { printToFile } from '../Print/Print'
-import { current } from '@reduxjs/toolkit'
+import { current } from '@reduxjs/toolkit' */
 import CarInfoScreen from '../../screens/CarInfoScreen'
 import SettingScreen from '../../screens/SettingScreen'
-import createStackNavigator, { StackScreenProps } from '@react-navigation/stack'
-import InputTaskPartScreen from '../../oldFiles/InputTaskPartScreen'
 
 import {
   useTheme,
-  MD3DarkTheme,
-  MD3LightTheme,
-  adaptNavigationTheme,
   PaperProvider,
-  Button,
   Text,
-  IconButton, Surface, TouchableRipple, FAB, Portal
+  IconButton, Surface, TouchableRipple, Icon
 } from 'react-native-paper'
-import merge from 'deepmerge'
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
-import { changeTheme } from '../Redux/actions'
 import SellerScreen from '../../screens/SellerScreen'
 import { Seller } from '../../type'
 
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootStackParamList = {
   BottomTabNav: NavigatorScreenParams<RootTabParamList>
   InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
@@ -57,7 +45,6 @@ export type RootStackParamList = {
   FuelScreen: undefined
   SellerScreen: undefined | { item: Seller }
 }
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RootTabParamList = {
   Home: undefined
   InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
@@ -96,14 +83,11 @@ function LogoTitle (): JSX.Element {
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()
-type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'>
 
 export const Navigation = (): JSX.Element => {
-  const BottomTabNav = ({ navigation, route }: PropsTab): JSX.Element => {
+  const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
     const theme = useTheme()
-    const listSeller = useAppSelector(state => state.sellerList)
     const FabTab = (): any => null
-    /* const Tab = createMaterialBottomTabNavigator() */
 
     return (
       <Tab.Navigator
@@ -123,10 +107,10 @@ export const Navigation = (): JSX.Element => {
                     options={{
                       tabBarLabel: 'Home',
                       tabBarIcon: ({ color, focused }) => (
-                        <MaterialCommunityIcons
-                          name={focused ? 'home' : 'home-outline'}
+                        <Icon
+                          source={focused ? 'home' : 'home-outline'}
                           color={color}
-                          size={focused ? 20 : 16}
+                          size={focused ? 22 : 20}
                         />
                       )
                     }}
@@ -138,8 +122,8 @@ export const Navigation = (): JSX.Element => {
                     options={{
                       tabBarLabel: 'Buy',
                       tabBarIcon: ({ color, focused }) => (
-                        <MaterialCommunityIcons
-                          name={focused ? 'cart' : 'cart-outline'}
+                        <Icon
+                          source={focused ? 'cart' : 'cart-outline'}
                           color={color}
                           size={focused ? 22 : 20}
                         />
@@ -192,8 +176,8 @@ export const Navigation = (): JSX.Element => {
                     options={{
                       tabBarLabel: 'Tasks',
                       tabBarIcon: ({ color, focused }) => (
-                        <MaterialCommunityIcons
-                          name='calendar-check'
+                        <Icon
+                          source='calendar-check'
                           color={color}
                           size={focused ? 24 : 20}
                         />
@@ -207,8 +191,8 @@ export const Navigation = (): JSX.Element => {
                     options={{
                       tabBarLabel: 'Statistic',
                       tabBarIcon: ({ color, focused }) => (
-                        <MaterialCommunityIcons
-                          name={focused ? 'chart-box' : 'chart-box-outline'}
+                        <Icon
+                          source={focused ? 'chart-box' : 'chart-box-outline'}
                           color={color}
                           size={focused ? 22 : 20}
                         />
@@ -222,14 +206,13 @@ export const Navigation = (): JSX.Element => {
 
   // ------------------------- Toggle Theme --------------------------------------
   const theme2 = useAppSelector(state => state.setting.themeSet)
-  const dispatch = useAppDispatch()
   const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme
 
-  const toggleTheme = useCallback(() => {
+  /*  const toggleTheme = useCallback(() => {
     (theme2 === 'dark')
       ? dispatch(changeTheme('light'))
       : dispatch(changeTheme('dark'))
-  }, [theme2])
+  }, [theme2]) */
 
   // -----------------------------------------------------------------------------
   /*  const [initial, setInitial] = useState(true)

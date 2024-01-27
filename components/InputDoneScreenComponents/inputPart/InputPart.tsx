@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react'
 import { StatePart } from '../../../type'
 import { addPart, editPart } from '../../Redux/actions'
 
-import BackgroundView from '../../../CommonComponents/BackgroundView'
 import {
   useTheme,
   List,
@@ -18,9 +17,6 @@ import {
 import { useNavigation } from '@react-navigation/native'
 import { PartsList } from './PartsList'
 import InputPartComponent from './InputPartComponent'
-
-/* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
-/* type Props = NativeStackScreenProps<RootStackParamList,'I'> */
 
 const InputPart = (): JSX.Element => {
   const dispatch = useAppDispatch()
