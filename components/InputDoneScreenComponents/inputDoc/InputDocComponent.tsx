@@ -1,20 +1,20 @@
 import {
   View,
-  StyleSheet,
-  KeyboardAvoidingView, Platform
+  StyleSheet
 } from 'react-native'
-import React, {
-  PropsWithChildren,
-  RefObject,
-  useEffect,
+import {
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { StateOther } from '../../../type'
+import { Seller, StateOther } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { useTheme, Surface, TextInput, Button } from 'react-native-paper'
+import { useTheme, Surface, TextInput, Button, Portal, Dialog } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
+import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackParamList } from '../../Navigation/Navigation'
 
 interface InputDocProps {
   isCancel: () => void
@@ -37,6 +37,7 @@ interface FormOther {
 
 const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JSX.Element => {
   const theme = useTheme()
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const tempNullOther: FormOther = {
     nameOther: '',
@@ -93,6 +94,24 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
     // @ts-expect-error date
     onChange: (event, date) => setValue('dateBuy', date)
   })
+
+  // ---------------------- handle ModalPickSeller -----------------------------
+  const [visibleSeller, setVisibleSeller] = useState(false)
+  const handlePress = (item: Seller): void => {
+    setVisibleSeller(false)
+    setValue('seller.name', item.name)
+    setValue('seller.phone', String(item.phone))
+    setValue('seller.link', String(item.web))
+  }
+  const editPress = (item: Seller): void => {
+    setVisibleSeller(false)
+    navigation.navigate('SellerScreen', { item })
+  }
+  const pressEditSeller = (): void => {
+    setVisibleSeller(false)
+    navigation.navigate('SellerScreen')
+  }
+  // ---------------------------------------------------------------------------
 
   // ------------------------- button result -----------------------------------
   const handleCancel = (): void => {
@@ -166,6 +185,12 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                               label={'продавец'}
                               onChangeText={(value) => onChange(value)}
                               value={value}
+                              right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
+                                                     color={theme.colors.tertiary}
+                                                     onPress={() => setVisibleSeller(true)
+                                                     }
+                              />
+                              }
                               /* onSubmitEditing={() => {
                                 setFocus('numberPart2')
                               }} */
@@ -294,7 +319,17 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
         </View>
         </View>
       </KeyboardAwareScrollView>
-
+      {
+        // -------------------------------- ModalPickSeller -----------------------
+      }
+      <Portal>
+        <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+          <ModalPickSeller handlePress={handlePress} editPress={editPress} navigation={pressEditSeller}/>
+        </Dialog>
+      </Portal>
+      {
+        // ------------------------------------------------------------------------
+      }
     </View>
 
   )
