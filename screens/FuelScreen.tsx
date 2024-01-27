@@ -6,11 +6,11 @@ import {
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
-import { StateFuel } from '../type'
+import { type StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, editFuel } from '../components/Redux/actions'
-import { PropsTab, RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { type RootStackParamList, type RootTabParamList } from '../components/Navigation/TypeNavigation'
+import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import {
@@ -24,8 +24,8 @@ import {
   ToggleButton
 } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { CompositeScreenProps, useNavigation } from '@react-navigation/native'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
+import { type CompositeScreenProps, useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { StackNavigationProp } from '@react-navigation/stack'
 
@@ -99,11 +99,13 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   } = useForm<FormFuel>({ mode: 'onSubmit', defaultValues: tempNullFuel, values: dataToForm(itemFuel) })
 
   // ----------------------------------------------------------------------------
-  const inputDate = (): void => DateTimePickerAndroid.open({
-    value: new Date(),
-    // @ts-expect-error date undefined
-    onChange: (event, date) => setValue('dateFuel', date)
-  })
+  const inputDate = (): void => {
+    DateTimePickerAndroid.open({
+      value: new Date(),
+      // @ts-expect-error date undefined
+      onChange: (event, date) => { setValue('dateFuel', date) }
+    })
+  }
 
   const clearInput = (): void => {
     setIsEditFuel(false)
@@ -146,7 +148,7 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
 
   const handleOnPress = (): void => {
     if (!openAccordion) setIsList(false)
-    else setTimeout(() => setIsList(true), 100)
+    else setTimeout(() => { setIsList(true) }, 100)
     setOpenAccordion(!openAccordion)
     clearInput()
   }
@@ -210,7 +212,7 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                     showSoftInputOnFocus={false}
                                     value = {new Date(value).toLocaleDateString()}
                                     onPressOut={inputDate}
-                                    onSubmitEditing={() => setFocus('mileageFuel')}
+                                    onSubmitEditing={() => { setFocus('mileageFuel') }}
                                   />
                                 )}
                     />
@@ -226,7 +228,7 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
                                       label={'пробег'}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       onSubmitEditing={() => {
                                         setFocus('volumeFuel')
                                       }}
@@ -260,10 +262,10 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                       ref={ref}
                                       label={'объем'}
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       keyboardType={'numeric'}
                                       value={value}
-                                      onSubmitEditing={() => setFocus('CostFuel')}
+                                      onSubmitEditing={() => { setFocus('CostFuel') }}
                                       error={(error != null) && true}
                                       onBlur={onBlur}
                                       right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="л"/>}
@@ -286,11 +288,11 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                     ref={ref}
                                     label={'цена'}
                                     style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                                    onChangeText={(value) => onChange(value)}
+                                    onChangeText={(value) => { onChange(value) }}
                                     keyboardType={'numeric'}
                                     value={value}
-                                    onSubmitEditing={() => setFocus('AmountFuel')/* handleOnSubmitCost() */}
-                                    onBlur={() => handleOnSubmitCost()}
+                                    onSubmitEditing={() => { setFocus('AmountFuel') }/* handleOnSubmitCost() */}
+                                    onBlur={() => { handleOnSubmitCost() }}
                                     right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="грн"/>}
                                   />
                                 )}
@@ -305,11 +307,11 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                     ref={ref}
                                     label={'сумма'}
                                     style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                                    onChangeText={(value) => onChange(value)}
+                                    onChangeText={(value) => { onChange(value) }}
                                     keyboardType={'numeric'}
                                     value={value}
-                                    onSubmitEditing={() => setFocus('StationFuel')/* handleOnSubmitAmount() */}
-                                    onBlur={() => handleOnSubmitAmount()}
+                                    onSubmitEditing={() => { setFocus('StationFuel') }/* handleOnSubmitAmount() */}
+                                    onBlur={() => { handleOnSubmitAmount() }}
                                     right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="грн"/>}
                                   />
                                 )}
@@ -330,7 +332,7 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                       /* placeholder={'название заправки'} */
                                       label={'название заправки'}
                                       style={{ flex: 1, backgroundColor: colors.surface }}
-                                      onChangeText={(value) => onChange(String(value))}
+                                      onChangeText={(value) => { onChange(String(value)) }}
                                       value={String(value)}
                                       onBlur={onBlur}
                                       error={(error != null) && true}
@@ -350,7 +352,7 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                       mode={'elevated'}
                       buttonColor={colors.secondaryContainer}
                       textColor={colors.primary}
-                      onPress={() => handleCancel() }
+                      onPress={() => { handleCancel() } }
                     >
                       Cancel
                     </Button>
@@ -375,7 +377,7 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         }
         {isList &&
           <View style={styles.flatList}>
-            <ToggleButton.Row onValueChange={value => setDateList(value)}
+            <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                               value={dateList}
                               style={{ alignSelf: 'flex-end', marginBottom: 10 }}
             >

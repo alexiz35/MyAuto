@@ -5,14 +5,14 @@ import {
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
-  StateFuel
+  type StateFuel
 } from '../../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, editFuel } from '../Redux/actions'
-import { RootTabParamList } from '../Navigation/Navigation'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { type RootTabParamList } from '../Navigation/Navigation'
+import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { useFocusEffect } from '@react-navigation/native'
 import { useTheme, Surface, TextInput, List, Button } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
@@ -106,11 +106,13 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
     return isNaN(output) ? 0 : output
   }
 
-  const inputDate = (): void => DateTimePickerAndroid.open({
-    value: new Date(),
-    // @ts-expect-error date undefined
-    onChange: (event, date) => setValue('dateFuel', date)
-  })
+  const inputDate = (): void => {
+    DateTimePickerAndroid.open({
+      value: new Date(),
+      // @ts-expect-error date undefined
+      onChange: (event, date) => { setValue('dateFuel', date) }
+    })
+  }
   const clearInput = (): void => {
     /* setItemFuel(formToData(tempNullFuel)) */
     setIsEditFuel(false)
@@ -211,7 +213,7 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
                         showSoftInputOnFocus={false}
                         value = {new Date(value).toLocaleDateString()}
                         onPressOut={inputDate}
-                        onSubmitEditing={() => setFocus('mileageFuel')}
+                        onSubmitEditing={() => { setFocus('mileageFuel') }}
                       />
                                   )}/>
                     </Surface>
@@ -227,7 +229,7 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
                                               placeholder={'пробег'}
                                               style={{ flex: 1, backgroundColor: colors.surface }}
                                               label={'текущий пробег'}
-                                              onChangeText={(value) => onChange(value)}
+                                              onChangeText={(value) => { onChange(value) }}
                                               onSubmitEditing={() => {
                                                 setFocus('volumeFuel')
                                               }}
@@ -256,10 +258,10 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
                       placeholder={'кол-во топлива'}
                       label={'кол-во топлива'}
                       style={{ flex: 1, backgroundColor: colors.surface }}
-                      onChangeText={(value) => onChange(value)}
+                      onChangeText={(value) => { onChange(value) }}
                       keyboardType={'numeric'}
                       value={value}
-                      onSubmitEditing={() => setFocus('CostFuel')}
+                      onSubmitEditing={() => { setFocus('CostFuel') }}
                     />
                               {/*   {((error === undefined)) ? <Text>This is required</Text> : null} */}
                                   </>
@@ -275,11 +277,11 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
                       placeholder={'цена топлива'}
                       label={'цена топлива'}
                       style={{ flex: 1, backgroundColor: colors.surface }}
-                      onChangeText={(value) => onChange(value)}
+                      onChangeText={(value) => { onChange(value) }}
                       keyboardType={'numeric'}
                       value={value}
-                      onSubmitEditing={() => setFocus('AmountFuel')/* handleOnSubmitCost() */}
-                      onBlur={() => handleOnSubmitCost()}
+                      onSubmitEditing={() => { setFocus('AmountFuel') }/* handleOnSubmitCost() */}
+                      onBlur={() => { handleOnSubmitCost() }}
                     />
                                 )}/>
                   </Surface>
@@ -293,11 +295,11 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
                       placeholder={'сумма заправки'}
                       label={'сумма заправки'}
                       style={{ flex: 1, backgroundColor: colors.surface }}
-                      onChangeText={(value) => onChange(value)}
+                      onChangeText={(value) => { onChange(value) }}
                       keyboardType={'numeric'}
                       value={value}
-                      onSubmitEditing={() => setFocus('StationFuel')/* handleOnSubmitAmount() */}
-                      onBlur={() => handleOnSubmitAmount()}
+                      onSubmitEditing={() => { setFocus('StationFuel') }/* handleOnSubmitAmount() */}
+                      onBlur={() => { handleOnSubmitAmount() }}
                     />
                                 )}/>
                   </Surface>
@@ -313,7 +315,7 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
                       placeholder={'название заправки'}
                       label={'название заправки'}
                       style={{ flex: 1, backgroundColor: colors.surface }}
-                      onChangeText={(value) => onChange(String(value))}
+                      onChangeText={(value) => { onChange(String(value)) }}
                       value={String(value)}
                       onBlur={onBlur}
                       error={(error != null) && true}
@@ -330,7 +332,7 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
                     mode={'elevated'}
                     buttonColor={colors.secondaryContainer}
                     textColor={colors.primary}
-                    onPress={() => handleCancel() }
+                    onPress={() => { handleCancel() } }
                   >
                     Cancel
                   </Button>
