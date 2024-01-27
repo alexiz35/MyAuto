@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import {
   StateService,
-  ModalPart, ListService
+  ModalPart, ListService, Seller
 } from '../../../type'
 import { AddPartModal } from './AddPartModal'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -18,13 +18,17 @@ import {
   Surface,
   TextInput,
   TouchableRipple,
-  Checkbox
+  Checkbox, Dialog
 } from 'react-native-paper'
 import { PickService } from './PickService'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import Accordion from '../../Accordion'
 import { useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackParamList } from '../../Navigation/Navigation'
 
 interface InputServiceProps {
   isCancel: () => void
@@ -50,6 +54,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
 
   const theme = useAppTheme()
   const state = useAppSelector((state) => state.cars[state.numberCar])
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const tempNullService: FormService = {
     startKm: '',
@@ -188,6 +193,22 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     isOk(formToData(dataForm))
   }
   // ---------------------------------------------------------------------------
+  // ---------------------- handle ModalPickSeller -----------------------------
+  const [visibleSeller, setVisibleSeller] = useState(false)
+  const handlePress = (item: Seller): void => {
+    setVisibleSeller(false)
+    setValue('sellerName', item.name)
+    setValue('sellerPhone', String(item.phone))
+    setValue('sellerWeb', String(item.web))
+  }
+  const editPress = (item: Seller): void => {
+    setVisibleSeller(false)
+    navigation.navigate('SellerScreen', { item })
+  }
+  const pressEditSeller = (): void => {
+    setVisibleSeller(false)
+    navigation.navigate('SellerScreen')
+  }
   // ---------------------- handleModal ----------------------------------------
 
   const handleCancelModal = (): void => {
@@ -290,7 +311,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                                     label={'дата сервиса'}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
-                                    onChangeText={(value) => onChange(value)}
+                                    /* onChangeText={(value) => onChange(value)} */
                                     onPressOut={() => inputDate('startDate')}
                                     /* onSubmitEditing={updateTypeService} */
                                   />
@@ -406,6 +427,10 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
                                       /* keyboardType={'phone-pad'} */
                                       onChangeText={(value) => onChange(value)}
                                       value={value}
+                                      right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
+                                                             color={theme.colors.tertiary}
+                                                             onPress={() => setVisibleSeller(true)
+                                                             }/>}
                                       onSubmitEditing={() => {
                                         setFocus('sellerPhone')
                                       }}
@@ -500,7 +525,17 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
             {/* </ScrollView> */}
           </View>
     </KeyboardAwareScrollView>
-
+    {
+      // -------------------------------- ModalPickSeller -----------------------
+    }
+    <Portal>
+      <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+        <ModalPickSeller handlePress={handlePress} editPress={editPress} navigation={pressEditSeller}/>
+      </Dialog>
+    </Portal>
+    {
+      // ------------------------------------------------------------------------
+    }
   </View>
   )
 }

@@ -4,19 +4,21 @@ import {
   Button,
   Surface,
   TextInput,
-  Checkbox, SegmentedButtons
+  Checkbox, SegmentedButtons, Portal, Dialog
 } from 'react-native-paper'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import Accordion from '../Accordion'
 
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { StateTask } from '../../type'
+import { Seller, StateTask } from '../../type'
 import { useAppSelector } from '../Redux/hook'
 import { useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../Navigation/Navigation'
+import { ModalPickSeller } from '../SellerScreenComponents/ModalPickSeller'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 interface InputTaskProps {
   isCancel: () => void
@@ -50,7 +52,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
 
   const theme = useAppTheme()
   const state = useAppSelector(state => state.cars[state.numberCar])
-  const nav = useNavigation<ProfileScreenNavigationProp>()
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const tempNullTask: FormTask = {
     typeTask: 'part',
@@ -151,6 +153,24 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
     } */
     isOk(formToData(dataForm))
   }
+
+  // ---------------------- handle ModalPickSeller -----------------------------
+  const [visibleSeller, setVisibleSeller] = useState(false)
+  const handlePress = (item: Seller): void => {
+    setVisibleSeller(false)
+    setValue('sellerName', item.name)
+    setValue('sellerPhone', String(item.phone))
+    setValue('sellerWeb', String(item.web))
+  }
+  const editPress = (item: Seller): void => {
+    setVisibleSeller(false)
+    navigation.navigate('SellerScreen', { item })
+  }
+  const pressEditSeller = (): void => {
+    setVisibleSeller(false)
+    navigation.navigate('SellerScreen')
+  }
+  // ---------------------------------------------------------------------------
 
   // --------------------------- function FinishTask ----------------------------
   /* useEffect(() => {
@@ -331,7 +351,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     label={'до даты'}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
-                                    onChangeText={(value) => onChange(value)}
+                                    /* onChangeText={(value) => onChange(value)} */
                                     onPressOut={() => inputDate('dateEndTask')}
                                     /* onSubmitEditing={updateTypeService} */
                                   />
@@ -442,6 +462,12 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                       label={'Продавец'}
                                       /* keyboardType={'phone-pad'} */
+                                      right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
+                                                             color={theme.colors.tertiary}
+                                                             onPress={() => setVisibleSeller(true)
+                                                             }
+                                      />
+                                      }
                                       onChangeText={(value) => onChange(value)}
                                       value={value}
                                       onSubmitEditing={() => {
@@ -557,7 +583,17 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
             {/* </ScrollView> */}
           </View>
     </KeyboardAwareScrollView>
-
+    {
+      // -------------------------------- ModalPickSeller -----------------------
+    }
+    <Portal>
+      <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+        <ModalPickSeller handlePress={handlePress} editPress={editPress} navigation={pressEditSeller}/>
+      </Dialog>
+    </Portal>
+    {
+      // ------------------------------------------------------------------------
+    }
   </View>
   )
 }
