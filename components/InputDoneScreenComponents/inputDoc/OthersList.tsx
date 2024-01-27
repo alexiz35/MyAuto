@@ -1,6 +1,6 @@
-import { FlatList, StyleSheet } from 'react-native'
+import { FlatList } from 'react-native'
 import { StateOther } from '../../../type'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { useAppSelector } from '../../Redux/hook'
 import { BusyIndicator } from '../../useIsReadyHook'
 import { RenderRowOther } from './OtherRow'
@@ -159,13 +159,3 @@ export const OthersList = ({ handlePress, filterList = 'last' }: handleProp): JS
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  listItem: {
-    height: 70,
-    paddingRight: 0,
-    marginHorizontal: 5,
-    marginVertical: 5,
-    flex: 1
-  }
-})

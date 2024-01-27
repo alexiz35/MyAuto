@@ -1,30 +1,24 @@
-import { FlatList, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
-import { RenderRowFuel } from '../components/FuelScreenComponents/fuelRow'
+import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
 import { SellerList } from '../components/SellerScreenComponents/SellerList'
-import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { useAppDispatch } from '../components/Redux/hook'
 import { useAppTheme } from '../CommonComponents/Theme'
-import { Seller, StateFuel } from '../type'
-import { useCallback, useEffect, useState } from 'react'
+import { Seller } from '../type'
+import { useCallback, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { addFuel, addSeller, editFuel, editSeller } from '../components/Redux/actions'
+import { addSeller, editSeller } from '../components/Redux/actions'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import {
   Button,
   HelperText,
-  IconButton,
   List,
   Portal,
   RadioButton,
   Surface,
-  Text,
   TextInput,
   ToggleButton
 } from 'react-native-paper'
-import { FuelList } from '../components/FuelScreenComponents/FuelList'
 import { ModalInfoSeller } from '../components/SellerScreenComponents/ModalInfoSeller'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
+import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/native'
 
@@ -40,8 +34,6 @@ type Props = StackScreenProps<RootStackParamList, 'SellerScreen'>
 
 const SellerScreen = ({ route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state.cars[state.numberCar])
-  const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
 
   const tempNullSeller: FormSeller = {
@@ -85,8 +77,6 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
   const {
     control,
     handleSubmit,
-    setValue,
-    getValues,
     setFocus
 
   } = useForm<FormSeller>({ mode: 'onSubmit', defaultValues: tempNullSeller, values: dataToForm(itemSeller) })
@@ -295,7 +285,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                 <Surface elevation={2} style={styles.surface}>
                   <Controller name={'type'}
                               control={control}
-                              render={ ({ field: { onChange, value, ref } }) => (
+                              render={ ({ field: { onChange, value } }) => (
 
                                 <RadioButton.Group onValueChange={value => onChange(value)} value={value} >
                                   <View style={{ flexDirection: 'row' }}>

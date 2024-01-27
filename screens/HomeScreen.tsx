@@ -1,8 +1,7 @@
 import { View, StyleSheet } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { useCallback, useEffect, useState } from 'react'
-import { RootStackParamList, RootTabParamList } from '../components/Navigation/Navigation'
+import { JSX, useCallback, useEffect, useState } from 'react'
+import { RootStackParamList, RootTabParamList } from '../components/Navigation/TypeNavigation'
 import * as ScreenOrientation from 'expo-screen-orientation'
 
 import { MainCard } from '../components/HomeScreenComponents/MainCard'
@@ -18,7 +17,6 @@ import { TasksList } from '../components/TaskScreenComponents/TasksList'
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
-  const setMiles = useAppDispatch()
   const theme = useAppTheme()
   /* const cars = useAppSelector((state) => state) */
 

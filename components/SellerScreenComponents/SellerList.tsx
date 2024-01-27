@@ -1,9 +1,8 @@
-import { Seller, StateFuel } from '../../type'
+import { Seller } from '../../type'
 import { useAppSelector } from '../Redux/hook'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { BusyIndicator } from '../useIsReadyHook'
 import { FlatList } from 'react-native'
-import { RenderRowFuel } from '../FuelScreenComponents/fuelRow'
 import { RenderRowSeller } from './RenderRowSeller'
 
 interface handleProp {

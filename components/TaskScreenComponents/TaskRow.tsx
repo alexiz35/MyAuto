@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { StateTask } from '../../type'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { delTask } from '../Redux/actions'
@@ -28,7 +28,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
   useEffect(() => {
     typeIcon()
   }, [])
-  const typeIcon = () => {
+  const typeIcon = (): void => {
     if (item.typeTask !== undefined) {
       switch (item.typeTask) {
         case 'part':

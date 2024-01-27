@@ -1,6 +1,6 @@
 import { View } from 'react-native'
-import { useCallback, useState } from 'react'
-import { RootTabParamList } from '../components/Navigation/Navigation'
+import { JSX, useCallback, useState } from 'react'
+import { RootTabParamList } from '../components/Navigation/TypeNavigation'
 import InputService from '../components/InputDoneScreenComponents/inputService/InputService'
 import InputPart from '../components/InputDoneScreenComponents/inputPart/InputPart'
 import BackgroundView from '../CommonComponents/BackgroundView'

@@ -1,6 +1,6 @@
 import WheelPickerExpo from 'react-native-wheel-picker-expo'
 import { View } from 'react-native'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { Button } from 'react-native-paper'
 

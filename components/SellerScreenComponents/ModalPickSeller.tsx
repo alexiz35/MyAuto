@@ -1,8 +1,9 @@
-import { Button, Card, Dialog, Portal } from 'react-native-paper'
-import { FlatList, View } from 'react-native'
+import { Button, Dialog } from 'react-native-paper'
+import { FlatList } from 'react-native'
 import { useAppSelector } from '../Redux/hook'
 import { RenderRowSeller } from './RenderRowSeller'
 import { Seller } from '../../type'
+import { JSX } from 'react'
 
 interface PropsPickSeller {
   handlePress: (item: Seller) => void

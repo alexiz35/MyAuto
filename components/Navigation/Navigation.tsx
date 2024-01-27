@@ -34,6 +34,7 @@ import { useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
+import { JSX } from 'react'
 
 function LogoTitle (): JSX.Element {
   return (

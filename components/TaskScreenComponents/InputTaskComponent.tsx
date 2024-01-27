@@ -1,4 +1,4 @@
-import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
   Button,
@@ -6,17 +6,15 @@ import {
   TextInput,
   Checkbox, SegmentedButtons, Portal, Dialog
 } from 'react-native-paper'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import Accordion from '../Accordion'
 
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { Seller, StateTask } from '../../type'
-import { useAppSelector } from '../Redux/hook'
-import { useEffect, useState } from 'react'
+import { JSX, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../Navigation/Navigation'
+import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { ModalPickSeller } from '../SellerScreenComponents/ModalPickSeller'
 import { StackNavigationProp } from '@react-navigation/stack'
 
@@ -43,15 +41,11 @@ interface FormTask {
   sellerWeb: string
   isFinished: boolean
 }
-type ProfileScreenNavigationProp = NativeStackNavigationProp<
-RootStackParamList,
-'InputDoneScreen'>
 
 const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskProps): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
 
   const theme = useAppTheme()
-  const state = useAppSelector(state => state.cars[state.numberCar])
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const tempNullTask: FormTask = {
@@ -117,7 +111,6 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
   const {
     control,
     handleSubmit,
-    getValues,
     setValue,
     setFocus
   } = useForm<FormTask>({ mode: 'onBlur', defaultValues: tempNullTask, values: dataToForm(itemTask) })
@@ -194,7 +187,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
               <Surface elevation={2} style={styles.surface}>
                 <Controller name={'typeTask'}
                             control={control}
-                            render={ ({ field: { onChange, value, ref, onBlur } }) => (
+                            render={ ({ field: { onChange, value } }) => (
                   <SegmentedButtons value={value} onValueChange={value => onChange(value)} buttons={[
                     {
                       value: 'part',
@@ -343,7 +336,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'dateEndTask'}
                                 control={control}
-                                render={ ({ field: { value, onChange, ref } }) => (
+                                render={ ({ field: { value, ref } }) => (
                                   <TextInput
                                     ref={ref}
                                     dense
@@ -535,7 +528,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                 <Surface elevation={2} style={styles.surface}>
                   <Controller name={'isFinished'}
                               control={control}
-                              render={ ({ field: { value, ref, onChange } }) => (
+                              render={ ({ field: { value, onChange } }) => (
                                 <Checkbox.Item status={value ? 'checked' : 'unchecked'} label={'Выполнено'}
                                                onPress={() => onChange(!value)}
                                                color={theme.colors.tertiary}

@@ -1,9 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../components/Navigation/Navigation'
+import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 import { Alert, StyleSheet, TouchableHighlight, View, ScrollView } from 'react-native'
-import { Button, Text, Divider, Checkbox, Icon, List, Switch, IconButton } from 'react-native-paper'
+import { Button, Text, Divider, Checkbox, Icon, IconButton } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { useCallback, useEffect, useState } from 'react'
+import { JSX, useCallback, useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
 import {
@@ -25,7 +25,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
-import { store } from '../components/Redux/store'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()

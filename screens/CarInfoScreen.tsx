@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useEffect, useState } from 'react'
 import { ListService, StateInfo } from '../type'
 import { editCar, updateMiles } from '../components/Redux/actions'
-import { RootStackParamList } from '../components/Navigation/Navigation'
+import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 import { cars } from '../cars.json'
 import { Dropdown } from 'react-native-element-dropdown'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
@@ -31,7 +31,6 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const setCar = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
   const car = useAppSelector(state => state.cars)
-  const state = useAppSelector(state => state)
   const { colors } = useAppTheme()
 
   const itemsFuel = [

@@ -2,7 +2,7 @@ import { Dimensions, ScrollView, StyleSheet, View } from 'react-native'
 import { Divider, Text, Icon, SegmentedButtons, Surface, Button, Portal, Dialog } from 'react-native-paper'
 
 import { useAppSelector } from '../components/Redux/hook'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import {
   fuelMiles,
@@ -19,7 +19,6 @@ import {
   yearDataPartsChart
 } from '../components/StatScreenComponents/FunctionStatistic'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { useAppTheme } from '../CommonComponents/Theme'
 import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
 import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
 
@@ -37,7 +36,6 @@ export interface TypeSelect {
 
 const StatScreen = (): JSX.Element => {
   const state = useAppSelector((state) => state.cars[state.numberCar])
-  const theme = useAppTheme()
 
   const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
 
@@ -59,11 +57,11 @@ const StatScreen = (): JSX.Element => {
 
   const [typeChart, setTypeChart] = useState('pie')
 
-  const calcSum = (targetArray: number[]): number => {
+  /*   const calcSum = (targetArray: number[]): number => {
     if (targetArray.length !== 0) {
       return targetArray.reduce((accumulator, currentValue) => accumulator + currentValue)
     } else { return 0 }
-  }
+  } */
 
   const selectTypeDate = (selectModal: TypeSelect): void => {
     switch (selectModal.type) {

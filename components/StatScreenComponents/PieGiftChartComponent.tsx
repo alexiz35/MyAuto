@@ -2,7 +2,7 @@ import { View } from 'react-native'
 import { PieChart } from 'react-native-gifted-charts'
 import { List } from 'react-native-paper'
 import { FUEL_BAR, OTHER_BAR, PART_BAR } from './FunctionStatistic'
-import { useEffect } from 'react'
+import { JSX } from 'react'
 
 interface PropsBarChat {
   dataProps: {

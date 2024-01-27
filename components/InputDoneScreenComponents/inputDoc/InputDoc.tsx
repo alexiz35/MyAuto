@@ -3,7 +3,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView, ScrollView
 } from 'react-native'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { StateOther } from '../../../type'
 import { addOther, editOther } from '../../Redux/actions'

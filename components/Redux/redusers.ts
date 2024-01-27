@@ -1,5 +1,4 @@
 import { ActionType, Dispatch, initialStateInfo, StateMain } from '../../type'
-import { settings } from 'eslint-config-standard-with-typescript'
 
 export const initialState: StateMain = {
   numberCar: 0,

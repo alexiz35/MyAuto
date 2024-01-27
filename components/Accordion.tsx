@@ -5,7 +5,7 @@ import {
   View,
   ViewStyle
 } from 'react-native'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { TouchableRipple, Text, IconButton } from 'react-native-paper'
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
 }
 
 const Accordion = ({
-  insideView, title, open, isOpen, bannerStyle, textBannerStyle, viewContainerStyle, arrowStyle, controlled, onPress
+  insideView, title, open, isOpen, bannerStyle, textBannerStyle, viewContainerStyle, controlled, onPress
 }: Props): JSX.Element => {
   const [isVisible, setIsVisible] = useState(false)
 

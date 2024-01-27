@@ -1,4 +1,4 @@
-import { Button, Card, Dialog, List } from 'react-native-paper'
+import { Button, Dialog, List } from 'react-native-paper'
 import { Seller } from '../../type'
 import { Linking } from 'react-native'
 

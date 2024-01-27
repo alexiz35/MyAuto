@@ -3,7 +3,6 @@ import {
   StyleSheet
 } from 'react-native'
 import { JSX, useState } from 'react'
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 /* import { useAppDispatch, useAppSelector } from '../components/Redux/hook' */
 import { type Seller, type StatePart } from '../../../type'
 import Accordion from '../../Accordion'
@@ -14,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { type StackNavigationProp } from '@react-navigation/stack'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 
 interface InputPartProps {
   isCancel: () => void

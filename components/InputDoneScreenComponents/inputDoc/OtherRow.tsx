@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { StateOther } from '../../../type'
 import { Card, IconButton, Menu } from 'react-native-paper'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { delOther } from '../../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'

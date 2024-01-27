@@ -3,6 +3,7 @@ import {
   StyleSheet
 } from 'react-native'
 import {
+  JSX,
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { useAppSelector } from '../Redux/hook'
 import { TypeSelect } from '../../screens/StatScreen'
 import WheelPickerSelectDate from './WheelPickerSelectDate'

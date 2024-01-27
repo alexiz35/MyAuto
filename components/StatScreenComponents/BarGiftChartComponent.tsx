@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { BarChart } from 'react-native-gifted-charts'
 
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import {
   ALL_BAR,
   FUEL_BAR, initialBarChart,

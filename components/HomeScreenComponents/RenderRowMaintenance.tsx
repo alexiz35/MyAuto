@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import { Card, IconButton, List, Menu } from 'react-native-paper'
 import { ListService } from '../../type'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 
 interface propsRowMaintenance {
   handlePick: (item: ListService) => void

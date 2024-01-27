@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, ImageBackground, View } from 'react-native'
-import { COLOR_GREEN } from '../type'
-import BackgroundView from '../CommonComponents/BackgroundView'
+import { JSX, useEffect, useState } from 'react'
+import { ActivityIndicator, View } from 'react-native'
 import { Text } from 'react-native-paper'
+import { useAppTheme } from '../CommonComponents/Theme'
 
 export const useIsReady = (): boolean => {
   const [isReady, setIsReady] = useState(false)
@@ -15,13 +14,15 @@ export const useIsReady = (): boolean => {
 }
 
 export const BusyIndicator = (): JSX.Element => {
+  const { colors } = useAppTheme()
+
   return (
   /* <BackgroundView style={{ height: '100%' }}> */
 
   <View style={{
     justifyContent: 'center'
   }}>
-    <ActivityIndicator size={'large'} color={COLOR_GREEN} />
+    <ActivityIndicator size={'large'} color={colors.tertiary} />
     <Text style={{ textAlign: 'center' }}>Downloading data...</Text>
   </View>
   /*  </BackgroundView> */

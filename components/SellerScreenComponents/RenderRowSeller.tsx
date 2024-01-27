@@ -1,6 +1,6 @@
-import { Seller, StateFuel } from '../../type'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { useState } from 'react'
+import { Seller } from '../../type'
+import { useAppDispatch } from '../Redux/hook'
+import { JSX, useState } from 'react'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Menu } from 'react-native-paper'
@@ -14,7 +14,6 @@ interface propsRowSeller {
 
 export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller): JSX.Element => {
   const dispatch = useAppDispatch()
-  const carId = useAppSelector(state => state.numberCar)
 
   const [visibleMenu, setVisibleMenu] = useState(false)
   const { colors } = useAppTheme()

@@ -1,6 +1,6 @@
 import { FlatList } from 'react-native'
 import { StatePart } from '../../../type'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { useAppSelector } from '../../Redux/hook'
 import { BusyIndicator } from '../../useIsReadyHook'
 import { RenderRowPart } from './PartRow'

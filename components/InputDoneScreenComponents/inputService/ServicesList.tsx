@@ -1,9 +1,8 @@
 import { FlatList } from 'react-native'
-import { StatePart, StateService } from '../../../type'
-import { useEffect, useState } from 'react'
+import { StateService } from '../../../type'
+import { JSX, useEffect, useState } from 'react'
 import { useAppSelector } from '../../Redux/hook'
 import { BusyIndicator } from '../../useIsReadyHook'
-import { RenderRowPart } from '../inputPart/PartRow'
 import { RenderRowService } from './ServiceRow'
 
 interface handleProp {

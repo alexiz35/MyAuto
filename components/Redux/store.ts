@@ -1,10 +1,9 @@
-import { applyMiddleware, compose, legacy_createStore as createStore } from 'redux'
+import { applyMiddleware, legacy_createStore as createStore } from 'redux'
 
 import thunk from 'redux-thunk'
 import { initialState, milesReducer } from './redusers'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import hardSet from 'redux-persist/es/stateReconciler/hardSet'
 
 const persistConfig = {
   key: 'root',

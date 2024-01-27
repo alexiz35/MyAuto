@@ -3,7 +3,6 @@ import { Provider } from 'react-redux'
 import { store, persistor } from './components/Redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { createTheme, ThemeProvider } from '@rneui/themed'
 import { LogBox } from 'react-native'
 
 export default function App (): JSX.Element {

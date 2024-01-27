@@ -145,14 +145,14 @@ export const initialStateInfo = {
   regMaintenance: listService
 }
 
-export interface StateServiceTask {
+/* export interface StateServiceTask {
   id: number
   title: string
   dateService: Date
   milesService: number
   seller?: Seller
   amountCostService: number
-}
+} */
 
 export interface StateService {
   id: number

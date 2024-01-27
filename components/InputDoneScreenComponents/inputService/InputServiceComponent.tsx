@@ -2,7 +2,7 @@ import {
   View,
   StyleSheet
 } from 'react-native'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import {
   StateService,
@@ -303,7 +303,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'startDate'}
                                 control={control}
-                                render={ ({ field: { value, onChange, ref } }) => (
+                                render={ ({ field: { value, ref } }) => (
                                   <TextInput
                                     ref={ref}
                                     dense
