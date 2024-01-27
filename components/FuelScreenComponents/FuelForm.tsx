@@ -11,7 +11,7 @@ import {
 } from '../../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, editFuel } from '../Redux/actions'
-import { type RootTabParamList } from '../Navigation/Navigation'
+import { type RootTabParamList } from '../Navigation/TypeNavigation'
 import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { useFocusEffect } from '@react-navigation/native'
 import { useTheme, Surface, TextInput, List, Button } from 'react-native-paper'
@@ -55,7 +55,7 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
   }
   const formToData = (data: FormFuel): StateFuel => {
     return {
-      id: Date.now(),
+      id: isEditFuel ? itemFuel?.id : Date.now(),
       dateFuel: data.dateFuel,
       mileageFuel: Number(data.mileageFuel),
       volumeFuel: Number(data.volumeFuel),
@@ -165,14 +165,13 @@ const FuelForm = ({ navigation, route }: Props): JSX.Element => {
     handleOnPress()
   }
 
-  console.log('ERROR', formState.errors)
   const handleOk = (dataForm: StateFuel): void => {
     /* if (valueDrop === null || startKmInput === 0) {
       setErrorMsg('Введите необходимые данные')
       return
     } */
 
-    dataForm.id = Date.now()
+    /* dataForm.id = Date.now() */
 
     isEditFuel
       ? dispatch(editFuel(carId, itemFuel?.id, dataForm))

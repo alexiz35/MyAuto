@@ -11,7 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useForm, Controller } from 'react-hook-form'
 import { Button, Dialog, Portal, Surface, TextInput, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
-import { type RootStackParamList } from '../../Navigation/Navigation'
+import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { type StackNavigationProp } from '@react-navigation/stack'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 

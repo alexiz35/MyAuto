@@ -1,7 +1,7 @@
 import { View, StyleSheet, Vibration } from 'react-native'
 import { CurrentMiles, initialStateInfo, StateInfo } from '../../type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamList, RootTabParamList } from '../Navigation/Navigation'
+import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
 import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useEffect, useState } from 'react'

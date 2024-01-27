@@ -28,12 +28,12 @@ import { useAppTheme } from '../../../CommonComponents/Theme'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParamList } from '../../Navigation/Navigation'
+import { RootStackParamList } from '../../Navigation/TypeNavigation'
 
 interface InputServiceProps {
   isCancel: () => void
   isOk: (serviceResult: StateService) => void
-  service?: StateService | null
+  service?: StateService | undefined
   isEdit: boolean
 }
 
@@ -49,7 +49,7 @@ interface FormService {
   sellerWeb: string
 }
 
-const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServiceProps): JSX.Element => {
+const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServiceProps): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
 
   const theme = useAppTheme()
@@ -105,7 +105,7 @@ const InputService = ({ isCancel, isOk, service = null, isEdit }: InputServicePr
     }
   }
 
-  const [itemService, setItemService] = useState<StateService>(service != null ? service : formToData(tempNullService))
+  const [itemService, setItemService] = useState<StateService>(service !== undefined ? service : formToData(tempNullService))
 
   const {
     control,

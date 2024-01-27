@@ -1,9 +1,9 @@
 import 'react-native-gesture-handler'
 import {
-  CompositeScreenProps, NavigationContainer, NavigatorScreenParams
+  NavigationContainer
 }
   from '@react-navigation/native'
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
 import { Image, Platform, View } from 'react-native'
@@ -12,7 +12,7 @@ import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
 import AsyncStorage from '@react-native-async-storage/async-storage' */
 
-import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
 import TaskScreen from '../../screens/TaskScreen'
 /* import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs' */
@@ -33,25 +33,7 @@ import {
 import { useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
 import SellerScreen from '../../screens/SellerScreen'
-import { Seller } from '../../type'
-
-export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
-
-export type RootStackParamList = {
-  BottomTabNav: NavigatorScreenParams<RootTabParamList>
-  InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
-  CarInfoScreen: undefined
-  SettingScreen: undefined
-  FuelScreen: undefined
-  SellerScreen: undefined | { item: Seller }
-}
-export type RootTabParamList = {
-  Home: undefined
-  InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
-  Fuel: undefined
-  TaskScreen: undefined
-  StatScreen: undefined
-}
+import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
 
 function LogoTitle (): JSX.Element {
   return (

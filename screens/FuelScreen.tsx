@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { type StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { addFuel, editFuel } from '../components/Redux/actions'
@@ -27,7 +27,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { type CompositeScreenProps, useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../CommonComponents/Theme'
-import { StackNavigationProp } from '@react-navigation/stack'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'StatScreen'>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
@@ -41,7 +40,7 @@ interface FormFuel {
   StationFuel: string
 }
 
-const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
+export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.cars[state.numberCar])
   const carId = useAppSelector(state => state.numberCar)
@@ -178,7 +177,8 @@ const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
               Cумма заправок в текущем месяце {sumFuel}
             </Text>
             <IconButton icon={'calendar-month'} onPress={() => {
-              navigation.navigation.navigate('StatScreen')
+              // @ts-expect-error temp error navigate props
+              navigation.navigate('StatScreen')
             }} />
         </View>
         {

@@ -10000,10 +10000,10 @@ react-native-numeric-input@^1.9.1:
     prop-types "^15.6.1"
     react-native-pixel-perfect "^1.0.1"
 
-react-native-paper@^5.11.1, "react-native-paper@>= 3.0.0":
-  version "5.11.1"
-  resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.11.1.tgz"
-  integrity sha512-axqRTagGL8LtuYh172cx2Q2THOVJ3PTpPjCKhL5ECRdpJs2ceiboVecSiOIBuO3H7dVpaneptBA0vJr9HeVHwg==
+react-native-paper@^5.12.3, "react-native-paper@>= 3.0.0":
+  version "5.12.3"
+  resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.12.3.tgz"
+  integrity sha512-nH1e1pGPE/aOE5YR2GRX7CfMHFA9cAfrAfgCtwL4amJPDZCoVjc5yt2VDiUE1rT+JUfk0qdICMP3UggxvjMgug==
   dependencies:
     "@callstack/react-theme-provider" "^3.0.9"
     color "^3.1.2"

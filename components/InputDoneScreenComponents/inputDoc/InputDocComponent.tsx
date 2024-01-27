@@ -14,7 +14,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { useNavigation } from '@react-navigation/native'
 import { type StackNavigationProp } from '@react-navigation/stack'
-import { type RootStackParamList } from '../../Navigation/Navigation'
+import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 
 interface InputDocProps {
   isCancel: () => void
