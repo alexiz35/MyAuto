@@ -1,18 +1,23 @@
-import { applyMiddleware, legacy_createStore as createStore } from 'redux'
+import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
 
 import thunk from 'redux-thunk'
-import { initialState, rootReducer } from './redusers'
+import { initialState, rootOldReducer } from './redusers'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore } from '@reduxjs/toolkit'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants'
 import logger from 'redux-logger'
+import { rootReducer } from './redusers_old'
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage
   /* stateReconciler: hardSet */
 }
+/* const rootReducer = combineReducers({
+  rootOldReducer
+
+}) */
 // ------------------------------- devTool -----------------------------------------------
 /* const composeEnhancers =
   typeof window === 'object' &&
@@ -39,6 +44,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const store = configureStore({
   reducer: persistedReducer,
+  preloadedState: initialState,
   middleware: getDefaultMiddleware => {
     const middleware = getDefaultMiddleware({
       // Pass in a custom `extra` argument to the thunk middleware

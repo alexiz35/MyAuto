@@ -1,17 +1,18 @@
 import { ActionType, Dispatch, initialStateInfo, StateMain } from '../../type'
+import { initialState } from './redusers'
 
-export const initialState: StateMain = {
+/* export const initialState: StateMain = {
   numberCar: 0,
   sellerList: [{
-    name: 'maks',
-    phone: '100'
+    name: 'rere',
+    phone: '1'
   }, {
     name: 'rerere',
     phone: '2'
   }],
   token: '',
   setting: {
-    themeSet: 'light',
+    themeSet: 'dark',
     alarmMileageStart: true,
     alarmMileagePeriod: true,
     alarmMileagePeriodNumber: 6
@@ -32,9 +33,9 @@ export const initialState: StateMain = {
       tasks: []
     }
   ]
-}
+} */
 
-export const rootOldReducer: Dispatch = (state = initialState, action) => {
+export const rootReducer: Dispatch = (state = initialState, action) => {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const selectCar = (numberCar: number) => ({
     indexArray: state.cars.findIndex(item => numberCar === item.carId),
