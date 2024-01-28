@@ -107,7 +107,7 @@ export interface Seller {
 
 export interface StateFuel {
   id: number
-  dateFuel: Date
+  dateFuel: string
   mileageFuel: number
   volumeFuel: number
   CostFuel: number
@@ -126,7 +126,7 @@ export interface StateInfo {
   capacity?: string
   gear?: string
   vin?: string
-  dateBuy: Date
+  dateBuy: string
   buyMileage: number
   regMaintenance: ListService[]
 }
@@ -140,7 +140,7 @@ export const initialStateInfo = {
   capacity: '',
   gear: '',
   vin: '',
-  dateBuy: new Date(),
+  dateBuy: new Date().toLocaleDateString(),
   buyMileage: 0,
   regMaintenance: listService
 }
@@ -223,7 +223,7 @@ export interface StateTask {
 // -----------------------------------type for Miles state----------------------------------
 export interface CurrentMiles {
   currentMileage: number
-  dateMileage: Date
+  dateMileage: string
 }
 // ------------------------------------------------------------------------------------------
 /* export interface StateMiles {

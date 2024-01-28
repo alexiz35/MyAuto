@@ -41,7 +41,7 @@ export const MainCard = (): JSX.Element => {
   ))
   const currentMiles: CurrentMiles = useAppSelector(state => (
     state.cars[state.numberCar].currentMiles === undefined
-      ? { currentMileage: 0, dateMileage: new Date() }
+      ? { currentMileage: 0, dateMileage: new Date().toLocaleDateString() }
       : state.cars[state.numberCar].currentMiles
   ))
   const dispatch = useAppDispatch()
@@ -92,7 +92,7 @@ export const MainCard = (): JSX.Element => {
     if (currentMiles.currentMileage < valueMileage) {
       const tempMileage: CurrentMiles = {
         currentMileage: valueMileage,
-        dateMileage: new Date()
+        dateMileage: new Date().toLocaleDateString()
       }
       dispatch(updateMiles(carId, tempMileage))
       setErrorInput(false)

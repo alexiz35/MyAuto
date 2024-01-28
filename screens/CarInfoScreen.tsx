@@ -148,7 +148,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       engine: valueEngine,
       gear: valueGear,
       vin: valueVin,
-      dateBuy: valueDateBuy,
+      dateBuy: valueDateBuy.toLocaleDateString(),
       buyMileage: valueBuyMileage,
       regMaintenance
     }

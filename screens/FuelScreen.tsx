@@ -32,7 +32,7 @@ import { useAppTheme } from '../CommonComponents/Theme'
 type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'StatScreen'>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
 
 interface FormFuel {
-  dateFuel: Date
+  dateFuel: string
   mileageFuel: string
   volumeFuel: string
   CostFuel: string
@@ -48,7 +48,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const navigation = useNavigation<Props>()
 
   const tempNullFuel: FormFuel = {
-    dateFuel: new Date(),
+    dateFuel: new Date().toLocaleDateString(),
     mileageFuel: '',
     volumeFuel: '',
     CostFuel: '',
@@ -101,8 +101,14 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const inputDate = (): void => {
     DateTimePickerAndroid.open({
       value: new Date(),
-      // @ts-expect-error date undefined
-      onChange: (event, date) => { setValue('dateFuel', date) }
+
+      onChange: (event, date) => {
+        const tempDate = date !== undefined
+          ? date?.toLocaleDateString()
+          : new Date().toLocaleDateString()
+        setValue('dateFuel', tempDate)
+      }
+
     })
   }
 
@@ -210,7 +216,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                     style={{ flex: 1, backgroundColor: colors.surface }}
                                     label={'Дата заправки'}
                                     showSoftInputOnFocus={false}
-                                    value = {new Date(value).toLocaleDateString()}
+                                    /* value = {new Date(value).toLocaleDateString()} */
+                                    value={value}
                                     onPressOut={inputDate}
                                     onSubmitEditing={() => { setFocus('mileageFuel') }}
                                   />

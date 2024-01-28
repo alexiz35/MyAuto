@@ -22,7 +22,7 @@ export const initialState: StateMain = {
       carId: 0,
       currentMiles: {
         currentMileage: 0,
-        dateMileage: new Date()
+        dateMileage: new Date().toLocaleDateString()
       },
       fuel: [],
       services: [],
