@@ -4,9 +4,6 @@ import thunk from 'redux-thunk'
 import { initialState, rootReducer } from './redusers'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { configureStore } from '@reduxjs/toolkit'
-import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants'
-import logger from 'redux-logger'
 
 const persistConfig = {
   key: 'root',
@@ -34,36 +31,9 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 // ------------------------------- DevTool -----------------------------
 /* const store = createStore(persistedReducer, initialState, enhancer) */
 // ---------------------------------------------------------------------
+// @ts-expect-error initial
 
-/* const store = createStore(persistedReducer, initialState, applyMiddleware(thunk)) */
-
-const store = configureStore({
-  reducer: persistedReducer,
-  middleware: getDefaultMiddleware => {
-    const middleware = getDefaultMiddleware({
-      // Pass in a custom `extra` argument to the thunk middleware
-      thunk: {
-        extraArgument: {}
-      },
-      // Customize the built-in serializability dev check
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-      }
-    })/* .concat(customMiddleware, api.middleware) */
-    // Conditionally add another middleware in dev
-    /*   if (process.env.NODE_ENV !== 'production') {
-      middleware.push(logger)
-    } */
-    return middleware
-  }
-  // Turn off devtools in prod, or pass options in dev
-  /* devTools: process.env.NODE_ENV === 'production'
-    ? false
-    : {
-        stateSanitizer: stateSanitizerForDevtools
-      } */
-})
-
+const store = createStore(persistedReducer, initialState, applyMiddleware(thunk))
 const persistor = persistStore(store)
 
 export type RootState = ReturnType<typeof store.getState>

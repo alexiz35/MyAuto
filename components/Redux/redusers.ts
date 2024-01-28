@@ -34,7 +34,7 @@ export const initialState: StateMain = {
   ]
 }
 
-export const milesReducer: Dispatch = (state = initialState, action) => {
+export const rootReducer: Dispatch = (state = initialState, action) => {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const selectCar = (numberCar: number) => ({
     indexArray: state.cars.findIndex(item => numberCar === item.carId),
