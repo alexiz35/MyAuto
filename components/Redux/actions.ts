@@ -64,11 +64,11 @@ export const changeTheme = (typeTheme: string): ActionChangeTheme => (
     typeTheme
   })
 // -------------------------- Action ChangeTheme -----------------------------------
-export const changeAlarmStart = (alarmStart: boolean): ActionAlarmMileageStart => (
+/* export const changeAlarmStart = (alarmStart: boolean): ActionAlarmMileageStart => (
   {
     type: ActionType.CHANGE_ALARM_START,
     alarmStart
-  })
+  }) */
 // -------------------------- Action ChangeTheme -----------------------------------
 export const changeAlarmPeriod = (alarmPeriod: boolean): ActionAlarmMileagePeriod => (
   {

@@ -1,40 +1,6 @@
 import { ActionType, Dispatch, initialStateInfo, StateMain } from '../../type'
 
-export const initialState: StateMain = {
-  numberCar: 0,
-  sellerList: [{
-    name: 'maks',
-    phone: '100'
-  }, {
-    name: 'rerere',
-    phone: '2'
-  }],
-  token: '',
-  setting: {
-    themeSet: 'light',
-    alarmMileageStart: true,
-    alarmMileagePeriod: true,
-    alarmMileagePeriodNumber: 6
-  },
-  cars: [
-    {
-      info: initialStateInfo,
-      carId: 0,
-      currentMiles: {
-        currentMileage: 0,
-        dateMileage: new Date().toLocaleDateString()
-      },
-      fuel: [],
-      services: [],
-      mileage: [],
-      parts: [],
-      others: [],
-      tasks: []
-    }
-  ]
-}
-
-export const rootOldReducer: Dispatch = (state = initialState, action) => {
+export const rootOldReducer: Dispatch = (state, action) => {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const selectCar = (numberCar: number) => ({
     indexArray: state.cars.findIndex(item => numberCar === item.carId),
@@ -55,12 +21,12 @@ export const rootOldReducer: Dispatch = (state = initialState, action) => {
       }
     }
     // ------------------------------------------------------------------
-    case ActionType.CHANGE_THEME:{
+    /*  case ActionType.CHANGE_THEME:{
       return {
         ...state,
         setting: { ...state.setting, themeSet: action.typeTheme }
       }
-    }
+    } */
     // ------------------------------------------------------------------
     case ActionType.CHANGE_ALARM_START:{
       return {

@@ -8,9 +8,7 @@ import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
 import {
   addToken,
-  changeAlarmPeriod, changeAlarmPeriodNumber,
-  changeAlarmStart,
-  changeTheme,
+  changeAlarmPeriodNumber,
   delAllSeller,
   updateState
 } from '../components/Redux/actions'
@@ -25,6 +23,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
+import { changeAlarmPeriod, changeAlarmStart, themeChanged } from '../components/Redux/SettingSlice'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -50,8 +49,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
 
   const toggleTheme = useCallback(() => {
     (theme2 === 'dark')
-      ? dispatch(changeTheme('light'))
-      : dispatch(changeTheme('dark'))
+      ? dispatch(themeChanged('light'))
+      : dispatch(themeChanged('dark'))
   }, [theme2])
 
   // -----------------------------------------------------------------------------

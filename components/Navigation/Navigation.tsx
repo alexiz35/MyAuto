@@ -35,6 +35,7 @@ import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
 import { JSX } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 function LogoTitle (): JSX.Element {
   return (
@@ -69,8 +70,11 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const Navigation = (): JSX.Element => {
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
+    /* void AsyncStorage.clear() */
+
     const theme = useTheme()
     const FabTab = (): any => null
+    console.log('first', useAppSelector((state) => state))
 
     return (
       <Tab.Navigator

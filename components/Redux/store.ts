@@ -1,23 +1,65 @@
 import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
 
 import thunk from 'redux-thunk'
-import { initialState, rootOldReducer } from './redusers'
+import { rootOldReducer } from './redusers'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore } from '@reduxjs/toolkit'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants'
 import logger from 'redux-logger'
-import { rootReducer } from './redusers_old'
+import { initialStateInfo, StateMain } from '../../type'
+import tokenSlice from './TokenSlice'
+import settingSlice from './SettingSlice'
+import sellerSlice from './SellerSlice'
+import numberCarSlice from './NumberCarSlice'
+import carsSlice from './CarsSlice'
+
+export const initialState: StateMain = {
+  numberCar: 0,
+  sellerList: [{
+    name: 'maks',
+    phone: '100'
+  }, {
+    name: 'rerere',
+    phone: '2'
+  }],
+  token: '',
+  setting: {
+    themeSet: 'light',
+    alarmMileageStart: true,
+    alarmMileagePeriod: true,
+    alarmMileagePeriodNumber: 6
+  },
+  cars: [
+    {
+      info: initialStateInfo,
+      carId: 0,
+      currentMiles: {
+        currentMileage: 0,
+        dateMileage: new Date().toLocaleDateString()
+      },
+      fuel: [],
+      services: [],
+      mileage: [],
+      parts: [],
+      others: [],
+      tasks: []
+    }
+  ]
+}
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage
   /* stateReconciler: hardSet */
 }
-/* const rootReducer = combineReducers({
-  rootOldReducer
-
-}) */
+const rootReducer = combineReducers({
+  setting: settingSlice,
+  token: tokenSlice,
+  cars: carsSlice,
+  numberCar: numberCarSlice,
+  sellerList: sellerSlice
+})
 // ------------------------------- devTool -----------------------------------------------
 /* const composeEnhancers =
   typeof window === 'object' &&
@@ -34,7 +76,6 @@ const enhancer = composeEnhancers(
 /* const rootReducer = combineReducers<MilesState>({
   currentMiles: milesReducer
 }) */
-// @ts-expect-error type reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 // ------------------------------- DevTool -----------------------------
 /* const store = createStore(persistedReducer, initialState, enhancer) */
