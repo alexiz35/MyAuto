@@ -24,6 +24,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { changeAlarmPeriod, changeAlarmStart, themeChanged } from '../components/Redux/SettingSlice'
+import { addedToken } from '../components/Redux/TokenSlice'
+import { deletedAllSeller, deletedSeller } from '../components/Redux/SellerSlice'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -128,7 +130,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       if (response.authentication !== null) {
         setToken(response.authentication.accessToken)
         setAuth(true)
-        dispatch(addToken(response.authentication.refreshToken !== undefined
+        dispatch(addedToken(response.authentication.refreshToken !== undefined
           ? response.authentication.refreshToken
           : ''
         ))
@@ -263,7 +265,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     if (del) {
       setUserInfo(null)
       setAuth(false)
-      dispatch(addToken(''))
+      dispatch(addedToken(''))
     } else {
       console.log('Повторите удаление')
     }
@@ -324,7 +326,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           <View style={styles.iconText}>
             <Icon source={'circle'} color={colors.tertiary} size={10} />
             <Button style={styles.text} onPress={() => navigation.navigate('SellerScreen')}>Список поставщиков</Button>
-            <Button style={styles.text} onPress={() => dispatch(delAllSeller())}>RESET</Button>
+            <Button style={styles.text} onPress={() => dispatch(deletedAllSeller())}>RESET</Button>
           </View>
           <View style={{ paddingRight: 10 }}>
             {/* <IconButton icon={'theme-light-dark'} size={18} mode={'outlined'} onPress={toggleTheme} /> */}

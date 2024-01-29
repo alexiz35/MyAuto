@@ -54,10 +54,10 @@ const persistConfig = {
   /* stateReconciler: hardSet */
 }
 const rootReducer = combineReducers({
-  setting: settingSlice,
-  token: tokenSlice,
+  setting: settingSlice, // ok
+  token: tokenSlice, // настроить токен
   cars: carsSlice,
-  numberCar: numberCarSlice,
+  numberCar: numberCarSlice, //
   sellerList: sellerSlice
 })
 // ------------------------------- devTool -----------------------------------------------

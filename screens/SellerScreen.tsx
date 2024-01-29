@@ -21,6 +21,7 @@ import { ModalInfoSeller } from '../components/SellerScreenComponents/ModalInfoS
 import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/native'
+import { addedSeller, editedSeller } from '../components/Redux/SellerSlice'
 
 interface FormSeller {
   name: string
@@ -130,8 +131,8 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
   const handleOk = (dataForm: FormSeller): void => {
     setTimeout(() => {
       isEditSeller
-        ? dispatch(editSeller(itemSeller.id, formToData(dataForm)))
-        : dispatch(addSeller(formToData(dataForm)))
+        ? dispatch(editedSeller(formToData(dataForm)))
+        : dispatch(addedSeller(formToData(dataForm)))
     }
     , 100)
     handleOnPress()

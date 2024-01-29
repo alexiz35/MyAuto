@@ -4,7 +4,7 @@ import { JSX, useState } from 'react'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Menu } from 'react-native-paper'
-import { delSeller } from '../Redux/actions'
+import { deletedSeller } from '../Redux/SellerSlice'
 
 interface propsRowSeller {
   handlePress: (item: Seller) => void
@@ -15,6 +15,11 @@ interface propsRowSeller {
 export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller): JSX.Element => {
   const dispatch = useAppDispatch()
 
+  const formString = (item: any): string => {
+    if (item === undefined || item === null) return ''
+    else if (typeof item === 'number') return String(item)
+    else return item
+  }
   const [visibleMenu, setVisibleMenu] = useState(false)
   const { colors } = useAppTheme()
 
@@ -24,6 +29,11 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
   const closeMenu = (): void => {
     setVisibleMenu(false)
   }
+  /*
+  useEffect(() => {
+    setItemRow(formItem(item))
+    console.log('render', itemRow)
+  }, [item]) */
 
   return (
 
@@ -41,7 +51,7 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
           left={(props) =>
             <Icon {...props} source={item.type === 'seller' ? 'car-cog' : 'car-wrench'} size={22} color={colors.tertiary} />
           }
-          title={String(item.name)}
+          title={formString(item.name)}
           titleStyle={{ paddingRight: 2, textAlignVertical: 'center' }}
           subtitleStyle={{ paddingRight: 2 }}
           /* subtitle={item.StationFuel} */
@@ -58,7 +68,7 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
         <Card.Title
           style={{ flex: 2.3 }}
 
-          title={String(item.phone)}
+          title={formString(item.phone)}
           /* subtitle = {String(item.CostFuel) + ' грн/л'} */
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
@@ -68,7 +78,7 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
 
         <Card.Title
           style={{ flex: 2.2 }}
-          title={String(item.web)}
+          title={formString(item.specialism)}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}
@@ -87,7 +97,7 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delSeller(item.id))
+                         dispatch(deletedSeller(item.id))
                          closeMenu()
                        }}
             />

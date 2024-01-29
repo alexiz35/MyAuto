@@ -12,9 +12,8 @@ const tokenSlice = createSlice({
   reducers: {
     // Give case reducers meaningful past-tense "event"-style names
     addedToken (state, action) {
-      const { token } = action.payload
       // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state = token
+      state = action.payload
     }
   }
 })

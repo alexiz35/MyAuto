@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 const initialState = 0
 
@@ -7,10 +7,9 @@ const numberCarSlice = createSlice({
   initialState,
   reducers: {
     // Give case reducers meaningful past-tense "event"-style names
-    changedToken (state, action) {
-      const { numberCar } = action.payload
+    changedToken (state, action: PayloadAction<number>) {
       // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state = numberCar
+      state = action.payload
     }
   }
 })

@@ -1,41 +1,46 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { Seller, Setting } from '../../type'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Seller } from '../../type'
 
 const initialState: Seller[] =
   [{
+    id: 1,
     name: 'maks',
-    phone: '100'
+    phone: '100',
+    specialism: 'renault'
   }, {
+    id: 2,
     name: 'максим',
-    phone: '200'
+    phone: '200',
+    specialism: 'renault'
   }]
 
 const sellerSlice = createSlice({
   name: 'seller',
   initialState,
   reducers: {
-    // Give case reducers meaningful past-tense "event"-style names
-    addedSeller (state, action) {
-      const { seller } = action.payload
-      // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state.concat(seller)
+    addedSeller (state, action: PayloadAction<Seller>) {
+      state.push(action.payload)
     },
-    editedSeller (state, action) {
-      const { seller } = action.payload
-      // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state.concat(seller)
+    editedSeller (state, action: PayloadAction<Seller>) {
+      if (action.payload.id === undefined) return state
+      const temp = state.filter(item => item.id !== action.payload.id)
+      temp.push(action.payload)
+      return temp
     },
-    deletedSeller (state, action) {
-      const { seller } = action.payload
+    deletedSeller (state, action: PayloadAction<number | undefined>) {
       // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state.concat(seller)
+      if (action.payload === undefined) return state
+      return state.filter(item => item.id !== action.payload)
+    },
+    deletedAllSeller (state) {
+      return initialState
     }
   }
 })
 
 // `createSlice` automatically generated action creators with these names.
 // export them as named exports from this "slice" file
-export const { addedSeller, editedSeller } = sellerSlice.actions
+export const { addedSeller, editedSeller, deletedSeller, deletedAllSeller } = sellerSlice.actions
 
 // Export the slice reducer as the default export
 export default sellerSlice.reducer
