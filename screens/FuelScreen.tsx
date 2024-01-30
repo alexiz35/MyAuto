@@ -27,12 +27,13 @@ import { Controller, useForm } from 'react-hook-form'
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { type CompositeScreenProps, useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../CommonComponents/Theme'
+import { addedFuel, editedFuel } from '../components/Redux/CarsSlice'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'StatScreen'>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
 
 interface FormFuel {
-  dateFuel: string
+  dateFuel: Date
   mileageFuel: string
   volumeFuel: string
   CostFuel: string
@@ -49,7 +50,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   console.log(state.fuel)
 
   const tempNullFuel: FormFuel = {
-    dateFuel: new Date().toLocaleDateString(),
+    dateFuel: new Date(),
     mileageFuel: '',
     volumeFuel: '',
     CostFuel: '',
@@ -103,13 +104,9 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
     DateTimePickerAndroid.open({
       value: new Date(),
 
-      onChange: (event, date) => {
-        const tempDate = date !== undefined
-          ? date?.toLocaleDateString()
-          : new Date().toLocaleDateString()
-        setValue('dateFuel', tempDate)
+      onChange: (event, date = new Date()) => {
+        setValue('dateFuel', date)
       }
-
     })
   }
 
@@ -166,8 +163,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const handleOk = (dataForm: FormFuel): void => {
     setTimeout(() =>
       isEditFuel
-        ? dispatch(editFuel(carId, itemFuel?.id, formToData(dataForm)))
-        : dispatch(addFuel(carId, formToData(dataForm)))
+        ? dispatch(editedFuel({ numberCar: carId, fuel: formToData(dataForm) }))
+        : dispatch(addedFuel({ numberCar: carId, fuel: formToData(dataForm) }))
     , 100)
     handleOnPress()
   }
@@ -181,7 +178,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         }
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontStyle: 'italic' }}>
-              Cумма заправок в текущем месяце {sumFuel}
+              Cумmа заправок в текущем месяце {sumFuel}
             </Text>
             <IconButton icon={'calendar-month'} onPress={() => {
               // @ts-expect-error temp error navigate props
@@ -217,8 +214,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                     style={{ flex: 1, backgroundColor: colors.surface }}
                                     label={'Дата заправки'}
                                     showSoftInputOnFocus={false}
-                                    /* value = {new Date(value).toLocaleDateString()} */
-                                    value={value}
+                                    value = {new Date(value).toLocaleDateString()}
+                                    /* value={value} */
                                     onPressOut={inputDate}
                                     onSubmitEditing={() => { setFocus('mileageFuel') }}
                                   />

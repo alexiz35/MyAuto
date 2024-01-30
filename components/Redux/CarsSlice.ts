@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CurrentMiles, initialStateInfo, StateCar, StateInfo } from '../../type'
+import { CurrentMiles, initialStateInfo, StateCar, StateFuel, StateInfo } from '../../type'
 
 const initialState: StateCar[] = [
   {
@@ -44,15 +44,29 @@ const carsSlice = createSlice({
       tempState.mileage.push(action.payload.currentMiles)
       state[action.payload.numberCar] = tempState
       return state
-    }
+    },
     // --------------------------------------------------------------------------------------
-
+    addedFuel (state, action: PayloadAction<{ numberCar: number, fuel: StateFuel }>) {
+      state[action.payload.numberCar].fuel.push(action.payload.fuel)
+    },
+    editedFuel (state, action: PayloadAction<{ numberCar: number, fuel: StateFuel }>) {
+      const tempFuel = state[action.payload.numberCar].fuel.filter(item => item.id !== action.payload.fuel.id)
+      tempFuel.push(action.payload.fuel)
+      state[action.payload.numberCar].fuel = tempFuel
+      return state
+    },
+    deletedFuel (state, action: PayloadAction<{ numberCar: number, id: number }>) {
+      state[action.payload.numberCar].fuel =
+        state[action.payload.numberCar].fuel.filter(item => item.id !== action.payload.id)
+      return state
+    }
+    // ----------------------------------------------------------------------------------------
   }
 })
 
 // `createSlice` automatically generated action creators with these names.
 // export them as named exports from this "slice" file
-export const { editedCarInfo, addedCurrentMiles } = carsSlice.actions
+export const { editedCarInfo, addedCurrentMiles, addedFuel, editedFuel, deletedFuel } = carsSlice.actions
 
 // Export the slice reducer as the default export
 export default carsSlice.reducer
