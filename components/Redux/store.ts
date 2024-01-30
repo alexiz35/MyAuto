@@ -36,7 +36,7 @@ export const initialState: StateMain = {
       carId: 0,
       currentMiles: {
         currentMileage: 0,
-        dateMileage: new Date().toLocaleDateString()
+        dateMileage: new Date()
       },
       fuel: [],
       services: [],
@@ -56,9 +56,9 @@ const persistConfig = {
 const rootReducer = combineReducers({
   setting: settingSlice, // ok
   token: tokenSlice, // настроить токен
-  cars: carsSlice,
+  cars: carsSlice, //
   numberCar: numberCarSlice, //
-  sellerList: sellerSlice
+  sellerList: sellerSlice // ok
 })
 // ------------------------------- devTool -----------------------------------------------
 /* const composeEnhancers =
@@ -92,10 +92,12 @@ const store = configureStore({
       thunk: {
         extraArgument: {}
       },
+      // OFF serializability dev check
+      serializableCheck: false
       // Customize the built-in serializability dev check
-      serializableCheck: {
+      /*  serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-      }
+      } */
     })/* .concat(customMiddleware, api.middleware) */
     // Conditionally add another middleware in dev
     /*   if (process.env.NODE_ENV !== 'production') {

@@ -14,12 +14,12 @@ export const rootOldReducer: Dispatch = (state, action) => {
       }
     }
     // ------------------------------------------------------------------
-    case ActionType.ADD_TOKEN:{
+    /*  case ActionType.ADD_TOKEN:{
       return {
         ...state,
         token: action.token
       }
-    }
+    } */
     // ------------------------------------------------------------------
     /*  case ActionType.CHANGE_THEME:{
       return {
@@ -28,19 +28,19 @@ export const rootOldReducer: Dispatch = (state, action) => {
       }
     } */
     // ------------------------------------------------------------------
-    case ActionType.CHANGE_ALARM_START:{
+    /*  case ActionType.CHANGE_ALARM_START:{
       return {
         ...state,
         setting: { ...state.setting, alarmMileageStart: action.alarmStart }
       }
-    }
+    } */
     // ------------------------------------------------------------------
-    case ActionType.CHANGE_ALARM_PERIOD:{
+    /* case ActionType.CHANGE_ALARM_PERIOD:{
       return {
         ...state,
         setting: { ...state.setting, alarmMileagePeriod: action.alarmPeriod }
       }
-    }
+    } */
     // ------------------------------------------------------------------
     case ActionType.CHANGE_ALARM_PERIOD_NUMBER:{
       return {
@@ -63,26 +63,26 @@ export const rootOldReducer: Dispatch = (state, action) => {
       }
     }
 
-    case ActionType.UPDATE_CAR: {
+    /* case ActionType.UPDATE_CAR: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
       newArray[indexArray].info = action.payload.carInfo
       return {
         ...state,
         cars: newArray
       }
-    }
+    } */
     // -------------------------------------------------------------------
-    case ActionType.UPDATE_MILES: {
+    /* case ActionType.UPDATE_MILES: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
-      /* const indexArray = state.cars.findIndex(item => action.payload.carId === item.carId)
-      const newArray = [...state.cars] */
+      /!* const indexArray = state.cars.findIndex(item => action.payload.carId === item.carId)
+      const newArray = [...state.cars] *!/
       newArray[indexArray].currentMiles = action.payload.currentMiles
       newArray[indexArray].mileage.push(action.payload.currentMiles)
       return {
         ...state,
         cars: newArray
       }
-    }
+    } */
     // -------------------------------------------------------------------
     case ActionType.ADD_SERVICE: {
       const { newArray, indexArray } = selectCar(action.payload.carId)
@@ -148,31 +148,31 @@ export const rootOldReducer: Dispatch = (state, action) => {
     }
 
     // -------------------------------------------------------------------
-    case ActionType.ADD_SELLER: {
+    /* case ActionType.ADD_SELLER: {
       const tempSeller = state.sellerList
       return {
         ...state,
         sellerList: tempSeller.concat(action.seller)
       }
-    }
+    } */
 
-    case ActionType.DEL_SELLER: {
+    /* case ActionType.DEL_SELLER: {
       const tempSellerList = state.sellerList
       const tempSeller = tempSellerList.filter(item => item.id !== action.id)
       return {
         ...state,
         sellerList: tempSeller
       }
-    }
+    } */
 
-    case ActionType.DELALL_SELLER: {
+    /* case ActionType.DELALL_SELLER: {
       return {
         ...state,
         sellerList: []
       }
-    }
+    } */
 
-    case ActionType.EDIT_SELLER: {
+    /* case ActionType.EDIT_SELLER: {
       const tempSellerList = state.sellerList
       const tempSeller = tempSellerList.filter(item => item.id !== action.id)
       const editSeller = tempSeller.concat(action.seller)
@@ -180,7 +180,7 @@ export const rootOldReducer: Dispatch = (state, action) => {
         ...state,
         sellerList: editSeller
       }
-    }
+    } */
 
     // -------------------------------------------------------------------
     // -------------------------------------------------------------------

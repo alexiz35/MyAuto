@@ -28,7 +28,6 @@ const sellerSlice = createSlice({
       return temp
     },
     deletedSeller (state, action: PayloadAction<number | undefined>) {
-      // "Mutating" update syntax thanks to Immer, and no `return` needed
       if (action.payload === undefined) return state
       return state.filter(item => item.id !== action.payload)
     },

@@ -5,7 +5,6 @@ import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigati
 import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { JSX, useEffect, useState } from 'react'
-import { updateMiles } from '../Redux/actions'
 import {
   TouchableRipple,
   Text,
@@ -17,6 +16,7 @@ import {
 } from 'react-native-paper'
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 import { useAppTheme } from '../../CommonComponents/Theme'
+import { addedCurrentMiles } from '../Redux/CarsSlice'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -41,7 +41,7 @@ export const MainCard = (): JSX.Element => {
   ))
   const currentMiles: CurrentMiles = useAppSelector(state => (
     state.cars[state.numberCar].currentMiles === undefined
-      ? { currentMileage: 0, dateMileage: new Date().toLocaleDateString() }
+      ? { currentMileage: 0, dateMileage: new Date() }
       : state.cars[state.numberCar].currentMiles
   ))
   const dispatch = useAppDispatch()
@@ -92,9 +92,9 @@ export const MainCard = (): JSX.Element => {
     if (currentMiles.currentMileage < valueMileage) {
       const tempMileage: CurrentMiles = {
         currentMileage: valueMileage,
-        dateMileage: new Date().toLocaleDateString()
+        dateMileage: new Date()
       }
-      dispatch(updateMiles(carId, tempMileage))
+      dispatch(addedCurrentMiles({ numberCar: carId, currentMiles: tempMileage }))
       setErrorInput(false)
       setVisibleMileage(false)
       // toggleMileage()

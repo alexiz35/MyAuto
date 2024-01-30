@@ -1,9 +1,8 @@
 import { View, StyleSheet, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { useEffect, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { ListService, StateInfo } from '../type'
-import { editCar, updateMiles } from '../components/Redux/actions'
 import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 import { cars } from '../cars.json'
 import { Dropdown } from 'react-native-element-dropdown'
@@ -20,6 +19,7 @@ import {
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
 import { RegMaintenance } from '../components/HomeScreenComponents/RegMaintenance'
+import { addedCurrentMiles, editedCarInfo } from '../components/Redux/CarsSlice'
 
 interface ListCar {
   label: string
@@ -31,6 +31,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const setCar = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
   const car = useAppSelector(state => state.cars)
+  console.log(car[numberCar].info)
   const { colors } = useAppTheme()
 
   const itemsFuel = [
@@ -148,13 +149,13 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       engine: valueEngine,
       gear: valueGear,
       vin: valueVin,
-      dateBuy: valueDateBuy.toLocaleDateString(),
+      dateBuy: valueDateBuy,
       buyMileage: valueBuyMileage,
       regMaintenance
     }
-    setCar(editCar(numberCar, carInfo))
-    const tempCurrentMileage = { currentMileage: valueCurrentMileage, dateMileage: new Date() }
-    setCar(updateMiles(numberCar, tempCurrentMileage))
+    setCar(editedCarInfo({ numberCar, carInfo }))
+    const tempCurrentMileage = { currentMileage: valueCurrentMileage, dateMileage: new Date().toString() }
+    setCar(addedCurrentMiles({ numberCar, currentMiles: tempCurrentMileage }))
     navigation.goBack()
   }
 
@@ -232,7 +233,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     setValueEngine(temp.engine)
     setValueGear(temp.gear)
     setValueVin(temp.vin)
-    setValueDateBuy(new Date(temp.dateBuy))
+    setValueDateBuy(temp.dateBuy === undefined ? new Date() : temp.dateBuy)
     setValueBuyMileage(temp.buyMileage)
     setValueCurrentMileage(car[numberCar].currentMiles.currentMileage)
   }, [])
@@ -413,7 +414,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 showSoftInputOnFocus={false}
                 label={'дата покупки'}
                 onPressIn={ inputDateBuy }
-                value = {valueDateBuy.toLocaleDateString()}
+                value = {new Date(valueDateBuy).toLocaleDateString()}
               />
             </View>
             <View style={styles.input}>

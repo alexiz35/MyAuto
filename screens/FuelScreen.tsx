@@ -46,6 +46,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
   const navigation = useNavigation<Props>()
+  console.log(state.fuel)
 
   const tempNullFuel: FormFuel = {
     dateFuel: new Date().toLocaleDateString(),
