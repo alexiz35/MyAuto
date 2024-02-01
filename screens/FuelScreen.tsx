@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { JSX, useEffect, useState } from 'react'
 import { type StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { addFuel, editFuel } from '../components/Redux/actions'
 import { type RootStackParamList, type RootTabParamList } from '../components/Navigation/TypeNavigation'
 import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { FuelList } from '../components/FuelScreenComponents/FuelList'
@@ -27,7 +26,10 @@ import { Controller, useForm } from 'react-hook-form'
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { type CompositeScreenProps, useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../CommonComponents/Theme'
-import { addedFuel, editedFuel } from '../components/Redux/CarsSlice'
+import { /* addedFuel, */
+  addStateCarReducer,
+  editStateCarReducer /* editedFuel, */ /* editStateCarReducer */
+} from '../components/Redux/CarsSlice'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'StatScreen'>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
@@ -47,7 +49,6 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
   const navigation = useNavigation<Props>()
-  console.log(state.fuel)
 
   const tempNullFuel: FormFuel = {
     dateFuel: new Date(),
@@ -77,7 +78,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
       CostFuel: Number(data.CostFuel),
       AmountFuel: Number(data.AmountFuel),
       StationFuel: data.StationFuel,
-      typeFuel: state.info.fuel ?? undefined
+      typeFuel: state.info.fuel!=='' ? state.info.fuel:'diesel'
     }
   }
 
@@ -121,14 +122,14 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
       setValueDrop(state.info.fuel)
     }, [state.info.fuel])) */
 
-  useEffect(() => {
+  /* useEffect(() => {
     const tempFuel = state.fuel.filter((item) => (new Date(item.dateFuel).getMonth() === new Date().getMonth()))
     const sumFuel = tempFuel.reduce(
       (accumulator, currentValue) => Number(accumulator) + Number(currentValue.AmountFuel),
       0
     )
     setSumFuel(sumFuel)
-  }, [state.fuel])
+  }, [state.fuel]) */
 
   // ------------------------- function calc input -----------------------------
   const handleOnSubmitCost = (): void => {
@@ -163,8 +164,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const handleOk = (dataForm: FormFuel): void => {
     setTimeout(() =>
       isEditFuel
-        ? dispatch(editedFuel({ numberCar: carId, fuel: formToData(dataForm) }))
-        : dispatch(addedFuel({ numberCar: carId, fuel: formToData(dataForm) }))
+        ? dispatch(editStateCarReducer({ type:'fuel',numberCar: carId, item: formToData(dataForm) }))
+        : dispatch(addStateCarReducer({type:'fuel', numberCar: carId, item: formToData(dataForm) }))
     , 100)
     handleOnPress()
   }
@@ -178,7 +179,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         }
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontStyle: 'italic' }}>
-              Cумmа заправок в текущем месяце {sumFuel}
+              Сумма заправок в текущем месяце {sumFuel}
             </Text>
             <IconButton icon={'calendar-month'} onPress={() => {
               // @ts-expect-error temp error navigate props

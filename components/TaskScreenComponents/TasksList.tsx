@@ -113,7 +113,7 @@ export const TasksList = ({ handlePress, filterList = 'last' }: handleProp): JSX
     )
   } */
 
-  useEffect(() => {
+ /*  useEffect(() => {
     if (listTasks.length > 1) {
       listTasks.sort(function (a, b) {
         // @ts-expect-error date
@@ -121,7 +121,7 @@ export const TasksList = ({ handlePress, filterList = 'last' }: handleProp): JSX
       })
       setIsSortTasks(!isSortTasks)
     }
-  }, [listTasks])
+  }, [listTasks]) */
 
   useEffect(() => {
     setTimeout(() => setIsLoad(false), 10)

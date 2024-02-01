@@ -7,7 +7,6 @@ import {
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { JSX, useEffect, useState } from 'react'
 import { StatePart } from '../../../type'
-import { addPart, editPart } from '../../Redux/actions'
 
 import {
   useTheme,
@@ -17,6 +16,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 import { PartsList } from './PartsList'
 import InputPartComponent from './InputPartComponent'
+import { addStateCarReducer, editStateCarReducer } from '../../Redux/CarsSlice'
 
 const InputPart = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -65,8 +65,8 @@ const InputPart = (): JSX.Element => {
   const handleOk = (dataForm: StatePart): void => {
     setTimeout(() =>
       isEditPart
-        ? dispatch(editPart(carId, itemPart?.id, dataForm))
-        : dispatch(addPart(carId, dataForm))
+        ? dispatch(editStateCarReducer({type:'parts', numberCar: carId, item: dataForm }))
+        : dispatch(addStateCarReducer({ type:'parts', numberCar: carId, item: dataForm }))
     , 100)
     handleOnPress()
   }

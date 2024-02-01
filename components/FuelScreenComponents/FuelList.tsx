@@ -15,13 +15,13 @@ export const FuelList = ({ handlePress, filterList = 'last' }: handleProp): JSX.
   const [isSortFuel, setIsSortFuel] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
 
-  useEffect(() => {
+  /* useEffect(() => {
     listFuel.sort(function (a, b) {
       // @ts-expect-error data
       return Date.parse(b.dateFuel) - Date.parse(a.dateFuel)
     })
     setIsSortFuel(!isSortFuel)
-  }, [listFuel])
+  }, [listFuel]) */
 
   useEffect(() => {
     setTimeout(() => setIsLoad(false), 10)

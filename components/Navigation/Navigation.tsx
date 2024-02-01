@@ -70,11 +70,11 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const Navigation = (): JSX.Element => {
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
-    void AsyncStorage.clear()
+    /* void AsyncStorage.clear() */
 
     const theme = useTheme()
     const FabTab = (): any => null
-    console.log('first', useAppSelector((state) => state))
+    /* console.log('first', useAppSelector((state) => state)) */
 
     return (
       <Tab.Navigator

@@ -129,6 +129,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
   }
 
   const handleOk = (dataForm: FormSeller): void => {
+    /* dispatch(addedSeller(formToData(dataForm))) */
     setTimeout(() => {
       isEditSeller
         ? dispatch(editedSeller(formToData(dataForm)))

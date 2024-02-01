@@ -16,13 +16,13 @@ export const SellerList = ({ handlePress, editPress, filterList = 'last' }: hand
   const [isSortSeller, setIsSortSeller] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
 
-  useEffect(() => {
+  /* useEffect(() => {
     listSeller.sort(function (a, b) {
       // @ts-expect-error data
       return Date.parse(b.dateFuel) - Date.parse(a.dateFuel)
     })
     setIsSortSeller(!isSortSeller)
-  }, [listSeller])
+  }, [listSeller]) */
 
   useEffect(() => {
     setTimeout(() => setIsLoad(false), 10)

@@ -6,12 +6,12 @@ import {
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { StateOther } from '../../../type'
-import { addOther, editOther } from '../../Redux/actions'
 import { OthersList } from './OthersList'
 import InputDocComponent from './InputDocComponent'
 import { List, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { addStateCarReducer, editStateCarReducer } from '../../Redux/CarsSlice'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 const InputDoc = (): JSX.Element => {
@@ -61,8 +61,8 @@ const InputDoc = (): JSX.Element => {
   const handleOk = (dataForm: StateOther): void => {
     setTimeout(() =>
       isEditOther
-        ? dispatch(editOther(carId, itemOther?.id, dataForm))
-        : dispatch(addOther(carId, dataForm))
+        ? dispatch(editStateCarReducer({type:'others',numberCar:carId,item: dataForm}))
+        : dispatch(addStateCarReducer({type:'others',numberCar:carId,item: dataForm}))
     , 100)
     handleOnPress()
   }

@@ -113,7 +113,7 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
     )
   } */
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (listParts.length > 1) {
       listParts.sort(function (a, b) {
         // @ts-expect-error date
@@ -121,7 +121,7 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
       })
       setIsSortParts(!isSortParts)
     }
-  }, [listParts])
+  }, [listParts]) */
 
   useEffect(() => {
     setTimeout(() => setIsLoad(false), 10)

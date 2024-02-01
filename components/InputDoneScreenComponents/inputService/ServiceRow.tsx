@@ -5,6 +5,7 @@ import { JSX, useEffect, useState } from 'react'
 import { delService } from '../../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { delStateCarReducer } from '../../Redux/CarsSlice'
 
 interface propsRowService {
   handlePress: (item: StateService) => void
@@ -152,7 +153,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delService(carId, item.id))
+                         dispatch(delStateCarReducer({type:'services',numberCar:carId,id: item.id}))
                          closeMenu()
                        }}
             />

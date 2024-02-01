@@ -6,13 +6,14 @@ import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore } from '@reduxjs/toolkit'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants'
-import logger from 'redux-logger'
+import { createLogger } from 'redux-logger'
 import { initialStateInfo, StateMain } from '../../type'
 import tokenSlice from './TokenSlice'
 import settingSlice from './SettingSlice'
 import sellerSlice from './SellerSlice'
 import numberCarSlice from './NumberCarSlice'
 import carsSlice from './CarsSlice'
+import hardSet from 'redux-persist/es/stateReconciler/hardSet'
 
 export const initialState: StateMain = {
   numberCar: 0,
@@ -48,12 +49,14 @@ export const initialState: StateMain = {
   ]
 }
 
+const logger = createLogger({colors:{action:()=>'red', title:()=>'yellow'}})
+
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage
   /* stateReconciler: hardSet */
 }
-const rootReducer = combineReducers({
+const rootReducer = combineReducers<StateMain>({
   setting: settingSlice, // ok
   token: tokenSlice, // настроить токен
   cars: carsSlice, //
@@ -86,31 +89,34 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 const store = configureStore({
   reducer: persistedReducer,
   preloadedState: initialState,
-  middleware: getDefaultMiddleware => {
-    const middleware = getDefaultMiddleware({
+  middleware: [thunk,logger]
+  /*getDefaultMiddleware => {
+    /const middleware =
+     getDefaultMiddleware({
       // Pass in a custom `extra` argument to the thunk middleware
       thunk: {
         extraArgument: {}
       },
       // OFF serializability dev check
-      serializableCheck: false
+      serializableCheck: false,
+      /!* immutableCheck:false *!/
       // Customize the built-in serializability dev check
-      /*  serializableCheck: {
+      /!*  serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-      } */
-    })/* .concat(customMiddleware, api.middleware) */
+      } *!/
+    })/!* .concat(customMiddleware, api.middleware) *!/
     // Conditionally add another middleware in dev
-    /*   if (process.env.NODE_ENV !== 'production') {
+    /!*   if (process.env.NODE_ENV !== 'production') {
       middleware.push(logger)
-    } */
+    } *!/
     return middleware
   }
   // Turn off devtools in prod, or pass options in dev
-  /* devTools: process.env.NODE_ENV === 'production'
+  /!* devTools: process.env.NODE_ENV === 'production'
     ? false
     : {
         stateSanitizer: stateSanitizerForDevtools
-      } */
+      } *!/ */
 })
 
 const persistor = persistStore(store)

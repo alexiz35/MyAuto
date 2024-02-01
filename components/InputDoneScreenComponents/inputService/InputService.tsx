@@ -11,6 +11,7 @@ import { List, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { ServicesList } from './ServicesList'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { addStateCarReducer, editStateCarReducer } from '../../Redux/CarsSlice'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 
@@ -62,8 +63,8 @@ const InputService = (): JSX.Element => {
   const handleOk = (dataForm: StateService): void => {
     setTimeout(() =>
       isEditService
-        ? dispatch(editService(carId, itemService?.id, dataForm))
-        : dispatch(addService(carId, dataForm))
+        ? dispatch(editStateCarReducer({type:'services',numberCar:carId, item: dataForm}))
+        : dispatch(addStateCarReducer({type:'services',numberCar:carId,item: dataForm}))
     , 100)
     handleOnPress()
   }

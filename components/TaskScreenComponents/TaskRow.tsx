@@ -3,7 +3,7 @@ import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
 import { JSX, useEffect, useState } from 'react'
 import { StateTask } from '../../type'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { delTask } from '../Redux/actions'
+import { delStateCarReducer } from '../Redux/CarsSlice'
 
 interface propsRowTask {
   handlePress: (item: StateTask) => void
@@ -108,7 +108,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delTask(carId, item.id))
+                         dispatch(delStateCarReducer({type:'tasks',numberCar:carId, id:item.id}))
                          closeMenu()
                        }}
             />

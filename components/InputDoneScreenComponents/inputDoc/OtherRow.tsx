@@ -2,9 +2,9 @@ import { StyleSheet, View } from 'react-native'
 import { StateOther } from '../../../type'
 import { Card, IconButton, Menu } from 'react-native-paper'
 import { JSX, useState } from 'react'
-import { delOther } from '../../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { delStateCarReducer } from '../../Redux/CarsSlice'
 
 interface propsRowPart {
   handlePress: (item: StateOther) => void
@@ -114,7 +114,7 @@ export const RenderRowOther = ({ item, handlePress }: propsRowPart): JSX.Element
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delOther(carId, item.id))
+                         dispatch(delStateCarReducer({type:'others',numberCar:carId,id: item.id}))
                          closeMenu()
                        }}
             />

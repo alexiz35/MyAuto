@@ -4,6 +4,7 @@ import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
 import { JSX, useState } from 'react'
 import { delPart } from '../../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
+import { delStateCarReducer } from '../../Redux/CarsSlice'
 
 interface propsRowPart {
   handlePress: (item: StatePart) => void
@@ -129,7 +130,7 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delPart(carId, item.id))
+                         dispatch(delStateCarReducer({type:'parts', numberCar: carId, id: item.id }))
                          closeMenu()
                        }}
             />

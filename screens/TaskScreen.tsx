@@ -6,11 +6,11 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { TasksList } from '../components/TaskScreenComponents/TasksList'
-import { addTask, editTask } from '../components/Redux/actions'
 import { useNavigation } from '@react-navigation/native'
 import { Button, Dialog, List, Portal, ToggleButton, Text } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import InputTaskComponent from '../components/TaskScreenComponents/InputTaskComponent'
+import { addStateCarReducer, editStateCarReducer } from '../components/Redux/CarsSlice'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'TaskScreen'>
 
@@ -65,8 +65,8 @@ const TaskScreen = ({ navigation }: Props): JSX.Element => {
   const handleOk = (dataForm: StateTask): void => {
     setTimeout(() => {
       isEditTask
-        ? dispatch(editTask(carId, itemTasks?.id, dataForm))
-        : dispatch(addTask(carId, dataForm))
+        ? dispatch(editStateCarReducer({type:'tasks',numberCar:carId, item: dataForm}))
+        : dispatch(addStateCarReducer({type:'tasks',numberCar:carId,item: dataForm}))
       if (dataForm.isFinished) {
         setTypeTask(dataForm.typeTask)
         showDialog()

@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { delFuel } from '../Redux/actions'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { deletedFuel } from '../Redux/CarsSlice'
+import { delStateCarReducer } from '../Redux/CarsSlice'
 
 interface propsRowFuel {
   handlePress: (item: StateFuel) => void
@@ -121,7 +121,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(deletedFuel({ numberCar: carId, id: item.id }))
+                         dispatch(delStateCarReducer({type:'fuel', numberCar: carId, id: item.id }))
                          closeMenu()
                        }}
             />
