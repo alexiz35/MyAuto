@@ -117,6 +117,7 @@ export interface StateFuel {
 }
 
 export interface StateInfo {
+  nameCar: string
   brand: string
   model: string
   fuel?: string
@@ -131,6 +132,7 @@ export interface StateInfo {
   regMaintenance: ListService[]
 }
 export const initialStateInfo = {
+  nameCar: '',
   brand: '',
   model: '',
   fuel: '',

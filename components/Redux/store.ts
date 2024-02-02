@@ -89,6 +89,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 const store = configureStore({
   reducer: persistedReducer,
   preloadedState: initialState,
+  // @ts-ignore: error name logger
   middleware: [thunk,logger]
   /*getDefaultMiddleware => {
     /const middleware =

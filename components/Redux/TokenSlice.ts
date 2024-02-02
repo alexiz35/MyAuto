@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 /* interface TypeTokenState {
   token: string
@@ -11,9 +11,8 @@ const tokenSlice = createSlice({
   initialState,
   reducers: {
     // Give case reducers meaningful past-tense "event"-style names
-    addedToken (state, action) {
-      // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state = action.payload
+    addedToken (state, action:PayloadAction<string>) {
+      return action.payload
     }
   }
 })

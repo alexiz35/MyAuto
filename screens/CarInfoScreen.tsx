@@ -14,12 +14,13 @@ import {
   Button,
   Divider,
   Portal,
-  Modal
+  Modal, Dialog, IconButton, Surface
 } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
 import { RegMaintenance } from '../components/HomeScreenComponents/RegMaintenance'
 import { addedCurrentMiles, editedCarInfo } from '../components/Redux/CarsSlice'
+import { useFocusEffect } from '@react-navigation/native'
 
 interface ListCar {
   label: string
@@ -133,6 +134,18 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     ? listService
     : car[numberCar].info.regMaintenance)
 
+  // ------------------ Dialog Input NameCar ------------------------------
+  const [visibleNameCar,setVisibleNameCar] = useState(false)
+  const [valueNameCar, setValueNameCar] = useState('')
+  const [valueDialogNameCar, setValueDialogNameCar] = useState(car[numberCar].info.nameCar)
+  const okDialogNameCar = (dialogNameCar:string):void => {
+    setValueNameCar(dialogNameCar)
+    setVisibleNameCar(false)
+  }
+  const CancelDialogNameCar = ():void => {
+
+    setVisibleNameCar(false)
+  }
   // ----------------------------------------------------------------------
   const inputDateBuy = (): void => DateTimePickerAndroid.open({
     value: new Date(),
@@ -141,6 +154,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   // ----------------------button Ok handler-------------------------------
   const handleOkCarInfo = (): void => {
     const carInfo: StateInfo = {
+      nameCar: valueNameCar,
       brand: valueBrand,
       model: valueModel,
       fuel: valueFuel,
@@ -154,7 +168,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       regMaintenance
     }
     setCar(editedCarInfo({ numberCar, carInfo }))
-    const tempCurrentMileage = { currentMileage: valueCurrentMileage, dateMileage: new Date().toString() }
+    const tempCurrentMileage = { currentMileage: valueCurrentMileage, dateMileage: new Date()}
     setCar(addedCurrentMiles({ numberCar, currentMiles: tempCurrentMileage }))
     navigation.goBack()
   }
@@ -214,6 +228,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
   // --------------------DropEffect----------------------------------------
   useEffect(() => {
+    if (car[numberCar].info.nameCar===''|| car[numberCar].info.nameCar === undefined) setVisibleNameCar(true)
     setItemsBrand(listBrand())
     setItemsYear(listYear())
   }, [])
@@ -224,7 +239,14 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
   // --------------------InitialSateScreen-------------------------------------
   useEffect(() => {
+    navigation.setOptions({
+      title:valueNameCar,
+      headerRight:()=>
+        <IconButton icon={'car-info'} mode={'outlined'} style={{borderRadius:10}} onPress={()=>setVisibleNameCar(true)}/>
+    })
+
     const temp = car[numberCar].info
+    setValueNameCar(temp.nameCar)
     setValueBrand(temp.brand)
     setValueModel(temp.model)
     setValueFuel(temp.fuel)
@@ -237,6 +259,12 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     setValueBuyMileage(temp.buyMileage)
     setValueCurrentMileage(car[numberCar].currentMiles.currentMileage)
   }, [])
+
+  useEffect(()=>{
+    navigation.setOptions({
+      title: valueNameCar
+    })
+  },[valueNameCar])
 
   const isReady = useIsReady()
 
@@ -491,6 +519,33 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                contentContainerStyle={{ marginHorizontal: 20, backgroundColor: colors.background, borderRadius: 5, padding: 3 }}>
             <RegMaintenance listMaintenance={regMaintenance} okPress={okModalMaintenance} cancelPress={cancelModalMaintenance}/>
         </Modal>
+      </Portal>
+      {
+        // -------------------------------------------------------------------------------------------
+      }
+      {
+        // -------------------------- Modal for selecting name of car ---------------------------
+      }
+      <Portal>
+       <Dialog visible={visibleNameCar} dismissableBackButton onDismiss={cancelModalMaintenance}>
+         <Dialog.Title>Введите псевдоним машины</Dialog.Title>
+         <Dialog.Content>
+           <TextInput
+             label={'введите псевдоним'}
+             placeholder={'введите псевдоним'}
+             onChangeText={(value) => setValueDialogNameCar(String(value))}
+             value={String(valueDialogNameCar)}
+           />
+         </Dialog.Content>
+         <Dialog.Actions >
+           <Surface elevation={2} style={{borderRadius:10}}>
+           <IconButton icon={'window-close'} onPress={()=>CancelDialogNameCar()} iconColor={colors.error}  ></IconButton>
+           </Surface>
+           <Surface elevation={2} style={{borderRadius:10}}>
+           <IconButton icon={'check'} onPress={()=>okDialogNameCar(valueDialogNameCar)} iconColor={colors.tertiary} ></IconButton>
+           </Surface>
+         </Dialog.Actions>
+       </Dialog>
       </Portal>
       {
         // -------------------------------------------------------------------------------------------

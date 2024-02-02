@@ -65,14 +65,15 @@ const carsSlice = createSlice({
       // "Mutating" update syntax thanks to Immer, and no `return` needed
       state.concat(seller)
     },
-    editedCarInfo (state, action: PayloadAction<{ numberCar: number, carInfo: StateInfo }>) {
-      // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state[action.payload.numberCar].info = action.payload.carInfo
-    },
     deletedCar (state, action) {
       const { seller } = action.payload
       // "Mutating" update syntax thanks to Immer, and no `return` needed
       state.concat(seller)
+    },
+    // --------------------------------------------------------------------------------------
+    editedCarInfo (state, action: PayloadAction<{ numberCar: number, carInfo: StateInfo }>) {
+      // "Mutating" update syntax thanks to Immer, and no `return` needed
+      state[action.payload.numberCar].info = action.payload.carInfo
     },
     // --------------------------------------------------------------------------------------
     addedCurrentMiles (state, action: PayloadAction<{ numberCar: number, currentMiles: CurrentMiles }>) {
@@ -87,15 +88,19 @@ const carsSlice = createSlice({
       /* const tempArray: TypeStatesCar[] = state[action.payload.numberCar][action.payload.type]
        tempArray.push(action.payload.item)
        state[action.payload.numberCar][action.payload.type] = tempArray */
-      state[action.payload.numberCar][action.payload.type].push(action.payload.item)
+       // @ts-ignore: error type item
+       state[action.payload.numberCar][action.payload.type].push(action.payload.item)
 
     },
     delStateCarReducer (state,action:PayloadAction<{type:TypeTypeState,numberCar:number,id:number}>) {
+
       state[action.payload.numberCar][action.payload.type] =
+        // @ts-ignore: error type item
         state[action.payload.numberCar][action.payload.type].filter(item => item.id !== action.payload.id)
     }
     ,
     editStateCarReducer (state,action: PayloadAction<{type: TypeTypeState,numberCar:number,item:TypeStatesCar}>) {
+      // @ts-ignore: error type item
       const temp = state[action.payload.numberCar][action.payload.type].filter(item => item.id !== action.payload.item.id)
       temp.push(action.payload.item)
       state[action.payload.numberCar][action.payload.type] = temp
@@ -104,9 +109,7 @@ const carsSlice = createSlice({
   }
 })
 
-// `createSlice` automatically generated action creators with these names.
-// export them as named exports from this "slice" file
+
 export const { editedCarInfo, addedCurrentMiles,addStateCarReducer, delStateCarReducer,editStateCarReducer } = carsSlice.actions
 
-// Export the slice reducer as the default export
 export default carsSlice.reducer

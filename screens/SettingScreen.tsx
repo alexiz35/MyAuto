@@ -26,6 +26,7 @@ import { useAppTheme } from '../CommonComponents/Theme'
 import { changeAlarmPeriod, changeAlarmStart, themeChanged } from '../components/Redux/SettingSlice'
 import { addedToken } from '../components/Redux/TokenSlice'
 import { deletedAllSeller, deletedSeller } from '../components/Redux/SellerSlice'
+import { CarsList } from '../components/SettingScreenComponents/CarsList'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
@@ -334,21 +335,22 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           </View>
         </View>
   {/*
-  *************************** GOOGLE account ******************************************
+  ************************** Car SWITCH  ******************************************
   */}
         <Divider bold/>
         <View style={styles.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
           <Text style={styles.text}>Мои машины</Text>
         </View>
-         {
+        <CarsList/>
+         {/* {
           state.cars.map((item, index) => (
             <View key={index} style={styles.viewText}>
             <Text >{item.info.model}</Text>
             <Divider/>
             </View>
           ))
-        }
+        } */}
         <Divider horizontalInset/>
           <Button onPress={() => navigation.navigate('CarInfoScreen')}>
             Добавить машину
