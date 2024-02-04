@@ -13,7 +13,7 @@ import {
   Button,
   Divider,
   Portal,
-  Modal, Dialog, IconButton, Surface
+  Modal, Dialog, IconButton, Surface, HelperText
 } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
@@ -64,6 +64,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const car = useAppSelector(state => state.cars)
   const { colors } = useAppTheme()
 
+  // ------------------------ Alert ConfirmAction -------------------------------
   const createTwoButtonAlert = () =>
     Alert.alert('Покинуть страницу?', 'Введенные данные не сохранятся', [
       {
@@ -106,7 +107,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   }
   const [itemCarInfo, setItemCarInfo] = useState<StateInfo>(formToData(tempNullCarInfo))
 
-  // -----------------------------------------------------------------------
+  // ----------------------- Styles function ------------------------------
   const styles = StyleSheet.create({
 
     viewAllInput: {},
@@ -165,25 +166,34 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
   })
 
-  // ---------------------DropState----------------------------------------
+  // --------------------- Modal RegMaintenance --------------------------------
   const [itemsModel, setItemsModel] = useState<ListCar[]>([])
   const [regMaintenance, setRegMaintenance] = useState<ListService[]>(car[numberCar].info.regMaintenance === undefined
     ? listService
     : car[numberCar].info.regMaintenance)
 
-  // ------------------ Dialog Input NameCar ------------------------------
+  // ------------------ Dialog Input NameCar -----------------------------------
   const [visibleNameCar, setVisibleNameCar] = useState(false)
+  const [errorNameCar, setErrorNameCar] = useState(false)
   const [valueNameCar, setValueNameCar] = useState(car[numberCar].info.nameCar)
   const [valueDialogNameCar, setValueDialogNameCar] = useState(car[numberCar].info.nameCar)
   const okDialogNameCar = (dialogNameCar: string): void => {
-    setValueNameCar(dialogNameCar)
-    setVisibleNameCar(false)
+    if (car.length>1){
+       if( car.some((element)=> element.info.nameCar===dialogNameCar)) {
+         console.log('noPass')
+         return
+       }
+      console.log('passLength')
+    }
+      setValueNameCar(dialogNameCar)
+      setVisibleNameCar(false)
+    console.log('passIf')
   }
   const CancelDialogNameCar = (): void => {
 
     setVisibleNameCar(false)
   }
-  // ----------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
   const inputDateBuy = (): void => DateTimePickerAndroid.open({
     value: new Date(),
     onChange: (event, date = new Date()) => setValue('dateBuy', date)
@@ -654,7 +664,11 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               placeholder={'введите псевдоним'}
               onChangeText={(value) => setValueDialogNameCar(String(value))}
               value={String(valueDialogNameCar)}
+              error={errorNameCar}
             />
+            <HelperText type={'error'} visible={errorNameCar}>
+              такое имя уже существует
+            </HelperText>
           </Dialog.Content>
           <Dialog.Actions>
             <Surface elevation={2} style={{ borderRadius: 10 }}>
