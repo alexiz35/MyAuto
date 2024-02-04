@@ -1,10 +1,9 @@
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView, Alert } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { JSX, useEffect, useState } from 'react'
-import { ListService, StateInfo } from '../type'
+import { JSX, useCallback, useEffect, useState } from 'react'
+import { brand, ListService, StateInfo } from '../type'
 import { RootStackParamList } from '../components/Navigation/TypeNavigation'
-import { cars } from '../cars.json'
 import { Dropdown } from 'react-native-element-dropdown'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { BusyIndicator, useIsReady } from '../components/useIsReadyHook'
@@ -19,43 +18,98 @@ import {
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
 import { RegMaintenance } from '../components/HomeScreenComponents/RegMaintenance'
-import { addedCurrentMiles, editedCarInfo } from '../components/Redux/CarsSlice'
+import { editedCarInfo } from '../components/Redux/CarsSlice'
 import { useFocusEffect } from '@react-navigation/native'
+import { useForm, Controller, useWatch } from 'react-hook-form'
+import { itemsBody, itemsFuel, ListCar, listModel, year } from '../components/CarInfoScreenComponents/InitialConstants'
 
-interface ListCar {
+interface FormCarInfo {
+  brand: string | TypeValueDrop
+  model: string | TypeValueDrop
+  fuel: string | TypeValueDrop
+  body: string | TypeValueDrop
+  year: string | TypeValueDrop
+  engine?: string
+  capacity?: string
+  gear?: string
+  vin?: string
+  dateBuy: Date
+  buyMileage: string
+}
+interface TypeValueDrop {
+  _index:number
   label: string
   value: string
 }
+
+const tempNullCarInfo:FormCarInfo = {
+  brand: '',
+  model: '',
+  fuel: '',
+  body: '',
+  year: '',
+  engine: '',
+  gear: '',
+  vin: '',
+  dateBuy: new Date(),
+  buyMileage: '',
+}
+
 type Props = NativeStackScreenProps<RootStackParamList, 'CarInfoScreen'>
 
 const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
+
   const setCar = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
   const car = useAppSelector(state => state.cars)
-  console.log(car[numberCar].info)
   const { colors } = useAppTheme()
 
-  const itemsFuel = [
-    { label: 'Дизель', value: 'Дизель' },
-    { label: 'Бензин', value: 'Бензин' },
-    { label: 'Газ', value: 'Газ' },
-    { label: 'Электро', value: 'Электро' },
-    { label: 'Газ-бензин', value: 'Газ-бензин' }
-  ]
-  const itemsBody = [
-    { label: 'Hatch', value: 'Hatch' },
-    { label: 'Sedan', value: 'Sedan' },
-    { label: 'Cabriolet', value: 'Cabriolet' },
-    { label: 'Coupe', value: 'Coupe' },
-    { label: 'Universal', value: 'Universal' }
-  ]
+  const createTwoButtonAlert = () =>
+    Alert.alert('Покинуть страницу?', 'Введенные данные не сохранятся', [
+      {
+        text: 'Cancel',
+        /* onPress: () => console.log('Cancel Pressed'), */
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => navigation.goBack()}
+    ]);
+
+  const formToData = (item: FormCarInfo): StateInfo => {
+    return {
+      nameCar: valueNameCar,
+      brand: typeof(item.brand) === 'string'? item.brand : item.brand.value,
+      model: typeof(item.model) === 'string'? item.model : item.model.value,
+      fuel: typeof(item.fuel) === 'string'? item.fuel : item.fuel.value,
+      body: typeof(item.body) === 'string'? item.body : item.body.value,
+      year: typeof(item.year) === 'string'? item.year : item.year.value,
+      engine: item.engine,
+      gear: item.gear,
+      vin: item.vin,
+      dateBuy: item.dateBuy,
+      buyMileage: Number(item.buyMileage),
+      regMaintenance: regMaintenance,
+    }
+  }
+  const dataToForm = (item: StateInfo): FormCarInfo => {
+    return {
+      brand: item.brand,
+      model: item.model,
+      fuel: item.fuel,
+      body: item.body,
+      year: item.year,
+      engine: item.engine,
+      gear: item.gear,
+      vin: item.vin,
+      dateBuy: item.dateBuy,
+      buyMileage: String(item.buyMileage),
+    }
+  }
+  const [itemCarInfo, setItemCarInfo] = useState<StateInfo>(formToData(tempNullCarInfo))
 
   // -----------------------------------------------------------------------
   const styles = StyleSheet.create({
 
-    viewAllInput: {
-
-    },
+    viewAllInput: {},
     row1: {
       flexDirection: 'row',
       justifyContent: 'space-around',
@@ -73,7 +127,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       flexDirection: 'row',
       justifyContent: 'space-around',
       columnGap: 7,
-      marginBottom: 12
+      marginBottom: 5
     },
     dropDown: {
       padding: 5,
@@ -88,7 +142,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       justifyContent: 'space-around'
     },
     input: {
-      marginVertical: 5,
+      marginVertical: 7,
       /* marginHorizontal: 5, */
       flex: 1
     },
@@ -112,109 +166,56 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   })
 
   // ---------------------DropState----------------------------------------
-  const [itemsBrand, setItemsBrand] = useState<ListCar[]>([])
   const [itemsModel, setItemsModel] = useState<ListCar[]>([])
-  const [itemsYear, setItemsYear] = useState<ListCar[]>([])
-
-  const [valueBrand, setValueBrand] = useState<string>('')
-  const [valueModel, setValueModel] = useState<string>('')
-
-  const [valueFuel, setValueFuel] = useState<string | undefined>('')
-  const [valueBody, setValueBody] = useState<string | undefined>('')
-  const [valueYear, setValueYear] = useState<string | undefined>('')
-
-  const [valueVin, setValueVin] = useState<string | undefined>('')
-  const [valueDateBuy, setValueDateBuy] = useState<Date>(new Date())
-  const [valueCurrentMileage, setValueCurrentMileage] = useState(0)
-  const [valueBuyMileage, setValueBuyMileage] = useState(0)
-
-  const [valueEngine, setValueEngine] = useState<string | undefined>('')
-  const [valueGear, setValueGear] = useState<string | undefined>('')
   const [regMaintenance, setRegMaintenance] = useState<ListService[]>(car[numberCar].info.regMaintenance === undefined
     ? listService
     : car[numberCar].info.regMaintenance)
 
   // ------------------ Dialog Input NameCar ------------------------------
-  const [visibleNameCar,setVisibleNameCar] = useState(false)
-  const [valueNameCar, setValueNameCar] = useState('')
+  const [visibleNameCar, setVisibleNameCar] = useState(false)
+  const [valueNameCar, setValueNameCar] = useState(car[numberCar].info.nameCar)
   const [valueDialogNameCar, setValueDialogNameCar] = useState(car[numberCar].info.nameCar)
-  const okDialogNameCar = (dialogNameCar:string):void => {
+  const okDialogNameCar = (dialogNameCar: string): void => {
     setValueNameCar(dialogNameCar)
     setVisibleNameCar(false)
   }
-  const CancelDialogNameCar = ():void => {
+  const CancelDialogNameCar = (): void => {
 
     setVisibleNameCar(false)
   }
   // ----------------------------------------------------------------------
   const inputDateBuy = (): void => DateTimePickerAndroid.open({
     value: new Date(),
-    onChange: (event, date = new Date()) => setValueDateBuy(date)
+    onChange: (event, date = new Date()) => setValue('dateBuy', date)
   })
   // ----------------------button Ok handler-------------------------------
-  const handleOkCarInfo = (): void => {
-    const carInfo: StateInfo = {
-      nameCar: valueNameCar,
-      brand: valueBrand,
-      model: valueModel,
-      fuel: valueFuel,
-      body: valueBody,
-      year: valueYear,
-      engine: valueEngine,
-      gear: valueGear,
-      vin: valueVin,
-      dateBuy: valueDateBuy,
-      buyMileage: valueBuyMileage,
-      regMaintenance
-    }
-    setCar(editedCarInfo({ numberCar, carInfo }))
-    const tempCurrentMileage = { currentMileage: valueCurrentMileage, dateMileage: new Date()}
-    setCar(addedCurrentMiles({ numberCar, currentMiles: tempCurrentMileage }))
+  const handleOkCarInfo = (dataForm: FormCarInfo): void => {
+    setCar(editedCarInfo({
+      numberCar: numberCar,
+      carInfo: formToData((dataForm))
+    }))
     navigation.goBack()
   }
 
+  // ------------------------- Controller Form-----------------------------------
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+  } = useForm<FormCarInfo>({
+    mode: 'onChange',
+    defaultValues: tempNullCarInfo,
+    values: dataToForm(itemCarInfo)
+  })
+
+  // ----------------------------------------------------------------------------
+  const watchBrand = useWatch({
+    control,
+    name: 'brand'
+  })
   // --------------------DropListCreate------------------------------------
-  const listBrand = (): ListCar[] => {
-    const tempList: ListCar[] = []
-    const tempBrand = Object.keys(cars)
-    tempBrand.forEach((item, index) =>
-      (tempList[index] = {
-        label: item,
-        value: item
-      })
-    )
-    return tempList
-  }
 
-  const listModel = (): ListCar[] => {
-    let i = 0
-    const tempList: ListCar[] = []
-    if (valueBrand !== '') {
-      // @ts-expect-error hbhbh
-      for (const key of cars[valueBrand]) {
-        tempList[i] = {
-          label: key,
-          value: key
-        }
-        i++
-      }
-      return tempList
-    }
-    return []
-  }
-
-  const listYear = (): ListCar[] => {
-    const tempList: ListCar[] = []
-    let index = 0
-    for (let i = 1990; i < 2023; i++) {
-      tempList[index] = {
-        label: String(i),
-        value: String(i)
-      }
-      index++
-    }
-    return tempList
-  }
   // ---------------------Pick Service-----------------------------------
   const [visibleModalService, setVisibleModalService] = useState(false)
 
@@ -227,270 +228,382 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   }
 
   // --------------------DropEffect----------------------------------------
-  useEffect(() => {
-    if (car[numberCar].info.nameCar===''|| car[numberCar].info.nameCar === undefined) setVisibleNameCar(true)
-    setItemsBrand(listBrand())
-    setItemsYear(listYear())
-  }, [])
 
   useEffect(() => {
-    setItemsModel(listModel())
-  }, [valueBrand])
-
-  // --------------------InitialSateScreen-------------------------------------
+    // @ts-ignore error value
+    setItemsModel(listModel(getValues('brand').value ?? ''))
+  }, [watchBrand])
   useEffect(() => {
-    navigation.setOptions({
-      title:valueNameCar,
-      headerRight:()=>
-        <IconButton icon={'car-info'} mode={'outlined'} style={{borderRadius:10}} onPress={()=>setVisibleNameCar(true)}/>
-    })
-
-    const temp = car[numberCar].info
-    setValueNameCar(temp.nameCar)
-    setValueBrand(temp.brand)
-    setValueModel(temp.model)
-    setValueFuel(temp.fuel)
-    setValueBody(temp.body)
-    setValueYear(temp.year)
-    setValueEngine(temp.engine)
-    setValueGear(temp.gear)
-    setValueVin(temp.vin)
-    setValueDateBuy(temp.dateBuy === undefined ? new Date() : temp.dateBuy)
-    setValueBuyMileage(temp.buyMileage)
-    setValueCurrentMileage(car[numberCar].currentMiles.currentMileage)
-  }, [])
-
-  useEffect(()=>{
     navigation.setOptions({
       title: valueNameCar
     })
-  },[valueNameCar])
+  }, [valueNameCar])
+
+  // --------------------InitialSateScreen-------------------------------------
+  useFocusEffect(
+    useCallback(() => {
+      if (car[numberCar].info.nameCar === '' || car[numberCar].info.nameCar === undefined) setVisibleNameCar(true)
+
+      navigation.setOptions({
+        title: valueNameCar,
+        headerRight: () =>
+          <IconButton icon={'car-info'} mode={'outlined'} style={{ borderRadius: 10 }}
+                      onPress={() => setVisibleNameCar(true)} />
+      })
+      const temp = car[numberCar].info
+      setItemCarInfo(temp)
+    }, []))
 
   const isReady = useIsReady()
 
   if (!isReady) { return <BusyIndicator/> } else {
-    return (
+  return (
     <BackgroundView style={{ height: '100%' }}>
-      <ScrollView nestedScrollEnabled={true} style={{ paddingHorizontal: 10, height: '100%' }}>
-        <View style={styles.row1 }>
+      <ScrollView nestedScrollEnabled={true} style={{
+        paddingHorizontal: 10,
+        height: '100%'
+      }}>
+        <View style={styles.row1}>
           <View style={{ flex: 1 }}>
-            <Dropdown
-              style={styles.dropDown}
-              selectedTextStyle={{ paddingHorizontal: 10, color: colors.onBackground }}
-              activeColor={colors.primaryContainer}
-              itemTextStyle={{ color: colors.onSurface }}
-              inputSearchStyle={{ backgroundColor: colors.surfaceVariant, color: colors.onSurfaceVariant }}
-              containerStyle={{ backgroundColor: colors.surface }}
-              data={itemsBrand}
-              labelField={'label'}
-              valueField={'value'}
-              placeholder={'Select Brand'}
-              placeholderStyle={{ color: colors.onBackground }}
-              search
-              searchPlaceholder="Search..."
-              value={valueBrand}
-              onChange={item => {
-                setValueBrand(item.value)
-                /* setDisableModel(false) */
-              }}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-              <Dropdown
-                /* disable={disableModel} */
-                style={styles.dropDown}
-                selectedTextStyle={{ paddingHorizontal: 10, color: colors.onBackground }}
-                activeColor={colors.primaryContainer}
-                itemTextStyle={{ color: colors.onSurface }}
-                inputSearchStyle={{ backgroundColor: colors.surfaceVariant, color: colors.onSurfaceVariant }}
-                containerStyle={{ backgroundColor: colors.surface }}
-                /* placeholderStyle={disableModel ? { color: 'black' } : { color: TEXT_WHITE }} */
-                placeholderStyle={{ color: colors.onBackground }}
-                data={itemsModel}
-                labelField={'label'}
-                valueField={'value'}
-                placeholder={'Select Model'}
-                search
-                searchPlaceholder="Search..."
-                value={valueModel}
-                onChange={item => {
-                  setValueModel(item.value)
-                }}
-              />
-          </View>
-        </View>
-        <View style={styles.row2 }>
-          <View style={{ flex: 1 }}>
-              <Dropdown
-                style={styles.dropDown}
-                selectedTextStyle={{
-                  paddingHorizontal: 10,
-                  color: colors.onBackground
-                }}
-                activeColor={colors.primaryContainer}
-                itemTextStyle={{ color: colors.onSurface }}
-                inputSearchStyle={{
-                  backgroundColor: colors.surfaceVariant,
-                  color: colors.onSurfaceVariant
-                }}
-                containerStyle={{ backgroundColor: colors.surface }}
-                data={itemsFuel}
-                labelField={'label'}
-                valueField={'value'}
-                placeholder={'Топливо'}
-                placeholderStyle={{ color: colors.onBackground }}
-                value={valueFuel}
-                onChange={item => {
-                  setValueFuel(item.value)
-                }}
-              />
-          </View>
-          <View style={{ flex: 1 }}>
-              <Dropdown
-                style={styles.dropDown}
-                selectedTextStyle={{
-                  paddingHorizontal: 10,
-                  color: colors.onBackground
-                }}
-                activeColor={colors.primaryContainer}
-                itemTextStyle={{ color: colors.onSurface }}
-                inputSearchStyle={{
-                  backgroundColor: colors.surfaceVariant,
-                  color: colors.onSurfaceVariant
-                }}
-                containerStyle={{ backgroundColor: colors.surface }}
-                placeholderStyle={{ color: colors.onBackground }}
 
-                data={itemsBody}
-                labelField={'label'}
-                valueField={'value'}
-                placeholder={'Тип'}
-                value={valueBody}
-                onChange={item => {
-                  setValueBody(item.value)
-                }}
-              />
-          </View>
-          <View style={{ flex: 1 }}>
-              <Dropdown
-                style={styles.dropDown}
-                selectedTextStyle={{
-                  paddingHorizontal: 10,
-                  color: colors.onBackground
-                }}
-                activeColor={colors.primaryContainer}
-                itemTextStyle={{ color: colors.onSurface }}
+            <Controller name={'brand'}
+                        control={control}
+                        render={({
+                          field: {
+                            onChange,
+                            value
+                          }
+                        }) => (
+                          <Dropdown
+                            style={styles.dropDown}
+                            selectedTextStyle={{
+                              paddingHorizontal: 10,
+                              color: colors.onBackground
+                            }}
+                            activeColor={colors.primaryContainer}
+                            itemTextStyle={{ color: colors.onSurface }}
+                            inputSearchStyle={{
+                              backgroundColor: colors.surfaceVariant,
+                              color: colors.onSurfaceVariant
+                            }}
+                            containerStyle={{ backgroundColor: colors.surface }}
+                            data={brand}
+                            labelField={'label'}
+                            valueField={'value'}
+                            placeholder={'Select Brand'}
+                            placeholderStyle={{ color: colors.onBackground }}
+                            search
+                            searchPlaceholder="Search..."
+                            value={value}
+                            onChange={(value) => {
+                              onChange(value)
+                            }}
+                          />
+                        )} />
 
-                containerStyle={{ backgroundColor: colors.surface }}
-                placeholderStyle={{ color: colors.onBackground }}
-                /* maxHeight={300}
-                showsVerticalScrollIndicator */
-                data={itemsYear}
-                labelField={'label'}
-                valueField={'value'}
-                placeholder={'Year'}
-                value={valueYear}
-                onChange={item => {
-                  setValueYear(item.value)
-                }}
-              />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Controller name={'model'}
+                        control={control}
+                        render={({
+                          field: {
+                            onChange,
+                            value,
+                          }
+                        }) => (
+                          <Dropdown
+                            /* disable={disableModel} */
+                            style={styles.dropDown}
+                            selectedTextStyle={{
+                              paddingHorizontal: 10,
+                              color: colors.onBackground
+                            }}
+                            activeColor={colors.primaryContainer}
+                            itemTextStyle={{ color: colors.onSurface }}
+                            inputSearchStyle={{
+                              backgroundColor: colors.surfaceVariant,
+                              color: colors.onSurfaceVariant
+                            }}
+                            containerStyle={{ backgroundColor: colors.surface }}
+                            /* placeholderStyle={disableModel ? { color: 'black' } : { color: TEXT_WHITE }} */
+                            placeholderStyle={{ color: colors.onBackground }}
+                            data={itemsModel}
+                            labelField={'label'}
+                            valueField={'value'}
+                            placeholder={'Select Model'}
+                            search
+                            searchPlaceholder="Search..."
+                            value={value}
+                            onChange={(value) => {
+                              onChange(value)
+                            }}
+                          />
+                        )} />
           </View>
         </View>
-        <View style={styles.row3 }>
+        <View style={styles.row2}>
           <View style={{ flex: 1 }}>
-                    <TextInput
-                      mode={'outlined'}
-                      dense
-                      /* ref={inputSellerName} */
-                      placeholder={'тип двигателя'}
-                      label={'тип двигателя'}
-                      value={valueEngine}
-                      onChangeText={(value) => setValueEngine(String(value))}
-                    />
-                  </View>
+            <Controller name={'fuel'}
+                        control={control}
+                        render={({
+                          field: {
+                            onChange,
+                            value,
+                          }
+                        }) => (
+                          <Dropdown
+                            style={styles.dropDown}
+                            selectedTextStyle={{
+                              paddingHorizontal: 10,
+                              color: colors.onBackground
+                            }}
+                            activeColor={colors.primaryContainer}
+                            itemTextStyle={{ color: colors.onSurface }}
+                            inputSearchStyle={{
+                              backgroundColor: colors.surfaceVariant,
+                              color: colors.onSurfaceVariant
+                            }}
+                            containerStyle={{ backgroundColor: colors.surface }}
+                            data={itemsFuel}
+                            labelField={'label'}
+                            valueField={'value'}
+                            placeholder={'Топливо'}
+                            placeholderStyle={{ color: colors.onBackground }}
+                            value={value}
+                            onChange={(value) => {
+                              onChange(value)
+                            }}
+                          />
+                        )} />
+          </View>
           <View style={{ flex: 1 }}>
-                    <TextInput
-                      mode={'outlined'}
-                      dense
-                      /* ref={inputSellerPhone} */
-                      label={'трансмиссия'}
-                      placeholder={'трансмиссия'}
-                      value={valueGear}
-                      onChangeText={(value) => setValueGear(String(value))}
-                    />
-                  </View>
+
+            <Controller name={'body'}
+                        control={control}
+                        render={({
+                          field: {
+                            onChange,
+                            value,
+                          }
+                        }) => (
+                          <Dropdown
+                            style={styles.dropDown}
+                            selectedTextStyle={{
+                              paddingHorizontal: 10,
+                              color: colors.onBackground
+                            }}
+                            activeColor={colors.primaryContainer}
+                            itemTextStyle={{ color: colors.onSurface }}
+                            inputSearchStyle={{
+                              backgroundColor: colors.surfaceVariant,
+                              color: colors.onSurfaceVariant
+                            }}
+                            containerStyle={{ backgroundColor: colors.surface }}
+                            placeholderStyle={{ color: colors.onBackground }}
+
+                            data={itemsBody}
+                            labelField={'label'}
+                            valueField={'value'}
+                            placeholder={'Тип'}
+                            value={value}
+                            onChange={(value) => {
+                              onChange(value)
+                            }}
+                          />
+                        )} />
+
+          </View>
+          <View style={{ flex: 1 }}>
+            <Controller name={'year'}
+                        control={control}
+                        render={({
+                          field: {
+                            onChange,
+                            value,
+                          }
+                        }) => (
+                          <Dropdown
+                            style={styles.dropDown}
+                            selectedTextStyle={{
+                              paddingHorizontal: 10,
+                              color: colors.onBackground
+                            }}
+                            activeColor={colors.primaryContainer}
+                            itemTextStyle={{ color: colors.onSurface }}
+
+                            containerStyle={{ backgroundColor: colors.surface }}
+                            placeholderStyle={{ color: colors.onBackground }}
+                            /* maxHeight={300}
+                            showsVerticalScrollIndicator */
+                            data={year}
+                            labelField={'label'}
+                            valueField={'value'}
+                            placeholder={'Year'}
+                            value={value}
+                            onChange={(value) => {
+                              onChange(value)
+                            }}
+                          />
+                        )} />
+          </View>
         </View>
-        <Divider horizontalInset bold />
+        <View style={styles.row3}>
+          <View style={{ flex: 1 }}>
+            <Controller name={'engine'}
+                        control={control}
+                        render={({
+                          field: {
+                            onChange,
+                            value,
+                          }
+                        }) => (
+                          <>
+                            <TextInput
+                              mode={'outlined'}
+                              dense
+                              /* ref={inputSellerName} */
+                              placeholder={'тип двигателя'}
+                              label={'тип двигателя'}
+                              value={value}
+                              onChangeText={(value) => onChange(value)}
+                            />
+                          </>
+                        )} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Controller name={'gear'}
+                        control={control}
+                        render={({
+                          field: {
+                            onChange,
+                            value,
+                          }
+                        }) => (
+                          <>
+                            <TextInput
+                              mode={'outlined'}
+                              dense
+                              /* ref={inputSellerPhone} */
+                              label={'трансмиссия'}
+                              placeholder={'трансмиссия'}
+                              value={value}
+                              onChangeText={(value) => onChange(value)}
+                            />
+                          </>
+                        )} />
+          </View>
+        </View>
         <View style={styles.input}>
-            <TextInput
-              mode={'outlined'}
-              dense
-              /* ref={inputSellerLink} */
-              placeholder={'VIN код автомобиля'}
-              label={'VIN код автомобиля'}
-              onChangeText={(value) => setValueVin(String(value))}
-              value={valueVin}
-            />
+          <Controller name={'vin'}
+                      control={control}
+                      render={({
+                        field: {
+                          onChange,
+                          value,
+                        }
+                      }) => (
+                        <>
+                          <TextInput
+                            mode={'outlined'}
+                            dense
+                            /* ref={inputSellerLink} */
+                            placeholder={'VIN код автомобиля'}
+                            label={'VIN код автомобиля'}
+                            onChangeText={(value) => onChange(value)}
+                            value={value}
+                          />
+                        </>
+                      )} />
+        </View>
+        <View style={styles.viewGroupEngine}>
+          <View style={styles.input}>
+            <Controller name={'dateBuy'}
+                        control={control}
+                        render={({
+                          field: {
+                            value,
+                            ref
+                          }
+                        }) => (
+                          <>
+                            <TextInput
+                              mode={'outlined'}
+                              dense
+                              ref={ref}
+                              placeholder={'дата покупки'}
+                              showSoftInputOnFocus={false}
+                              label={'дата покупки'}
+                              onPressIn={inputDateBuy}
+                              value={new Date(value).toLocaleDateString()}
+                            />
+                          </>
+                        )} />
           </View>
-          <View style={styles.viewGroupEngine}>
-            <View style={styles.input}>
-              <TextInput
-                mode={'outlined'}
-                dense
-                /* ref={inputSellerName} */
-                placeholder={'дата покупки'}
-                showSoftInputOnFocus={false}
-                label={'дата покупки'}
-                onPressIn={ inputDateBuy }
-                value = {new Date(valueDateBuy).toLocaleDateString()}
-              />
-            </View>
-            <View style={styles.input}>
-              <TextInput
-                mode={'outlined'}
-                dense
-                /* ref={inputSellerPhone} */
-                placeholder={'пробег при покупке'}
-                label={'пробег при покупке'}
-                keyboardType={'numeric'}
-                value={String(valueBuyMileage)}
-                onChangeText={(value) => setValueBuyMileage(Number(value))}
-              />
-            </View>
+          <View style={styles.input}>
+            <Controller name={'buyMileage'}
+                        control={control}
+                        render={({
+                          field: {
+                            onChange,
+                            value,
+                          }
+                        }) => (
+                          <>
+                            <TextInput
+                              mode={'outlined'}
+                              dense
+                              /* ref={inputSellerPhone} */
+                              placeholder={'пробег при покупке'}
+                              label={'пробег при покупке'}
+                              keyboardType={'numeric'}
+                              value={value}
+                              onChangeText={(value) => onChange(value)}
+                            />
+                          </>
+                        )} />
           </View>
-        <Divider horizontalInset bold style={{ marginTop: 8, marginBottom: 6 }} />
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 5, columnGap: 10 }}>
-          <Button mode={'outlined'} style={{ borderRadius: 5, backgroundColor: colors.surface, flex: 1 }}
+        </View>
+        <Divider horizontalInset bold style={{
+          marginTop: 8,
+          marginBottom: 6
+        }} />
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginVertical: 5,
+          columnGap: 10
+        }}>
+          <Button mode={'outlined'} style={{
+            borderRadius: 5,
+            backgroundColor: colors.surface,
+            flex: 1
+          }}
                   onPress={() => setVisibleModalService(true)}>
             Регламент ТО
           </Button>
           <Button
             icon={'restore'} mode={'outlined'}
-            style={{ borderRadius: 5, height: 45, backgroundColor: colors.surface, flex: 1 }}
+            style={{
+              borderRadius: 5,
+              height: 45,
+              backgroundColor: colors.surface,
+              flex: 1
+            }}
             onPress={() => setRegMaintenance(listService)}>
             Сброс ТО
           </Button>
         </View>
-        <Divider horizontalInset bold style={{ marginTop: 8, marginBottom: 6 }} />
-
-        <View style={styles.viewGroupEngine}>
-            <TextInput
-              mode={'outlined'}
-              /* style={{ backgroundColor: colors.surface }} */
-              dense
-              /* ref={inputSellerLink} */
-              placeholder={'текущий пробег'}
-              label={'текущий пробег'}
-              keyboardType={'numeric'}
-              value={String(valueCurrentMileage)}
-              onChangeText={(value) => setValueCurrentMileage(Number(value))}
-            />
-          </View>
+        <Divider horizontalInset bold style={{
+          marginTop: 8,
+          marginBottom: 6
+        }} />
         <View style={styles.viewButton}>
 
           <Button
             icon={'close-thick'}
-            onPress={() => { navigation.goBack() }}
+            onPress={() => {
+              createTwoButtonAlert()
+            }}
             mode='outlined'
             rippleColor={colors.error}
             textColor={colors.error}
@@ -504,20 +617,26 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             textColor={colors.tertiary}
             rippleColor={colors.tertiary}
             mode={'outlined'}
-            onPress={() => { handleOkCarInfo() }}
+            onPress={handleSubmit(handleOkCarInfo)}
           >
             Ok
           </Button>
         </View>
-    </ScrollView>
+      </ScrollView>
 
       {
         // -------------------------- Modal for selecting type of service ---------------------------
       }
       <Portal>
         <Modal visible={visibleModalService} onDismiss={() => setVisibleModalService(false)} dismissableBackButton
-               contentContainerStyle={{ marginHorizontal: 20, backgroundColor: colors.background, borderRadius: 5, padding: 3 }}>
-            <RegMaintenance listMaintenance={regMaintenance} okPress={okModalMaintenance} cancelPress={cancelModalMaintenance}/>
+               contentContainerStyle={{
+                 marginHorizontal: 20,
+                 backgroundColor: colors.background,
+                 borderRadius: 5,
+                 padding: 3
+               }}>
+          <RegMaintenance listMaintenance={regMaintenance} okPress={okModalMaintenance}
+                          cancelPress={cancelModalMaintenance} />
         </Modal>
       </Portal>
       {
@@ -527,25 +646,27 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         // -------------------------- Modal for selecting name of car ---------------------------
       }
       <Portal>
-       <Dialog visible={visibleNameCar} dismissableBackButton onDismiss={cancelModalMaintenance}>
-         <Dialog.Title>Введите псевдоним машины</Dialog.Title>
-         <Dialog.Content>
-           <TextInput
-             label={'введите псевдоним'}
-             placeholder={'введите псевдоним'}
-             onChangeText={(value) => setValueDialogNameCar(String(value))}
-             value={String(valueDialogNameCar)}
-           />
-         </Dialog.Content>
-         <Dialog.Actions >
-           <Surface elevation={2} style={{borderRadius:10}}>
-           <IconButton icon={'window-close'} onPress={()=>CancelDialogNameCar()} iconColor={colors.error}  ></IconButton>
-           </Surface>
-           <Surface elevation={2} style={{borderRadius:10}}>
-           <IconButton icon={'check'} onPress={()=>okDialogNameCar(valueDialogNameCar)} iconColor={colors.tertiary} ></IconButton>
-           </Surface>
-         </Dialog.Actions>
-       </Dialog>
+        <Dialog visible={visibleNameCar} dismissableBackButton onDismiss={cancelModalMaintenance}>
+          <Dialog.Title>Введите псевдоним машины</Dialog.Title>
+          <Dialog.Content>
+            <TextInput
+              label={'введите псевдоним'}
+              placeholder={'введите псевдоним'}
+              onChangeText={(value) => setValueDialogNameCar(String(value))}
+              value={String(valueDialogNameCar)}
+            />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Surface elevation={2} style={{ borderRadius: 10 }}>
+              <IconButton icon={'window-close'} onPress={() => CancelDialogNameCar()}
+                          iconColor={colors.error}></IconButton>
+            </Surface>
+            <Surface elevation={2} style={{ borderRadius: 10 }}>
+              <IconButton icon={'check'} onPress={() => okDialogNameCar(valueDialogNameCar)}
+                          iconColor={colors.tertiary}></IconButton>
+            </Surface>
+          </Dialog.Actions>
+        </Dialog>
       </Portal>
       {
         // -------------------------------------------------------------------------------------------
@@ -553,8 +674,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
     </BackgroundView>
 
-    )
-  }
+  )
+}
 }
 
 export default CarInfoScreen

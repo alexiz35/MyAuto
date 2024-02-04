@@ -1,6 +1,7 @@
 // --------------------------------constant Color --------------------------------------------
 
 import { listService } from './components/InputDoneScreenComponents/inputService/ListServices'
+import { cars } from './cars.json'
 
 export const BACKGROUND = '#13171A'
 /* export const BACK_OPACITY = 'rgba(0,0,0,0)' */
@@ -60,6 +61,23 @@ export enum ActionType {
   EDIT_TASK = 'EDIT_TASK',
   FINISH_TASK = 'FINISH_TASK',
 }
+interface ListCar {
+  label: string
+  value: string
+}
+const listBrand = (): ListCar[] => {
+  const tempList: ListCar[] = []
+  const tempBrand = Object.keys(cars)
+  tempBrand.forEach((item, index) =>
+    (tempList[index] = {
+      label: item,
+      value: item
+    })
+  )
+  console.log('brand')
+  return tempList
+}
+export const brand = listBrand()
 
 export interface StateMain {
   cars: StateCar[]
@@ -120,9 +138,9 @@ export interface StateInfo {
   nameCar: string
   brand: string
   model: string
-  fuel?: string
-  body?: string
-  year?: string
+  fuel: string
+  body: string
+  year: string
   engine?: string
   capacity?: string
   gear?: string

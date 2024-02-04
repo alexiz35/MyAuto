@@ -15,7 +15,7 @@ const BackgroundView = ({ children, props }: React.PropsWithChildren<any>): JSX.
     theme.dark ? setImg(BlackBack) : setImg(LightBack)
   }, [theme])
   return (
-    <ImageBackground source={img} style={props} >
+    <ImageBackground source={img} style={props}>
       {children}
     </ImageBackground>
   )
