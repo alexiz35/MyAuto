@@ -21,6 +21,7 @@ import {
 import BackgroundView from '../CommonComponents/BackgroundView'
 import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
 import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
+import { indexCar } from '../type'
 
 export interface TypeSelect {
   type: string
@@ -35,7 +36,7 @@ export interface TypeSelect {
 }
 
 const StatScreen = (): JSX.Element => {
-  const state = useAppSelector((state) => state.cars[state.numberCar])
+  const state = useAppSelector((state) => state.cars[indexCar(state.cars,state.numberCar)])
 
   const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
 

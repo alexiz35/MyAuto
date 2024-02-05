@@ -76,14 +76,14 @@ const carsSlice = createSlice({
     // --------------------------------------------------------------------------------------
     editedCarInfo (state, action: PayloadAction<{ numberCar: number, carInfo: StateInfo }>) {
       // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state[action.payload.numberCar].info = action.payload.carInfo
+      state[indexCar(state,action.payload.numberCar)].info = action.payload.carInfo
     },
     // --------------------------------------------------------------------------------------
     addedCurrentMiles (state, action: PayloadAction<{ numberCar: number, currentMiles: CurrentMiles }>) {
       const tempState = state[action.payload.numberCar]
       tempState.currentMiles = action.payload.currentMiles
       tempState.mileage.push(action.payload.currentMiles)
-      state[action.payload.numberCar] = tempState
+      state[indexCar(state,action.payload.numberCar)] = tempState
       return state
     },
     // ------------ reducers for fuel,part,service,other ------------------------------------
@@ -92,7 +92,7 @@ const carsSlice = createSlice({
        tempArray.push(action.payload.item)
        state[action.payload.numberCar][action.payload.type] = tempArray */
        // @ts-ignore: error type item
-       state[action.payload.numberCar][action.payload.type].push(action.payload.item)
+       state[indexCar(state,action.payload.numberCar)][action.payload.type].push(action.payload.item)
 
     },
     /* delStateCarReducer (state,action:PayloadAction<{type:TypeTypeState,numberCar:number,id:number}>) {
@@ -109,9 +109,9 @@ const carsSlice = createSlice({
       },
     editStateCarReducer (state,action: PayloadAction<{type: TypeTypeState,numberCar:number,item:TypeStatesCar}>) {
       // @ts-ignore: error type item
-      const temp = state[action.payload.numberCar][action.payload.type].filter(item => item.id !== action.payload.item.id)
+      const temp = state[indexCar(state,action.payload.numberCar)][action.payload.type].filter(item => item.id !== action.payload.item.id)
       temp.push(action.payload.item)
-      state[action.payload.numberCar][action.payload.type] = temp
+      state[indexCar(state,action.payload.numberCar)][action.payload.type] = temp
     }
     // ----------------------------------------------------------------------------------------
   }

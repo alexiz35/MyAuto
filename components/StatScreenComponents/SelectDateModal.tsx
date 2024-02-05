@@ -6,6 +6,7 @@ import WheelPickerSelectDate from './WheelPickerSelectDate'
 import WheelPickerSelectDouble, { TypeResultPicker } from './WheelPickerSelectDouble'
 import { Dialog, Divider, Button, RadioButton, Portal, Modal } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
+import { indexCar } from '../../type'
 
 interface Props {
   handleOk: (selectModal: TypeSelect) => void
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element => {
-  const state = useAppSelector((state) => state.cars[state.numberCar])
+  const state = useAppSelector((state) => state.cars[indexCar(state.cars,state.numberCar)])
   const MONTH = 'Январь,февраль,Март,Апрель,Май,Июнь,Июль, Август, Сентябрь, Октябрь, Ноябрь, Декабрь'.split(',')
   const { colors } = useAppTheme()
 

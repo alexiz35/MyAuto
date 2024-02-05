@@ -6,7 +6,7 @@ import { JSX, useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import {
   StateService,
-  ModalPart, ListService, Seller
+  ModalPart, ListService, Seller, indexCar
 } from '../../../type'
 import { AddPartModal } from './AddPartModal'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -53,7 +53,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   /* const stateSecond = useAppSelector((state) => state) */
 
   const theme = useAppTheme()
-  const state = useAppSelector((state) => state.cars[state.numberCar])
+  const state = useAppSelector((state) => state.cars[indexCar(state.cars,state.numberCar)])
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const tempNullService: FormService = {

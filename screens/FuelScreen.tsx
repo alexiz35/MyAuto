@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { JSX, useEffect, useState } from 'react'
-import { type StateFuel } from '../type'
+import { indexCar, type StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { type RootStackParamList, type RootTabParamList } from '../components/Navigation/TypeNavigation'
 import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -45,7 +45,7 @@ interface FormFuel {
 
 export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state.cars[state.numberCar])
+  const state = useAppSelector((state) => state.cars[indexCar(state.cars,state.numberCar)])
   console.log('fuelState',state)
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()

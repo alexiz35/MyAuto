@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import { StateService } from '../../../type'
+import { indexCar, StateService } from '../../../type'
 import { Card, IconButton, Menu, ProgressBar } from 'react-native-paper'
 import { JSX, useEffect, useState } from 'react'
 import { delService } from '../../Redux/actions'
@@ -17,7 +17,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
 
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
-  const state = useAppSelector((state) => state.cars[state.numberCar])
+  const state = useAppSelector((state) => state.cars[indexCar(state.cars,carId)])
 
   const [visibleMenu, setVisibleMenu] = useState(false)
   const [progress, setProgress] = useState(0)
