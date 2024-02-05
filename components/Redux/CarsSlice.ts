@@ -11,7 +11,7 @@ import {
   StateTask
 } from '../../type'
 
-const initialState: StateCar[] = [
+export const initialStateCar: StateCar[] = [
   {
     info: initialStateInfo, // ok
     carId: 0,
@@ -57,18 +57,21 @@ type TypeTypeState = ObjectValues<typeof TYPE_REDUCER> */
 
 const carsSlice = createSlice({
   name: 'cars',
-  initialState,
+  initialState: initialStateCar,
   reducers: {
     // --------------------------------------------------------------------------------------
-    addedCar (state, action) {
-      const { seller } = action.payload
+    addedCar (state, action:PayloadAction<StateCar>) {
+      /* const tempNewCar = initialStateCar[0]
+      tempNewCar.carId = state.length */
       // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state.concat(seller)
+      state.push(action.payload)
     },
-    deletedCar (state, action) {
-      const { seller } = action.payload
-      // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state.concat(seller)
+    deletedCar (state, action:PayloadAction<{numberCar:number}>) {
+      if (state.length===1) return initialStateCar
+      else return state.filter(item=>item.carId !== action.payload.numberCar)
+    },
+    delNowCar (state) {
+      return state.filter(item=>item.info.nameCar !== '')
     },
     // --------------------------------------------------------------------------------------
     editedCarInfo (state, action: PayloadAction<{ numberCar: number, carInfo: StateInfo }>) {
@@ -110,6 +113,6 @@ const carsSlice = createSlice({
 })
 
 
-export const { editedCarInfo, addedCurrentMiles,addStateCarReducer, delStateCarReducer,editStateCarReducer } = carsSlice.actions
+export const { editedCarInfo, addedCurrentMiles,addStateCarReducer, delStateCarReducer,editStateCarReducer, addedCar, deletedCar,delNowCar } = carsSlice.actions
 
 export default carsSlice.reducer

@@ -1,5 +1,5 @@
 import { View, StyleSheet, Vibration } from 'react-native'
-import { CurrentMiles, initialStateInfo, StateInfo } from '../../type'
+import { CurrentMiles, indexCar, initialStateInfo, StateInfo } from '../../type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
 import { useNavigation } from '@react-navigation/native'
@@ -35,14 +35,14 @@ export const MainCard = (): JSX.Element => {
   const state = useAppSelector(state => state)
 
   const infoCar: StateInfo = useAppSelector(state => (
-    state.cars[state.numberCar].info === undefined
+    state.cars[indexCar(state.cars,carId)].info === undefined
       ? initialStateInfo
-      : state.cars[state.numberCar].info
+      : state.cars[indexCar(state.cars,carId)].info
   ))
   const currentMiles: CurrentMiles = useAppSelector(state => (
-    state.cars[state.numberCar].currentMiles === undefined
+    state.cars[indexCar(state.cars,carId)].currentMiles === undefined
       ? { currentMileage: 0, dateMileage: new Date() }
-      : state.cars[state.numberCar].currentMiles
+      : state.cars[indexCar(state.cars,carId)].currentMiles
   ))
   const dispatch = useAppDispatch()
 

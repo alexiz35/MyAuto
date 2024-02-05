@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 import { Alert, StyleSheet, TouchableHighlight, View, ScrollView } from 'react-native'
-import { Button, Text, Divider, Checkbox, Icon, IconButton } from 'react-native-paper'
+import { Button, Text, Divider, Checkbox, Icon, IconButton, Card } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { JSX, useCallback, useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
@@ -27,9 +27,29 @@ import { changeAlarmPeriod, changeAlarmStart, themeChanged } from '../components
 import { addedToken } from '../components/Redux/TokenSlice'
 import { deletedAllSeller, deletedSeller } from '../components/Redux/SellerSlice'
 import { CarsList } from '../components/SettingScreenComponents/CarsList'
+import { initialState } from '../components/Redux/store'
+import { addedCar, initialStateCar } from '../components/Redux/CarsSlice'
+import { changedNumberCar } from '../components/Redux/NumberCarSlice'
+import { initialStateInfo } from '../type'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
+
+export const initialCarState = {
+    info: initialStateInfo, // ok
+    carId: 0,
+    currentMiles: {
+      currentMileage: 0,
+      dateMileage: new Date()
+    }, // ok
+    fuel: [], // ok
+    services: [],
+    mileage: [], // ok
+    parts: [], // ok
+    others: [], // ok
+    tasks: [] // ok
+}
+
 
 const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const state = useAppSelector(state => state)
@@ -56,6 +76,15 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       : dispatch(themeChanged('dark'))
   }, [theme2])
 
+  // ****************************** ADD NEW CAR *********************************
+    const addNewCar = () => {
+      const tempNewCar = Object.assign({},initialStateCar[0])
+      tempNewCar.carId = state.cars.length
+      /* console.log('add',state.cars.length,tempNewCar) */
+      dispatch(addedCar(tempNewCar))
+      dispatch(changedNumberCar(tempNewCar.carId))
+      navigation.navigate('CarInfoScreen')
+    }
   // -----------------------------------------------------------------------------
   // ****************************** ALARM section *********************************
 
@@ -308,7 +337,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   {/*
   *************************** Change THEME ******************************************
   */}
-        <Divider style={{ marginTop: 10 }} bold/>
+        <Card style={{marginVertical:5}}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={styles.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
@@ -319,10 +348,11 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
           </View>
         </View>
+        </Card>
   {/*
   *************************** Seller List ******************************************
   */}
-        <Divider style={{ marginTop: 1 }} bold/>
+        <Card style={{marginVertical:5}}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={styles.iconText}>
             <Icon source={'circle'} color={colors.tertiary} size={10} />
@@ -334,28 +364,25 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
             {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
           </View>
         </View>
+        </Card>
   {/*
   ************************** Car SWITCH  ******************************************
   */}
-        <Divider bold/>
+        <Card style={{marginVertical:5}}>
         <View style={styles.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
           <Text style={styles.text}>Мои машины</Text>
         </View>
-        <CarsList/>
-         {/* {
-          state.cars.map((item, index) => (
-            <View key={index} style={styles.viewText}>
-            <Text >{item.info.model}</Text>
-            <Divider/>
-            </View>
-          ))
-        } */}
+          <Divider bold/>
+
+          <CarsList/>
         <Divider horizontalInset/>
-          <Button onPress={() => navigation.navigate('CarInfoScreen')}>
+          <Button onPress={() => addNewCar()}>
             Добавить машину
           </Button>
-        <Divider bold/>
+        </Card>
+
+        <Card style={{marginVertical:5}}>
         <View style={styles.iconText}>
 
           <Icon source={'circle'} color={colors.tertiary} size={10} />
@@ -442,7 +469,9 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         <Button onPress={() => { void backup() }} disabled={!auth}>
           Экспорт данных
         </Button>
-        <Divider bold/>
+        </Card>
+
+        <Card style={{marginVertical:5}}>
         <View style={styles.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
           <Text style={styles.text}>Контроль пробега</Text>
@@ -455,7 +484,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         <Divider horizontalInset/>
         <Checkbox.Item status={checkAlarmPeriodNumber} label={'Синхронизация пробега с авто'}
                        onPress={() => pressAlarm('alarmPeriodNumber')} labelVariant={'bodyMedium'} />
-        <Divider bold/>
+
+        </Card>
 
         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <TouchableHighlight onPress={async () => {

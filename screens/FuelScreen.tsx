@@ -46,6 +46,7 @@ interface FormFuel {
 export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.cars[state.numberCar])
+  console.log('fuelState',state)
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
   const navigation = useNavigation<Props>()

@@ -11,7 +11,7 @@ interface handleProp {
 }
 
 export const OthersList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
-  const listOthers = useAppSelector(state => state.cars[0].others)
+  const listOthers = useAppSelector(state => state.cars[state.numberCar].others)
   const [isSortOthers, setIsSortOthers] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
 
