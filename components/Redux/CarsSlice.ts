@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
-  CurrentMiles,
+  CurrentMiles, indexCar,
   initialStateInfo,
   StateCar,
   StateFuel,
@@ -95,13 +95,18 @@ const carsSlice = createSlice({
        state[action.payload.numberCar][action.payload.type].push(action.payload.item)
 
     },
-    delStateCarReducer (state,action:PayloadAction<{type:TypeTypeState,numberCar:number,id:number}>) {
+    /* delStateCarReducer (state,action:PayloadAction<{type:TypeTypeState,numberCar:number,id:number}>) {
 
       state[action.payload.numberCar][action.payload.type] =
         // @ts-ignore: error type item
         state[action.payload.numberCar][action.payload.type].filter(item => item.id !== action.payload.id)
     }
-    ,
+    , */
+    delStateCarReducer (state,action:PayloadAction<{type:TypeTypeState,numberCar:number,id:number}>) {
+        state[indexCar(state,action.payload.numberCar)][action.payload.type] =
+          // @ts-ignore: error type item
+          state[indexCar(state,action.payload.numberCar)][action.payload.type].filter(item => item.id !== action.payload.id)
+      },
     editStateCarReducer (state,action: PayloadAction<{type: TypeTypeState,numberCar:number,item:TypeStatesCar}>) {
       // @ts-ignore: error type item
       const temp = state[action.payload.numberCar][action.payload.type].filter(item => item.id !== action.payload.item.id)
