@@ -33,8 +33,9 @@ export const listModel = (brand:string): ListCar[] => {
 }
 const listYear = (): ListCar[] => {
   const tempList: ListCar[] = []
+  const endYear = new Date().getFullYear()
   let index = 0
-  for (let i = 1990; i < 2023; i++) {
+  for (let i = 1990; i < endYear+1; i++) {
     tempList[index] = {
       label: String(i),
       value: String(i)
