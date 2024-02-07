@@ -11,7 +11,7 @@ interface handleProp {
 }
 
 export const FuelList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
-  const listFuel = useAppSelector(state => state.cars[indexCar(state.cars,state.numberCar)].fuel)
+  const listFuel = useAppSelector(state => state.cars[indexCar(state.cars, state.numberCar)].fuel)
   const [isSortFuel, setIsSortFuel] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
 
@@ -24,8 +24,8 @@ export const FuelList = ({ handlePress, filterList = 'last' }: handleProp): JSX.
   }, [listFuel]) */
 
   useEffect(() => {
-    setTimeout(() => setIsLoad(false), 10)
-    return setIsLoad(true)
+    setTimeout(() => { setIsLoad(false) }, 10)
+    setIsLoad(true)
   }, [filterList])
 
   const filter = (): StateFuel[] => {

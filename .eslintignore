@@ -11,4 +11,4 @@ assets
 node_modules
 package.json
 babel.config.js
-oldFiles
+/oldFiles/

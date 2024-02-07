@@ -1,6 +1,6 @@
 import { View, StyleSheet, Vibration } from 'react-native'
 import { CurrentMiles, indexCar, initialStateInfo, StateInfo } from '../../type'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+/* import { NativeStackNavigationProp } from '@react-navigation/native-stack' */
 import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
 import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
@@ -17,6 +17,7 @@ import {
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { addedCurrentMiles } from '../Redux/CarsSlice'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -35,14 +36,14 @@ export const MainCard = (): JSX.Element => {
   const state = useAppSelector(state => state)
 
   const infoCar: StateInfo = useAppSelector(state => (
-    state.cars[indexCar(state.cars,carId)].info === undefined
+    state.cars[indexCar(state.cars, carId)].info === undefined
       ? initialStateInfo
-      : state.cars[indexCar(state.cars,carId)].info
+      : state.cars[indexCar(state.cars, carId)].info
   ))
   const currentMiles: CurrentMiles = useAppSelector(state => (
-    state.cars[indexCar(state.cars,carId)].currentMiles === undefined
+    state.cars[indexCar(state.cars, carId)].currentMiles === undefined
       ? { currentMileage: 0, dateMileage: new Date() }
-      : state.cars[indexCar(state.cars,carId)].currentMiles
+      : state.cars[indexCar(state.cars, carId)].currentMiles
   ))
   const dispatch = useAppDispatch()
 
@@ -179,7 +180,7 @@ export const MainCard = (): JSX.Element => {
                 maxLength={8}
                 placeholder={'введите пробег'}
                 right={<TextInput.Affix text="km" />}
-                onChangeText={(value) => setValueMileage(Number(value))}
+                onChangeText={(value) => { setValueMileage(Number(value)) }}
                 keyboardType={'numeric'}
                 value={String(valueMileage)}
                 error={errorInput}
@@ -191,7 +192,7 @@ export const MainCard = (): JSX.Element => {
               <Dialog.Actions >
                 <Button onPress={handleCancelMileage}>Cancel</Button>
               <Button
-                onPress={() => handlePressOkMileage()}
+                onPress={() => { handlePressOkMileage() }}
                 >Ok
               </Button>
 
