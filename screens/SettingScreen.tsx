@@ -1,12 +1,30 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../components/Navigation/TypeNavigation'
-import { Alert, StyleSheet, TouchableHighlight, View, ScrollView } from 'react-native'
-import { Button, Text, Divider, Checkbox, Icon, IconButton, Card } from 'react-native-paper'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
+import { type RootStackParamList } from '../components/Navigation/TypeNavigation'
+import {
+  Alert,
+  StyleSheet,
+  TouchableHighlight,
+  View,
+  ScrollView
+} from 'react-native'
+import {
+  Button,
+  Text,
+  Divider,
+  Checkbox,
+  Icon,
+  IconButton,
+  Card
+} from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { JSX, useCallback, useEffect, useState } from 'react'
+import { type JSX, useCallback, useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
-import { changeAlarmPeriodNumber, delAllSeller, updateState } from '../components/Redux/actions'
+import {
+  changeAlarmPeriodNumber,
+  delAllSeller,
+  updateState
+} from '../components/Redux/actions'
 import {
   deleteGoogleAuth,
   GDCreateFileJson,
@@ -15,15 +33,22 @@ import {
   GDGetFile,
   GDGetUserInfo,
   GDUpdateFileJson,
-  GDUserInfo,
+  type GDUserInfo,
   getRefreshToken
 } from '../components/GoogleAccount/GoogleAPI'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
-import { changeAlarmPeriod, changeAlarmStart, themeChanged } from '../components/Redux/SettingSlice'
+import {
+  changeAlarmPeriod,
+  changeAlarmStart,
+  themeChanged
+} from '../components/Redux/SettingSlice'
 import { addedToken } from '../components/Redux/TokenSlice'
-import { deletedAllSeller, deletedSeller } from '../components/Redux/SellerSlice'
+import {
+  deletedAllSeller,
+  deletedSeller
+} from '../components/Redux/SellerSlice'
 import { CarsList } from '../components/SettingScreenComponents/CarsList'
 import { initialState } from '../components/Redux/store'
 import { addedCar, initialStateCar } from '../components/Redux/CarsSlice'
@@ -49,7 +74,7 @@ export const initialCarState = {
 }
 
 const SettingScreen = ({ navigation }: Props): JSX.Element => {
-  const state = useAppSelector(state => state)
+  const state = useAppSelector((state) => state)
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
   const [token, setToken] = useState('')
@@ -59,7 +84,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
 
   // ****************************** THEME change *********************************
   // ------------------------- Toggle Theme --------------------------------------
-  const theme2 = useAppSelector(state => state.setting.themeSet)
+  const theme2 = useAppSelector((state) => state.setting.themeSet)
   /* const [switchTheme, setSwitchTheme] = useState(false)
         const toggleSwitchTheme = (): void => {
           setSwitchTheme(!switchTheme)
@@ -68,7 +93,9 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   /*   const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme */
 
   const toggleTheme = useCallback(() => {
-    theme2 === 'dark' ? dispatch(themeChanged('light')) : dispatch(themeChanged('dark'))
+    theme2 === 'dark'
+      ? dispatch(themeChanged('light'))
+      : dispatch(themeChanged('dark'))
   }, [theme2])
 
   // ****************************** ADD NEW CAR *********************************
@@ -83,15 +110,15 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   // -----------------------------------------------------------------------------
   // ****************************** ALARM section *********************************
 
-  const [checkAlarmStart, setCheckAlarmStart] = useState<'checked' | 'unchecked' | 'indeterminate'>(
-    state.setting.alarmMileageStart ? 'checked' : 'unchecked'
-  )
-  const [checkAlarmPeriod, setCheckAlarmPeriod] = useState<'checked' | 'unchecked' | 'indeterminate'>(
-    state.setting.alarmMileagePeriod ? 'checked' : 'unchecked'
-  )
-  const [checkAlarmPeriodNumber, setCheckAlarmPeriodNumber] = useState<'checked' | 'unchecked' | 'indeterminate'>(
-    state.setting.alarmMileagePeriodNumber === 2 ? 'unchecked' : 'checked'
-  )
+  const [checkAlarmStart, setCheckAlarmStart] = useState<
+  'checked' | 'unchecked' | 'indeterminate'
+  >(state.setting.alarmMileageStart ? 'checked' : 'unchecked')
+  const [checkAlarmPeriod, setCheckAlarmPeriod] = useState<
+  'checked' | 'unchecked' | 'indeterminate'
+  >(state.setting.alarmMileagePeriod ? 'checked' : 'unchecked')
+  const [checkAlarmPeriodNumber, setCheckAlarmPeriodNumber] = useState<
+  'checked' | 'unchecked' | 'indeterminate'
+  >(state.setting.alarmMileagePeriodNumber === 2 ? 'unchecked' : 'checked')
   const pressAlarm = (typeCheck: string): void => {
     switch (typeCheck) {
       case 'alarmStart':
@@ -125,9 +152,12 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   }
   // ****************************** GOOGLE account *********************************
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: '192692660431-2is6dth1j1d4c8j6mnfa91arctkgksnm.apps.googleusercontent.com',
-    webClientId: '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
-    expoClientId: '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
+    androidClientId:
+      '192692660431-2is6dth1j1d4c8j6mnfa91arctkgksnm.apps.googleusercontent.com',
+    webClientId:
+      '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
+    expoClientId:
+      '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
 
     scopes: [
       'profile',
@@ -153,7 +183,11 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         setToken(response.authentication.accessToken)
         setAuth(true)
         dispatch(
-          addedToken(response.authentication.refreshToken !== undefined ? response.authentication.refreshToken : '')
+          addedToken(
+            response.authentication.refreshToken !== undefined
+              ? response.authentication.refreshToken
+              : ''
+          )
         )
       }
     }
@@ -162,7 +196,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   useEffect(() => {
     if (auth) {
       try {
-        void getRefreshToken(state.token).then(res => {
+        void getRefreshToken(state.token).then((res) => {
           setToken(res)
           setAuth(true)
         })
@@ -181,53 +215,56 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const backup = async (): Promise<void> => {
     if (state.token !== '') {
       await GDFindFile(
-        "name='myAuto' and mimeType = 'application/vnd.google-apps.folder' and trashed = false ",
+        'name=\'myAuto\' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false ',
         token
-      ).then(findFolders => {
+      ).then((findFolders) => {
         if (findFolders.files.length === 1) {
           // if the folder is found then starting to find the file
           const temp: string =
             // @ts-expect-error filesId
             findFolders.files[0] !== undefined ? findFolders.files[0].id : ''
-          void GDFindFile("name='myAuto' and" + ` '${temp}' in parents ` + 'and trashed = false ', token).then(
-            findFile => {
-              if (findFile.files.length === 1) {
-                // if the file is found then update it
-                try {
-                  void GDUpdateFileJson(
-                    state,
-                    'myAuto',
-                    // @ts-expect-error filesId
+          void GDFindFile(
+            'name=\'myAuto\' and' +
+              ` '${temp}' in parents ` +
+              'and trashed = false ',
+            token
+          ).then((findFile) => {
+            if (findFile.files.length === 1) {
+              // if the file is found then update it
+              try {
+                void GDUpdateFileJson(
+                  state,
+                  'myAuto',
+                  // @ts-expect-error filesId
 
-                    findFile.files[0].id,
-                    token
-                  )
-                  Alert.alert('Backup Successfully')
-                } catch (error) {
-                  Alert.alert('Error Backup')
-                }
-              } else {
-                // if the file isn't found then create new file
-                try {
-                  void GDCreateFileJson(
-                    state,
-                    'myAuto',
-                    // @ts-expect-error filesId
+                  findFile.files[0].id,
+                  token
+                )
+                Alert.alert('Backup Successfully')
+              } catch (error) {
+                Alert.alert('Error Backup')
+              }
+            } else {
+              // if the file isn't found then create new file
+              try {
+                void GDCreateFileJson(
+                  state,
+                  'myAuto',
+                  // @ts-expect-error filesId
 
-                    findFolders.files[0].id,
-                    token
-                  )
-                  Alert.alert('Backup Successfully')
-                } catch (error) {
-                  Alert.alert('Error Backup')
-                }
+                  findFolders.files[0].id,
+                  token
+                )
+                Alert.alert('Backup Successfully')
+              } catch (error) {
+                Alert.alert('Error Backup')
               }
             }
-          )
+          })
         } else {
           // if the folder isn't found then create new folder and file
           try {
-            void GDCreateFolder('myAuto', token).then(response => {
+            void GDCreateFolder('myAuto', token).then((response) => {
               setIdParent(response.id)
               void GDCreateFileJson(state, 'myAuto', response.id, token)
               Alert.alert('Backup Successfully')
@@ -245,39 +282,42 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const importData = async (): Promise<void> => {
     if (state.token !== '') {
       await GDFindFile(
-        "name='myAuto' and mimeType = 'application/vnd.google-apps.folder' and trashed = false ",
+        'name=\'myAuto\' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false ',
         token
-      ).then(findFolders => {
+      ).then((findFolders) => {
         if (findFolders.files.length === 1) {
           // if the folder is found then starting to find the file
           const temp: string =
-            // @ts-expect-error filesId
+          // @ts-expect-error filesId
 
             findFolders.files[0] !== undefined ? findFolders.files[0].id : ''
-          void GDFindFile("name='myAuto' and" + ` '${temp}' in parents ` + 'and trashed = false ', token).then(
-            findFile => {
-              if (findFile.files.length === 1) {
-                // if the file is found then update it
-                try {
-                  // @ts-expect-error filesId
-                  void GDGetFile(findFile.files[0].id, token).then(getFile => {
-                    if (getFile !== undefined) {
-                      dispatch(updateState(getFile))
-                      Alert.alert('Import Successfully')
-                      console.log('Import Successfully')
-                    }
-                  })
-                } catch (error) {
-                  Alert.alert('Error Import')
-                  console.log('Error Import')
-                }
-              } else {
-                // if the file isn't found then create new file
-                console.log('File not find')
-                Alert.alert('File not find')
+          void GDFindFile(
+            'name=\'myAuto\' and' +
+              ` '${temp}' in parents ` +
+              'and trashed = false ',
+            token
+          ).then((findFile) => {
+            if (findFile.files.length === 1) {
+              // if the file is found then update it
+              try {
+                // @ts-expect-error filesId
+                void GDGetFile(findFile.files[0].id, token).then((getFile) => {
+                  if (getFile !== undefined) {
+                    dispatch(updateState(getFile))
+                    Alert.alert('Import Successfully')
+                    console.log('Import Successfully')
+                  }
+                })
+              } catch (error) {
+                Alert.alert('Error Import')
+                console.log('Error Import')
               }
+            } else {
+              // if the file isn't found then create new file
+              console.log('File not find')
+              Alert.alert('File not find')
             }
-          )
+          })
         } else {
           // if the folder isn't found then create new folder and file
           console.log('Folder not find')
@@ -290,7 +330,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     }
   }
   const getUserInfo = async (): Promise<void> => {
-    await GDGetUserInfo(token, 'name,email').then(response => {
+    await GDGetUserInfo(token, 'name,email').then((response) => {
       if (response !== null) {
         setUserInfo(response)
       } else {
@@ -341,18 +381,28 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
 
   return (
     <BackgroundView>
-      <ScrollView nestedScrollEnabled={true} style={{ paddingHorizontal: 10, height: '100%' }}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        style={{ paddingHorizontal: 10, height: '100%' }}
+      >
         {/*
          *************************** Change THEME ******************************************
          */}
         <Card style={{ marginVertical: 5 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
             <View style={styles.iconText}>
               <Icon source={'circle'} color={colors.tertiary} size={10} />
               <Text style={styles.text}>Переключение темы</Text>
             </View>
             <View style={{ paddingRight: 10 }}>
-              <IconButton icon={'theme-light-dark'} size={18} mode={'outlined'} onPress={toggleTheme} />
+              <IconButton
+                icon={'theme-light-dark'}
+                size={18}
+                mode={'outlined'}
+                onPress={toggleTheme}
+              />
               {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
             </View>
           </View>
@@ -361,13 +411,21 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
          *************************** Seller List ******************************************
          */}
         <Card style={{ marginVertical: 5 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
             <View style={styles.iconText}>
               <Icon source={'circle'} color={colors.tertiary} size={10} />
-              <Button style={styles.text} onPress={() => navigation.navigate('SellerScreen')}>
+              <Button
+                style={styles.text}
+                onPress={() => { navigation.navigate('SellerScreen') }}
+              >
                 Список поставщиков
               </Button>
-              <Button style={styles.text} onPress={() => dispatch(deletedAllSeller())}>
+              <Button
+                style={styles.text}
+                onPress={() => dispatch(deletedAllSeller())}
+              >
                 RESET
               </Button>
             </View>
@@ -389,19 +447,22 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
 
           <CarsList />
           <Divider horizontalInset />
-          <Button onPress={() => addNewCar()}>Добавить машину</Button>
+          <Button onPress={() => { addNewCar() }}>Добавить машину</Button>
         </Card>
 
         <Card style={{ marginVertical: 5 }}>
           <View style={styles.iconText}>
             <Icon source={'circle'} color={colors.tertiary} size={10} />
-            {userInfo === null ? (
+            {userInfo === null
+              ? (
               <Text style={styles.text}>Подключить GoogleDisk для бэкапа</Text>
-            ) : (
+                )
+              : (
               <Text style={styles.text}>{userInfo.name}</Text>
-            )}
+                )}
           </View>
-          {!auth ? (
+          {!auth
+            ? (
             <Button
               disabled={request == null}
               onPress={() => {
@@ -410,7 +471,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
             >
               Log in with Google
             </Button>
-          ) : (
+              )
+            : (
             <Button
               disabled={request == null}
               onPress={() => {
@@ -419,7 +481,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
             >
               Log Out from Google
             </Button>
-          )}
+              )}
           <Divider horizontalInset />
           <Button
             onPress={() => {
@@ -492,21 +554,21 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           <Checkbox.Item
             status={checkAlarmStart}
             label={'Напоминание при входе в приложении'}
-            onPress={() => pressAlarm('alarmStart')}
+            onPress={() => { pressAlarm('alarmStart') }}
             labelVariant={'bodyMedium'}
           />
           <Divider horizontalInset />
           <Checkbox.Item
             status={checkAlarmPeriod}
             label={'Периодическое напоминание в фоне'}
-            onPress={() => pressAlarm('alarmPeriod')}
+            onPress={() => { pressAlarm('alarmPeriod') }}
             labelVariant={'bodyMedium'}
           />
           <Divider horizontalInset />
           <Checkbox.Item
             status={checkAlarmPeriodNumber}
             label={'Синхронизация пробега с авто'}
-            onPress={() => pressAlarm('alarmPeriodNumber')}
+            onPress={() => { pressAlarm('alarmPeriodNumber') }}
             labelVariant={'bodyMedium'}
           />
         </Card>

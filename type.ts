@@ -79,11 +79,9 @@ const listBrand = (): ListCar[] => {
 }
 export const brand = listBrand()
 
-export const indexCar = (cars: StateCar[],numberCar:number): number => {
+export const indexCar = (cars: StateCar[], numberCar: number): number => {
   return cars.findIndex(item => item.carId === numberCar)
 }
-
-
 
 export interface StateMain {
   cars: StateCar[]
