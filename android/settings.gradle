@@ -1,4 +1,4 @@
-rootProject.name = 'MyAuto'
+rootProject.name = 'DevizCar'
 
 dependencyResolutionManagement {
   versionCatalogs {

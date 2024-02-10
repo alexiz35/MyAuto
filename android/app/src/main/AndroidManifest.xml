@@ -29,9 +29,9 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="myauto"/>
-        <data android:scheme="host.exp.exponent"/>
-        <data android:scheme="exp+myauto"/>
+        <data android:scheme="devizcar"/>
+        <data android:scheme="com.deviz.devizcar"/>
+        <data android:scheme="exp+devizcar"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

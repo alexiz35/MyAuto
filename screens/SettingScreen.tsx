@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableHighlight,
   View,
-  ScrollView
+  ScrollView,
+  Image
 } from 'react-native'
 import {
   Button,
@@ -14,7 +15,8 @@ import {
   Checkbox,
   Icon,
   IconButton,
-  Card
+  Card,
+  Avatar
 } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { type JSX, useCallback, useEffect, useState } from 'react'
@@ -54,9 +56,20 @@ import { initialState } from '../components/Redux/store'
 import { addedCar, initialStateCar } from '../components/Redux/CarsSlice'
 import { changedNumberCar } from '../components/Redux/NumberCarSlice'
 import { initialStateInfo } from '../type'
+import { GoogleSignin, statusCodes, User } from '@react-native-google-signin/google-signin'
+import { makeRedirectUri } from 'expo-auth-session'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
+
+// -------------------------------------------------------------------------------------------
+type ErrorWithCode = Error & { code?: string }
+
+type UserInfo = {
+  error?: ErrorWithCode
+  userInfo?: User
+}
+// -------------------------------------------------------------------------------------------
 
 export const initialCarState = {
   info: initialStateInfo, // ok
@@ -78,7 +91,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
   const [token, setToken] = useState('')
-  const [userInfo, setUserInfo] = useState<GDUserInfo | null>(null)
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
   const [auth, setAuth] = useState(!(state.token === ''))
   const [idParent, setIdParent] = useState('')
 
@@ -151,6 +164,21 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     }
   }
   // ****************************** GOOGLE account *********************************
+  // "googleServicesFile": "./google-services.json",
+  /*
+
+  const EXPO_REDIRECT_PARAMS = {
+    useProxy: true,
+    projectNameForProxy: '@yourUsername/myauto'
+  }
+
+  const NATIVE_REDIRECT_PARAMS = { native: 'myauto://' }
+
+  /!* const REDIRECT_PARAMS =
+    Constants.appOwnership === 'expo'
+      ? EXPO_REDIRECT_PARAMS
+      : NATIVE_REDIRECT_PARAMS; *!/
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId:
       '192692660431-2is6dth1j1d4c8j6mnfa91arctkgksnm.apps.googleusercontent.com',
@@ -158,12 +186,19 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
     expoClientId:
       '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
+    redirectUri: makeRedirectUri({
 
+      scheme: 'myauto',
+      path: 'redirect'
+
+      /!* preferLocalhost: true,
+      isTripleSlashed: true *!/
+    }),
     scopes: [
       'profile',
       'email',
       'https://www.googleapis.com/auth/drive.appdata',
-      /* 'https://www.googleapis.com/auth/drive', */
+      /!* 'https://www.googleapis.com/auth/drive', *!/
       'https://www.googleapis.com/auth/drive.file'
     ],
     clientSecret: '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',
@@ -176,8 +211,61 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
     tokenEndpoint: 'https://oauth2.googleapis.com/token'
   })
+*/
+  GoogleSignin.configure({
+    offlineAccess: true,
+    webClientId: '879173884588-t74ch2ub0vkp46bb6bh0bke959kj409g.apps.googleusercontent.com',
+    /* forceCodeForRefreshToken: true, */
+    scopes: [
+      /* 'https://www.googleapis.com/auth/drive.appdata', */
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/drive.file'
+    ]
+  })
+  const handleGoogleIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices()
+      const tempUserInfo = await GoogleSignin.signIn()
+      const tempUser = await GoogleSignin.getCurrentUser()
+      /* const { idToken } = await GoogleSignin.signIn() */
+      console.log('Token', tempUser)
+      setUserInfo({
+        userInfo: tempUserInfo,
+        error: undefined
+      })
+      const tempToken = await GoogleSignin.getTokens()
 
-  useEffect(() => {
+      setToken(tempToken.accessToken)
+      console.log('USER', tempUserInfo, 'TOKEN', tempToken)
+      setAuth(true)
+    } catch (error) {
+      console.log('ERROR', error)
+      const typedError = error as ErrorWithCode
+      console.log('ERROR', typedError)
+
+      switch (typedError.code) {
+        case statusCodes.SIGN_IN_CANCELLED:
+          // user cancelled the login flow
+          console.log('error_INCANC')
+
+          break
+        case statusCodes.IN_PROGRESS:
+          console.log('error_IN_PROGRESS')
+          // kjkj
+          // operation (eg. sign in) already in progress
+          break
+        case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+          console.log('error_PLAY_SERVICES_NOT_AVAILABLE')
+
+          // play services not available or outdated
+          break
+        default:
+          // some other error happened
+      }
+    }
+  }
+
+  /* useEffect(() => {
     if (response?.type === 'success') {
       if (response.authentication !== null) {
         setToken(response.authentication.accessToken)
@@ -191,29 +279,34 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         )
       }
     }
-  }, [response, token])
+  }, [response, token]) */
 
-  useEffect(() => {
-    if (auth) {
-      try {
-        void getRefreshToken(state.token).then((res) => {
-          setToken(res)
-          setAuth(true)
-        })
-      } catch (error) {
-        console.log('ERROR refreshToken', error)
-      }
-    } else setUserInfo(null)
+  /* useEffect(() => {
+    const isSignedIn = async () => {
+      await GoogleSignin.isSignedIn()
+    }
+    if (isSignedIn) {
+      if (auth) {
+        try {
+          void getRefreshToken(state.token).then((res) => {
+            setToken(res)
+            setAuth(true)
+          })
+        } catch (error) {
+          console.log('ERROR refreshToken', error)
+        }
+      } else setUserInfo(null)
+    }
   }, [])
-
-  useEffect(() => {
+ */
+  /*  useEffect(() => {
     if (token !== '') {
       void getUserInfo()
     }
-  }, [token])
+  }, [token]) */
 
   const backup = async (): Promise<void> => {
-    if (state.token !== '') {
+    if (/* state.token */ token !== '') {
       await GDFindFile(
         'name=\'myAuto\' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false ',
         token
@@ -280,16 +373,16 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     }
   }
   const importData = async (): Promise<void> => {
-    if (state.token !== '') {
+    if (/* state.token */ token !== '') {
       await GDFindFile(
         'name=\'myAuto\' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false ',
         token
       ).then((findFolders) => {
+        console.log('FINFFOLDERS', findFolders, findFolders.error)
         if (findFolders.files.length === 1) {
           // if the folder is found then starting to find the file
           const temp: string =
           // @ts-expect-error filesId
-
             findFolders.files[0] !== undefined ? findFolders.files[0].id : ''
           void GDFindFile(
             'name=\'myAuto\' and' +
@@ -303,7 +396,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
                 // @ts-expect-error filesId
                 void GDGetFile(findFile.files[0].id, token).then((getFile) => {
                   if (getFile !== undefined) {
-                    dispatch(updateState(getFile))
+                    console.log('IMPORT', getFile, 'CARS', getFile.cars)
+                    /* dispatch(updateState(getFile)) */
                     Alert.alert('Import Successfully')
                     console.log('Import Successfully')
                   }
@@ -454,19 +548,26 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           <View style={styles.iconText}>
             <Icon source={'circle'} color={colors.tertiary} size={10} />
             {userInfo === null
-              ? (
-              <Text style={styles.text}>Подключить GoogleDisk для бэкапа</Text>
-                )
-              : (
-              <Text style={styles.text}>{userInfo.name}</Text>
-                )}
+              ? <Text style={styles.text}>Подключить GoogleDisk для бэкапа</Text>
+              : <>
+                  <Image
+                    style={{ width: 30, height: 30 }}
+                    source={{
+                      uri: userInfo.userInfo?.user.photo
+                    }}
+                  />
+              <Text style={styles.text}>{userInfo.userInfo?.user.name}</Text>
+
+                </>
+                }
           </View>
           {!auth
             ? (
             <Button
-              disabled={request == null}
+              /* disabled={request == null} */
               onPress={() => {
-                void promptAsync()
+                void handleGoogleIn()
+                /* void promptAsync() */
               }}
             >
               Log in with Google
@@ -474,7 +575,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
               )
             : (
             <Button
-              disabled={request == null}
+              /* disabled={request == null} */
               onPress={() => {
                 void handleDeleteGoogleAuth()
               }}

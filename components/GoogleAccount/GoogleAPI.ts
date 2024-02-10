@@ -103,7 +103,7 @@ export const GDCreateFileJson = async (contentJson: object, nameFile: string, pa
     headers: new Headers({ Authorization: 'Bearer ' + token }),
     body: form
   })
-
+  console.log('2')
   const user = await response.json()
   console.log('createFile', user)
   return user
