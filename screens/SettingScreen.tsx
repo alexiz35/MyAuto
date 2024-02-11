@@ -19,7 +19,7 @@ import {
   Avatar
 } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { type JSX, useCallback, useEffect, useState } from 'react'
+import { type JSX, ReactNode, useCallback, useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
 import {
@@ -43,7 +43,7 @@ import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
 import {
   changeAlarmPeriod,
-  changeAlarmStart,
+  changeAlarmStart, setGoogle,
   themeChanged
 } from '../components/Redux/SettingSlice'
 import { addedToken } from '../components/Redux/TokenSlice'
@@ -172,6 +172,22 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     }
   }
 
+  // ******************************************************************************
+  const [checkGoogle, setCheckGoogle] = useState<
+  'checked' | 'unchecked' | 'indeterminate'
+  >(state.setting.isGoogle ? 'checked' : 'unchecked')
+
+  const pressCheckGoogle = () => {
+    if (checkGoogle === 'checked') {
+      setCheckGoogle('unchecked')
+      dispatch(setGoogle(false))
+    } else if (checkGoogle === 'unchecked') {
+      setCheckGoogle('checked')
+      dispatch(setGoogle(true))
+    }
+  }
+  // ******************************************************************************
+
   GoogleSignin.configure({
     offlineAccess: true,
     webClientId: '879173884588-t74ch2ub0vkp46bb6bh0bke959kj409g.apps.googleusercontent.com',
@@ -243,6 +259,9 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       setAuth(isSign)
     }
   }, [])
+  useEffect(() => {
+
+  }, [auth])
 
   /* useEffect(() => {
 
@@ -506,37 +525,48 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         </Card>
 
         <Card style={{ marginVertical: 5 }}>
-          <View style={styles.iconText}>
-            <Icon source={'circle'} color={colors.tertiary} size={10} />
-            {userInfo === null
-              ? <Text style={styles.text}>Подключить GoogleDisk для бэкапа</Text>
-              : <>
-                  <Image
-                    style={{ width: 30, height: 30 }}
-                    source={{
-                      uri: userInfo.userInfo?.user.photo
-                    }}
-                  />
-              <Text style={styles.text}>{userInfo.userInfo?.user.name}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={styles.iconText}>
+                <Icon source={'circle'} color={colors.tertiary} size={10} />
+                {userInfo === null
+                  ? <Text style={styles.text}>Подключить GoogleDisk для бэкапа</Text>
+                  : <>
+                    <Image
+                      style={{ width: 30, height: 30 }}
+                      source={{
+                        uri: userInfo.userInfo?.user.photo
+                      }}
+                    />
+                    <Text style={styles.text}>{userInfo.userInfo?.user.name}</Text>
 
-                </>
+                  </>
                 }
-          </View>
+              </View>
+              <View style={{ paddingRight: 10 }}>
+                <Checkbox
+                  status={checkGoogle}
+                  onPress={() => { pressCheckGoogle() }}
+                />
+              </View>
+            </View>
+         <Card.Content >
           {!auth
             ? (
             <Button
-              /* disabled={request == null} */
+              disabled={checkGoogle !== 'checked'}
               onPress={() => {
                 void handleGoogleIn()
                 /* void promptAsync() */
               }}
             >
               Log in with Google
+
             </Button>
               )
             : (
             <Button
-              /* disabled={request == null} */
+              disabled={checkGoogle !== 'checked'}
+
               onPress={() => {
                 void handleDeleteGoogleAuth()
               }}
@@ -544,12 +574,13 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
               Log Out from Google
             </Button>
               )}
+        </Card.Content>
           <Divider horizontalInset />
           <Button
             onPress={() => {
               void importData()
             }}
-            disabled={!auth}
+            disabled={!auth || checkGoogle !== 'checked'}
           >
             Импорт данных
           </Button>
@@ -602,7 +633,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
             onPress={() => {
               void backup()
             }}
-            disabled={!auth}
+            disabled={!auth || checkGoogle !== 'checked'}
           >
             Экспорт данных
           </Button>

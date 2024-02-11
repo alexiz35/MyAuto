@@ -107,6 +107,7 @@ export interface Setting {
   alarmMileageStart: boolean
   alarmMileagePeriod: boolean
   alarmMileagePeriodNumber: number
+  isGoogle: boolean
 }
 export interface Seller {
   id?: number
