@@ -1,4 +1,6 @@
-import { StateMain } from '../../type'
+import { StateCar, StateMain } from '../../type'
+import { NAME_FILE } from '../../screens/SettingScreen'
+import { Buffer } from '../../App'
 
 export interface ResponseFolder {
   kind: string
@@ -85,30 +87,58 @@ export const GDCreateFolder = async (folderName: string, token: string): Promise
   )
   return await response.json()
 }
-export const GDCreateFileJson = async (contentJson: object, nameFile: string, parentsId: string, token: string): Promise<string> => {
+export const GDCreateFileJson = async (contentJson: object, nameFile: string, parentsId: string, token: string): Promise<string | undefined> => {
+  console.log('STATE', contentJson)
   const fileContent = JSON.stringify(contentJson)// As a sample, upload a text file.
+
   const file = new Blob([fileContent], { type: 'application/json' })
+  console.log('createFile', file.size, file.type, file)
+
   const metadata = {
-    name: nameFile, // Filename at Google Drive
-    mimeType: 'text/plain', // mimeType at Google Drive
+    name: NAME_FILE, // Filename at Google Drive
+    mimeType: 'application/json', // mimeType at Google Drive
     parents: [parentsId] // Folder ID at Google Drive 1W9dNxbciIAChBzH-di0v4RmNJqVflhq3
   }
 
-  const form = new FormData()
+  const boundary = 'xxxxxxxxxx'
+  let data = '--' + boundary + '\r\n'
+  data += 'Content-Disposition: form-data; name="metadata"\r\n'
+  data += 'Content-Type: application/json; charset=UTF-8\r\n\r\n'
+  data += JSON.stringify(metadata) + '\r\n'
+  data += '--' + boundary + '\r\n'
+  data += 'Content-Disposition: form-data; name="file"\r\n\r\n'
+  const payload = Buffer.concat([
+    Buffer.from(data, 'utf8'),
+    Buffer.from(fileContent, 'utf8'),
+    Buffer.from('\r\n--' + boundary + '--\r\n', 'utf8')
+  ])
+
+  /* const form = new FormData()
   form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }))
   form.append('file', file)
+  console.log('FORM', form) */
+  const header = new Headers()
+  header.append('Authorization', `Bearer ${token}`)
+  header.append('Content-Type', 'multipart/form-data; boundary=' + boundary)
+  header.append('Accept', 'application/json')
 
-  const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
-    method: 'POST',
-    headers: new Headers({ Authorization: 'Bearer ' + token }),
-    body: form
-  })
-  console.log('2')
-  const user = await response.json()
-  console.log('createFile', user)
-  return user
+  try {
+    const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
+      method: 'POST',
+      headers: header/* new Headers({ Authorization: 'Bearer ' + token, 'Content-Type': 'multipart/form-data', Accept: 'application/json' }) */,
+      body: payload
+    })
+
+    console.log('Responce', response)
+    const user = await response.json()
+    console.log('createFileResponse', user)
+    return user
+  } catch (error) {
+    console.log('create', error)
+  }
 }
-export const GDUpdateFileJson = async (contentJson: object, nameFile: string, parentsId: string, token: string): Promise<string> => {
+export const GDUpdateFileJson = async (contentJson: object, nameFile: string, parentsId: string, token: string): Promise<string | undefined> => {
+  console.log('UpdateFileJSON')
   const fileContent = JSON.stringify(contentJson)// As a sample, upload a text file.
   const file = new Blob([fileContent], { type: 'application/json' })
   const metadata = {
@@ -117,19 +147,41 @@ export const GDUpdateFileJson = async (contentJson: object, nameFile: string, pa
     fileId: parentsId
   }
 
-  const form = new FormData()
+  const boundary = 'xxxxxxxxxx'
+  let data = '--' + boundary + '\r\n'
+  data += 'Content-Disposition: form-data; name="metadata"\r\n'
+  data += 'Content-Type: application/json; charset=UTF-8\r\n\r\n'
+  data += JSON.stringify(metadata) + '\r\n'
+  data += '--' + boundary + '\r\n'
+  data += 'Content-Disposition: form-data; name="file"\r\n\r\n'
+  const payload = Buffer.concat([
+    Buffer.from(data, 'utf8'),
+    Buffer.from(fileContent, 'utf8'),
+    Buffer.from('\r\n--' + boundary + '--\r\n', 'utf8')
+  ])
+
+  /* const form = new FormData()
   form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }))
   form.append('file', file)
+  console.log('FORM', form) */
+  const header = new Headers()
+  header.append('Authorization', `Bearer ${token}`)
+  header.append('Content-Type', 'multipart/form-data; boundary=' + boundary)
+  header.append('Accept', 'application/json')
 
-  const response = await fetch('https://www.googleapis.com/upload/drive/v3/files/' + `${parentsId}` + '?uploadType=multipart', {
-    method: 'PATCH',
-    headers: new Headers({ Authorization: 'Bearer ' + token }),
-    body: form
-  })
-
-  const user = await response.json()
-  console.log('createFile', user)
-  return user
+  try {
+    const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${parentsId}?uploadType=multipart`, {
+      method: 'PATCH',
+      headers: header,
+      body: payload
+    })
+    console.log('FetchUpdate', response)
+    const user = await response.json()
+    console.log('createFile', user)
+    return user
+  } catch (e) {
+    console.log('UPDATE_ERROR', e)
+  }
 }
 export const GDFindFile = async (findQuery: string, token: string): Promise<ResponseFindFile> => {
   const response = await fetch(

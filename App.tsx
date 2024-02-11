@@ -4,28 +4,11 @@ import { store, persistor } from './components/Redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { LogBox } from 'react-native'
-import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
+
+export const Buffer = require('buffer/').Buffer
+
 export default function App (): JSX.Element {
-// TODO: Replace the following with your app's Firebase project configuration
-  // See: https://firebase.google.com/docs/web/learn-more#config-object
-  /*  const firebaseConfig = {
-    apiKey: 'AIzaSyB0yWL1Oesm4gcIs4RlIXY_K6NRn_W3kVw',
-    authDomain: 'mycar2-4563d.firebaseapp.com',
-    databaseURL: 'https://mycar2-4563d.firebaseio.com',
-    projectId: 'mycar2-4563d',
-    storageBucket: 'mycar2-4563d.appspot.com',
-    // messagingSenderId: 'sender-id',
-    appId: '1:366949801874:android:2596e59d2c65f35a576b4b'
-    // measurementId: 'G-measurement-id'
-  }
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig)
-
-  // Initialize Firebase Authentication and get a reference to the service
-  const auth = firebase.auth() */
-
   /*   const theme = createTheme({
     mode: 'dark',
     darkColors:

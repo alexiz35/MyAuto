@@ -57,10 +57,18 @@ import { addedCar, initialStateCar } from '../components/Redux/CarsSlice'
 import { changedNumberCar } from '../components/Redux/NumberCarSlice'
 import { initialStateInfo } from '../type'
 import { GoogleSignin, statusCodes, User } from '@react-native-google-signin/google-signin'
+import {
+  GDrive,
+  MimeTypes
+} from '@robinbobin/react-native-google-drive-api-wrapper'
 import { makeRedirectUri } from 'expo-auth-session'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 WebBrowser.maybeCompleteAuthSession()
+
+// -------------------------------------------------------------------------------------------
+export const NAME_FOLDER = 'devizCar'
+export const NAME_FILE = 'devizCarBackup'
 
 // -------------------------------------------------------------------------------------------
 type ErrorWithCode = Error & { code?: string }
@@ -217,7 +225,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     webClientId: '879173884588-t74ch2ub0vkp46bb6bh0bke959kj409g.apps.googleusercontent.com',
     /* forceCodeForRefreshToken: true, */
     scopes: [
-      /* 'https://www.googleapis.com/auth/drive.appdata', */
+      'https://www.googleapis.com/auth/drive.appdata',
       'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.file'
     ]
@@ -265,6 +273,19 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     }
   }
 
+  /* const importData = async (): Promise<void > => {
+    const gdrive = new GDrive()
+
+    gdrive.accessToken = token
+
+    gdrive.files.getId(
+      name: String, // The name.
+      parents: [String], // The parents.
+      mimeType: String, // The mime type.
+      trashed: Boolean // Whether the file is trashed. Default: false
+  );
+    console.log('LIST', await gdrive.files.list())
+  } */
   /* useEffect(() => {
     if (response?.type === 'success') {
       if (response.authentication !== null) {
@@ -308,7 +329,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const backup = async (): Promise<void> => {
     if (/* state.token */ token !== '') {
       await GDFindFile(
-        'name=\'myAuto\' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false ',
+        `name='${NAME_FOLDER}' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false`,
         token
       ).then((findFolders) => {
         if (findFolders.files.length === 1) {
@@ -316,10 +337,9 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           const temp: string =
             // @ts-expect-error filesId
             findFolders.files[0] !== undefined ? findFolders.files[0].id : ''
+          console.log('FOLDER', temp)
           void GDFindFile(
-            'name=\'myAuto\' and' +
-              ` '${temp}' in parents ` +
-              'and trashed = false ',
+            `name='${NAME_FILE}' and '${temp}' in parents and trashed = false`,
             token
           ).then((findFile) => {
             if (findFile.files.length === 1) {
@@ -327,9 +347,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
               try {
                 void GDUpdateFileJson(
                   state,
-                  'myAuto',
+                  NAME_FILE,
                   // @ts-expect-error filesId
-
                   findFile.files[0].id,
                   token
                 )
@@ -341,8 +360,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
               // if the file isn't found then create new file
               try {
                 void GDCreateFileJson(
-                  state,
-                  'myAuto',
+                  state.cars,
+                  NAME_FILE,
                   // @ts-expect-error filesId
 
                   findFolders.files[0].id,
@@ -359,7 +378,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           try {
             void GDCreateFolder('myAuto', token).then((response) => {
               setIdParent(response.id)
-              void GDCreateFileJson(state, 'myAuto', response.id, token)
+              console.log('Sate', state.cars)
+              void GDCreateFileJson(state.cars, 'myAuto', response.id, token)
               Alert.alert('Backup Successfully')
             })
           } catch (error) {
@@ -372,10 +392,12 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       console.log('Нужна авторизация')
     }
   }
+
   const importData = async (): Promise<void> => {
+    await getUserInfo()
     if (/* state.token */ token !== '') {
       await GDFindFile(
-        'name=\'myAuto\' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false ',
+        `name='${NAME_FOLDER}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false `,
         token
       ).then((findFolders) => {
         console.log('FINFFOLDERS', findFolders, findFolders.error)
@@ -385,9 +407,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           // @ts-expect-error filesId
             findFolders.files[0] !== undefined ? findFolders.files[0].id : ''
           void GDFindFile(
-            'name=\'myAuto\' and' +
-              ` '${temp}' in parents ` +
-              'and trashed = false ',
+            `name='${NAME_FILE}' and '${temp}' in parents and trashed = false`,
             token
           ).then((findFile) => {
             if (findFile.files.length === 1) {
@@ -426,9 +446,11 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const getUserInfo = async (): Promise<void> => {
     await GDGetUserInfo(token, 'name,email').then((response) => {
       if (response !== null) {
-        setUserInfo(response)
+        console.log('getUser', response)
+        /* setUserInfo(response) */
       } else {
-        setUserInfo(null)
+        console.log('getUserElse')
+        /* setUserInfo(null) */
       }
     })
   }
