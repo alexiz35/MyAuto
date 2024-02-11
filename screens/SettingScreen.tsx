@@ -171,55 +171,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         break
     }
   }
-  // ****************************** GOOGLE account *********************************
-  // "googleServicesFile": "./google-services.json",
-  /*
 
-  const EXPO_REDIRECT_PARAMS = {
-    useProxy: true,
-    projectNameForProxy: '@yourUsername/myauto'
-  }
-
-  const NATIVE_REDIRECT_PARAMS = { native: 'myauto://' }
-
-  /!* const REDIRECT_PARAMS =
-    Constants.appOwnership === 'expo'
-      ? EXPO_REDIRECT_PARAMS
-      : NATIVE_REDIRECT_PARAMS; *!/
-
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId:
-      '192692660431-2is6dth1j1d4c8j6mnfa91arctkgksnm.apps.googleusercontent.com',
-    webClientId:
-      '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
-    expoClientId:
-      '192692660431-ap31mf2uvvm1livb9lucg4h5lkpo3au5.apps.googleusercontent.com',
-    redirectUri: makeRedirectUri({
-
-      scheme: 'myauto',
-      path: 'redirect'
-
-      /!* preferLocalhost: true,
-      isTripleSlashed: true *!/
-    }),
-    scopes: [
-      'profile',
-      'email',
-      'https://www.googleapis.com/auth/drive.appdata',
-      /!* 'https://www.googleapis.com/auth/drive', *!/
-      'https://www.googleapis.com/auth/drive.file'
-    ],
-    clientSecret: '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',
-    responseType: 'code',
-    // @ts-expect-error prompt
-    prompt: 'consent',
-    extraParams: {
-      access_type: 'offline'
-    },
-    authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-    tokenEndpoint: 'https://oauth2.googleapis.com/token'
-  })
-*/
   GoogleSignin.configure({
     offlineAccess: true,
     webClientId: '879173884588-t74ch2ub0vkp46bb6bh0bke959kj409g.apps.googleusercontent.com',
@@ -234,17 +186,14 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     try {
       await GoogleSignin.hasPlayServices()
       const tempUserInfo = await GoogleSignin.signIn()
-      const tempUser = await GoogleSignin.getCurrentUser()
-      /* const { idToken } = await GoogleSignin.signIn() */
-      console.log('Token', tempUser)
+      // -------------------------- get USER INFO -------------------------------------------
       setUserInfo({
         userInfo: tempUserInfo,
         error: undefined
       })
+      // -------------------------- get TOKEN -------------------------------------------
       const tempToken = await GoogleSignin.getTokens()
-
       setToken(tempToken.accessToken)
-      console.log('USER', tempUserInfo, 'TOKEN', tempToken)
       setAuth(true)
     } catch (error) {
       console.log('ERROR', error)
@@ -273,19 +222,6 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
     }
   }
 
-  /* const importData = async (): Promise<void > => {
-    const gdrive = new GDrive()
-
-    gdrive.accessToken = token
-
-    gdrive.files.getId(
-      name: String, // The name.
-      parents: [String], // The parents.
-      mimeType: String, // The mime type.
-      trashed: Boolean // Whether the file is trashed. Default: false
-  );
-    console.log('LIST', await gdrive.files.list())
-  } */
   /* useEffect(() => {
     if (response?.type === 'success') {
       if (response.authentication !== null) {
@@ -301,11 +237,15 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       }
     }
   }, [response, token]) */
+  useEffect(() => {
+    const isSignedIn = async () => {
+      const isSign = await GoogleSignin.isSignedIn()
+      setAuth(isSign)
+    }
+  }, [])
 
   /* useEffect(() => {
-    const isSignedIn = async () => {
-      await GoogleSignin.isSignedIn()
-    }
+
     if (isSignedIn) {
       if (auth) {
         try {
@@ -318,8 +258,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         }
       } else setUserInfo(null)
     }
-  }, [])
- */
+  }, []) */
   /*  useEffect(() => {
     if (token !== '') {
       void getUserInfo()
@@ -360,7 +299,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
               // if the file isn't found then create new file
               try {
                 void GDCreateFileJson(
-                  state.cars,
+                  state,
                   NAME_FILE,
                   // @ts-expect-error filesId
 
@@ -378,8 +317,8 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           try {
             void GDCreateFolder('myAuto', token).then((response) => {
               setIdParent(response.id)
-              console.log('Sate', state.cars)
-              void GDCreateFileJson(state.cars, 'myAuto', response.id, token)
+              console.log('Sate', state)
+              void GDCreateFileJson(state, 'myAuto', response.id, token)
               Alert.alert('Backup Successfully')
             })
           } catch (error) {

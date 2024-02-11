@@ -6,7 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { LogBox } from 'react-native'
 import 'firebase/compat/auth'
 
-export const Buffer = require('buffer/').Buffer
+/* export const Buffer = require('buffer/').Buffer */
 
 export default function App (): JSX.Element {
   /*   const theme = createTheme({
