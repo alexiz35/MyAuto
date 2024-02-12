@@ -41,6 +41,7 @@ import { addedCar, initialStateCar } from '../components/Redux/CarsSlice'
 import { changedNumberCar } from '../components/Redux/NumberCarSlice'
 import { initialStateInfo } from '../type'
 import { GoogleCard } from '../components/SettingScreenComponents/GoogleCard'
+import { ThemeCard } from '../components/SettingScreenComponents/ThemeCard'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 
@@ -65,22 +66,6 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const state = useAppSelector((state) => state)
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
-
-  // ****************************** THEME change *********************************
-  // ------------------------- Toggle Theme --------------------------------------
-  const theme2 = useAppSelector((state) => state.setting.themeSet)
-  /* const [switchTheme, setSwitchTheme] = useState(false)
-        const toggleSwitchTheme = (): void => {
-          setSwitchTheme(!switchTheme)
-          toggleTheme()
-        } */
-  /*   const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme */
-
-  const toggleTheme = useCallback(() => {
-    theme2 === 'dark'
-      ? dispatch(themeChanged('light'))
-      : dispatch(themeChanged('dark'))
-  }, [theme2])
 
   // ****************************** ADD NEW CAR *********************************
   const addNewCar = () => {
@@ -144,25 +129,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         {/*
          *************************** Change THEME ******************************************
          */}
-        <Card style={{ marginVertical: 5 }}>
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <View style={styles.iconText}>
-              <Icon source={'circle'} color={colors.tertiary} size={10} />
-              <Text style={styles.text}>Переключение темы</Text>
-            </View>
-            <View style={{ paddingRight: 10 }}>
-              <IconButton
-                icon={'theme-light-dark'}
-                size={18}
-                mode={'outlined'}
-                onPress={toggleTheme}
-              />
-              {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
-            </View>
-          </View>
-        </Card>
+          <ThemeCard/>
         {/*
          *************************** Seller List ******************************************
          */}
