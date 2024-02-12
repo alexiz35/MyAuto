@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useAppTheme } from '../../CommonComponents/Theme'
+import { stylesSettingScreen } from '../../screens/SettingScreen'
 
 export const CarsCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -29,9 +30,9 @@ export const CarsCard = (): JSX.Element => {
 
   return (
     <Card style={{ marginVertical: 5 }}>
-      <View style={styles.iconText}>
+      <View style={stylesSettingScreen.iconText}>
         <Icon source={'circle'} color={colors.tertiary} size={10} />
-        <Text style={styles.text}>Мои машины</Text>
+        <Text style={stylesSettingScreen.text}>Мои машины</Text>
       </View>
       <Divider bold />
 
@@ -41,18 +42,3 @@ export const CarsCard = (): JSX.Element => {
     </Card>
   )
 }
-const styles = StyleSheet.create({
-  iconText: {
-    flexDirection: 'row',
-    padding: 10,
-    alignItems: 'center'
-  },
-  text: {
-    paddingHorizontal: 5
-  },
-  viewText: {
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
