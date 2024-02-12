@@ -26,6 +26,9 @@ const settingSlice = createSlice({
     },
     setGoogle (state, action: PayloadAction<boolean>) {
       state.isGoogle = action.payload
+    },
+    updateSetting (state, action: PayloadAction<Setting>) {
+      return action.payload
     }
   }
 })
@@ -34,7 +37,8 @@ const settingSlice = createSlice({
 // export them as named exports from this "slice" file
 export const {
   themeChanged, changeAlarmStart,
-  changeAlarmPeriod, setGoogle
+  changeAlarmPeriod, setGoogle,
+  updateSetting
 } = settingSlice.actions
 
 // Export the slice reducer as the default export

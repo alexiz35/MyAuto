@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import * as WebBrowser from 'expo-web-browser'
 import { GoogleSignin, statusCodes, User } from '@react-native-google-signin/google-signin'
-import { setGoogle } from '../Redux/SettingSlice'
+import { setGoogle, updateSetting } from '../Redux/SettingSlice'
 import {
   deleteGoogleAuth,
   GDCreateFileJson,
@@ -16,6 +16,9 @@ import {
 } from '../GoogleAccount/GoogleAPI'
 import { addedToken } from '../Redux/TokenSlice'
 import { log } from 'expo/build/devtools/logger'
+import { updateStateCars } from '../Redux/CarsSlice'
+import { changedNumberCar } from '../Redux/NumberCarSlice'
+import { updatedAllSeller } from '../Redux/SellerSlice'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -237,7 +240,11 @@ export const GoogleCard = (): JSX.Element => {
                 void GDGetFile(findFile.files[0].id, token).then((getFile) => {
                   if (getFile !== undefined) {
                     console.log(/* 'IMPORT', getFile,  */'CARS', getFile.cars)
-                    dispatch(setS)
+                    dispatch(updateSetting(getFile.setting))
+                    dispatch(addedToken(getFile.token))
+                    dispatch(updateStateCars(getFile.cars))
+                    dispatch(changedNumberCar(getFile.numberCar))
+                    dispatch(updatedAllSeller(getFile.sellerList))
                     /* dispatch(updateState(getFile)) */
                     Alert.alert('Import Successfully')
                     console.log('Import Successfully')

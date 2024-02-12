@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { LogBox } from 'react-native'
 import 'firebase/compat/auth'
+import { JSX } from 'react'
 
 /* export const Buffer = require('buffer/').Buffer */
 

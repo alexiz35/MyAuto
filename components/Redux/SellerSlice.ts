@@ -33,13 +33,20 @@ const sellerSlice = createSlice({
     },
     deletedAllSeller (state) {
       return initialState
+    },
+    updatedAllSeller (state, action: PayloadAction<Seller[]>) {
+      return action.payload
     }
   }
 })
 
 // `createSlice` automatically generated action creators with these names.
 // export them as named exports from this "slice" file
-export const { addedSeller, editedSeller, deletedSeller, deletedAllSeller } = sellerSlice.actions
+export const {
+  addedSeller, editedSeller,
+  deletedSeller, deletedAllSeller,
+  updatedAllSeller
+} = sellerSlice.actions
 
 // Export the slice reducer as the default export
 export default sellerSlice.reducer
