@@ -1,12 +1,10 @@
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { type RootStackParamList } from '../components/Navigation/TypeNavigation'
 import {
-  Alert,
   StyleSheet,
   TouchableHighlight,
   View,
-  ScrollView,
-  Image
+  ScrollView
 } from 'react-native'
 import {
   Button,
@@ -15,38 +13,24 @@ import {
   Checkbox,
   Icon,
   IconButton,
-  Card,
-  Avatar
+  Card
 } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { type JSX, ReactNode, useCallback, useEffect, useState } from 'react'
-import * as WebBrowser from 'expo-web-browser'
-import * as Google from 'expo-auth-session/providers/google'
+import { type JSX, useCallback, useEffect, useState } from 'react'
+
 import {
-  changeAlarmPeriodNumber,
-  delAllSeller,
-  updateState
+  changeAlarmPeriodNumber
+
 } from '../components/Redux/actions'
-import {
-  deleteGoogleAuth,
-  GDCreateFileJson,
-  GDCreateFolder,
-  GDFindFile,
-  GDGetFile,
-  GDGetUserInfo,
-  GDUpdateFileJson,
-  type GDUserInfo,
-  getRefreshToken
-} from '../components/GoogleAccount/GoogleAPI'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { useAppTheme } from '../CommonComponents/Theme'
 import {
   changeAlarmPeriod,
-  changeAlarmStart, setGoogle,
+  changeAlarmStart,
   themeChanged
 } from '../components/Redux/SettingSlice'
-import { addedToken } from '../components/Redux/TokenSlice'
 import {
   deletedAllSeller,
   deletedSeller
@@ -56,27 +40,10 @@ import { initialState } from '../components/Redux/store'
 import { addedCar, initialStateCar } from '../components/Redux/CarsSlice'
 import { changedNumberCar } from '../components/Redux/NumberCarSlice'
 import { initialStateInfo } from '../type'
-import { GoogleSignin, statusCodes, User } from '@react-native-google-signin/google-signin'
-import {
-  GDrive,
-  MimeTypes
-} from '@robinbobin/react-native-google-drive-api-wrapper'
-import { makeRedirectUri } from 'expo-auth-session'
+import { GoogleCard } from '../components/SettingScreenComponents/GoogleCard'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
-WebBrowser.maybeCompleteAuthSession()
 
-// -------------------------------------------------------------------------------------------
-export const NAME_FOLDER = 'devizCar'
-export const NAME_FILE = 'devizCarBackup'
-
-// -------------------------------------------------------------------------------------------
-type ErrorWithCode = Error & { code?: string }
-
-type UserInfo = {
-  error?: ErrorWithCode
-  userInfo?: User
-}
 // -------------------------------------------------------------------------------------------
 
 export const initialCarState = {
@@ -98,10 +65,6 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const state = useAppSelector((state) => state)
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
-  const [token, setToken] = useState('')
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
-  const [auth, setAuth] = useState(!(state.token === ''))
-  const [idParent, setIdParent] = useState('')
 
   // ****************************** THEME change *********************************
   // ------------------------- Toggle Theme --------------------------------------
@@ -171,287 +134,6 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         break
     }
   }
-
-  // ******************************************************************************
-  const [checkGoogle, setCheckGoogle] = useState<
-  'checked' | 'unchecked' | 'indeterminate'
-  >(state.setting.isGoogle ? 'checked' : 'unchecked')
-
-  const pressCheckGoogle = () => {
-    if (checkGoogle === 'checked') {
-      setCheckGoogle('unchecked')
-      dispatch(setGoogle(false))
-    } else if (checkGoogle === 'unchecked') {
-      setCheckGoogle('checked')
-      dispatch(setGoogle(true))
-    }
-  }
-  // ******************************************************************************
-
-  GoogleSignin.configure({
-    offlineAccess: true,
-    webClientId: '879173884588-t74ch2ub0vkp46bb6bh0bke959kj409g.apps.googleusercontent.com',
-    /* forceCodeForRefreshToken: true, */
-    scopes: [
-      'https://www.googleapis.com/auth/drive.appdata',
-      'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/drive.file'
-    ]
-  })
-  const handleGoogleIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices()
-      const tempUserInfo = await GoogleSignin.signIn()
-      // -------------------------- get USER INFO -------------------------------------------
-      setUserInfo({
-        userInfo: tempUserInfo,
-        error: undefined
-      })
-      // -------------------------- get TOKEN -------------------------------------------
-      const tempToken = await GoogleSignin.getTokens()
-      setToken(tempToken.accessToken)
-      setAuth(true)
-    } catch (error) {
-      console.log('ERROR', error)
-      const typedError = error as ErrorWithCode
-      console.log('ERROR', typedError)
-
-      switch (typedError.code) {
-        case statusCodes.SIGN_IN_CANCELLED:
-          // user cancelled the login flow
-          console.log('error_INCANC')
-
-          break
-        case statusCodes.IN_PROGRESS:
-          console.log('error_IN_PROGRESS')
-          // kjkj
-          // operation (eg. sign in) already in progress
-          break
-        case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-          console.log('error_PLAY_SERVICES_NOT_AVAILABLE')
-
-          // play services not available or outdated
-          break
-        default:
-          // some other error happened
-      }
-    }
-  }
-
-  /* useEffect(() => {
-    if (response?.type === 'success') {
-      if (response.authentication !== null) {
-        setToken(response.authentication.accessToken)
-        setAuth(true)
-        dispatch(
-          addedToken(
-            response.authentication.refreshToken !== undefined
-              ? response.authentication.refreshToken
-              : ''
-          )
-        )
-      }
-    }
-  }, [response, token]) */
-  useEffect(() => {
-    const isSignedIn = async () => {
-      const isSign = await GoogleSignin.isSignedIn()
-      setAuth(isSign)
-    }
-  }, [])
-  useEffect(() => {
-
-  }, [auth])
-
-  /* useEffect(() => {
-
-    if (isSignedIn) {
-      if (auth) {
-        try {
-          void getRefreshToken(state.token).then((res) => {
-            setToken(res)
-            setAuth(true)
-          })
-        } catch (error) {
-          console.log('ERROR refreshToken', error)
-        }
-      } else setUserInfo(null)
-    }
-  }, []) */
-  /*  useEffect(() => {
-    if (token !== '') {
-      void getUserInfo()
-    }
-  }, [token]) */
-
-  const backup = async (): Promise<void> => {
-    if (/* state.token */ token !== '') {
-      await GDFindFile(
-        `name='${NAME_FOLDER}' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false`,
-        token
-      ).then((findFolders) => {
-        if (findFolders.files.length === 1) {
-          // if the folder is found then starting to find the file
-          const temp: string =
-            // @ts-expect-error filesId
-            findFolders.files[0] !== undefined ? findFolders.files[0].id : ''
-          console.log('FOLDER', temp)
-          void GDFindFile(
-            `name='${NAME_FILE}' and '${temp}' in parents and trashed = false`,
-            token
-          ).then((findFile) => {
-            if (findFile.files.length === 1) {
-              // if the file is found then update it
-              try {
-                void GDUpdateFileJson(
-                  state,
-                  NAME_FILE,
-                  // @ts-expect-error filesId
-                  findFile.files[0].id,
-                  token
-                )
-                Alert.alert('Backup Successfully')
-              } catch (error) {
-                Alert.alert('Error Backup')
-              }
-            } else {
-              // if the file isn't found then create new file
-              try {
-                void GDCreateFileJson(
-                  state,
-                  NAME_FILE,
-                  // @ts-expect-error filesId
-
-                  findFolders.files[0].id,
-                  token
-                )
-                Alert.alert('Backup Successfully')
-              } catch (error) {
-                Alert.alert('Error Backup')
-              }
-            }
-          })
-        } else {
-          // if the folder isn't found then create new folder and file
-          try {
-            void GDCreateFolder('myAuto', token).then((response) => {
-              setIdParent(response.id)
-              console.log('Sate', state)
-              void GDCreateFileJson(state, 'myAuto', response.id, token)
-              Alert.alert('Backup Successfully')
-            })
-          } catch (error) {
-            Alert.alert('Error Backup')
-          }
-        }
-      })
-    } else {
-      Alert.alert('Нужна авторизация')
-      console.log('Нужна авторизация')
-    }
-  }
-
-  const importData = async (): Promise<void> => {
-    await getUserInfo()
-    if (/* state.token */ token !== '') {
-      await GDFindFile(
-        `name='${NAME_FOLDER}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false `,
-        token
-      ).then((findFolders) => {
-        console.log('FINFFOLDERS', findFolders, findFolders.error)
-        if (findFolders.files.length === 1) {
-          // if the folder is found then starting to find the file
-          const temp: string =
-          // @ts-expect-error filesId
-            findFolders.files[0] !== undefined ? findFolders.files[0].id : ''
-          void GDFindFile(
-            `name='${NAME_FILE}' and '${temp}' in parents and trashed = false`,
-            token
-          ).then((findFile) => {
-            if (findFile.files.length === 1) {
-              // if the file is found then update it
-              try {
-                // @ts-expect-error filesId
-                void GDGetFile(findFile.files[0].id, token).then((getFile) => {
-                  if (getFile !== undefined) {
-                    console.log('IMPORT', getFile, 'CARS', getFile.cars)
-                    /* dispatch(updateState(getFile)) */
-                    Alert.alert('Import Successfully')
-                    console.log('Import Successfully')
-                  }
-                })
-              } catch (error) {
-                Alert.alert('Error Import')
-                console.log('Error Import')
-              }
-            } else {
-              // if the file isn't found then create new file
-              console.log('File not find')
-              Alert.alert('File not find')
-            }
-          })
-        } else {
-          // if the folder isn't found then create new folder and file
-          console.log('Folder not find')
-          Alert.alert('Folder not find')
-        }
-      })
-    } else {
-      Alert.alert('Нужна авторизация')
-      console.log('Нужна авторизация')
-    }
-  }
-  const getUserInfo = async (): Promise<void> => {
-    await GDGetUserInfo(token, 'name,email').then((response) => {
-      if (response !== null) {
-        console.log('getUser', response)
-        /* setUserInfo(response) */
-      } else {
-        console.log('getUserElse')
-        /* setUserInfo(null) */
-      }
-    })
-  }
-  const handleDeleteGoogleAuth = async (): Promise<void> => {
-    const del = await deleteGoogleAuth(state.token)
-    if (del) {
-      setUserInfo(null)
-      setAuth(false)
-      dispatch(addedToken(''))
-    } else {
-      console.log('Повторите удаление')
-    }
-  }
-
-  /* const handleCreateFile = async (): Promise<void> => {
-          /!*
-          const fileContent = JSON.stringify(state)// As a sample, upload a text file.
-          const file = new Blob([fileContent], { type: 'application/json' })
-          const metadata = {
-            name: 'myAutoJson', // Filename at Google Drive
-            mimeType: 'text/plain', // mimeType at Google Drive
-            parents: ['1W9dNxbciIAChBzH-di0v4RmNJqVflhq3'] // Folder ID at Google Drive
-          }
-
-          const form = new FormData()
-          form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }))
-          form.append('file', file)
-
-          const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
-            method: 'POST',
-            headers: new Headers({ Authorization: 'Bearer ' + token }),
-            body: form
-          })
-
-          const user = await response.json()
-          console.log('createFile', user) *!/
-
-          void await GDCreateFileJson(state, 'rere', 'root', token)
-            .then(res => {
-              console.log(res)
-            })
-        } */
-  // ******************************  *********************************
 
   return (
     <BackgroundView>
@@ -523,122 +205,13 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           <Divider horizontalInset />
           <Button onPress={() => { addNewCar() }}>Добавить машину</Button>
         </Card>
-
-        <Card style={{ marginVertical: 5 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <View style={styles.iconText}>
-                <Icon source={'circle'} color={colors.tertiary} size={10} />
-                {userInfo === null
-                  ? <Text style={styles.text}>Подключить GoogleDisk для бэкапа</Text>
-                  : <>
-                    <Image
-                      style={{ width: 30, height: 30 }}
-                      source={{
-                        uri: userInfo.userInfo?.user.photo
-                      }}
-                    />
-                    <Text style={styles.text}>{userInfo.userInfo?.user.name}</Text>
-
-                  </>
-                }
-              </View>
-              <View style={{ paddingRight: 10 }}>
-                <Checkbox
-                  status={checkGoogle}
-                  onPress={() => { pressCheckGoogle() }}
-                />
-              </View>
-            </View>
-         <Card.Content >
-          {!auth
-            ? (
-            <Button
-              disabled={checkGoogle !== 'checked'}
-              onPress={() => {
-                void handleGoogleIn()
-                /* void promptAsync() */
-              }}
-            >
-              Log in with Google
-
-            </Button>
-              )
-            : (
-            <Button
-              disabled={checkGoogle !== 'checked'}
-
-              onPress={() => {
-                void handleDeleteGoogleAuth()
-              }}
-            >
-              Log Out from Google
-            </Button>
-              )}
-        </Card.Content>
-          <Divider horizontalInset />
-          <Button
-            onPress={() => {
-              void importData()
-            }}
-            disabled={!auth || checkGoogle !== 'checked'}
-          >
-            Импорт данных
-          </Button>
-          {/* <Button
-          title="Refresh Token"
-          disabled={request == null}
-          onPress={() => {
-            void getRefreshToken(state.token)
-              .then((res) => setToken(res))
-          }}
-        /> */}
-          {/* <Button
-          title="Cancel Google"
-          onPress={() => {
-            void handleDeleteGoogleAuth()
-          }}
-        /> */}
-          {/* <Button
-          title="Create Folder"
-          onPress={() => {
-            void GDCreateFolder('myAuto', token)
-          }}
-          /> */}
-          {/* <Button
-          title="Create File"
-          onPress={() => {
-            void handleCreateFile()
-          }}
-        /> */}
-          {/* <Button
-          title="Find File"
-          onPress={() => {
-            void GDFindFile('name=\'myAuto\' and mimeType = \'application/vnd.google-apps.folder\' and trashed = false ', token)
-          }}
-        /> */}
-          {/* <Button
-          title="BackUp"
-          onPress={() => {
-            void backup().then(() => console.log(idParent))
-          }}
-        /> */}
-          {/* <Button
-          title="Get File"
-          onPress={() => {
-            void importData()
-          }}
-        /> */}
-          <Divider horizontalInset />
-          <Button
-            onPress={() => {
-              void backup()
-            }}
-            disabled={!auth || checkGoogle !== 'checked'}
-          >
-            Экспорт данных
-          </Button>
-        </Card>
-
+        {/*
+         ************************** GOOGLE BACKUP  ******************************************
+         */}
+            <GoogleCard/>
+        {/*
+         ************************** ALARM BLOCK  ******************************************
+         */}
         <Card style={{ marginVertical: 5 }}>
           <View style={styles.iconText}>
             <Icon source={'circle'} color={colors.tertiary} size={10} />

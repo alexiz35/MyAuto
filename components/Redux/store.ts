@@ -29,7 +29,8 @@ export const initialState: StateMain = {
     themeSet: 'light',
     alarmMileageStart: true,
     alarmMileagePeriod: true,
-    alarmMileagePeriodNumber: 6
+    alarmMileagePeriodNumber: 6,
+    isGoogle: false
   },
   cars: [
     {
@@ -49,13 +50,14 @@ export const initialState: StateMain = {
   ]
 }
 
-const logger = createLogger({colors:{action:()=>'red', title:()=>'yellow'}})
+const logger = createLogger({ colors: { action: () => 'red', title: () => 'yellow' } })
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage
   /* stateReconciler: hardSet */
 }
+
 const rootReducer = combineReducers<StateMain>({
   setting: settingSlice, // ok
   token: tokenSlice, // настроить токен
@@ -63,6 +65,7 @@ const rootReducer = combineReducers<StateMain>({
   numberCar: numberCarSlice, //
   sellerList: sellerSlice // ok
 })
+
 // ------------------------------- devTool -----------------------------------------------
 /* const composeEnhancers =
   typeof window === 'object' &&
@@ -89,9 +92,9 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 const store = configureStore({
   reducer: persistedReducer,
   preloadedState: initialState,
-  // @ts-ignore: error name logger
-  middleware: [thunk,logger]
-  /*getDefaultMiddleware => {
+  // @ts-expect-error: error name logger
+  middleware: [thunk, logger]
+  /* getDefaultMiddleware => {
     /const middleware =
      getDefaultMiddleware({
       // Pass in a custom `extra` argument to the thunk middleware
