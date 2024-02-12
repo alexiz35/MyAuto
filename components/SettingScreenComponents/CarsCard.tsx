@@ -5,15 +5,15 @@ import { CarsList } from './CarsList'
 import { addedCar, initialStateCar } from '../Redux/CarsSlice'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { useNavigation } from '@react-navigation/native'
+// eslint-disable-next-line import/named
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppTheme } from '../../CommonComponents/Theme'
 
 export const CarsCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
   const navigation =
-    useNavigation<NativeStackScreenProps<RootStackParamList, 'CarInfoScreen'>>()
+    useNavigation<NavigationProp<RootStackParamList>>()
   const state = useAppSelector((state) => state)
   const { colors } = useAppTheme()
 
@@ -24,7 +24,7 @@ export const CarsCard = (): JSX.Element => {
     /* console.log('add',state.cars.length,tempNewCar) */
     dispatch(addedCar(tempNewCar))
     dispatch(changedNumberCar(tempNewCar.carId))
-    navigation.navigation.navigate('CarInfoScreen')
+    navigation.navigate('CarInfoScreen')
   }
 
   return (

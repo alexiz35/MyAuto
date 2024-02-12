@@ -43,6 +43,7 @@ import { initialStateInfo } from '../type'
 import { GoogleCard } from '../components/SettingScreenComponents/GoogleCard'
 import { ThemeCard } from '../components/SettingScreenComponents/ThemeCard'
 import { CarsCard } from '../components/SettingScreenComponents/CarsCard'
+import { SellersCard } from '../components/SettingScreenComponents/SellersCard'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 
@@ -125,31 +126,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         {/*
          *************************** Seller List ******************************************
          */}
-        <Card style={{ marginVertical: 5 }}>
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <View style={styles.iconText}>
-              <Icon source={'circle'} color={colors.tertiary} size={10} />
-              <Button
-                style={styles.text}
-                onPress={() => { navigation.navigate('SellerScreen') }}
-              >
-                Список поставщиков
-              </Button>
-              <Button
-                style={styles.text}
-                onPress={() => dispatch(deletedAllSeller())}
-              >
-                RESET
-              </Button>
-            </View>
-            <View style={{ paddingRight: 10 }}>
-              {/* <IconButton icon={'theme-light-dark'} size={18} mode={'outlined'} onPress={toggleTheme} /> */}
-              {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
-            </View>
-          </View>
-        </Card>
+          <SellersCard/>
         {/*
          ************************** Car SWITCH  ******************************************
          */}
