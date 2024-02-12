@@ -15,7 +15,6 @@ import {
   GDUpdateFileJson
 } from '../GoogleAccount/GoogleAPI'
 import { addedToken } from '../Redux/TokenSlice'
-import { log } from 'expo/build/devtools/logger'
 import { updateStateCars } from '../Redux/CarsSlice'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
 import { updatedAllSeller } from '../Redux/SellerSlice'
@@ -28,11 +27,6 @@ export const NAME_FILE = 'devizCarBackup'
 
 // -------------------------------------------------------------------------------------------
 type ErrorWithCode = Error & { code?: string }
-
-/* type UserInfo = {
-  error?: ErrorWithCode
-  userInfo?: User
-} */
 
 export const GoogleCard = (): JSX.Element => {
   const state = useAppSelector((state) => state)
@@ -73,6 +67,7 @@ export const GoogleCard = (): JSX.Element => {
       'https://www.googleapis.com/auth/drive.file'
     ]
   })
+  // ******************** handler Press LogIn Button ****************************
   const handleGoogleIn = async () => {
     try {
       await GoogleSignin.hasPlayServices()
@@ -101,7 +96,7 @@ export const GoogleCard = (): JSX.Element => {
         case statusCodes.IN_PROGRESS:
           console.log('error_IN_PROGRESS')
           // kjkj
-          // operation (eg. sign in) already in progress
+          // operation ( sign in) already in progress
           break
         case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
           console.log('error_PLAY_SERVICES_NOT_AVAILABLE')
@@ -149,7 +144,7 @@ export const GoogleCard = (): JSX.Element => {
       void getUserInfo()
     }
   }, [token]) */
-
+  // ******************** handler Press Export Button ***************************
   const backup = async (): Promise<void> => {
     if (token !== '') {
       await GDFindFile(
@@ -161,7 +156,6 @@ export const GoogleCard = (): JSX.Element => {
           const temp: string =
             // @ts-expect-error filesId
             findFolders.files[0] !== undefined ? findFolders.files[0].id : ''
-          console.log('FOLDER', temp)
           void GDFindFile(
             `name='${NAME_FILE}' and '${temp}' in parents and trashed = false`,
             token
@@ -202,7 +196,6 @@ export const GoogleCard = (): JSX.Element => {
           try {
             void GDCreateFolder('myAuto', token).then((response) => {
               setIdParent(response.id)
-              console.log('Sate', state)
               void GDCreateFileJson(state, 'myAuto', response.id, token)
               Alert.alert('Backup Successfully')
             })
@@ -216,13 +209,13 @@ export const GoogleCard = (): JSX.Element => {
       console.log('Нужна авторизация')
     }
   }
+  // ******************** handler Press Import Button ***************************
   const importData = async (): Promise<void> => {
     if (token !== '') {
       await GDFindFile(
         `name='${NAME_FOLDER}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false `,
         token
       ).then((findFolders) => {
-        console.log('IMPORT', findFolders.files[0].id)
         if (findFolders.files.length === 1) {
           // if the folder is found then starting to find the file
           const temp: string =
@@ -232,14 +225,12 @@ export const GoogleCard = (): JSX.Element => {
             `name='${NAME_FILE}' and '${temp}' in parents and trashed = false`,
             token
           ).then((findFile) => {
-            console.log('IMPORT_FILE', findFile.files[0].id)
             if (findFile.files.length === 1) {
               // if the file is found then update it
               try {
                 // @ts-expect-error filesId
                 void GDGetFile(findFile.files[0].id, token).then((getFile) => {
                   if (getFile !== undefined) {
-                    console.log(/* 'IMPORT', getFile,  */'CARS', getFile.cars)
                     dispatch(updateSetting(getFile.setting))
                     dispatch(addedToken(getFile.token))
                     dispatch(updateStateCars(getFile.cars))
@@ -247,30 +238,27 @@ export const GoogleCard = (): JSX.Element => {
                     dispatch(updatedAllSeller(getFile.sellerList))
                     /* dispatch(updateState(getFile)) */
                     Alert.alert('Import Successfully')
-                    console.log('Import Successfully')
                   }
                 })
               } catch (error) {
                 Alert.alert('Error Import')
-                console.log('Error Import')
               }
             } else {
               // if the file isn't found then create new file
-              console.log('File not find')
               Alert.alert('File not find')
             }
           })
         } else {
           // if the folder isn't found then create new folder and file
-          console.log('Folder not find')
           Alert.alert('Folder not find')
         }
       })
     } else {
       Alert.alert('Нужна авторизация')
-      console.log('Нужна авторизация')
     }
   }
+  // ****************************************************************************
+
   const getUserInfo = async (): Promise<void> => {
     await GDGetUserInfo(token, 'name,email').then((response) => {
       if (response !== null) {
@@ -292,6 +280,7 @@ export const GoogleCard = (): JSX.Element => {
       console.log('Повторите удаление')
     }
   }
+  // ******************** handler Press LogOut Button ***************************
   const signOut = async () => {
     try {
       await GoogleSignin.signOut()
@@ -302,6 +291,7 @@ export const GoogleCard = (): JSX.Element => {
       console.error(error)
     }
   }
+  // ******************** Get info Google User **********************/***********
   const getCurrentUser = async () => {
     return await GoogleSignin.getCurrentUser()
   }
@@ -314,6 +304,7 @@ export const GoogleCard = (): JSX.Element => {
       dispatch(addedToken(tempToken.accessToken))
       setAuth(true)
     } catch (error) {
+      // @ts-expect-error errorType
       if (error.code === statusCodes.SIGN_IN_REQUIRED) {
         // user has not signed in yet
       } else {
@@ -321,12 +312,12 @@ export const GoogleCard = (): JSX.Element => {
       }
     }
   }
-  // -------------------- Checking Auth status ---------------------------------
+  // ********************* Checking Auth status *********************************
   const isSignedIn = async () => {
     return await GoogleSignin.isSignedIn()
   }
 
-  // ******************************  *********************************
+  // ****************************************************************************
 
   useEffect(() => {
     if (checkGoogle === 'checked') {
