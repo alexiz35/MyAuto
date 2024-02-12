@@ -1,0 +1,58 @@
+import { JSX } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Button, Card, Divider, Icon, Text } from 'react-native-paper'
+import { CarsList } from './CarsList'
+import { addedCar, initialStateCar } from '../Redux/CarsSlice'
+import { changedNumberCar } from '../Redux/NumberCarSlice'
+import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { useNavigation } from '@react-navigation/native'
+import { RootStackParamList } from '../Navigation/TypeNavigation'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useAppTheme } from '../../CommonComponents/Theme'
+
+export const CarsCard = (): JSX.Element => {
+  const dispatch = useAppDispatch()
+  const navigation =
+    useNavigation<NativeStackScreenProps<RootStackParamList, 'CarInfoScreen'>>()
+  const state = useAppSelector((state) => state)
+  const { colors } = useAppTheme()
+
+  // ****************************** ADD NEW CAR *********************************
+  const addNewCar = () => {
+    const tempNewCar = Object.assign({}, initialStateCar[0])
+    tempNewCar.carId = state.cars.length
+    /* console.log('add',state.cars.length,tempNewCar) */
+    dispatch(addedCar(tempNewCar))
+    dispatch(changedNumberCar(tempNewCar.carId))
+    navigation.navigation.navigate('CarInfoScreen')
+  }
+
+  return (
+    <Card style={{ marginVertical: 5 }}>
+      <View style={styles.iconText}>
+        <Icon source={'circle'} color={colors.tertiary} size={10} />
+        <Text style={styles.text}>Мои машины</Text>
+      </View>
+      <Divider bold />
+
+      <CarsList />
+      <Divider horizontalInset />
+      <Button onPress={() => { addNewCar() }}>Добавить машину</Button>
+    </Card>
+  )
+}
+const styles = StyleSheet.create({
+  iconText: {
+    flexDirection: 'row',
+    padding: 10,
+    alignItems: 'center'
+  },
+  text: {
+    paddingHorizontal: 5
+  },
+  viewText: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})

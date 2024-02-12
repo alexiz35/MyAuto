@@ -42,6 +42,7 @@ import { changedNumberCar } from '../components/Redux/NumberCarSlice'
 import { initialStateInfo } from '../type'
 import { GoogleCard } from '../components/SettingScreenComponents/GoogleCard'
 import { ThemeCard } from '../components/SettingScreenComponents/ThemeCard'
+import { CarsCard } from '../components/SettingScreenComponents/CarsCard'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 
@@ -67,15 +68,6 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
 
-  // ****************************** ADD NEW CAR *********************************
-  const addNewCar = () => {
-    const tempNewCar = Object.assign({}, initialStateCar[0])
-    tempNewCar.carId = state.cars.length
-    /* console.log('add',state.cars.length,tempNewCar) */
-    dispatch(addedCar(tempNewCar))
-    dispatch(changedNumberCar(tempNewCar.carId))
-    navigation.navigate('CarInfoScreen')
-  }
   // -----------------------------------------------------------------------------
   // ****************************** ALARM section *********************************
 
@@ -161,17 +153,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         {/*
          ************************** Car SWITCH  ******************************************
          */}
-        <Card style={{ marginVertical: 5 }}>
-          <View style={styles.iconText}>
-            <Icon source={'circle'} color={colors.tertiary} size={10} />
-            <Text style={styles.text}>Мои машины</Text>
-          </View>
-          <Divider bold />
-
-          <CarsList />
-          <Divider horizontalInset />
-          <Button onPress={() => { addNewCar() }}>Добавить машину</Button>
-        </Card>
+              <CarsCard/>
         {/*
          ************************** GOOGLE BACKUP  ******************************************
          */}
