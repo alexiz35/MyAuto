@@ -32,6 +32,7 @@ import {
   listModel,
   year
 } from '../components/CarInfoScreenComponents/InitialConstants'
+import { ModalPickNameCar } from '../components/CarInfoScreenComponents/ModalPickNameCar'
 
 interface FormCarInfo {
   brand: string | TypeValueDrop
@@ -186,24 +187,21 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
   // ------------------ Dialog Input NameCar -----------------------------------
   const [visibleNameCar, setVisibleNameCar] = useState(false)
-  const [errorNameCar, setErrorNameCar] = useState(false)
   const [valueNameCar, setValueNameCar] = useState(car[numberCar].info.nameCar)
-  const [valueDialogNameCar, setValueDialogNameCar] = useState(
-    car[numberCar].info.nameCar
-  )
+
   const okDialogNameCar = (dialogNameCar: string): void => {
-    if (car.length > 1) {
+    /*  if (car.length > 1) {
       if (car.some((element) => element.info.nameCar === dialogNameCar)) {
         console.log('noPass')
         return
       }
       console.log('passLength')
-    }
+    } */
     setValueNameCar(dialogNameCar)
     setVisibleNameCar(false)
     console.log('passIf')
   }
-  const CancelDialogNameCar = (): void => {
+  const cancelDialogNameCar = (): void => {
     setVisibleNameCar(false)
   }
   // ---------------------------------------------------------------------------
@@ -215,6 +213,10 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   }
   // ----------------------button Ok handler-------------------------------
   const handleOkCarInfo = (dataForm: FormCarInfo): void => {
+    if (valueNameCar === '' || valueNameCar === undefined) {
+      setVisibleNameCar(true)
+      return
+    }
     setCar(
       editedCarInfo({
         numberCar,
@@ -261,7 +263,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     })
   }, [valueNameCar])
 
-  // --------------------InitialSateScreen-------------------------------------
+  // --------------------InitialStateScreen-------------------------------------
   useFocusEffect(
     useCallback(() => {
       if (
@@ -284,6 +286,21 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       setItemCarInfo(temp)
     }, [])
   )
+  /*  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        if (
+          car[numberCar].info.nameCar === '' ||
+          car[numberCar].info.nameCar === undefined
+        ) { setVisibleNameCar(true) } else return
+
+        // Prevent default behavior of leaving the screen
+        e.preventDefault()
+
+        // Prompt the user before leaving the screen
+      }),
+    [navigation]
+  ) */
 
   const isReady = useIsReady()
 
@@ -672,35 +689,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             dismissableBackButton
             onDismiss={cancelModalMaintenance}
           >
-            <Dialog.Title>Введите псевдоним машины</Dialog.Title>
-            <Dialog.Content>
-              <TextInput
-                label={'введите псевдоним'}
-                placeholder={'введите псевдоним'}
-                onChangeText={(value) => { setValueDialogNameCar(String(value)) }}
-                value={String(valueDialogNameCar)}
-                error={errorNameCar}
-              />
-              <HelperText type={'error'} visible={errorNameCar}>
-                такое имя уже существует
-              </HelperText>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Surface elevation={2} style={{ borderRadius: 10 }}>
-                <IconButton
-                  icon={'window-close'}
-                  onPress={() => { CancelDialogNameCar() }}
-                  iconColor={colors.error}
-                ></IconButton>
-              </Surface>
-              <Surface elevation={2} style={{ borderRadius: 10 }}>
-                <IconButton
-                  icon={'check'}
-                  onPress={() => { okDialogNameCar(valueDialogNameCar) }}
-                  iconColor={colors.tertiary}
-                ></IconButton>
-              </Surface>
-            </Dialog.Actions>
+            <ModalPickNameCar handlePressOk={okDialogNameCar} handlePressCancel={cancelDialogNameCar}/>
           </Dialog>
         </Portal>
         {

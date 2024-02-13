@@ -119,7 +119,7 @@ export const MainCard = (): JSX.Element => {
                  }}>
         <View >
           <Button icon={'information-outline'} uppercase textColor={colors.onBackground}>
-            {`${infoCar.brand} ${infoCar.model}`}
+            {infoCar.nameCar}
           </Button>
         <Divider horizontalInset />
 

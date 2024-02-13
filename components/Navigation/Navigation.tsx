@@ -28,15 +28,17 @@ import {
   useTheme,
   PaperProvider,
   Text,
-  IconButton, Surface, TouchableRipple, Icon
+  IconButton, Surface, TouchableRipple, Icon, Dialog, Portal
 } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
-import { JSX } from 'react'
+import { JSX, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
+import { ModalPickNameCar } from '../CarInfoScreenComponents/ModalPickNameCar'
+import { editedCarInfo, initialStateCar } from '../Redux/CarsSlice'
 
 function LogoTitle (): JSX.Element {
   return (
@@ -74,10 +76,8 @@ export const Navigation = (): JSX.Element => {
   const dispatch = useAppDispatch()
   dispatch(changedNumberCar(state.cars[0].carId)) */
 
-
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
     /* void AsyncStorage.clear() */
-
 
     const theme = useTheme()
     const FabTab = (): any => null
@@ -97,6 +97,7 @@ export const Navigation = (): JSX.Element => {
           tabBarHideOnKeyboard: Platform.OS !== 'ios'
         }}
       >
+
         <Tab.Screen name={'Home'} component={HomeScreen}
                     options={{
                       tabBarLabel: 'Home',
@@ -441,6 +442,7 @@ export const Navigation = (): JSX.Element => {
         {
 // ----------------------------InfoScreen-------------------------------
         }
+
         {/* <Stack.Screen
           name='Info'
           component={InfoScreen}

@@ -1,24 +1,48 @@
 import { View, StyleSheet } from 'react-native'
+// eslint-disable-next-line import/named
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { JSX, useCallback, useEffect, useState } from 'react'
 import { RootStackParamList, RootTabParamList } from '../components/Navigation/TypeNavigation'
 import * as ScreenOrientation from 'expo-screen-orientation'
 
 import { MainCard } from '../components/HomeScreenComponents/MainCard'
+// eslint-disable-next-line import/named
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+// eslint-disable-next-line import/named
 import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native'
 import { Orientation } from 'expo-screen-orientation'
 import BackgroundView from '../CommonComponents/BackgroundView'
-import { Surface, Text } from 'react-native-paper'
+import { Dialog, Portal, Surface, Text } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { TasksList } from '../components/TaskScreenComponents/TasksList'
+import { ModalPickNameCar } from '../components/CarInfoScreenComponents/ModalPickNameCar'
+import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
+import { editedCarInfo, initialStateCar } from '../components/Redux/CarsSlice'
+import { info } from 'expo/build/devtools/logger'
+import { StateCar } from '../type'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const theme = useAppTheme()
-  /* const cars = useAppSelector((state) => state) */
+  const dispatch = useAppDispatch()
+  const state = useAppSelector((state) => state)
+  const [visibleNameCar, setVisibleNameCar] = useState(false)
+
+  const cancelDialogNameCar = () => {
+
+  }
+  const okDialogNameCar = (nameCar: string) => {
+    if (state.cars.length === 1 && state.cars[state.numberCar].info.nameCar === '') {
+      const tempNewCar: StateCar = { ...state.cars[0], info: { ...state.cars[0].info, nameCar } }
+      dispatch(editedCarInfo({
+        numberCar: state.numberCar,
+        carInfo: tempNewCar.info
+      }))
+      setVisibleNameCar(false)
+    }
+  }
 
   // -----------------------------block orientation screen--------------------------
   const [orientation, setOrientation] = useState(0)
@@ -31,11 +55,18 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
     void checkOrientation()
   }
 
+  useFocusEffect(() => {
+    if (state.cars.length === 1 && state.cars[state.numberCar].info.nameCar === '') {
+      setVisibleNameCar(true)
+    }
+  })
+
   useFocusEffect(
     useCallback(() => {
       const subscription = ScreenOrientation.addOrientationChangeListener(
         handleOrientationChange
       )
+
       return () => {
         ScreenOrientation.removeOrientationChangeListener(subscription)
       }
@@ -74,6 +105,15 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
         </View>
 
       </View>
+      <Portal>
+        <Dialog
+          visible={visibleNameCar}
+          dismissableBackButton
+          onDismiss={cancelDialogNameCar}
+        >
+          <ModalPickNameCar mode={'new'} handlePressOk={okDialogNameCar} handlePressCancel={cancelDialogNameCar}/>
+        </Dialog>
+      </Portal>
     </BackgroundView>
 
   )
