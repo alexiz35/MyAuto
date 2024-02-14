@@ -1,14 +1,12 @@
-import { Alert, FlatList, ScrollView, StyleSheet, View } from 'react-native'
-import { Button, Card, Divider, Icon, IconButton, List, Portal, Text } from 'react-native-paper'
-import { StateCar } from '../../type'
+import { Alert, StyleSheet, View } from 'react-native'
+import { Button, Divider, Icon, IconButton } from 'react-native-paper'
 import { JSX } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { listService } from '../InputDoneScreenComponents/inputService/ListServices'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
-import { deletedCar, delNowCar } from '../Redux/CarsSlice'
+import { deletedCar } from '../Redux/CarsSlice'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
-import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
+import { RootTabParamList } from '../Navigation/TypeNavigation'
 
 export const CarsList = (): JSX.Element => {
   const state = useAppSelector(state => state)
