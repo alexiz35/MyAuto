@@ -1,10 +1,10 @@
 import { View, StyleSheet, Vibration } from 'react-native'
-import { CurrentMiles, indexCar, initialStateInfo, StateInfo } from '../../type'
+import { CurrentMiles, getIndexCar, initialStateInfo, StateInfo } from '../../type'
 /* import { NativeStackNavigationProp } from '@react-navigation/native-stack' */
 import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
 import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { JSX, useEffect, useState } from 'react'
+import { JSX, useCallback, useEffect, useState } from 'react'
 import {
   TouchableRipple,
   Text,
@@ -32,18 +32,22 @@ export const MainCard = (): JSX.Element => {
   const navStack = useNavigation<ProfileScreenNavigationProp>()
   const navTab = useNavigation<ProfileTabNavigationProp>()
   const { colors } = useAppTheme()
-  const carId = useAppSelector(state => state.numberCar)
+  const numberCar = useAppSelector(state => state.numberCar)
   const state = useAppSelector(state => state)
+  const [indexCar, setIndexCar] = useState<number>(getIndexCar(state.cars, numberCar))
+  useCallback(() => {
+    setIndexCar(getIndexCar(state.cars, numberCar))
+  }, [numberCar])
 
   const infoCar: StateInfo = useAppSelector(state => (
-    state.cars[indexCar(state.cars, carId)].info === undefined
+    state.cars[indexCar].info === undefined
       ? initialStateInfo
-      : state.cars[indexCar(state.cars, carId)].info
+      : state.cars[indexCar].info
   ))
   const currentMiles: CurrentMiles = useAppSelector(state => (
-    state.cars[indexCar(state.cars, carId)].currentMiles === undefined
+    state.cars[indexCar].currentMiles === undefined
       ? { currentMileage: 0, dateMileage: new Date() }
-      : state.cars[indexCar(state.cars, carId)].currentMiles
+      : state.cars[indexCar].currentMiles
   ))
   const dispatch = useAppDispatch()
 
@@ -95,7 +99,7 @@ export const MainCard = (): JSX.Element => {
         currentMileage: valueMileage,
         dateMileage: new Date()
       }
-      dispatch(addedCurrentMiles({ numberCar: carId, currentMiles: tempMileage }))
+      dispatch(addedCurrentMiles({ numberCar, currentMiles: tempMileage }))
       setErrorInput(false)
       setVisibleMileage(false)
       // toggleMileage()

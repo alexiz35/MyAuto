@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { JSX, useEffect, useState } from 'react'
-import { indexCar, type StateFuel } from '../type'
+import { getIndexCar, type StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { type RootStackParamList, type RootTabParamList } from '../components/Navigation/TypeNavigation'
 import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -45,8 +45,8 @@ interface FormFuel {
 
 export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state.cars[indexCar(state.cars,state.numberCar)])
-  console.log('fuelState',state)
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
+  console.log('fuelState', state)
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
   const navigation = useNavigation<Props>()
@@ -79,7 +79,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
       CostFuel: Number(data.CostFuel),
       AmountFuel: Number(data.AmountFuel),
       StationFuel: data.StationFuel,
-      typeFuel: state.info.fuel!=='' ? state.info.fuel:'diesel'
+      typeFuel: state.info.fuel !== '' ? state.info.fuel : 'diesel'
     }
   }
 
@@ -165,8 +165,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const handleOk = (dataForm: FormFuel): void => {
     setTimeout(() =>
       isEditFuel
-        ? dispatch(editStateCarReducer({ type:'fuel',numberCar: carId, item: formToData(dataForm) }))
-        : dispatch(addStateCarReducer({type:'fuel', numberCar: carId, item: formToData(dataForm) }))
+        ? dispatch(editStateCarReducer({ type: 'fuel', numberCar: carId, item: formToData(dataForm) }))
+        : dispatch(addStateCarReducer({ type: 'fuel', numberCar: carId, item: formToData(dataForm) }))
     , 100)
     handleOnPress()
   }

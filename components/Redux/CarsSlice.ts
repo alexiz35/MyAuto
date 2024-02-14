@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
-  CurrentMiles, indexCar,
+  CurrentMiles, getIndexCar,
   initialStateInfo,
   StateCar,
   StateFuel,
@@ -75,14 +75,14 @@ const carsSlice = createSlice({
     // --------------------------------------------------------------------------------------
     editedCarInfo (state, action: PayloadAction<{ numberCar: number, carInfo: StateInfo }>) {
       // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state[indexCar(state, action.payload.numberCar)].info = action.payload.carInfo
+      state[getIndexCar(state, action.payload.numberCar)].info = action.payload.carInfo
     },
     // --------------------------------------------------------------------------------------
     addedCurrentMiles (state, action: PayloadAction<{ numberCar: number, currentMiles: CurrentMiles }>) {
       const tempState = state[action.payload.numberCar]
       tempState.currentMiles = action.payload.currentMiles
       tempState.mileage.push(action.payload.currentMiles)
-      state[indexCar(state, action.payload.numberCar)] = tempState
+      state[getIndexCar(state, action.payload.numberCar)] = tempState
       return state
     },
     // ------------ reducers for fuel,part,service,other ------------------------------------
@@ -91,7 +91,7 @@ const carsSlice = createSlice({
        tempArray.push(action.payload.item)
        state[action.payload.numberCar][action.payload.type] = tempArray */
       // @ts-expect-error: error type item
-      state[indexCar(state, action.payload.numberCar)][action.payload.type].push(action.payload.item)
+      state[getIndexCar(state, action.payload.numberCar)][action.payload.type].push(action.payload.item)
     },
     /* delStateCarReducer (state,action:PayloadAction<{type:TypeTypeState,numberCar:number,id:number}>) {
 
@@ -102,14 +102,14 @@ const carsSlice = createSlice({
     , */
     delStateCarReducer (state, action: PayloadAction<{ type: TypeTypeState, numberCar: number, id: number }>) {
       // @ts-expect-error: error type item
-      state[indexCar(state, action.payload.numberCar)][action.payload.type] =
-          state[indexCar(state, action.payload.numberCar)][action.payload.type].filter(item => item.id !== action.payload.id)
+      state[getIndexCar(state, action.payload.numberCar)][action.payload.type] =
+          state[getIndexCar(state, action.payload.numberCar)][action.payload.type].filter(item => item.id !== action.payload.id)
     },
     editStateCarReducer (state, action: PayloadAction<{ type: TypeTypeState, numberCar: number, item: TypeStatesCar }>) {
-      const temp = state[indexCar(state, action.payload.numberCar)][action.payload.type].filter(item => item.id !== action.payload.item.id)
+      const temp = state[getIndexCar(state, action.payload.numberCar)][action.payload.type].filter(item => item.id !== action.payload.item.id)
       temp.push(action.payload.item)
       // @ts-expect-error: error type item
-      state[indexCar(state, action.payload.numberCar)][action.payload.type] = temp
+      state[getIndexCar(state, action.payload.numberCar)][action.payload.type] = temp
     },
     // ----------------------------------------------------------------------------------------
     updateStateCars (state, action: PayloadAction<StateCar[]>) {

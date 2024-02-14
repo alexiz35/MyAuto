@@ -3,6 +3,7 @@ import { Dialog, HelperText, IconButton, Surface, TextInput } from 'react-native
 import { Keyboard, View, TextInput as TypeTextInput } from 'react-native'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { useAppSelector } from '../Redux/hook'
+import { getIndexCar } from '../../type'
 
 type TypeMode = 'new' | 'addNewCar' | 'editCar'
 interface PropsDialogNameCar {
@@ -17,7 +18,7 @@ export const ModalPickNameCar = ({ mode, handlePressOk, handlePressCancel }: Pro
   const [isErrorNameCar, setIsErrorNameCar] = useState(false)
   const [errorNameCar, setErrorNameCar] = useState('')
   const [valueNameCar, setValueNameCar] = useState(
-    car[numberCar].info.nameCar
+    car[getIndexCar(car, numberCar)].info.nameCar
   )
 
   const inputRef = useRef<TypeTextInput>(null)

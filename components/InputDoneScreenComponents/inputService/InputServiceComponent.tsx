@@ -6,7 +6,7 @@ import { JSX, useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import {
   StateService,
-  ModalPart, ListService, Seller, indexCar
+  ModalPart, ListService, Seller, getIndexCar
 } from '../../../type'
 import { AddPartModal } from './AddPartModal'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -53,7 +53,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   /* const stateSecond = useAppSelector((state) => state) */
 
   const theme = useAppTheme()
-  const state = useAppSelector((state) => state.cars[indexCar(state.cars,state.numberCar)])
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const tempNullService: FormService = {
@@ -126,12 +126,12 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   const [visibleModalAddParts, setVisibleModalAddParts] = useState(false)
 
   /* -------------------- function modal Add Parts --------------------------------------- */
-  const showModalAddParts = (): void => setVisibleModalAddParts(true)
-  const hideModalAddParts = (): void => setVisibleModalAddParts(false)
+  const showModalAddParts = (): void => { setVisibleModalAddParts(true) }
+  const hideModalAddParts = (): void => { setVisibleModalAddParts(false) }
 
   /* -------------------- function modal Pick Service ----------------------------------- */
-  const showModalService = (): void => setVisibleModalService(true)
-  const hideModalService = (): void => setVisibleModalService(false)
+  const showModalService = (): void => { setVisibleModalService(true) }
+  const hideModalService = (): void => { setVisibleModalService(false) }
   const okModalService = (item: ListService): void => {
     setTypeService(item)
     hideModalService()
@@ -141,13 +141,15 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   const [amountPart, setAmountPart] = useState(0)
   const [sumCost, setSumCost] = useState(0)
 
-  const inputDate = (target: string): void => DateTimePickerAndroid.open({
-    value: new Date(),
-    /* display: 'spinner', */
-    // @ts-expect-error date undefined
-    onChange: (event, date) => setValue(target, date)
+  const inputDate = (target: string): void => {
+    DateTimePickerAndroid.open({
+      value: new Date(),
+      /* display: 'spinner', */
+      // @ts-expect-error date undefined
+      onChange: (event, date) => { setValue(target, date) }
 
-  })
+    })
+  }
   const editDate = (start: Date, increment: number): Date => {
     const tempDate = new Date(start)
     tempDate.setMonth(tempDate.getMonth() + increment)
@@ -270,7 +272,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     keyboardType={'numeric'}
                                     value={value}
                                     onSubmitEditing={updateTypeService}
-                                    onChangeText={(value) => onChange(value)}
+                                    onChangeText={(value) => { onChange(value) }}
                                     onBlur={onBlur}
                                     /* onSubmitEditing={() => setFocus('numberPart')} */
                                   />
@@ -288,7 +290,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     label={'пробег замены'}
                                     keyboardType={'numeric'}
                                     value={value}
-                                    onChangeText={(value) => onChange(value)}
+                                    onChangeText={(value) => { onChange(value) }}
                                     onBlur={onBlur}
                                     /* onSubmitEditing={() => setFocus('numberPart')} */
                                   />
@@ -312,7 +314,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
                                     /* onChangeText={(value) => onChange(value)} */
-                                    onPressOut={() => inputDate('startDate')}
+                                    onPressOut={() => { inputDate('startDate') }}
                                     /* onSubmitEditing={updateTypeService} */
                                   />
                                 )}
@@ -329,7 +331,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     label={'дата замены'}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
-                                    onPressOut={() => inputDate('endDate')}
+                                    onPressOut={() => { inputDate('endDate') }}
                                     /* onSubmitEditing={() => setFocus('numberPart')} */
                                   />
                                 )}
@@ -370,7 +372,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                 label={'цена сервиса'}
                                 keyboardType={'numeric'}
-                                onChangeText={(value) => onChange(value)}
+                                onChangeText={(value) => { onChange(value) }}
                                 value={value}
                                 onBlur={onBlur}
                                 error={(error != null) && true}
@@ -425,11 +427,11 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                       label={'название'}
                                       /* keyboardType={'phone-pad'} */
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
                                                              color={theme.colors.tertiary}
-                                                             onPress={() => setVisibleSeller(true)
+                                                             onPress={() => { setVisibleSeller(true) }
                                                              }/>}
                                       onSubmitEditing={() => {
                                         setFocus('sellerPhone')
@@ -450,7 +452,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                         label={'телефон'}
                                         keyboardType={'phone-pad'}
-                                        onChangeText={(value) => onChange(value)}
+                                        onChangeText={(value) => { onChange(value) }}
                                         value={value}
                                         onSubmitEditing={() => {
                                           setFocus('sellerWeb')
@@ -469,7 +471,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                         label={'интернет'}
                                         keyboardType={'url'}
-                                        onChangeText={(value) => onChange(value)}
+                                        onChangeText={(value) => { onChange(value) }}
                                         value={value}
                                         /* onSubmitEditing={() => {
                                           setFocus('numberPart2')
@@ -529,7 +531,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       // -------------------------------- ModalPickSeller -----------------------
     }
     <Portal>
-      <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+      <Dialog visible={visibleSeller} onDismiss={() => { setVisibleSeller(false) }}>
         <ModalPickSeller handlePress={handlePress} editPress={editPress} navigation={pressEditSeller}/>
       </Dialog>
     </Portal>

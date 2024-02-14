@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import { indexCar, StateService } from '../../../type'
+import { getIndexCar, StateService } from '../../../type'
 import { Card, IconButton, Menu, ProgressBar } from 'react-native-paper'
 import { JSX, useEffect, useState } from 'react'
 import { delService } from '../../Redux/actions'
@@ -17,7 +17,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
 
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
-  const state = useAppSelector((state) => state.cars[indexCar(state.cars,carId)])
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, carId)])
 
   const [visibleMenu, setVisibleMenu] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -89,7 +89,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
           />
         )} */
 
-        onPress={() => handlePress(item)}
+        onPress={() => { handlePress(item) }}
       >
 
         <Card.Title
@@ -153,7 +153,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delStateCarReducer({type:'services',numberCar:carId,id: item.id}))
+                         dispatch(delStateCarReducer({ type: 'services', numberCar: carId, id: item.id }))
                          closeMenu()
                        }}
             />

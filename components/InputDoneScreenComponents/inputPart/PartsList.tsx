@@ -1,5 +1,5 @@
 import { FlatList } from 'react-native'
-import { indexCar, StatePart } from '../../../type'
+import { getIndexCar, StatePart } from '../../../type'
 import { JSX, useEffect, useState } from 'react'
 import { useAppSelector } from '../../Redux/hook'
 import { BusyIndicator } from '../../useIsReadyHook'
@@ -12,7 +12,7 @@ interface handleProp {
 }
 
 export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
-  const listParts = useAppSelector(state => state.cars[indexCar(state.cars,state.numberCar)].parts)
+  const listParts = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].parts)
   const [isSortParts, setIsSortParts] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
 
@@ -124,8 +124,8 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
   }, [listParts]) */
 
   useEffect(() => {
-    setTimeout(() => setIsLoad(false), 10)
-    return setIsLoad(true)
+    setTimeout(() => { setIsLoad(false) }, 10)
+    setIsLoad(true)
   }, [filterList])
 
   const filter = (): StatePart[] => {

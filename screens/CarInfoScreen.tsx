@@ -2,7 +2,7 @@ import { View, StyleSheet, ScrollView, Alert } from 'react-native'
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { JSX, useCallback, useEffect, useState } from 'react'
-import { brand, ListService, StateInfo } from '../type'
+import { brand, getIndexCar, ListService, StateInfo } from '../type'
 import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 import { Dropdown } from 'react-native-element-dropdown'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
@@ -72,6 +72,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const setCar = useAppDispatch()
   const numberCar = useAppSelector((state) => state.numberCar)
   const car = useAppSelector((state) => state.cars)
+  const [indexCar, setIndexCar] = useState<number>(getIndexCar(car, numberCar))
   const { colors } = useAppTheme()
 
   // ------------------------ Alert ConfirmAction -------------------------------
@@ -180,14 +181,14 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   // --------------------- Modal RegMaintenance --------------------------------
   const [itemsModel, setItemsModel] = useState<ListCar[]>([])
   const [regMaintenance, setRegMaintenance] = useState<ListService[]>(
-    car[numberCar].info.regMaintenance === undefined
+    car[indexCar].info.regMaintenance === undefined
       ? listService
-      : car[numberCar].info.regMaintenance
+      : car[indexCar].info.regMaintenance
   )
 
   // ------------------ Dialog Input NameCar -----------------------------------
   const [visibleNameCar, setVisibleNameCar] = useState(false)
-  const [valueNameCar, setValueNameCar] = useState(car[numberCar].info.nameCar)
+  const [valueNameCar, setValueNameCar] = useState(car[indexCar].info.nameCar)
 
   const okDialogNameCar = (dialogNameCar: string): void => {
     /*  if (car.length > 1) {
@@ -238,8 +239,10 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     control,
     name: 'brand'
   })
-  // --------------------DropListCreate------------------------------------
-
+  // --------------------Update IndexCar------------------------------------
+  useCallback(() => {
+    setIndexCar(getIndexCar(car, numberCar))
+  }, [numberCar])
   // ---------------------Pick Service-----------------------------------
   const [visibleModalService, setVisibleModalService] = useState(false)
 
@@ -267,8 +270,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   useFocusEffect(
     useCallback(() => {
       if (
-        car[numberCar].info.nameCar === '' ||
-        car[numberCar].info.nameCar === undefined
+        car[indexCar].info.nameCar === '' ||
+        car[indexCar].info.nameCar === undefined
       ) { setVisibleNameCar(true) }
 
       navigation.setOptions({
@@ -282,7 +285,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           />
         )
       })
-      const temp = car[numberCar].info
+      const temp = car[indexCar].info
       setItemCarInfo(temp)
     }, [])
   )
@@ -689,7 +692,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             dismissableBackButton
             onDismiss={cancelModalMaintenance}
           >
-            <ModalPickNameCar handlePressOk={okDialogNameCar} handlePressCancel={cancelDialogNameCar}/>
+            <ModalPickNameCar mode={'editCar'} handlePressOk={okDialogNameCar} handlePressCancel={cancelDialogNameCar}/>
           </Dialog>
         </Portal>
         {

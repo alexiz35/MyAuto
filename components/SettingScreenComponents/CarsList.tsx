@@ -7,11 +7,15 @@ import { listService } from '../InputDoneScreenComponents/inputService/ListServi
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
 import { deletedCar, delNowCar } from '../Redux/CarsSlice'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
 
 export const CarsList = (): JSX.Element => {
   const state = useAppSelector(state => state)
   const { colors } = useAppTheme()
   const dispatch = useAppDispatch()
+  const navigation =
+    useNavigation<NavigationProp<RootTabParamList>>()
 
   // ------------------------ Alert ConfirmAction -------------------------------
   const createDeleteAlert = (id: number) => {
@@ -30,7 +34,14 @@ export const CarsList = (): JSX.Element => {
   }
   const deleteCar = (id: number) => {
     if (state.numberCar === id) {
-      dispatch(changedNumberCar(state.cars[0].carId))
+      if (state.cars.length === 1) {
+        dispatch(changedNumberCar(0))
+        dispatch(deletedCar({ numberCar: id }))
+        navigation.navigate('Home')
+      } else {
+        const targetIndex = state.cars.findIndex(item => item.carId !== id)
+        dispatch(changedNumberCar(targetIndex))
+      }
     }
     dispatch(deletedCar({ numberCar: id }))
   }

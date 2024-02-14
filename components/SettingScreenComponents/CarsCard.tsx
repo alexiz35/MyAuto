@@ -34,18 +34,15 @@ export const CarsCard = (): JSX.Element => {
     setVisibleNameCar(false)
   }
   const okDialogNameCar = (nameCar: string) => {
-    if (state.cars.length === 1 && state.cars[state.numberCar].info.nameCar === '') {
-      const tempNewCar = Object.assign({}, initialStateCar[0])
-      tempNewCar.info.nameCar = nameCar
-      dispatch(editedCarInfo({ numberCar: state.numberCar, carInfo: tempNewCar.info }))
-    }
-    const tempNewCar = Object.assign({}, initialStateCar[0])
-    tempNewCar.carId = state.cars.length
+    /* const tempNewCar = Object.assign({}, initialStateCar[0]) */
+    const tempNewCar = { ...initialStateCar[0], info: { ...initialStateCar[0].info, nameCar } }
+    tempNewCar.carId = Date.now()
     tempNewCar.info.nameCar = nameCar
+    console.log('TEMP_ADD_CAR', tempNewCar)
     dispatch(addedCar(tempNewCar))
     dispatch(changedNumberCar(tempNewCar.carId))
-    navigation.navigate('CarInfoScreen')
     setVisibleNameCar(false)
+    navigation.navigate('CarInfoScreen')
   }
 
   return (
@@ -67,7 +64,7 @@ export const CarsCard = (): JSX.Element => {
           dismissableBackButton
           onDismiss={cancelDialogNameCar}
         >
-          <ModalPickNameCar handlePressOk={okDialogNameCar} handlePressCancel={cancelDialogNameCar}/>
+          <ModalPickNameCar mode={'addNewCar'} handlePressOk={okDialogNameCar} handlePressCancel={cancelDialogNameCar}/>
         </Dialog>
       </Portal>
     </>

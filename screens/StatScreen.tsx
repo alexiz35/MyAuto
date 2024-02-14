@@ -21,7 +21,7 @@ import {
 import BackgroundView from '../CommonComponents/BackgroundView'
 import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
 import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
-import { indexCar } from '../type'
+import { getIndexCar } from '../type'
 
 export interface TypeSelect {
   type: string
@@ -36,7 +36,7 @@ export interface TypeSelect {
 }
 
 const StatScreen = (): JSX.Element => {
-  const state = useAppSelector((state) => state.cars[indexCar(state.cars,state.numberCar)])
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
 
   const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
 
@@ -140,7 +140,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
         // -------------------------------- ModalPickSeller -----------------------
       }
       <Portal>
-        <Dialog visible={visiblePickDate} onDismiss={() => setVisiblePickDate(false)}>
+        <Dialog visible={visiblePickDate} onDismiss={() => { setVisiblePickDate(false) }}>
           <SelectDateModal handleCancel={handleCancel} handleOk={handleOk}/>
         </Dialog>
         </Portal>

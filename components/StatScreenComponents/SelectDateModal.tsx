@@ -6,7 +6,7 @@ import WheelPickerSelectDate from './WheelPickerSelectDate'
 import WheelPickerSelectDouble, { TypeResultPicker } from './WheelPickerSelectDouble'
 import { Dialog, Divider, Button, RadioButton, Portal, Modal } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { indexCar } from '../../type'
+import { getIndexCar } from '../../type'
 
 interface Props {
   handleOk: (selectModal: TypeSelect) => void
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element => {
-  const state = useAppSelector((state) => state.cars[indexCar(state.cars,state.numberCar)])
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
   const MONTH = 'Январь,февраль,Март,Апрель,Май,Июнь,Июль, Август, Сентябрь, Октябрь, Ноябрь, Декабрь'.split(',')
   const { colors } = useAppTheme()
 
@@ -74,18 +74,18 @@ export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element 
           // ------------------------------------ select Year ---------------------------------------------------------
         }
         <Dialog.Content >
-          <RadioButton.Group onValueChange={(item) => setChecked(item)} value={checked} >
+          <RadioButton.Group onValueChange={(item) => { setChecked(item) }} value={checked} >
             <View style={styles.viewRowChecked}>
           <RadioButton.Item
             label={'год'}
             value={'year'}
             position={'leading'}
           />
-              <Button onPress={ () => setVisibleYear(true)} disabled={checked !== 'year'} mode={'elevated'}>
+              <Button onPress={ () => { setVisibleYear(true) }} disabled={checked !== 'year'} mode={'elevated'}>
                 <Text>{String(checkedYear)}</Text>
               </Button>
         <Portal>
-          <Modal visible={visibleYear} style={{ alignItems: 'center' }} onDismiss={() => setVisibleYear(false)}>
+          <Modal visible={visibleYear} style={{ alignItems: 'center' }} onDismiss={() => { setVisibleYear(false) }}>
             <WheelPickerSelectDate list={createListYears()} handlerEnterPicker={resultPickerYear}/>
           </Modal>
         </Portal>
@@ -100,14 +100,14 @@ export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element 
           label={'месяц'}
           value={'month'}
         />
-          <Button onPress={ () => setVisibleMonth(true)} disabled={checked !== 'month'} mode={'elevated'}>
+          <Button onPress={ () => { setVisibleMonth(true) }} disabled={checked !== 'month'} mode={'elevated'}>
             <Text>{String(checkedMonth)} </Text>
             <Text> {String(checkedMonthYear)}</Text>
           </Button>
 
         </View>
         <Portal>
-          <Modal visible={visibleMonth} style={{ alignItems: 'center' }} onDismiss={() => setVisibleMonth(false)}>
+          <Modal visible={visibleMonth} style={{ alignItems: 'center' }} onDismiss={() => { setVisibleMonth(false) }}>
             <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerMonth}/>
           </Modal>
         </Portal>
@@ -122,24 +122,24 @@ export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element 
           value={'period'}
           />
           <View style={{ flexDirection: 'column', gap: 10 }}>
-            <Button onPress={() => setVisibleStartDate(true)} disabled={checked !== 'period'} mode={'elevated'}>
+            <Button onPress={() => { setVisibleStartDate(true) }} disabled={checked !== 'period'} mode={'elevated'}>
               <Text>{`с  ${String(checkedStartMonth)}`}</Text>
               <Text style={{ paddingHorizontal: 2 }}>{` ${String(checkedStartYear)}`}</Text>
             </Button>
 
-            <Button onPress={() => setVisibleEndDate(true)} disabled={checked !== 'period'} mode={'elevated'}>
+            <Button onPress={() => { setVisibleEndDate(true) }} disabled={checked !== 'period'} mode={'elevated'}>
               <Text>{`до ${String(checkedEndMonth)}`}</Text>
               <Text style={{ paddingHorizontal: 2 }}>{` ${String(checkedEndYear)}`}</Text>
             </Button>
           </View>
         </View>
             <Portal>
-              <Modal visible={visibleStartDate} style={{ alignItems: 'center' }} onDismiss={() => setVisibleStartDate(false)}>
+              <Modal visible={visibleStartDate} style={{ alignItems: 'center' }} onDismiss={() => { setVisibleStartDate(false) }}>
                 <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerStartDate}/>
               </Modal>
             </Portal>
             <Portal>
-              <Modal visible={visibleEndDate} style={{ alignItems: 'center' }} onDismiss={() => setVisibleEndDate(false)}>
+              <Modal visible={visibleEndDate} style={{ alignItems: 'center' }} onDismiss={() => { setVisibleEndDate(false) }}>
                 <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerEndDate}/>
               </Modal>
             </Portal>

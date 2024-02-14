@@ -19,7 +19,7 @@ import { ModalPickNameCar } from '../components/CarInfoScreenComponents/ModalPic
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { editedCarInfo, initialStateCar } from '../components/Redux/CarsSlice'
 import { info } from 'expo/build/devtools/logger'
-import { StateCar } from '../type'
+import { getIndexCar, StateCar } from '../type'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
@@ -29,13 +29,18 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const [visibleNameCar, setVisibleNameCar] = useState(false)
+  const [indexCar, setIndexCar] = useState<number>(getIndexCar(state.cars, state.numberCar))
+  useCallback(() => {
+    setIndexCar(getIndexCar(state.cars, state.numberCar))
+  }, [])
 
   const cancelDialogNameCar = () => {
 
   }
   const okDialogNameCar = (nameCar: string) => {
-    if (state.cars.length === 1 && state.cars[state.numberCar].info.nameCar === '') {
-      const tempNewCar: StateCar = { ...state.cars[0], info: { ...state.cars[0].info, nameCar } }
+    if (state.cars.length === 1 && state.cars[indexCar].info.nameCar === '') {
+      const tempNewCar = { ...initialStateCar[0], info: { ...initialStateCar[0].info, nameCar } }
+
       dispatch(editedCarInfo({
         numberCar: state.numberCar,
         carInfo: tempNewCar.info
@@ -54,12 +59,6 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const handleOrientationChange = (): void => {
     void checkOrientation()
   }
-
-  useFocusEffect(() => {
-    if (state.cars.length === 1 && state.cars[state.numberCar].info.nameCar === '') {
-      setVisibleNameCar(true)
-    }
-  })
 
   useFocusEffect(
     useCallback(() => {
@@ -81,6 +80,14 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   useEffect(() => {
     /* setMiles(updateMiles(15)) */
   }, [])
+
+  // **************************** Block HomeScreen for input NameCar ***************************************************
+  useFocusEffect(() => {
+    if (state.cars.length === 1 && state.cars[0].info.nameCar === '') {
+      setVisibleNameCar(true)
+    }
+  })
+  // *******************************************************************************************************************
 
   return (
     <BackgroundView>
