@@ -50,7 +50,7 @@ const InputDoc = (): JSX.Element => {
   const handleOnPress = (): void => {
     if (!openAccordion) {
       setIsList(false)
-    } else setTimeout(() => setIsList(true), 100)
+    } else setTimeout(() => { setIsList(true) }, 100)
     setOpenAccordion(!openAccordion)
     clearInput()
   }
@@ -61,8 +61,8 @@ const InputDoc = (): JSX.Element => {
   const handleOk = (dataForm: StateOther): void => {
     setTimeout(() =>
       isEditOther
-        ? dispatch(editStateCarReducer({type:'others',numberCar:carId,item: dataForm}))
-        : dispatch(addStateCarReducer({type:'others',numberCar:carId,item: dataForm}))
+        ? dispatch(editStateCarReducer({ type: 'others', numberCar: carId, item: dataForm }))
+        : dispatch(addStateCarReducer({ type: 'others', numberCar: carId, item: dataForm }))
     , 100)
     handleOnPress()
   }
@@ -96,7 +96,7 @@ const InputDoc = (): JSX.Element => {
 
       {isList &&
         <View style={styles.flatList}>
-          <ToggleButton.Row onValueChange={value => setDateList(value)}
+          <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                             value={dateList}
                             style={{ alignSelf: 'flex-end', marginBottom: 10 }}
           >

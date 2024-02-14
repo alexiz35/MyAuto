@@ -30,15 +30,12 @@ import {
   Text,
   IconButton, Surface, TouchableRipple, Icon, Dialog, Portal
 } from 'react-native-paper'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
-import { JSX, useState } from 'react'
+import { JSX } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { changedNumberCar } from '../Redux/NumberCarSlice'
-import { ModalPickNameCar } from '../CarInfoScreenComponents/ModalPickNameCar'
-import { editedCarInfo, initialStateCar } from '../Redux/CarsSlice'
 
 function LogoTitle (): JSX.Element {
   return (

@@ -2,7 +2,7 @@ import { JSX, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Card, Dialog, Divider, Icon, Portal, Text } from 'react-native-paper'
 import { CarsList } from './CarsList'
-import { addedCar, editedCarInfo, initialStateCar } from '../Redux/CarsSlice'
+import { addedCar, initialStateCar } from '../Redux/CarsSlice'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 // eslint-disable-next-line import/named
@@ -23,22 +23,15 @@ export const CarsCard = (): JSX.Element => {
   // ****************************** ADD NEW CAR *********************************
   const addNewCar = () => {
     setVisibleNameCar(true)
-    /*  const tempNewCar = Object.assign({}, initialStateCar[0])
-    tempNewCar.carId = state.cars.length
-    dispatch(addedCar(tempNewCar))
-    dispatch(changedNumberCar(tempNewCar.carId))
-    navigation.navigate('CarInfoScreen') */
   }
 
   const cancelDialogNameCar = () => {
     setVisibleNameCar(false)
   }
   const okDialogNameCar = (nameCar: string) => {
-    /* const tempNewCar = Object.assign({}, initialStateCar[0]) */
     const tempNewCar = { ...initialStateCar[0], info: { ...initialStateCar[0].info, nameCar } }
     tempNewCar.carId = Date.now()
     tempNewCar.info.nameCar = nameCar
-    console.log('TEMP_ADD_CAR', tempNewCar)
     dispatch(addedCar(tempNewCar))
     dispatch(changedNumberCar(tempNewCar.carId))
     setVisibleNameCar(false)

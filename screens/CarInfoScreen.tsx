@@ -15,9 +15,7 @@ import {
   Portal,
   Modal,
   Dialog,
-  IconButton,
-  Surface,
-  HelperText
+  IconButton
 } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
@@ -73,19 +71,10 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const numberCar = useAppSelector((state) => state.numberCar)
   const car = useAppSelector((state) => state.cars)
   const [indexCar, setIndexCar] = useState<number>(getIndexCar(car, numberCar))
+  const [isSave, setIsSave] = useState(false)
   const { colors } = useAppTheme()
 
   // ------------------------ Alert ConfirmAction -------------------------------
-  const createTwoButtonAlert = () => {
-    Alert.alert('Покинуть страницу?', 'Введенные данные не сохранятся', [
-      {
-        text: 'Cancel',
-        /* onPress: () => console.log('Cancel Pressed'), */
-        style: 'cancel'
-      },
-      { text: 'OK', onPress: () => { navigation.goBack() } }
-    ])
-  }
 
   const formToData = (item: FormCarInfo): StateInfo => {
     return {
@@ -191,16 +180,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const [valueNameCar, setValueNameCar] = useState(car[indexCar].info.nameCar)
 
   const okDialogNameCar = (dialogNameCar: string): void => {
-    /*  if (car.length > 1) {
-      if (car.some((element) => element.info.nameCar === dialogNameCar)) {
-        console.log('noPass')
-        return
-      }
-      console.log('passLength')
-    } */
     setValueNameCar(dialogNameCar)
     setVisibleNameCar(false)
-    console.log('passIf')
   }
   const cancelDialogNameCar = (): void => {
     setVisibleNameCar(false)
@@ -224,6 +205,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         carInfo: formToData(dataForm)
       })
     )
+    setIsSave(true)
     navigation.goBack()
   }
 
@@ -289,21 +271,28 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       setItemCarInfo(temp)
     }, [])
   )
-  /*  useEffect(
+  useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
-        if (
-          car[numberCar].info.nameCar === '' ||
-          car[numberCar].info.nameCar === undefined
-        ) { setVisibleNameCar(true) } else return
-
+        if (isSave) return
         // Prevent default behavior of leaving the screen
         e.preventDefault()
-
         // Prompt the user before leaving the screen
+
+        Alert.alert('Покинуть страницу?', 'Введенные данные не сохранятся', [
+          {
+            text: 'Cancel',
+            /* onPress: () => console.log('Cancel Pressed'), */
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => { navigation.dispatch(e.data.action) }
+          }
+        ])
       }),
     [navigation]
-  ) */
+  )
 
   const isReady = useIsReady()
 
@@ -635,9 +624,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           <View style={styles.viewButton}>
             <Button
               icon={'close-thick'}
-              onPress={() => {
-                createTwoButtonAlert()
-              }}
+              onPress={() => { navigation.goBack() }}
               mode="outlined"
               rippleColor={colors.error}
               textColor={colors.error}

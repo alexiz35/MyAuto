@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
 import { deletedCar } from '../Redux/CarsSlice'
+// eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootTabParamList } from '../Navigation/TypeNavigation'
 
