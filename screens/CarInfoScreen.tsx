@@ -199,13 +199,13 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       setVisibleNameCar(true)
       return
     }
+    setIsSave(true)
     setCar(
       editedCarInfo({
         numberCar,
         carInfo: formToData(dataForm)
       })
     )
-    setIsSave(true)
     navigation.goBack()
   }
 
@@ -274,7 +274,9 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
+        console.log('1', isSave)
         if (isSave) return
+        console.log('2', isSave)
         // Prevent default behavior of leaving the screen
         e.preventDefault()
         // Prompt the user before leaving the screen

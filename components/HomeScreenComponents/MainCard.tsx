@@ -17,6 +17,7 @@ import {
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { addedCurrentMiles } from '../Redux/CarsSlice'
+// eslint-disable-next-line import/named
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<

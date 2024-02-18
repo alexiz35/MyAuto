@@ -27,6 +27,7 @@ import { useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { useNavigation } from '@react-navigation/native'
+// eslint-disable-next-line import/named
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../Navigation/TypeNavigation'
 

@@ -77,7 +77,7 @@ export const Navigation = (): JSX.Element => {
     void AsyncStorage.clear()
 
     const theme = useTheme()
-    const FabTab = (): any => null
+    const FabTab = (): null => null
     /* console.log('first', useAppSelector((state) => state)) */
 
     return (
