@@ -50,7 +50,9 @@ export const CarsList = (): JSX.Element => {
     {state.cars.length === 1 && state.cars[0].info.nameCar === ''
       ? null
       : state.cars.map((item, index) => (
+
         <TouchableRipple key={index} onPress={() => { pressRow(item.carId) }}>
+          <>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Button
             icon={() => (
@@ -64,8 +66,10 @@ export const CarsList = (): JSX.Element => {
           </Button>
           <IconButton icon={'close'} iconColor={colors.error} onPress={() => { createDeleteAlert(item.carId) }}/>
         </View>
-      {/* <Divider horizontalInset /> */}
+            <Divider horizontalInset />
+          </>
       </TouchableRipple>
+
       ))
     }
 
