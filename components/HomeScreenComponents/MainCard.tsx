@@ -61,7 +61,7 @@ export const MainCard = (): JSX.Element => {
   }
 
   useEffect(() => {
-    /* periodTimeMileage() */
+    periodTimeMileage()
   }, [currentMiles])
 
   /* useEffect(() => {
@@ -187,7 +187,7 @@ export const MainCard = (): JSX.Element => {
                 right={<TextInput.Affix text="km" />}
                 onChangeText={(value) => { setValueMileage(Number(value)) }}
                 keyboardType={'numeric'}
-                value={String(valueMileage)}
+                value={String(valueMileage === 0 ? '' : valueMileage)}
                 error={errorInput}
               />
               <HelperText type="error" visible={errorInput}>
