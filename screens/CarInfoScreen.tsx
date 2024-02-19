@@ -282,6 +282,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         Alert.alert('Покинуть страницу?', 'Введенные данные не сохранятся', [
           {
             text: 'Cancel',
+            // ***
             /* onPress: () => console.log('Cancel Pressed'), */
             style: 'cancel'
           },
