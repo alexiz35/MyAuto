@@ -74,7 +74,6 @@ const listBrand = (): ListCar[] => {
       value: item
     })
   )
-  console.log('brand')
   return tempList
 }
 export const brand = listBrand()
