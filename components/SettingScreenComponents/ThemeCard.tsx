@@ -1,10 +1,9 @@
 import { JSX, useCallback } from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { themeChanged } from '../Redux/SettingSlice'
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { stylesSettingScreen } from '../../screens/SettingScreen'
 
 export const ThemeCard = (): JSX.Element => {
   // ****************************** THEME change *********************************
@@ -41,3 +40,18 @@ export const ThemeCard = (): JSX.Element => {
     </Card>
   )
 }
+const stylesSettingScreen = StyleSheet.create({
+  iconText: {
+    flexDirection: 'row',
+    padding: 10,
+    alignItems: 'center'
+  },
+  text: {
+    paddingHorizontal: 5
+  },
+  viewText: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})

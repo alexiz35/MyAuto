@@ -325,8 +325,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                     mode={'elevated'}
                     buttonColor={colors.secondaryContainer}
                     textColor={colors.primary}
-                    /* onPress={() => { handleCancel() } } */
-                    onPress={clearInput}
+                    onPress={() => { handleCancel() } }
                   >
                     Cancel
                   </Button>

@@ -15,7 +15,7 @@ export const ModalPickSeller = ({ handlePress, editPress, navigation }: PropsPic
   return (
     <>
     <Dialog.Title>Список поставщиков/сервисов</Dialog.Title>
-  <Dialog.Content>
+  <Dialog.Content style={{ height: 300 }}>
               <FlatList
           scrollEnabled
           data={useAppSelector((state) => state.sellerList)}
