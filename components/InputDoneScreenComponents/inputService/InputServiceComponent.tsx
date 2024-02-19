@@ -70,9 +70,19 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   }
 
   const dataToForm = (data: StateService): FormService => {
+    let tempStartKm = '0'
+    if (isEdit) {
+      tempStartKm = data.startKm === undefined || data.startKm === 0
+        ? ''
+        : String(data.startKm)
+    } else {
+      tempStartKm = state.currentMiles.currentMileage === undefined || state.currentMiles.currentMileage === 0
+        ? ''
+        : String(state.currentMiles.currentMileage)
+    }
     return {
-      startKm: isEdit ? String(data.startKm) : String(state.currentMiles.currentMileage),
-      endKm: String(data.endKm),
+      startKm: tempStartKm,
+      endKm: data.endKm === undefined || data.endKm === 0 ? '' : String(data.endKm),
       startDate: data.startDate,
       endDate: data.endData,
       sumCostParts: data.sumCostParts === undefined || data.sumCostParts === 0 ? '' : String(data.sumCostParts),
