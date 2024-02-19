@@ -112,7 +112,8 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
     control,
     handleSubmit,
     setValue,
-    setFocus
+    setFocus,
+    getValues
   } = useForm<FormPart>({ mode: 'onBlur', defaultValues: tempNullPart, values: dataToForm(itemPart) })
 
   /* const handleError = (): void => {
@@ -145,6 +146,20 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
     setCostPart(amountCostPart / quantityPart)
     /!* inputFuelAmount.current?.focus() *!/
   } */
+
+  // ------------------------- function calc input -----------------------------
+  const handleOnSubmitCost = (): void => {
+    const valueCost = getValues(['quantityPart', 'costPart'])
+    const amountFuel = Number(valueCost[0]) * Number(valueCost[1])
+    setValue('amountCostPart', amountFuel === 0 ? '' : String(amountFuel))
+  }
+  const handleOnSubmitAmount = (): void => {
+    const amountCalc = getValues(['quantityPart', 'costPart', 'amountCostPart'])
+    const tempCalc = Number(amountCalc[2]) / Number(amountCalc[0])
+    setValue('costPart', isNaN(tempCalc) ? '' : String(tempCalc))
+  }
+
+  /* --------------------------------------------------------------------------- */
 
   // ------------------------- button result -----------------------------------
   const handleCancel = (): void => {
@@ -265,7 +280,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                       onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       keyboardType={'numeric'}
-                                      onBlur={onBlur}
+                                      onBlur={handleOnSubmitCost}
                                       onSubmitEditing={() => { setFocus('amountCostPart') }}
                                     />
                                   )}
@@ -282,7 +297,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                       onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       keyboardType={'numeric'}
-                                      onBlur={onBlur}
+                                      onBlur={handleOnSubmitAmount}
                                       /* onSubmitEditing={() => setFocus('numberPart')} */
                                     />
                                   )}
