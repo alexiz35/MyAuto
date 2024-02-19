@@ -3,9 +3,7 @@ import { SellerList } from '../components/SellerScreenComponents/SellerList'
 import { useAppDispatch } from '../components/Redux/hook'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { Seller } from '../type'
-import { useCallback, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { addSeller, editSeller } from '../components/Redux/actions'
+import { JSX, useCallback, useState } from 'react'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import {
   Button,
@@ -19,9 +17,11 @@ import {
 } from 'react-native-paper'
 import { ModalInfoSeller } from '../components/SellerScreenComponents/ModalInfoSeller'
 import { RootStackParamList } from '../components/Navigation/TypeNavigation'
+// eslint-disable-next-line import/named
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/native'
 import { addedSeller, editedSeller } from '../components/Redux/SellerSlice'
+import { Controller, useForm } from 'react-hook-form'
 
 interface FormSeller {
   name: string
@@ -78,13 +78,15 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
   const {
     control,
     handleSubmit,
-    setFocus
+    setFocus,
+    reset
 
   } = useForm<FormSeller>({ mode: 'onSubmit', defaultValues: tempNullSeller, values: dataToForm(itemSeller) })
 
   const clearInput = (): void => {
     setIsEditSeller(false)
     setItemSeller(formToData(tempNullSeller))
+    reset()
   }
 
   // ---------------------------------------------------------------------------
@@ -119,7 +121,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
 
   const handleOnPress = (): void => {
     if (!openAccordion) setIsList(false)
-    else setTimeout(() => setIsList(true), 100)
+    else setTimeout(() => { setIsList(true) }, 100)
     setOpenAccordion(!openAccordion)
     clearInput()
   }
@@ -130,6 +132,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
 
   const handleOk = (dataForm: FormSeller): void => {
     /* dispatch(addedSeller(formToData(dataForm))) */
+    setItemSeller(formToData(dataForm))
     setTimeout(() => {
       isEditSeller
         ? dispatch(editedSeller(formToData(dataForm)))
@@ -166,14 +169,13 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                     <Controller name={'name'}
                                 control={control}
                                 rules={{ required: 'введите имя/название' }}
-                                defaultValue={'100'}
                                 render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
                                   <>
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
                                       label={'название/имя'}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       onSubmitEditing={() => {
                                         setFocus('phone')
                                       }}
@@ -205,10 +207,10 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                                       ref={ref}
                                       label={'телефон'}
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       keyboardType={'phone-pad'}
                                       value={value}
-                                      onSubmitEditing={() => setFocus('specialism')}
+                                      onSubmitEditing={() => { setFocus('specialism') }}
                                       error={(error != null) && true}
                                       onBlur={onBlur}
                                     />
@@ -231,9 +233,9 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                                       /* placeholder={'название заправки'} */
                                       label={'специализация'}
                                       style={{ flex: 1, backgroundColor: colors.surface }}
-                                      onChangeText={(value) => onChange(String(value))}
-                                      onSubmitEditing={() => setFocus('web')}
-                                      value={String(value)}
+                                      onChangeText={(value) => { onChange(value) }}
+                                      onSubmitEditing={() => { setFocus('web') }}
+                                      value={value}
                                       onBlur={onBlur}
                                       error={(error != null) && true}
                                     />
@@ -272,11 +274,11 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                                   ref={ref}
                                   label={'ссылка'}
                                   style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                                  onChangeText={(value) => onChange(value)}
+                                  onChangeText={(value) => { onChange(value) }}
                                   keyboardType={'url'}
                                   value={value}
-                                  onSubmitEditing={() => setFocus('type')/* handleOnSubmitCost() */}
-                                  right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="грн"/>}
+                                  onSubmitEditing={() => { setFocus('type') }/* handleOnSubmitCost() */}
+                                  /* right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="грн"/>} */
                                 />
                               )}
                   />
@@ -289,7 +291,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                               control={control}
                               render={ ({ field: { onChange, value } }) => (
 
-                                <RadioButton.Group onValueChange={value => onChange(value)} value={value} >
+                                <RadioButton.Group onValueChange={value => { onChange(value) }} value={value} >
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flex: 1 }}>
                                   <RadioButton.Item label="Запчасти" value="seller" />
@@ -323,7 +325,8 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                     mode={'elevated'}
                     buttonColor={colors.secondaryContainer}
                     textColor={colors.primary}
-                    onPress={() => handleCancel() }
+                    /* onPress={() => { handleCancel() } } */
+                    onPress={clearInput}
                   >
                     Cancel
                   </Button>
@@ -348,7 +351,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
         }
         {isList &&
           <View style={styles.flatList}>
-            <ToggleButton.Row onValueChange={value => setDateList(value)}
+            <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                               value={dateList}
                               style={{ alignSelf: 'flex-end', marginBottom: 10 }}
             >
