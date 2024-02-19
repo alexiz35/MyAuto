@@ -16,6 +16,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { ModalPickSeller } from '../SellerScreenComponents/ModalPickSeller'
+// eslint-disable-next-line import/named
 import { StackNavigationProp } from '@react-navigation/stack'
 
 interface InputTaskProps {
@@ -70,7 +71,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
       typeTask: data.typeTask === undefined ? 'part' : data.typeTask,
       name: data.name,
       dateEndTask: data.dateEndTask,
-      milesEndTask: String(data.milesEndTask),
+      milesEndTask: data.milesEndTask === undefined || data.milesEndTask === 0 ? '' : String(data.milesEndTask),
       numberPart1: data.numberPart1 === undefined ? '' : data.numberPart1,
       numberPart2: data.numberPart2 === undefined ? '' : data.numberPart2,
       numberPart3: data.numberPart3 === undefined ? '' : data.numberPart3,
@@ -112,7 +113,8 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
     control,
     handleSubmit,
     setValue,
-    setFocus
+    setFocus,
+    getValues
   } = useForm<FormTask>({ mode: 'onBlur', defaultValues: tempNullTask, values: dataToForm(itemTask) })
   /*  const controlIsCreated = useWatch({
     control,
@@ -125,15 +127,29 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
   /* const [visibleModalService, setVisibleModalService] = useState(false)
   const [visibleModalAddParts, setVisibleModalAddParts] = useState(false) */
 
+  // ------------------------- function calc input -----------------------------
+  const handleOnSubmitCost = (): void => {
+    const valueCost = getValues(['quantity', 'cost'])
+    const amountFuel = Number(valueCost[0]) * Number(valueCost[1])
+    setValue('amount', amountFuel === 0 ? '' : String(amountFuel))
+  }
+  const handleOnSubmitAmount = (): void => {
+    const amountCalc = getValues(['quantity', 'cost', 'amount'])
+    const tempCalc = Number(amountCalc[2]) / Number(amountCalc[0])
+    setValue('cost', isNaN(tempCalc) ? '' : String(tempCalc))
+  }
+
   /* --------------------------------------------------------------------------- */
 
-  const inputDate = (target: string): void => DateTimePickerAndroid.open({
-    value: new Date(),
-    /* display: 'spinner', */
-    // @ts-expect-error date undefined
-    onChange: (event, date) => setValue(target, date)
+  const inputDate = (target: string): void => {
+    DateTimePickerAndroid.open({
+      value: new Date(),
+      /* display: 'spinner', */
+      // @ts-expect-error date undefined
+      onChange: (event, date) => { setValue(target, date) }
 
-  })
+    })
+  }
 
   // ---------------------------handleButtons-----------------------------------
   const handleCancel = (): void => {
@@ -188,7 +204,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                 <Controller name={'typeTask'}
                             control={control}
                             render={ ({ field: { onChange, value } }) => (
-                  <SegmentedButtons value={value} onValueChange={value => onChange(value)} buttons={[
+                  <SegmentedButtons value={value} onValueChange={value => { onChange(value) }} buttons={[
                     {
                       value: 'part',
                       label: 'Part',
@@ -235,7 +251,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                     label={'название задачи'}
                                     value={value}
-                                    onChangeText={(value) => onChange(value)}
+                                    onChangeText={(value) => { onChange(value) }}
                                     onBlur={onBlur}
                                     /* onSubmitEditing={() => setFocus('numberPart')} */
                                   />
@@ -270,7 +286,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                         label={'Номер детали'}
                                         /* keyboardType={'phone-pad'} */
-                                        onChangeText={(value) => onChange(value)}
+                                        onChangeText={value => { onChange(value) }}
                                         value={value}
                                         onSubmitEditing={() => {
                                           setFocus('numberPart2')
@@ -290,7 +306,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                           dense
                                           style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                           label={'аналог'}
-                                          onChangeText={(value) => onChange(value)}
+                                          onChangeText={(value) => { onChange(value) }}
                                           value={value}
                                           onSubmitEditing={() => {
                                             setFocus('numberPart3')
@@ -313,7 +329,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                           numberOfLines={2}
                                           style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                           label={'дополнительно'}
-                                          onChangeText={(value) => onChange(value)}
+                                          onChangeText={(value) => { onChange(value) }}
                                           value={value}
                                           /* onSubmitEditing={() => {
                                             setFocus('numberPart2')
@@ -345,7 +361,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
                                     /* onChangeText={(value) => onChange(value)} */
-                                    onPressOut={() => inputDate('dateEndTask')}
+                                    onPressOut={() => { inputDate('dateEndTask') }}
                                     /* onSubmitEditing={updateTypeService} */
                                   />
                                 )}
@@ -360,9 +376,10 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                     label={'до пробега'}
-                                    showSoftInputOnFocus={false}
+                                    showSoftInputOnFocus={true}
+                                    keyboardType={'numeric'}
                                     value={value}
-                                    onChangeText={(value) => onChange(value)}
+                                    onChangeText={(value) => { onChange(value) }}
                                     /* onSubmitEditing={() => setFocus('numberPart')} */
                                   />
                                 )}
@@ -383,11 +400,11 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                 dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                 label={'цена'}
-                                onChangeText={(value) => onChange(value)}
+                                onChangeText={(value) => { onChange(value) }}
                                 value={value}
                                 keyboardType={'numeric'}
                                 onBlur={onBlur}
-                                onSubmitEditing={() => setFocus('quantity')}
+                                onSubmitEditing={() => { setFocus('quantity') }}
                               />
                             )}
                 />
@@ -401,11 +418,11 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                 dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                 label={'кол-во'}
-                                onChangeText={(value) => onChange(value)}
+                                onChangeText={(value) => { onChange(value) }}
                                 value={value}
                                 keyboardType={'numeric'}
-                                onBlur={onBlur}
-                                onSubmitEditing={() => setFocus('amount')}
+                                onBlur={handleOnSubmitCost}
+                                onSubmitEditing={() => { setFocus('amount') }}
                               />
                             )}
                 />
@@ -419,10 +436,10 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                 dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
                                 label={'сумма'}
-                                onChangeText={(value) => onChange(value)}
+                                onChangeText={(value) => { onChange(value) }}
                                 value={value}
                                 keyboardType={'numeric'}
-                                onBlur={onBlur}
+                                onBlur={handleOnSubmitAmount}
                                 /* onSubmitEditing={() => setFocus('numberPart')} */
                               />
                             )}
@@ -457,11 +474,11 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                       /* keyboardType={'phone-pad'} */
                                       right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
                                                              color={theme.colors.tertiary}
-                                                             onPress={() => setVisibleSeller(true)
+                                                             onPress={() => { setVisibleSeller(true) }
                                                              }
                                       />
                                       }
-                                      onChangeText={(value) => onChange(value)}
+                                      onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       onSubmitEditing={() => {
                                         setFocus('sellerPhone')
@@ -483,7 +500,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                         label={'телефон'}
                                         keyboardType={'phone-pad'}
-                                        onChangeText={(value) => onChange(value)}
+                                        onChangeText={(value) => { onChange(value) }}
                                         value={value}
                                         onSubmitEditing={() => {
                                           setFocus('sellerWeb')
@@ -503,7 +520,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                         label={'интернет'}
                                         keyboardType={'url'}
-                                        onChangeText={(value) => onChange(value)}
+                                        onChangeText={(value) => { onChange(value) }}
                                         value={value}
                                         /* onSubmitEditing={() => {
                                           setFocus('numberPart2')
@@ -530,7 +547,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                               control={control}
                               render={ ({ field: { value, onChange } }) => (
                                 <Checkbox.Item status={value ? 'checked' : 'unchecked'} label={'Выполнено'}
-                                               onPress={() => onChange(!value)}
+                                               onPress={() => { onChange(!value) }}
                                                color={theme.colors.tertiary}
                                                style={{ paddingVertical: 1 }}
                                                labelVariant={'bodyMedium'}
@@ -580,7 +597,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
       // -------------------------------- ModalPickSeller -----------------------
     }
     <Portal>
-      <Dialog visible={visibleSeller} onDismiss={() => setVisibleSeller(false)}>
+      <Dialog visible={visibleSeller} onDismiss={() => { setVisibleSeller(false) }}>
         <ModalPickSeller handlePress={handlePress} editPress={editPress} navigation={pressEditSeller}/>
       </Dialog>
     </Portal>
