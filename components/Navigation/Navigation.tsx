@@ -74,7 +74,7 @@ export const Navigation = (): JSX.Element => {
   dispatch(changedNumberCar(state.cars[0].carId)) */
 
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
-    void AsyncStorage.clear()
+    /* void AsyncStorage.clear() */
 
     const theme = useTheme()
     const FabTab = (): null => null

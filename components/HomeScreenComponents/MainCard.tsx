@@ -2,7 +2,7 @@ import { View, StyleSheet, Vibration } from 'react-native'
 import { CurrentMiles, getIndexCar, initialStateInfo, StateInfo } from '../../type'
 /* import { NativeStackNavigationProp } from '@react-navigation/native-stack' */
 import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { JSX, useCallback, useEffect, useState } from 'react'
 import {
@@ -19,6 +19,7 @@ import { useAppTheme } from '../../CommonComponents/Theme'
 import { addedCurrentMiles } from '../Redux/CarsSlice'
 // eslint-disable-next-line import/named
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -68,12 +69,36 @@ export const MainCard = (): JSX.Element => {
     setVisibleMileage(true)
   }, [isNeedUpdate]) */
 
-  useEffect(() => {
-    if (state.setting.alarmMileageStart) setVisibleMileage(true)
-    if (state.setting.alarmMileagePeriod) {
-      periodTimeMileage()
+  const checkFirstRun = async () => {
+    try {
+      await AsyncStorage.getItem('isStart')
+        .then(
+          (isStart) => {
+            if (
+              state.setting.alarmMileageStart &&
+              isStart === 'false' &&
+              state.cars[0].info.nameCar !== ''
+            ) {
+              void AsyncStorage.setItem('isStart', 'true').then((res) => { console.log('SET', res) })
+              setVisibleMileage(true)
+            }
+          }
+        )
+      // value previously stored
+    } catch (e) {
+      console.log('ERROR_GET_ASYNCDATA', e)
+      // error reading value
     }
-  }, [])
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      void checkFirstRun()
+
+      if (state.setting.alarmMileagePeriod) {
+        periodTimeMileage()
+      }
+    }, []))
 
   // period alarm to update mileage
   const periodTimeMileage = (): void => {

@@ -18,8 +18,9 @@ import { TasksList } from '../components/TaskScreenComponents/TasksList'
 import { ModalPickNameCar } from '../components/CarInfoScreenComponents/ModalPickNameCar'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { editedCarInfo, initialStateCar } from '../components/Redux/CarsSlice'
-import { info } from 'expo/build/devtools/logger'
-import { getIndexCar, StateCar } from '../type'
+import * as Notifications from 'expo-notifications'
+import { getIndexCar } from '../type'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
@@ -79,6 +80,25 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
 
   useEffect(() => {
     /* setMiles(updateMiles(15)) */
+    // First, set the handler that will cause the notification
+    // to show the alert
+
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false
+      })
+    })
+    // Second, call the method
+
+    /*    Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Look at that notification',
+        body: "I'm so proud of myself!",
+      },
+      trigger: null,
+    }); */
   }, [])
 
   // **************************** Block HomeScreen for input NameCar ***************************************************
@@ -107,7 +127,20 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
           </View>
 
         <View style={(orientation < 3) ? { flex: 4 } : { flex: 1.5 }}>
-          <Text style={{ textAlign: 'center' }}> Current Task</Text>
+          <Text onPress={async () => await Notifications.scheduleNotificationAsync({
+            content: {
+              title: 'Look at that notification',
+              body: "I'm so proud of myself!",
+              priority: Notifications.AndroidNotificationPriority.MAX
+            },
+            trigger: {
+              hour: 16,
+              minute: 0,
+              repeats: true,
+              weekday: 3
+            }
+          })} style={{ textAlign: 'center' }}> Current Task</Text>
+          <Text onPress={async () => { await Notifications.cancelAllScheduledNotificationsAsync() }}>Cancel</Text>
           <TasksList handlePress={pressList} filterList={'last'}/>
         </View>
 

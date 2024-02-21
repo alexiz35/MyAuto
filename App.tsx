@@ -3,9 +3,13 @@ import { Provider } from 'react-redux'
 import { store, persistor } from './components/Redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { LogBox } from 'react-native'
+import { AppState, LogBox } from 'react-native'
 import 'firebase/compat/auth'
-import { JSX } from 'react'
+import { JSX, useEffect, useRef, useState } from 'react'
+import { useAppSelector } from './components/Redux/hook'
+import { NotificationComponent } from './components/NotificationComponent'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { CloseFunction } from './components/CloseFunction'
 
 /* export const Buffer = require('buffer/').Buffer */
 
@@ -28,12 +32,23 @@ export default function App (): JSX.Element {
   LogBox.ignoreLogs(['Warning: Selector unknown returned the root state when called.'])
   // Ignore all log notifications
   LogBox.ignoreAllLogs() */
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change',
+      (nextAppState) => { CloseFunction(nextAppState) }
+    )
+    return () => {
+      subscription.remove()
+    }
+  }, [])
+
   return (
     <SafeAreaProvider>
     <Provider store={store}>
 
       <PersistGate persistor={persistor} loading={null}>
         {/* <ThemeProvider theme={theme}> */}
+        <NotificationComponent/>
         <Navigation />
         {/* </ThemeProvider> */}
       </PersistGate>
