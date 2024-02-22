@@ -1,13 +1,12 @@
 import { Card, Checkbox, Divider, Icon, Text } from 'react-native-paper'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { changeAlarmStart } from '../Redux/SettingSlice'
 import { changeAlarmPeriod, changeAlarmPeriodNumber } from '../Redux/actions'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from '../../screens/SettingScreen'
 import * as Notifications from 'expo-notifications'
-import { NotificationRequest } from 'expo-notifications'
 import Toast from 'react-native-toast-message'
 
 export const useFirstMount = () => {
@@ -68,14 +67,6 @@ export const ControlCard = () => {
   }
 
   // ************************************************ PERIOD NOTIFICATION *********************************************
-  const pressAlarmPeriod = () => {
-    Alert.alert('Notification Start', 'Введенные данные не сохранятся', [
-      {
-        text: 'Ok',
-        onPress: async () => { await startPeriodNotification() },
-        style: 'default'
-      }])
-  }
   const startPeriodNotification = async () => {
     const listNotification = await Notifications.getAllScheduledNotificationsAsync()
     if (listNotification.length === 0) {
@@ -108,21 +99,27 @@ export const ControlCard = () => {
           /* text2: 'This is some something 👋' */
         })
       })
+        .catch((e) => { console.log('errorOkNotification', e) })
+    } else {
+      Toast.show({
+        type: 'info',
+        text1: 'Еженедельные напоминания уже запущены',
+        visibilityTime: 2500
+        /* text2: 'This is some something 👋' */
+      })
     }
   }
   const cancelNotification = () => {
     Notifications.cancelAllScheduledNotificationsAsync()
-      .then(async () => {
-        await Notifications.getAllScheduledNotificationsAsync()
-          .then(list => {
-            Toast.show({
-              type: 'error',
-              text1: 'Еженедельные напоминания отключены',
-              visibilityTime: 2500
-              /* text2: 'This is some something 👋' */
-            })
-          })
+      .then(() => {
+        Toast.show({
+          type: 'error',
+          text1: 'Еженедельные напоминания отключены',
+          visibilityTime: 2500
+          /* text2: 'This is some something 👋' */
+        })
       })
+      .catch((e) => { console.log('errorCancelNotification', e) })
   }
 
   useEffect(() => {
@@ -132,7 +129,7 @@ export const ControlCard = () => {
       cancelNotification()
     }
   }, [checkAlarmPeriod])
-  // -----------------------------------------------------------------------------
+  // ******************************************************************************************************************
 
   return (
     <Card style={{ marginVertical: 5 }}>
