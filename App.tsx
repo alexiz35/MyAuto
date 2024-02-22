@@ -10,6 +10,7 @@ import { useAppSelector } from './components/Redux/hook'
 import { NotificationComponent } from './components/NotificationComponent'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CloseFunction } from './components/CloseFunction'
+import Toast from 'react-native-toast-message'
 
 /* export const Buffer = require('buffer/').Buffer */
 
@@ -50,22 +51,10 @@ export default function App (): JSX.Element {
         {/* <ThemeProvider theme={theme}> */}
         <NotificationComponent/>
         <Navigation />
+        <Toast/>
         {/* </ThemeProvider> */}
       </PersistGate>
     </Provider>
     </SafeAreaProvider>
-    /* <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style='auto' />
-    </View> */
   )
 }
-
-/* const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'grey',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-}) */

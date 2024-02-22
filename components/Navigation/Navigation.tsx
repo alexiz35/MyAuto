@@ -11,7 +11,6 @@ import { Image, Platform, View } from 'react-native'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
 import AsyncStorage from '@react-native-async-storage/async-storage' */
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
 import TaskScreen from '../../screens/TaskScreen'
@@ -23,12 +22,11 @@ import { printToFile } from '../Print/Print'
 import { current } from '@reduxjs/toolkit' */
 import CarInfoScreen from '../../screens/CarInfoScreen'
 import SettingScreen from '../../screens/SettingScreen'
-
 import {
   useTheme,
   PaperProvider,
   Text,
-  IconButton, Surface, TouchableRipple, Icon, Dialog, Portal
+  IconButton, Surface, TouchableRipple, Icon
 } from 'react-native-paper'
 import { useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'

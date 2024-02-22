@@ -1,19 +1,30 @@
 import { Card, Checkbox, Divider, Icon, Text } from 'react-native-paper'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { changeAlarmStart } from '../Redux/SettingSlice'
 import { changeAlarmPeriod, changeAlarmPeriodNumber } from '../Redux/actions'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from '../../screens/SettingScreen'
+import * as Notifications from 'expo-notifications'
+import { NotificationRequest } from 'expo-notifications'
+import Toast from 'react-native-toast-message'
 
+export const useFirstMount = () => {
+  const ref = useRef()
+  useEffect(() => {
+    // @ts-expect-error
+    ref.current = true
+  }, [])
+  return ref.current
+}
 export const ControlCard = () => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const { colors } = useAppTheme()
+  const isFirst = useFirstMount()
 
-  // -----------------------------------------------------------------------------
-  // ****************************** ALARM section *********************************
+  // ************************************************ ALARM section ***************************************************
 
   const [checkAlarmStart, setCheckAlarmStart] = useState<
   'checked' | 'unchecked' | 'indeterminate'
@@ -55,6 +66,73 @@ export const ControlCard = () => {
         break
     }
   }
+
+  // ************************************************ PERIOD NOTIFICATION *********************************************
+  const pressAlarmPeriod = () => {
+    Alert.alert('Notification Start', 'Введенные данные не сохранятся', [
+      {
+        text: 'Ok',
+        onPress: async () => { await startPeriodNotification() },
+        style: 'default'
+      }])
+  }
+  const startPeriodNotification = async () => {
+    const listNotification = await Notifications.getAllScheduledNotificationsAsync()
+    if (listNotification.length === 0) {
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: true,
+          shouldSetBadge: false
+        })
+      })
+      void Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'Look at that notification',
+          body: 'Вам необходимо обновить пробег в программе ',
+          priority: Notifications.AndroidNotificationPriority.MAX
+        },
+        trigger: {
+          seconds: 10,
+          repeats: true
+          /* hour: 16,
+            minute: 0,
+            repeats: true,
+            weekday: 3 */
+        }
+      }).then(() => {
+        Toast.show({
+          type: 'success',
+          text1: 'Еженедельные напоминания запущены',
+          visibilityTime: 2500
+          /* text2: 'This is some something 👋' */
+        })
+      })
+    }
+  }
+  const cancelNotification = () => {
+    Notifications.cancelAllScheduledNotificationsAsync()
+      .then(async () => {
+        await Notifications.getAllScheduledNotificationsAsync()
+          .then(list => {
+            Toast.show({
+              type: 'error',
+              text1: 'Еженедельные напоминания отключены',
+              visibilityTime: 2500
+              /* text2: 'This is some something 👋' */
+            })
+          })
+      })
+  }
+
+  useEffect(() => {
+    if (checkAlarmPeriod === 'checked' && isFirst) {
+      void startPeriodNotification()
+    } else if ((checkAlarmPeriod === 'unchecked' && isFirst)) {
+      cancelNotification()
+    }
+  }, [checkAlarmPeriod])
+  // -----------------------------------------------------------------------------
 
   return (
     <Card style={{ marginVertical: 5 }}>

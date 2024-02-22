@@ -83,13 +83,6 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
     // First, set the handler that will cause the notification
     // to show the alert
 
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false
-      })
-    })
     // Second, call the method
 
     /*    Notifications.scheduleNotificationAsync({
@@ -130,7 +123,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
           <Text onPress={async () => await Notifications.scheduleNotificationAsync({
             content: {
               title: 'Look at that notification',
-              body: "I'm so proud of myself!",
+              body: 'Вам необходимо обновить пробег в программе ',
               priority: Notifications.AndroidNotificationPriority.MAX
             },
             trigger: {

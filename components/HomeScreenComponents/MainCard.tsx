@@ -79,7 +79,7 @@ export const MainCard = (): JSX.Element => {
               isStart === 'false' &&
               state.cars[0].info.nameCar !== ''
             ) {
-              void AsyncStorage.setItem('isStart', 'true').then((res) => { console.log('SET', res) })
+              void AsyncStorage.setItem('isStart', 'true')
               setVisibleMileage(true)
             }
           }
@@ -159,7 +159,6 @@ export const MainCard = (): JSX.Element => {
         <TouchableRipple style={styles.kmView}
                          rippleColor={colors.primary}
                          onPress={() => {
-                           setValueMileage(currentMiles.currentMileage)
                            setVisibleMileage(true)
                          }}>
           <>
