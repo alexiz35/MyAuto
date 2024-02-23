@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { Button, Divider, Icon, IconButton, TouchableRipple } from 'react-native-paper'
 import { JSX } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
@@ -76,19 +76,3 @@ export const CarsList = (): JSX.Element => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  /* iconText: {
-    flexDirection: 'row',
-    padding: 10,
-    alignItems: 'center'
-  },
-  text: {
-    paddingHorizontal: 5
-  }, */
-  viewText: {
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})

@@ -3,16 +3,12 @@ import { Provider } from 'react-redux'
 import { store, persistor } from './components/Redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { AppState, LogBox } from 'react-native'
+import { AppState } from 'react-native'
 import 'firebase/compat/auth'
-import { JSX, useEffect, useRef, useState } from 'react'
-import { useAppSelector } from './components/Redux/hook'
+import { JSX, useEffect } from 'react'
 import { NotificationComponent } from './components/NotificationComponent'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CloseFunction } from './components/CloseFunction'
 import Toast from 'react-native-toast-message'
-
-/* export const Buffer = require('buffer/').Buffer */
 
 export default function App (): JSX.Element {
   /*   const theme = createTheme({
@@ -49,9 +45,11 @@ export default function App (): JSX.Element {
 
       <PersistGate persistor={persistor} loading={null}>
         {/* <ThemeProvider theme={theme}> */}
-        <NotificationComponent/>
         <Navigation />
+
         <Toast/>
+        <NotificationComponent/>
+
         {/* </ThemeProvider> */}
       </PersistGate>
     </Provider>

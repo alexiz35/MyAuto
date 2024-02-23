@@ -1,5 +1,5 @@
 import { JSX, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { Button, Card, Dialog, Divider, Icon, Portal, Text } from 'react-native-paper'
 import { CarsList } from './CarsList'
 import { addedCar, initialStateCar } from '../Redux/CarsSlice'
@@ -9,8 +9,8 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { stylesSettingScreen } from '../../screens/SettingScreen'
 import { ModalPickNameCar } from '../CarInfoScreenComponents/ModalPickNameCar'
+import { stylesSettingScreen } from './StyleSettingScreen'
 
 export const CarsCard = (): JSX.Element => {
   const dispatch = useAppDispatch()

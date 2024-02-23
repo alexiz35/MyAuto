@@ -24,6 +24,9 @@ const settingSlice = createSlice({
     changeAlarmPeriod (state, action: PayloadAction<boolean>) {
       state.alarmMileagePeriod = action.payload
     },
+    changeAlarmPeriodNumber (state, action: PayloadAction<number>) {
+      state.alarmMileagePeriodNumber = action.payload
+    },
     setGoogle (state, action: PayloadAction<boolean>) {
       state.isGoogle = action.payload
     },
@@ -37,8 +40,8 @@ const settingSlice = createSlice({
 // export them as named exports from this "slice" file
 export const {
   themeChanged, changeAlarmStart,
-  changeAlarmPeriod, setGoogle,
-  updateSetting
+  changeAlarmPeriod, changeAlarmPeriodNumber,
+  setGoogle, updateSetting
 } = settingSlice.actions
 
 // Export the slice reducer as the default export

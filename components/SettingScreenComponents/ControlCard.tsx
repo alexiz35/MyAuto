@@ -2,12 +2,10 @@ import { Card, Checkbox, Divider, Icon, Text } from 'react-native-paper'
 import { View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useEffect, useRef, useState } from 'react'
-import { changeAlarmStart } from '../Redux/SettingSlice'
-import { changeAlarmPeriod, changeAlarmPeriodNumber } from '../Redux/actions'
+import { changeAlarmPeriod, changeAlarmPeriodNumber, changeAlarmStart } from '../Redux/SettingSlice'
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { stylesSettingScreen } from '../../screens/SettingScreen'
-import * as Notifications from 'expo-notifications'
-import Toast from 'react-native-toast-message'
+import { stylesSettingScreen } from './StyleSettingScreen'
+import { cancelNotification, startPeriodNotification } from '../NotificationComponent'
 
 export const useFirstMount = () => {
   const ref = useRef()
@@ -17,6 +15,7 @@ export const useFirstMount = () => {
   }, [])
   return ref.current
 }
+
 export const ControlCard = () => {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
@@ -28,12 +27,15 @@ export const ControlCard = () => {
   const [checkAlarmStart, setCheckAlarmStart] = useState<
   'checked' | 'unchecked' | 'indeterminate'
   >(state.setting.alarmMileageStart ? 'checked' : 'unchecked')
+
   const [checkAlarmPeriod, setCheckAlarmPeriod] = useState<
   'checked' | 'unchecked' | 'indeterminate'
   >(state.setting.alarmMileagePeriod ? 'checked' : 'unchecked')
+
   const [checkAlarmPeriodNumber, setCheckAlarmPeriodNumber] = useState<
   'checked' | 'unchecked' | 'indeterminate'
   >(state.setting.alarmMileagePeriodNumber === 2 ? 'unchecked' : 'checked')
+
   const pressAlarm = (typeCheck: string): void => {
     switch (typeCheck) {
       case 'alarmStart':
@@ -67,7 +69,7 @@ export const ControlCard = () => {
   }
 
   // ************************************************ PERIOD NOTIFICATION *********************************************
-  const startPeriodNotification = async () => {
+  /* const startPeriodNotification = async () => {
     const listNotification = await Notifications.getAllScheduledNotificationsAsync()
     if (listNotification.length === 0) {
       Notifications.setNotificationHandler({
@@ -86,17 +88,17 @@ export const ControlCard = () => {
         trigger: {
           seconds: 10,
           repeats: true
-          /* hour: 16,
+          /!* hour: 16,
             minute: 0,
             repeats: true,
-            weekday: 3 */
+            weekday: 3 *!/
         }
       }).then(() => {
         Toast.show({
           type: 'success',
           text1: 'Еженедельные напоминания запущены',
           visibilityTime: 2500
-          /* text2: 'This is some something 👋' */
+          /!* text2: 'This is some something 👋' *!/
         })
       })
         .catch((e) => { console.log('errorOkNotification', e) })
@@ -105,22 +107,10 @@ export const ControlCard = () => {
         type: 'info',
         text1: 'Еженедельные напоминания уже запущены',
         visibilityTime: 2500
-        /* text2: 'This is some something 👋' */
+        /!* text2: 'This is some something 👋' *!/
       })
     }
-  }
-  const cancelNotification = () => {
-    Notifications.cancelAllScheduledNotificationsAsync()
-      .then(() => {
-        Toast.show({
-          type: 'error',
-          text1: 'Еженедельные напоминания отключены',
-          visibilityTime: 2500
-          /* text2: 'This is some something 👋' */
-        })
-      })
-      .catch((e) => { console.log('errorCancelNotification', e) })
-  }
+  } */
 
   useEffect(() => {
     if (checkAlarmPeriod === 'checked' && isFirst) {

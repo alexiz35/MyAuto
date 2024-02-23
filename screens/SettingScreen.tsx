@@ -1,7 +1,6 @@
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { type RootStackParamList } from '../components/Navigation/TypeNavigation'
 import {
-  StyleSheet,
   TouchableHighlight,
   ScrollView
 } from 'react-native'
@@ -41,7 +40,6 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
 
           <ControlCard/>
 
-            {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
           <TouchableHighlight
               onPress={async () => {
                 await AsyncStorage.clear()
@@ -54,19 +52,3 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
   )
 }
 export default SettingScreen
-
-export const stylesSettingScreen = StyleSheet.create({
-  iconText: {
-    flexDirection: 'row',
-    padding: 10,
-    alignItems: 'center'
-  },
-  text: {
-    paddingHorizontal: 5
-  },
-  viewText: {
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})

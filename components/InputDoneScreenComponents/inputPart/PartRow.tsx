@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import { StatePart } from '../../../type'
 import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
 import { JSX, useState } from 'react'
-import { delPart } from '../../Redux/actions'
+import { delPart } from '../../../oldFiles/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { delStateCarReducer } from '../../Redux/CarsSlice'
 
@@ -65,7 +65,7 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
           />
         )} */
 
-        onPress={() => handlePress(item)}
+        onPress={() => { handlePress(item) }}
       >
 
         <Card.Title
@@ -130,7 +130,7 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delStateCarReducer({type:'parts', numberCar: carId, id: item.id }))
+                         dispatch(delStateCarReducer({ type: 'parts', numberCar: carId, id: item.id }))
                          closeMenu()
                        }}
             />

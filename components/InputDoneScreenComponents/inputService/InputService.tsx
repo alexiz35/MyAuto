@@ -5,7 +5,7 @@ import {
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { StateService } from '../../../type'
-import { addService, editService } from '../../Redux/actions'
+import { addService, editService } from '../../../oldFiles/actions'
 import InputServiceComponent from './InputServiceComponent'
 import { List, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
@@ -50,7 +50,7 @@ const InputService = (): JSX.Element => {
   const handleOnPress = (): void => {
     if (!openAccordion) {
       setIsList(false)
-    } else setTimeout(() => setIsList(true), 100)
+    } else setTimeout(() => { setIsList(true) }, 100)
     setOpenAccordion(!openAccordion)
     clearInput()
   }
@@ -63,8 +63,8 @@ const InputService = (): JSX.Element => {
   const handleOk = (dataForm: StateService): void => {
     setTimeout(() =>
       isEditService
-        ? dispatch(editStateCarReducer({type:'services',numberCar:carId, item: dataForm}))
-        : dispatch(addStateCarReducer({type:'services',numberCar:carId,item: dataForm}))
+        ? dispatch(editStateCarReducer({ type: 'services', numberCar: carId, item: dataForm }))
+        : dispatch(addStateCarReducer({ type: 'services', numberCar: carId, item: dataForm }))
     , 100)
     handleOnPress()
   }
@@ -99,7 +99,7 @@ const InputService = (): JSX.Element => {
 
     {isList &&
       <View style={styles.flatList}>
-        <ToggleButton.Row onValueChange={value => setDateList(value)}
+        <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                           value={dateList}
                           style={{ alignSelf: 'flex-end', marginBottom: 10 }}
         >

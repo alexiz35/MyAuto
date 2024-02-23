@@ -1,6 +1,6 @@
 import { JSX, useEffect, useState } from 'react'
 import { Button, Card, Checkbox, Divider, Icon, Surface, Text } from 'react-native-paper'
-import { Alert, Image, StyleSheet, View } from 'react-native'
+import { Alert, Image, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import * as WebBrowser from 'expo-web-browser'
@@ -18,6 +18,7 @@ import { addedToken } from '../Redux/TokenSlice'
 import { updateStateCars } from '../Redux/CarsSlice'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
 import { updatedAllSeller } from '../Redux/SellerSlice'
+import { stylesSettingScreen } from './StyleSettingScreen'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -339,9 +340,9 @@ export const GoogleCard = (): JSX.Element => {
   return (
     <Card style={{ marginVertical: 5 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View style={styles.iconText}>
+        <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
-          <Text style={styles.text}>Использовать GoogleDisk для бэкапа</Text>
+          <Text style={stylesSettingScreen.text}>Использовать GoogleDisk для бэкапа</Text>
 
         </View>
         <View style={{ paddingRight: 10 }}>
@@ -363,7 +364,7 @@ export const GoogleCard = (): JSX.Element => {
                 uri: String(userInfo?.user.photo)
               }}
             />
-            <Text style={styles.text}>{userInfo?.user.name}</Text>
+            <Text style={stylesSettingScreen.text}>{userInfo?.user.name}</Text>
           </Surface>
         }
         </View>
@@ -416,6 +417,7 @@ export const GoogleCard = (): JSX.Element => {
   )
 }
 
+/*
 const styles = StyleSheet.create({
   iconText: {
     flexDirection: 'row',
@@ -431,3 +433,4 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+*/

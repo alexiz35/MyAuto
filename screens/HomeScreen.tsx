@@ -20,7 +20,6 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { editedCarInfo, initialStateCar } from '../components/Redux/CarsSlice'
 import * as Notifications from 'expo-notifications'
 import { getIndexCar } from '../type'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
@@ -50,29 +49,31 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
     }
   }
 
-  // -----------------------------block orientation screen--------------------------
+  // ****************************** block orientation screen ****************************************************
   const [orientation, setOrientation] = useState(0)
 
   const checkOrientation = async (): Promise<void> => {
     const orientation: Orientation = await ScreenOrientation.getOrientationAsync()
     setOrientation(orientation)
   }
-  const handleOrientationChange = (): void => {
-    void checkOrientation()
-  }
 
   useFocusEffect(
     useCallback(() => {
       const subscription = ScreenOrientation.addOrientationChangeListener(
-        handleOrientationChange
+        checkOrientation
       )
 
       return () => {
         ScreenOrientation.removeOrientationChangeListener(subscription)
       }
     }, []))
-  // --------------------------------------------
-
+  // *********************************Checking NOTIFICATION in first run App ******************************
+  /* useEffect(() => {
+    if (state.setting.alarmMileagePeriod) {
+      void startPeriodNotification()
+    }
+  }, []) */
+  // ******************************************************************************************************
   const pressList = () => {
     return 1
   }

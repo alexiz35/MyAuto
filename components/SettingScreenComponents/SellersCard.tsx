@@ -1,12 +1,13 @@
 import { JSX } from 'react'
 import { Button, Card, Icon } from 'react-native-paper'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { deletedAllSeller } from '../Redux/SellerSlice'
 import { useAppDispatch } from '../Redux/hook'
 // eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useAppTheme } from '../../CommonComponents/Theme'
+import { stylesSettingScreen } from './StyleSettingScreen'
 
 export const SellersCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -18,16 +19,16 @@ export const SellersCard = (): JSX.Element => {
       <View
         style={{ flexDirection: 'row', justifyContent: 'space-between' }}
       >
-        <View style={styles.iconText}>
+        <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
           <Button
-            style={styles.text}
+            style={stylesSettingScreen.text}
             onPress={() => { navigation.navigate('SellerScreen') }}
           >
             Список поставщиков
           </Button>
           <Button
-            style={styles.text}
+            style={stylesSettingScreen.text}
             onPress={() => dispatch(deletedAllSeller())}
           >
             RESET
@@ -42,19 +43,3 @@ export const SellersCard = (): JSX.Element => {
 
   )
 }
-
-const styles = StyleSheet.create({
-  iconText: {
-    flexDirection: 'row',
-    padding: 10,
-    alignItems: 'center'
-  },
-  text: {
-    paddingHorizontal: 5
-  },
-  viewText: {
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
