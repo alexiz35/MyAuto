@@ -81,18 +81,19 @@ export const averageFuel = (selectDate: TypeSelect, dataState: StateCar): number
         new Date(value.dateFuel).getFullYear() === Number(selectDate.valueYear) &&
         new Date(value.dateFuel).getMonth() === selectDate.valueMonth)
       break
-    case 'period':
+    case 'period': {
       const { startDate, endDate } = createPeriodDate(selectDate)
       filteredArrayByDate = dataState.fuel.filter((value) => {
         const tempDate = new Date(value.dateFuel)
         return startDate <= tempDate && tempDate <= endDate
       })
+    }
       break
     default: {
       filteredArrayByDate = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === Number(selectDate.valueYear))
     }
   }
-  if (filteredArrayByDate.length == 0) return 0
+  if (filteredArrayByDate.length === 0) return 0
   // array is sorted by ascending order
   filteredArrayByDate.sort((a, b) => a.mileageFuel - b.mileageFuel)
   console.log('ARRAY', filteredArrayByDate)
