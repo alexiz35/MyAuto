@@ -5,6 +5,7 @@ import { useAppSelector } from '../components/Redux/hook'
 import { JSX, useEffect, useState } from 'react'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import {
+  averageFuel,
   fuelMiles,
   initialBarChart,
   monthDataFuelChart,
@@ -24,7 +25,7 @@ import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftCha
 import { getIndexCar } from '../type'
 
 export interface TypeSelect {
-  type: string
+  type: 'year' | 'month' | 'period'
   valueYear?: string
   valueMonth?: number
   period?: {
@@ -44,6 +45,7 @@ const StatScreen = (): JSX.Element => {
 
   // топливо за период
   const [sumFuel, setSumFuel] = useState<number>(0)
+
   const [volumeFuel, setVolumeFuel] = useState<number>(0)
   const [sumParts, setSumParts] = useState(0)
   const [sumOther, setSumOther] = useState(0)
@@ -172,7 +174,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>Средний расход </Text>
-            <Text style={styles.textKm}>{String(fuelMiles(volumeFuel, sumMileage))} (l/100km)</Text>
+            <Text style={styles.textKm}>{String(averageFuel(selectedDate, state))} (l/100km)</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>Использовано на ремонт</Text>
@@ -188,7 +190,6 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
 
     </BackgroundView>
     </ScrollView>
-
   )
 }
 
