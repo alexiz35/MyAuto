@@ -49,7 +49,7 @@ export const yearDataPartsBarChart = (searchYear = new Date().getFullYear(), dat
   })
   return tempData
 }
-export const yearDataAllChart = (searchYear = new Date().getFullYear(), dataState: StateCar): any => {
+export const yearDataAllChart = (searchYear = new Date().getFullYear(), dataState: StateCar): { all: number[], fuel: number[], parts: number[], other: number[] } => {
   const fuel = yearDataFuelBarChart(searchYear, dataState)
   const parts = yearDataPartsBarChart(searchYear, dataState)
   const other = yearDataOtherBarChart(searchYear, dataState)
@@ -58,7 +58,7 @@ export const yearDataAllChart = (searchYear = new Date().getFullYear(), dataStat
 }
 // *************************************************************************************************
 // ------------------------------------ function select Year date ----------------------------------
-export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataState: StateCar): any => {
+export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataState: StateCar): { amountFuel: number, volumeFuel: number } => {
   const selectYear = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === searchYear)
 
   const amountFuel = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.AmountFuel), 0)
@@ -130,7 +130,7 @@ export const yearDataOtherChart = (searchYear = new Date().getFullYear(), dataSt
   return selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.amountCostOther), 0)
 }
 // ----------------------------------- function select Month Date ----------------------------------
-export const monthDataFuelChart = (searchDate: TypeSelect, dataState: StateCar): any => {
+export const monthDataFuelChart = (searchDate: TypeSelect, dataState: StateCar): { amountFuel: number, volumeFuel: number } => {
   const tempArrayFuelSelectMonth = dataState.fuel.filter((value) =>
     // @ts-expect-error valueYear?undefined
     new Date(value.dateFuel).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
@@ -183,7 +183,7 @@ const createPeriodDate = (searchDate: TypeSelect): { startDate: Date, endDate: D
     endDate
   }
 }
-export const periodDataFuelChart = (searchDate: TypeSelect, dataState: StateCar): any => {
+export const periodDataFuelChart = (searchDate: TypeSelect, dataState: StateCar): { amountFuel: number, volumeFuel: number } => {
   const { startDate, endDate } = createPeriodDate(searchDate)
   const filterDate = dataState.fuel.filter((value) => {
     const tempDate = new Date(value.dateFuel)
