@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { JSX, useState } from 'react'
 import { useAppSelector } from '../Redux/hook'
-import { TypeSelect } from '../../screens/StatScreen'
+import { NAME_MONTH, TypePickedDate } from '../../screens/StatScreen'
 import WheelPickerSelectDate from './WheelPickerSelectDate'
 import WheelPickerSelectDouble, { TypeResultPicker } from './WheelPickerSelectDouble'
 import { Dialog, Divider, Button, RadioButton, Portal, Modal } from 'react-native-paper'
@@ -9,29 +9,49 @@ import { useAppTheme } from '../../CommonComponents/Theme'
 import { getIndexCar } from '../../type'
 
 interface Props {
-  handleOk: (selectModal: TypeSelect) => void
+  handleOk: (selectModal: TypePickedDate) => void
   handleCancel: () => void
+  selectedDate: TypePickedDate
 }
 
-export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element => {
+export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props): JSX.Element => {
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
-  const MONTH = 'Январь,февраль,Март,Апрель,Май,Июнь,Июль, Август, Сентябрь, Октябрь, Ноябрь, Декабрь'.split(',')
   const { colors } = useAppTheme()
 
-  const [checked, setChecked] = useState<'year' | 'month' | 'period' | string>('year')
+  const [checked, setChecked] = useState<'year' | 'month' | 'period' | string >('year')
   const [visibleYear, setVisibleYear] = useState(false)
   const [visibleMonth, setVisibleMonth] = useState(false)
   const [visibleStartDate, setVisibleStartDate] = useState(false)
   const [visibleEndDate, setVisibleEndDate] = useState(false)
 
-  const [checkedYear, setCheckedYear] = useState<string>(String(new Date().getFullYear()))
+  const [pickedYear, setPickedYear] = useState<string>(selectedDate.valueYear === undefined
+    ? String(new Date().getFullYear())
+    : selectedDate.valueYear)
 
-  const [checkedMonth, setCheckedMonth] = useState<string>(String(MONTH[new Date().getMonth()]))
-  const [checkedMonthYear, setCheckedMonthYear] = useState<string>(String(new Date().getFullYear()))
-  const [checkedStartMonth, setCheckedStartMonth] = useState<string>(String(MONTH[new Date().getMonth()]))
-  const [checkedStartYear, setCheckedStartYear] = useState<string>(String(new Date().getFullYear()))
-  const [checkedEndMonth, setCheckedEndMonth] = useState<string>(String(MONTH[new Date().getMonth()]))
-  const [checkedEndYear, setCheckedEndYear] = useState<string>(String(new Date().getFullYear()))
+  const [pickedMonth, setPickedMonth] = useState<string>(selectedDate.valueMonth === undefined
+    ? String(NAME_MONTH[new Date().getMonth()])
+    : String(NAME_MONTH[selectedDate.valueMonth])
+  )
+  const [pickedMonthYear, setPickedMonthYear] = useState<string>(selectedDate.valueYear === undefined
+    ? String(new Date().getFullYear())
+    : String(selectedDate.valueYear)
+  )
+  const [pickedStartMonth, setPickedStartMonth] = useState<string>(selectedDate.period.valueStartMonth === undefined
+    ? String(NAME_MONTH[new Date().getMonth()])
+    : String(NAME_MONTH[selectedDate.period.valueStartMonth])
+  )
+  const [pickedStartYear, setPickedStartYear] = useState<string>(selectedDate.period.valueStartYear === undefined
+    ? String(new Date().getFullYear())
+    : String(selectedDate.period.valueStartYear)
+  )
+  const [pickedEndMonth, setPickedEndMonth] = useState<string>(selectedDate.period.valueEndMonth === undefined
+    ? String(NAME_MONTH[new Date().getMonth()])
+    : String(NAME_MONTH[selectedDate.period.valueEndMonth])
+  )
+  const [pickedEndYear, setPickedEndYear] = useState<string>(selectedDate.period.valueEndYear === undefined
+    ? String(new Date().getFullYear())
+    : String(selectedDate.period.valueEndYear)
+  )
 
   const createListYears = (): string[] => {
     const minYear = new Date(state.info.dateBuy).getFullYear()
@@ -46,24 +66,40 @@ export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element 
   }
 
   const resultPickerYear = (result: string): void => {
-    setCheckedYear(result)
+    setPickedYear(result)
     setVisibleYear(false)
   }
   const resultPickerMonth = (result: TypeResultPicker): void => {
-    setCheckedMonth(result.left)
-    setCheckedMonthYear(result.right)
+    console.log('RESULT', result)
+    setPickedMonth(result.left)
+    setPickedMonthYear(result.right)
     setVisibleMonth(false)
   }
   const resultPickerStartDate = (result: TypeResultPicker): void => {
-    setCheckedStartMonth(result.left)
-    setCheckedStartYear(result.right)
+    setPickedStartMonth(result.left)
+    setPickedStartYear(result.right)
     setVisibleStartDate(false)
   }
   const resultPickerEndDate = (result: TypeResultPicker): void => {
-    setCheckedEndMonth(result.left)
-    setCheckedEndYear(result.right)
+    setPickedEndMonth(result.left)
+    setPickedEndYear(result.right)
 
     setVisibleEndDate(false)
+  }
+
+  const pressConfirm = (): TypePickedDate => {
+    return {
+      type: checked,
+      valueYear: pickedYear,
+      valueMonth: NAME_MONTH.indexOf(pickedMonth),
+      valueMonthYear: pickedMonthYear,
+      period: {
+        valueStartMonth: NAME_MONTH.indexOf(pickedStartMonth),
+        valueStartYear: pickedStartYear,
+        valueEndMonth: NAME_MONTH.indexOf(pickedEndMonth),
+        valueEndYear: pickedEndYear
+      }
+    }
   }
 
   return (
@@ -82,15 +118,15 @@ export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element 
             position={'leading'}
           />
               <Button onPress={ () => { setVisibleYear(true) }} disabled={checked !== 'year'} mode={'elevated'}>
-                <Text>{String(checkedYear)}</Text>
+                <Text>{String(pickedYear)}</Text>
               </Button>
         <Portal>
           <Modal visible={visibleYear} style={{ alignItems: 'center' }} onDismiss={() => { setVisibleYear(false) }}>
-            <WheelPickerSelectDate list={createListYears()} handlerEnterPicker={resultPickerYear}/>
+            <WheelPickerSelectDate list={createListYears()} handlerEnterPicker={resultPickerYear} initial={pickedYear}/>
           </Modal>
         </Portal>
             </View>
-        <Divider horizontalInset bold/>
+        <Divider bold style={{ marginVertical: 10 }}/>
         {
           // -------------------------------------- select Month -------------------------------------------------------
         }
@@ -101,17 +137,18 @@ export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element 
           value={'month'}
         />
           <Button onPress={ () => { setVisibleMonth(true) }} disabled={checked !== 'month'} mode={'elevated'}>
-            <Text>{String(checkedMonth)} </Text>
-            <Text> {String(checkedMonthYear)}</Text>
+            <Text>{String(pickedMonth)} </Text>
+            <Text> {String(pickedMonthYear)}</Text>
           </Button>
 
         </View>
         <Portal>
           <Modal visible={visibleMonth} style={{ alignItems: 'center' }} onDismiss={() => { setVisibleMonth(false) }}>
-            <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerMonth}/>
+            <WheelPickerSelectDouble listLeft={NAME_MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerMonth}
+                                     initial={{ left: pickedMonth, right: pickedMonthYear }}/>
           </Modal>
         </Portal>
-        <Divider style={{ marginBottom: 20 }}/>
+        <Divider bold style={{ marginVertical: 10 }}/>
         {
           // -------------------------------------- select Period ------------------------------------------------------}
         }
@@ -123,27 +160,31 @@ export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element 
           />
           <View style={{ flexDirection: 'column', gap: 10 }}>
             <Button onPress={() => { setVisibleStartDate(true) }} disabled={checked !== 'period'} mode={'elevated'}>
-              <Text>{`с  ${String(checkedStartMonth)}`}</Text>
-              <Text style={{ paddingHorizontal: 2 }}>{` ${String(checkedStartYear)}`}</Text>
+              <Text>{`с  ${String(pickedStartMonth)}`}</Text>
+              <Text style={{ paddingHorizontal: 2 }}>{` ${String(pickedStartYear)}`}</Text>
             </Button>
 
             <Button onPress={() => { setVisibleEndDate(true) }} disabled={checked !== 'period'} mode={'elevated'}>
-              <Text>{`до ${String(checkedEndMonth)}`}</Text>
-              <Text style={{ paddingHorizontal: 2 }}>{` ${String(checkedEndYear)}`}</Text>
+              <Text>{`до ${String(pickedEndMonth)}`}</Text>
+              <Text style={{ paddingHorizontal: 2 }}>{` ${String(pickedEndYear)}`}</Text>
             </Button>
           </View>
         </View>
             <Portal>
               <Modal visible={visibleStartDate} style={{ alignItems: 'center' }} onDismiss={() => { setVisibleStartDate(false) }}>
-                <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerStartDate}/>
+                <WheelPickerSelectDouble listLeft={NAME_MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerStartDate}
+                                         initial={{ left: pickedStartMonth, right: pickedStartYear }}/>
               </Modal>
             </Portal>
             <Portal>
               <Modal visible={visibleEndDate} style={{ alignItems: 'center' }} onDismiss={() => { setVisibleEndDate(false) }}>
-                <WheelPickerSelectDouble listLeft={MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerEndDate}/>
+                <WheelPickerSelectDouble listLeft={NAME_MONTH} listRight={createListYears()} handlerEnterPicker={resultPickerEndDate}
+                                         initial={{ left: pickedEndMonth, right: pickedEndYear }}/>
               </Modal>
             </Portal>
           </RadioButton.Group>
+          <Divider bold style={{ marginTop: 10 }}/>
+
         </Dialog.Content>
 
       {
@@ -151,35 +192,38 @@ export const SelectDateModal = ({ handleOk, handleCancel }: Props): JSX.Element 
         }
         <Dialog.Actions>
           <Button
+            textColor={colors.error}
+            onPress={() => {
+              handleCancel()
+            }}
+          >CANCEL</Button>
+          <Button
             /* title="CONFIRM" */
             onPress={() => {
-              switch (checked) {
-                case 'year': handleOk({ type: checked, valueYear: checkedYear })
-                  break
-                case 'month': handleOk({ type: checked, valueYear: checkedMonthYear, valueMonth: MONTH.indexOf(checkedMonth) })
-                  break
-                case 'period': handleOk({
-                  type: checked,
-                  period: {
-                    valueStartMonth: MONTH.indexOf(checkedStartMonth),
-                    valueStartYear: checkedStartYear,
-                    valueEndMonth: MONTH.indexOf(checkedEndMonth),
-                    valueEndYear: checkedEndYear
-                  }
-                })
-                  break
-                default: break
-              }
+              handleOk(pressConfirm())
+              /*   switch (checked) {
+                  case 'year': handleOk({ type: checked, valueYear: pickedYear })
+                    break
+                  case 'month': handleOk({ type: checked, valueYear: pickedMonthYear, valueMonth: NAME_MONTH.indexOf(pickedMonth) })
+                    break
+                  case 'period': handleOk({
+                    type: checked,
+                    period: {
+                      valueStartMonth: NAME_MONTH.indexOf(pickedStartMonth),
+                      valueStartYear: pickedStartYear,
+                      valueEndMonth: NAME_MONTH.indexOf(pickedEndMonth),
+                      valueEndYear: pickedEndYear
+                    }
+                  })
+                    break
+                  default: break
+                }
+              } */
             }}
             textColor={colors.tertiary}
 
           >CONFIRM</Button>
-          <Button
-            textColor={colors.error}
-                  onPress={() => {
-                    handleCancel()
-                  }}
-                  >CANCEL</Button>
+
         </Dialog.Actions>
     </View>
   )

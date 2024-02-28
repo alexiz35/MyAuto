@@ -5,6 +5,7 @@ import { useAppTheme } from '../../CommonComponents/Theme'
 import { Button } from 'react-native-paper'
 
 interface PropsPicker {
+  initial: TypeResultPicker
   listLeft: string[]
   listRight: string[]
   handlerEnterPicker: (result: TypeResultPicker) => void
@@ -14,11 +15,11 @@ export interface TypeResultPicker {
   right: string
 }
 
-const WheelPickerSelectDouble = ({ listLeft, listRight, handlerEnterPicker }: PropsPicker): JSX.Element => {
+const WheelPickerSelectDouble = ({ listLeft, listRight, handlerEnterPicker, initial }: PropsPicker): JSX.Element => {
   const { colors } = useAppTheme()
-
-  const [checkedLeft, setCheckedLeft] = useState('')
-  const [checkedRight, setCheckedRight] = useState('')
+  console.log('Picker', initial, listLeft, listRight)
+  const [checkedLeft, setCheckedLeft] = useState(initial.left)
+  const [checkedRight, setCheckedRight] = useState(initial.right)
 
   return (
     <View style={{ backgroundColor: colors.background }}>
@@ -27,7 +28,7 @@ const WheelPickerSelectDouble = ({ listLeft, listRight, handlerEnterPicker }: Pr
       /* backgroundColor={'#8f8b8b'} */
       height={300}
       width={150}
-      initialSelectedIndex={3}
+      initialSelectedIndex={listLeft.indexOf(initial.left)}
       haptics={true}
       items={listLeft.map(name => ({ label: name, value: '' }))}
       onChange={({ item }) => {
@@ -38,7 +39,7 @@ const WheelPickerSelectDouble = ({ listLeft, listRight, handlerEnterPicker }: Pr
       /* backgroundColor={'#8f8b8b'} */
       height={300}
       width={150}
-      initialSelectedIndex={3}
+      initialSelectedIndex={listRight.indexOf(initial.right)}
       haptics={true}
       items={listRight.map(name => ({ label: name, value: '' }))}
       onChange={({ item }) => {

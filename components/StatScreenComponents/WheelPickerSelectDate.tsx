@@ -7,9 +7,10 @@ import { useAppTheme } from '../../CommonComponents/Theme'
 interface PropsPicker {
   list: string[]
   handlerEnterPicker: (result: string) => void
+  initial: string
 }
 
-const WheelPickerSelectDate = ({ list, handlerEnterPicker }: PropsPicker): JSX.Element => {
+const WheelPickerSelectDate = ({ list, handlerEnterPicker, initial }: PropsPicker): JSX.Element => {
   const [checked, setChecked] = useState('')
   const { colors } = useAppTheme()
 
@@ -19,7 +20,7 @@ const WheelPickerSelectDate = ({ list, handlerEnterPicker }: PropsPicker): JSX.E
       /* backgroundColor={'#FFFFFF'} */
       height={300}
       /* width={150} */
-      initialSelectedIndex={3}
+      initialSelectedIndex={list.indexOf(initial)}
       haptics={true}
       items={list.map(name => ({ label: name, value: '' }))}
       onChange={({ item }) => {

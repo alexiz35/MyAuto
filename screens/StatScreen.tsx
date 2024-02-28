@@ -6,7 +6,6 @@ import { JSX, useEffect, useState } from 'react'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import {
   averageFuel,
-  fuelMiles,
   initialBarChart,
   monthDataFuelChart,
   monthDataMilesChart,
@@ -24,22 +23,36 @@ import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftCha
 import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
 import { getIndexCar } from '../type'
 
-export interface TypeSelect {
-  type: 'year' | 'month' | 'period'
-  valueYear?: string
-  valueMonth?: number
-  period?: {
+export interface TypePickedDate {
+  type: 'year' | 'month' | 'period' | string
+  valueYear: string
+  valueMonth: number
+  valueMonthYear: string
+  period: {
     valueStartYear: string
     valueStartMonth: number
     valueEndYear: string
     valueEndMonth: number
   }
 }
+export const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
+
+export const initialDate: TypePickedDate = {
+  type: 'year',
+  valueYear: String(new Date().getFullYear()),
+  valueMonth: new Date().getMonth(),
+  valueMonthYear: String(new Date().getFullYear()),
+  period: {
+    valueStartYear: String(new Date().getFullYear()),
+    valueStartMonth: new Date().getMonth(),
+    valueEndYear: String(new Date().getFullYear()),
+    valueEndMonth: new Date().getMonth()
+  }
+
+}
 
 const StatScreen = (): JSX.Element => {
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
-
-  const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
 
   const [dataBarChart, setDataBarChart] = useState({ all: initialBarChart, fuel: initialBarChart, parts: initialBarChart, other: initialBarChart })
 
@@ -51,9 +64,7 @@ const StatScreen = (): JSX.Element => {
   const [sumOther, setSumOther] = useState(0)
   const [sumMileage, setSumMileage] = useState<number>(0)
   // выбранная дата
-  const [selectedDate, setSelectedDate] = useState<TypeSelect>(
-    { type: 'year', valueYear: String(new Date().getFullYear()) }
-  )
+  const [selectedDate, setSelectedDate] = useState<TypePickedDate>(initialDate)
   const [textButtonDate, setButtonDate] = useState<string | undefined>(undefined)
 
   const [visiblePickDate, setVisiblePickDate] = useState(false)
@@ -66,7 +77,7 @@ const StatScreen = (): JSX.Element => {
     } else { return 0 }
   } */
 
-  const selectTypeDate = (selectModal: TypeSelect): void => {
+  const selectTypeDate = (selectModal: TypePickedDate): void => {
     switch (selectModal.type) {
       case 'year':
         setButtonDate(selectModal.valueYear)
@@ -104,7 +115,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
   const handleCancel = (): void => {
     setVisiblePickDate(false)
   }
-  const handleOk = (selectModal: TypeSelect): void => {
+  const handleOk = (selectModal: TypePickedDate): void => {
     setVisiblePickDate(false)
     setSelectedDate(selectModal)
   }
@@ -143,7 +154,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
       }
       <Portal>
         <Dialog visible={visiblePickDate} onDismiss={() => { setVisiblePickDate(false) }}>
-          <SelectDateModal handleCancel={handleCancel} handleOk={handleOk}/>
+          <SelectDateModal handleCancel={handleCancel} handleOk={handleOk} selectedDate={selectedDate}/>
         </Dialog>
         </Portal>
 
