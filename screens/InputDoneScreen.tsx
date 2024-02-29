@@ -6,6 +6,7 @@ import InputPart from '../components/InputDoneScreenComponents/inputPart/InputPa
 import BackgroundView from '../CommonComponents/BackgroundView'
 import InputDoc from '../components/InputDoneScreenComponents/inputDoc/InputDoc'
 import { SegmentedButtons } from 'react-native-paper'
+// eslint-disable-next-line import/named
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { useFocusEffect } from '@react-navigation/native'
 

@@ -74,7 +74,6 @@ export const yearDataMilesChart = (searchYear = new Date().getFullYear(), dataSt
   //* *****************************************************************************
   selectMiles.splice(0, 1) // temp string
   //* *****************************************************************************
-
   const minMiles = (arr: number[]): number => Math.min(...arr)
   const maxMiles = (arr: number[]): number => Math.max(...arr)
   return maxMiles(selectMiles) - minMiles(selectMiles)
@@ -90,7 +89,6 @@ export const yearDataOtherChart = (searchYear = new Date().getFullYear(), dataSt
 // ----------------------------------- function select Month Date ----------------------------------
 export const monthDataFuelChart = (searchDate: TypePickedDate, dataState: StateCar): { amountFuel: number, volumeFuel: number } => {
   const tempArrayFuelSelectMonth = dataState.fuel.filter((value) =>
-    // @ts-expect-error valueYear?undefined
     new Date(value.dateFuel).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
     new Date(value.dateFuel).getMonth() === searchDate.valueMonth
   )
@@ -100,7 +98,6 @@ export const monthDataFuelChart = (searchDate: TypePickedDate, dataState: StateC
 }
 export const monthDataPartsChart = (searchDate: TypePickedDate, dataState: StateCar): number => {
   const selectYear = dataState.services.filter((value) =>
-    // @ts-expect-error valueYear?undefined
     new Date(value.startDate).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
     new Date(value.startDate).getMonth() === searchDate.valueMonth
   )
@@ -109,7 +106,6 @@ export const monthDataPartsChart = (searchDate: TypePickedDate, dataState: State
 }
 export const monthDataOtherChart = (searchDate: TypePickedDate, dataState: StateCar): number => {
   const selectYear = dataState.others.filter((value) =>
-    // @ts-expect-error valueYear?undefined
     new Date(value.dateBuy).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
     new Date(value.dateBuy).getMonth() === searchDate.valueMonth
   )
@@ -118,7 +114,6 @@ export const monthDataOtherChart = (searchDate: TypePickedDate, dataState: State
 }
 export const monthDataMilesChart = (searchDate: TypePickedDate, dataState: StateCar): number => {
   const selectYear = dataState.mileage.filter((value) =>
-    // @ts-expect-error valueYear?undefined
     new Date(value.dateMileage).getFullYear() === new Date(searchDate.valueYear).getFullYear() &&
     new Date(value.dateMileage).getMonth() === searchDate.valueMonth
   )
