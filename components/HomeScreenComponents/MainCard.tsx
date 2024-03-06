@@ -65,6 +65,14 @@ export const MainCard = (): JSX.Element => {
     periodTimeMileage()
   }, [currentMiles])
 
+  useEffect(() => {
+    if (currentMiles.currentMileage === 0) {
+      if (infoCar.buyMileage !== 0) setValueMileage(infoCar.buyMileage)
+      else setValueMileage(0)
+    }
+    console.log('startMile', infoCar.buyMileage)
+  }, [currentMiles, infoCar])
+
   /* useEffect(() => {
     setVisibleMileage(true)
   }, [isNeedUpdate]) */
@@ -168,7 +176,7 @@ export const MainCard = (): JSX.Element => {
             <Button icon={({ size, color }) => (<Icon name='navigation-variant' size={22}
                     color={colors.onBackground}/>)} textColor={colors.onBackground} labelStyle={{ fontSize: 16 }}
             >
-              {String(currentMiles.currentMileage) + ' km'}
+              {String(valueMileage) + ' km'}
             </Button>
           </>
         </TouchableRipple>

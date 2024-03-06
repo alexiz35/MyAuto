@@ -34,6 +34,7 @@ import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
 import { JSX } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import MileageScreen from '../../screens/MileageScreen'
 
 function LogoTitle (): JSX.Element {
   return (
@@ -391,6 +392,29 @@ export const Navigation = (): JSX.Element => {
           })} />
         {
   // ---------------------------------------------------------------------------
+  // ------------------------------ MileageScreen ------------------------------
+        }
+        <Stack.Screen
+          name='MileageScreen'
+          component={MileageScreen}
+          options={({ navigation }) => ({
+            headerStyle: { backgroundColor: theme.colors.background },
+            title: 'Список точек пробега',
+            headerTintColor: theme.colors.onBackground
+            /*  headerRight: () => (
+              <IconButton
+                mode='outlined'
+                rippleColor={theme.colors.primary}
+                icon={'tune'}
+                size={20}
+                onPress={() =>
+                  navigation.navigate('SettingScreen')
+                }
+              />
+            ) */
+          })} />
+        {
+          // ---------------------------------------------------------------------------
   // ------------------------------FuelScreen-----------------------------------
         }
         <Stack.Screen

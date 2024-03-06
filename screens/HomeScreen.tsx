@@ -46,6 +46,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
         carInfo: tempNewCar.info
       }))
       setVisibleNameCar(false)
+      navigation.navigate('CarInfoScreen')
     }
   }
 

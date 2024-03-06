@@ -15,7 +15,7 @@ import {
   Portal,
   Modal,
   Dialog,
-  IconButton
+  IconButton, Surface
 } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
@@ -109,63 +109,6 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const [itemCarInfo, setItemCarInfo] = useState<StateInfo>(
     formToData(tempNullCarInfo)
   )
-
-  // ----------------------- Styles function ------------------------------
-  const styles = StyleSheet.create({
-    viewAllInput: {},
-    row1: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginTop: 15,
-      columnGap: 7
-    },
-    row2: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 15,
-      columnGap: 7,
-      marginBottom: 12
-    },
-    row3: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      columnGap: 7,
-      marginBottom: 5
-    },
-    dropDown: {
-      padding: 5,
-      borderWidth: 1,
-      borderColor: colors.outline,
-      borderRadius: 5,
-      backgroundColor: colors.surface
-    },
-    viewGroupEngine: {
-      flexDirection: 'row',
-      columnGap: 7,
-      justifyContent: 'space-around'
-    },
-    input: {
-      marginVertical: 7,
-      /* marginHorizontal: 5, */
-      flex: 1
-    },
-    errorInput: {
-      color: 'gray',
-      marginTop: 1,
-      textAlign: 'center'
-    },
-
-    viewButton: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginTop: 20,
-      columnGap: 25
-    },
-    buttonStyle: {
-      flex: 1
-      /* marginHorizontal: 10 */
-    }
-  })
 
   // --------------------- Modal RegMaintenance --------------------------------
   const [itemsModel, setItemsModel] = useState<ListCar[]>([])
@@ -311,12 +254,14 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         >
           <View style={styles.row1}>
             <View style={{ flex: 1 }}>
+              <Surface elevation={2} >
               <Controller
                 name={'brand'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <Dropdown
-                    style={styles.dropDown}
+                    style={[styles.dropDown, { backgroundColor: colors.surface }]}
+
                     selectedTextStyle={{
                       paddingHorizontal: 10,
                       color: colors.onBackground
@@ -342,15 +287,18 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   />
                 )}
               />
+              </Surface>
             </View>
             <View style={{ flex: 1 }}>
+              <Surface elevation={2} >
               <Controller
                 name={'model'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <Dropdown
                     /* disable={disableModel} */
-                    style={styles.dropDown}
+                    style={[styles.dropDown, { backgroundColor: colors.surface }]}
+
                     selectedTextStyle={{
                       paddingHorizontal: 10,
                       color: colors.onBackground
@@ -377,16 +325,19 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   />
                 )}
               />
+              </Surface>
             </View>
           </View>
           <View style={styles.row2}>
             <View style={{ flex: 1 }}>
+              <Surface elevation={2} >
               <Controller
                 name={'fuel'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <Dropdown
-                    style={styles.dropDown}
+                    style={[styles.dropDown, { backgroundColor: colors.surface }]}
+
                     selectedTextStyle={{
                       paddingHorizontal: 10,
                       color: colors.onBackground
@@ -410,14 +361,17 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   />
                 )}
               />
+              </Surface>
             </View>
             <View style={{ flex: 1 }}>
+              <Surface elevation={2} >
               <Controller
                 name={'body'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <Dropdown
-                    style={styles.dropDown}
+                    style={[styles.dropDown, { backgroundColor: colors.surface }]}
+
                     selectedTextStyle={{
                       paddingHorizontal: 10,
                       color: colors.onBackground
@@ -441,14 +395,16 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   />
                 )}
               />
+              </Surface>
             </View>
             <View style={{ flex: 1 }}>
+              <Surface elevation={2} >
               <Controller
                 name={'year'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <Dropdown
-                    style={styles.dropDown}
+                    style={[styles.dropDown, { backgroundColor: colors.surface }]}
                     selectedTextStyle={{
                       paddingHorizontal: 10,
                       color: colors.onBackground
@@ -470,19 +426,21 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   />
                 )}
               />
+              </Surface>
             </View>
           </View>
           <View style={styles.row3}>
-            <View style={{ flex: 1 }}>
+            <Surface elevation={2} style={{ flex: 1 }}>
               <Controller
                 name={'engine'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <>
                     <TextInput
-                      mode={'outlined'}
+                      mode={'flat'}
                       dense
                       /* ref={inputSellerName} */
+                      style={{ flex: 1, backgroundColor: colors.surface }}
                       placeholder={'тип двигателя'}
                       label={'тип двигателя'}
                       value={value}
@@ -491,15 +449,16 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   </>
                 )}
               />
-            </View>
-            <View style={{ flex: 1 }}>
+            </Surface>
+            <Surface elevation={2} style={{ flex: 1 }}>
               <Controller
                 name={'gear'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <>
                     <TextInput
-                      mode={'outlined'}
+                      mode={'flat'}
+                      style={{ flex: 1, backgroundColor: colors.surface }}
                       dense
                       /* ref={inputSellerPhone} */
                       label={'трансмиссия'}
@@ -510,16 +469,18 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   </>
                 )}
               />
-            </View>
+              </Surface>
           </View>
           <View style={styles.input}>
+            <Surface elevation={2} >
             <Controller
               name={'vin'}
               control={control}
               render={({ field: { onChange, value } }) => (
                 <>
                   <TextInput
-                    mode={'outlined'}
+                    mode={'flat'}
+                    style={{ flex: 1, backgroundColor: colors.surface }}
                     dense
                     /* ref={inputSellerLink} */
                     placeholder={'VIN код автомобиля'}
@@ -530,16 +491,18 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 </>
               )}
             />
+            </Surface>
           </View>
           <View style={styles.viewGroupEngine}>
-            <View style={styles.input}>
+            <Surface elevation={2} style={styles.input}>
               <Controller
                 name={'dateBuy'}
                 control={control}
                 render={({ field: { value, ref } }) => (
                   <>
                     <TextInput
-                      mode={'outlined'}
+                      mode={'flat'}
+                      style={{ flex: 1, backgroundColor: colors.surface }}
                       dense
                       ref={ref}
                       placeholder={'дата покупки'}
@@ -551,15 +514,16 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   </>
                 )}
               />
-            </View>
-            <View style={styles.input}>
+            </Surface>
+            <Surface elevation={2} style={styles.input}>
               <Controller
                 name={'buyMileage'}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <>
                     <TextInput
-                      mode={'outlined'}
+                      mode={'flat'}
+                      style={{ flex: 1, backgroundColor: colors.surface }}
                       dense
                       /* ref={inputSellerPhone} */
                       placeholder={'пробег при покупке'}
@@ -571,7 +535,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                   </>
                 )}
               />
-            </View>
+            </Surface>
           </View>
           <Divider
             horizontalInset
@@ -590,10 +554,11 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             }}
           >
             <Button
-              mode={'outlined'}
+              mode={'elevated'}
+              elevation={5}
               style={{
                 borderRadius: 5,
-                backgroundColor: colors.surface,
+                /* backgroundColor: colors.surface, */
                 flex: 1
               }}
               onPress={() => { setVisibleModalService(true) }}
@@ -602,11 +567,11 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             </Button>
             <Button
               icon={'restore'}
-              mode={'outlined'}
+              mode={'elevated'}
               style={{
                 borderRadius: 5,
                 height: 45,
-                backgroundColor: colors.surface,
+                /* backgroundColor: colors.surface, */
                 flex: 1
               }}
               onPress={() => { setRegMaintenance(listService) }}
@@ -692,3 +657,60 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 }
 
 export default CarInfoScreen
+
+// ----------------------- Styles function ------------------------------
+const styles = StyleSheet.create({
+  viewAllInput: {},
+  row1: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 15,
+    columnGap: 7
+  },
+  row2: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 15,
+    columnGap: 7,
+    marginBottom: 12
+  },
+  row3: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    columnGap: 7,
+    marginBottom: 5
+  },
+  dropDown: {
+    padding: 5,
+    /* borderWidth: 1, */
+    /* borderColor: colors.outline, */
+    borderRadius: 5
+    /* backgroundColor: colors.surface */
+  },
+  viewGroupEngine: {
+    flexDirection: 'row',
+    columnGap: 7,
+    justifyContent: 'space-around'
+  },
+  input: {
+    marginVertical: 7,
+    /* marginHorizontal: 5, */
+    flex: 1
+  },
+  errorInput: {
+    color: 'gray',
+    marginTop: 1,
+    textAlign: 'center'
+  },
+
+  viewButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+    columnGap: 25
+  },
+  buttonStyle: {
+    flex: 1
+    /* marginHorizontal: 10 */
+  }
+})

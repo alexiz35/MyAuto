@@ -80,11 +80,32 @@ const carsSlice = createSlice({
     },
     // --------------------------------------------------------------------------------------
     addedCurrentMiles (state, action: PayloadAction<{ numberCar: number, currentMiles: CurrentMiles }>) {
-      const tempState = state[action.payload.numberCar]
+      const tempState = state[getIndexCar(state, action.payload.numberCar)]
       tempState.currentMiles = action.payload.currentMiles
       tempState.mileage.push(action.payload.currentMiles)
       state[getIndexCar(state, action.payload.numberCar)] = tempState
       return state
+    },
+    delAllMileage (state, action: PayloadAction<{ numberCar: number }>) {
+      const tempState = state[getIndexCar(state, action.payload.numberCar)]
+      tempState.currentMiles = { currentMileage: 0, dateMileage: new Date() }
+      tempState.mileage = []
+      state[getIndexCar(state, action.payload.numberCar)] = tempState
+      return state
+      /* state[getIndexCar(state, action.payload.numberCar)].mileage = [] */
+    },
+    delItemMileage (state, action: PayloadAction<{ numberCar: number, item: CurrentMiles }>) {
+      state[getIndexCar(state, action.payload.numberCar)].mileage =
+        state[getIndexCar(state, action.payload.numberCar)].mileage.filter(item =>
+          Date.parse(String(item.dateMileage)) !== Date.parse(String(action.payload.item.dateMileage))
+        )
+    },
+    editedItemMileage (state, action: PayloadAction<{ numberCar: number, item: CurrentMiles }>) {
+      const temp = state[getIndexCar(state, action.payload.numberCar)].mileage.filter(
+        item => Date.parse(String(item.dateMileage)) !== Date.parse(String(action.payload.item.dateMileage))
+      )
+      temp.push(action.payload.item)
+      state[getIndexCar(state, action.payload.numberCar)].mileage = temp
     },
     // ------------ reducers for fuel,part,service,other ------------------------------------
     addStateCarReducer (state, action: PayloadAction<{ type: TypeTypeState, numberCar: number, item: TypeStatesCar }>) {
@@ -124,7 +145,9 @@ export const {
   addStateCarReducer, delStateCarReducer,
   editStateCarReducer, addedCar,
   deletedCar, delNowCar,
-  updateStateCars
+  updateStateCars,
+  delAllMileage, delItemMileage,
+  editedItemMileage
 } = carsSlice.actions
 
 export default carsSlice.reducer
