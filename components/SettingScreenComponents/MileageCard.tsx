@@ -1,7 +1,6 @@
 import { JSX } from 'react'
 import { Button, Card, Icon, IconButton } from 'react-native-paper'
 import { View } from 'react-native'
-import { deletedAllSeller } from '../Redux/SellerSlice'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 // eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'

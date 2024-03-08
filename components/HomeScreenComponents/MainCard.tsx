@@ -70,7 +70,6 @@ export const MainCard = (): JSX.Element => {
       if (infoCar.buyMileage !== 0) setValueMileage(infoCar.buyMileage)
       else setValueMileage(0)
     }
-    console.log('startMile', infoCar.buyMileage)
   }, [currentMiles, infoCar])
 
   /* useEffect(() => {

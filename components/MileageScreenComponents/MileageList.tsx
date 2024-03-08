@@ -16,16 +16,8 @@ export const MileageList = ({ handlePress, editPress, filterList = 'last' }: han
     state => state.cars[getIndexCar(state.cars, state.numberCar)].mileage
   )
   const [isSortMileage, setIsSortMileage] = useState(false)
-  const [sortMileage, setSortMileage] = useState<CurrentMiles[]>([])
 
   const [isLoad, setIsLoad] = useState(true)
-
-  /* useEffect(() => {
-    console.log('SORT1', listMileage)
-    listMileage = listMileage.slice().sort((a, b) => b.currentMileage - a.currentMileage)
-    console.log('SORT', listMileage)
-    setIsSortMileage(!isSortMileage)
-  }, [listMileage]) */
 
   useEffect(() => {
     setTimeout(() => { setIsLoad(false) }, 10)
@@ -34,14 +26,12 @@ export const MileageList = ({ handlePress, editPress, filterList = 'last' }: han
 
   const filter = (): CurrentMiles[] => {
     listMileage = listMileage.slice().sort((a, b) => b.currentMileage - a.currentMileage)
-    console.log('Sort', listMileage)
     switch (filterList) {
       case 'last': return listMileage.slice(0, 3)
       case 'ten': return listMileage.slice(0, 10)
       default: return listMileage
     }
   }
-  console.log('MILE', listMileage)
   return (
     <>
       {isLoad

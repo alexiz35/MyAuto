@@ -52,6 +52,8 @@ const MileageScreen = (): JSX.Element => {
   const [openAccordion, setOpenAccordion] = useState(false)
   const [itemChecked, setItemChecked] = useState<CurrentMiles>(tempNullMileage)
   const [itemMileage, setItemMileage] = useState<CurrentMiles>(tempNullMileage)
+  const [isError, setIsError] = useState(false)
+  const [mileageError, setMileageError] = useState('')
 
   const [isList, setIsList] = useState(true)
   const [dateList, setDateList] = useState('last')
@@ -60,6 +62,7 @@ const MileageScreen = (): JSX.Element => {
 
   const clearInput = (): void => {
     setItemMileage(tempNullMileage)
+    setMileageError('')
   }
 
   const changeTextMileage = (value: string) => {
@@ -78,6 +81,7 @@ const MileageScreen = (): JSX.Element => {
   }
 
   const pressRowSeller = (item: CurrentMiles): void => {
+    setMileageError('')
     setItemMileage(item)
     setItemChecked(item)
     setVisibleEditMileage(true)
@@ -96,18 +100,43 @@ const MileageScreen = (): JSX.Element => {
   // ------------------------- button result -----------------------------------
 
   const checkMileage = (array: CurrentMiles[], item: CurrentMiles) => {
-    console.log('check1', array)
     const index = array.findIndex((value, index, obj) =>
       Date.parse(String(value.dateMileage)) === Date.parse(String(item.dateMileage))
     )
+    const isLessPrev = () => {
+      return !(item.currentMileage > array[index - 1].currentMileage)
+    }
+    const isMoreNext = () => {
+      return !(item.currentMileage < array[index + 1].currentMileage)
+    }
     if (index !== -1 && array.length !== 1) {
       if (index === 0) {
-        return item.currentMileage < array[index + 1].currentMileage
+        if (isMoreNext()) {
+          setMileageError('Пробег больше следующего')
+          return false
+        } else {
+          setMileageError('')
+          return true
+        }
       } else if (index === array.length - 1) {
-        return item.currentMileage > array[index - 1].currentMileage
+        if (isLessPrev()) {
+          setMileageError('Пробег меньше предыдущего')
+          return false
+        } else {
+          setMileageError('')
+          return true
+        }
+      } else if (isLessPrev()) {
+        setMileageError('Пробег меньше предыдущего')
+        return false
+      } else if (isMoreNext()) {
+        setMileageError('Пробег больше следующего')
+        return false
+      } else {
+        setMileageError('')
+        return true
       }
-      return item.currentMileage > array[index - 1].currentMileage && item.currentMileage < array[index + 1].currentMileage
-    } else return true
+    }
   }
 
   const handleOk = (): void => {
@@ -130,18 +159,21 @@ const MileageScreen = (): JSX.Element => {
           <ScrollView style={{ marginTop: 5 }}>
             {visibleEditMileage
               ? <Card mode={'elevated'} style={{ margin: 15 }}>
-              <Card.Title title={'Корректировка пробега'} titleStyle={{ textAlign: 'center' }} />
+
+              <Card.Title title={'Корректировка пробега'} titleStyle={{ textAlign: 'center' }}/>
               <Card.Content style={{
                 flexDirection: 'row',
                 columnGap: 10,
                 justifyContent: 'space-around'
               }}>
+
                 <View style={{ flex: 1 }}>
                   <TextInput
                     dense
                     mode={'flat'}
                     onPressIn={inputDateMileage}
                     value={new Date(itemMileage.dateMileage).toLocaleDateString()}
+                    disabled
                   />
                 </View>
 
@@ -152,9 +184,12 @@ const MileageScreen = (): JSX.Element => {
                     mode={'flat'}
                     value={String(itemMileage.currentMileage)}
                     onChangeText={value => { changeTextMileage(value) }}
+                    error={!!mileageError}
                   />
                 </View>
               </Card.Content>
+                {mileageError ? <HelperText type={'error'} style={{ textAlign: 'center' }}>{mileageError}</HelperText> : null}
+
               <View style={{
                 flexDirection: 'row',
                 justifyContent: 'center',

@@ -1,10 +1,9 @@
-import { CurrentMiles, Seller } from '../../type'
+import { CurrentMiles } from '../../type'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { JSX, useState } from 'react'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Menu } from 'react-native-paper'
-import { deletedSeller } from '../Redux/SellerSlice'
 import { delItemMileage } from '../Redux/CarsSlice'
 
 interface propsRowMileage {
@@ -31,11 +30,6 @@ export const RenderRowMileage = ({ item, handlePress, editPress }: propsRowMilea
   const closeMenu = (): void => {
     setVisibleMenu(false)
   }
-  /*
-  useEffect(() => {
-    setItemRow(formItem(item))
-    console.log('render', itemRow)
-  }, [item]) */
 
   return (
 
@@ -85,6 +79,7 @@ export const RenderRowMileage = ({ item, handlePress, editPress }: propsRowMilea
             <Menu.Item title={'edit'}
                        onPress={() => {
                          editPress(item)
+                         closeMenu()
                        }}
                        dense
                        leadingIcon={'file-document-edit'}
