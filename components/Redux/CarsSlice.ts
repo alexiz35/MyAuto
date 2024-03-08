@@ -86,6 +86,12 @@ const carsSlice = createSlice({
       state[getIndexCar(state, action.payload.numberCar)] = tempState
       return state
     },
+    editedCurrentMiles (state, action: PayloadAction<{ numberCar: number, currentMiles: CurrentMiles }>) {
+      const tempState = state[getIndexCar(state, action.payload.numberCar)]
+      tempState.currentMiles = action.payload.currentMiles
+      state[getIndexCar(state, action.payload.numberCar)].currentMiles = action.payload.currentMiles
+      return state
+    },
     delAllMileage (state, action: PayloadAction<{ numberCar: number }>) {
       const tempState = state[getIndexCar(state, action.payload.numberCar)]
       tempState.currentMiles = { currentMileage: 0, dateMileage: new Date() }
@@ -141,7 +147,8 @@ const carsSlice = createSlice({
 })
 
 export const {
-  editedCarInfo, addedCurrentMiles,
+  editedCarInfo,
+  addedCurrentMiles, editedCurrentMiles,
   addStateCarReducer, delStateCarReducer,
   editStateCarReducer, addedCar,
   deletedCar, delNowCar,

@@ -64,7 +64,9 @@ export const CarsList = (): JSX.Element => {
           >
             {item.info.nameCar}
           </Button>
-          <IconButton icon={'close'} iconColor={colors.error} onPress={() => { createDeleteAlert(item.carId) }}/>
+          <View style={{ paddingRight: 5 }}>
+              <IconButton icon={'close'} iconColor={colors.error} onPress={() => { createDeleteAlert(item.carId) }}/>
+          </View>
         </View>
             <Divider horizontalInset />
           </>

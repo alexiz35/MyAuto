@@ -24,7 +24,7 @@ import { addedSeller, editedSeller } from '../components/Redux/SellerSlice'
 import { Controller, useForm } from 'react-hook-form'
 import { MileageList } from '../components/MileageScreenComponents/MileageList'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { editedItemMileage } from '../components/Redux/CarsSlice'
+import { editedCurrentMiles, editedItemMileage } from '../components/Redux/CarsSlice'
 
 interface FormSeller {
   name: string
@@ -49,6 +49,9 @@ const MileageScreen = (): JSX.Element => {
     state => state.cars[getIndexCar(state.cars, state.numberCar)].mileage
   )
   const numberCar = useAppSelector(state => state.numberCar)
+  const currentMiles = useAppSelector(state =>
+    state.cars[getIndexCar(state.cars, state.numberCar)].currentMiles
+  )
   const [openAccordion, setOpenAccordion] = useState(false)
   const [itemChecked, setItemChecked] = useState<CurrentMiles>(tempNullMileage)
   const [itemMileage, setItemMileage] = useState<CurrentMiles>(tempNullMileage)
@@ -141,11 +144,15 @@ const MileageScreen = (): JSX.Element => {
 
   const handleOk = (): void => {
     listMileage = listMileage.slice().sort((a, b) => a.currentMileage - b.currentMileage)
-
+    console.log('current1', currentMiles)
     if (checkMileage(listMileage, itemMileage)) {
+      if (Date.parse(String(itemMileage.dateMileage)) === Date.parse(String(currentMiles.dateMileage))) {
+        dispatch(editedCurrentMiles({ numberCar, currentMiles: itemMileage }))
+      }
       dispatch(editedItemMileage({ numberCar, item: itemMileage }))
       closeEditMileage()
     }
+    console.log('current2', currentMiles)
   }
 
   return (

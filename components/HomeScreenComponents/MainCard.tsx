@@ -55,7 +55,7 @@ export const MainCard = (): JSX.Element => {
 
   const [visibleMileage, setVisibleMileage] = useState(false)
   const [isNeedUpdate, setIsNeedUpdate] = useState(false)
-  const [valueMileage, setValueMileage] = useState<number>(0)
+  const [valueMileage, setValueMileage] = useState<number>(currentMiles.currentMileage)
   const [errorInput, setErrorInput] = useState(false)
   const toggleMileage = (): void => {
     setVisibleMileage(!visibleMileage)
@@ -65,12 +65,9 @@ export const MainCard = (): JSX.Element => {
     periodTimeMileage()
   }, [currentMiles])
 
-  useEffect(() => {
-    if (currentMiles.currentMileage === 0) {
-      if (infoCar.buyMileage !== 0) setValueMileage(infoCar.buyMileage)
-      else setValueMileage(0)
-    }
-  }, [currentMiles, infoCar])
+  /* useFocusEffect(() => {
+
+  }, [currentMiles, infoCar]) */
 
   /* useEffect(() => {
     setVisibleMileage(true)
@@ -100,7 +97,20 @@ export const MainCard = (): JSX.Element => {
 
   useFocusEffect(
     useCallback(() => {
+      if (currentMiles.currentMileage === 0) {
+        if (infoCar.buyMileage !== 0) setValueMileage(infoCar.buyMileage)
+        else setValueMileage(0)
+      } else setValueMileage(currentMiles.currentMileage)
+    }, [currentMiles]))
+
+  useFocusEffect(
+    useCallback(() => {
       void checkFirstRun()
+
+      if (currentMiles.currentMileage === 0) {
+        if (infoCar.buyMileage !== 0) setValueMileage(infoCar.buyMileage)
+        else setValueMileage(0)
+      } else setValueMileage(currentMiles.currentMileage)
 
       if (state.setting.alarmMileagePeriod) {
         periodTimeMileage()

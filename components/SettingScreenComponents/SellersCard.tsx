@@ -1,5 +1,5 @@
 import { JSX } from 'react'
-import { Button, Card, Icon } from 'react-native-paper'
+import { Button, Card, Icon, IconButton } from 'react-native-paper'
 import { View } from 'react-native'
 import { deletedAllSeller } from '../Redux/SellerSlice'
 import { useAppDispatch } from '../Redux/hook'
@@ -27,16 +27,10 @@ export const SellersCard = (): JSX.Element => {
           >
             Список поставщиков
           </Button>
-          <Button
-            style={stylesSettingScreen.text}
-            onPress={() => dispatch(deletedAllSeller())}
-          >
-            RESET
-          </Button>
         </View>
-        <View style={{ paddingRight: 10 }}>
-          {/* <IconButton icon={'theme-light-dark'} size={18} mode={'outlined'} onPress={toggleTheme} /> */}
-          {/* <Switch value={switchTheme} onValueChange={toggleSwitchTheme}/> */}
+
+        <View style={{ paddingRight: 5 }}>
+            <IconButton icon={'close'} iconColor={colors.error} onPress={() => dispatch(deletedAllSeller())}/>
         </View>
       </View>
     </Card>

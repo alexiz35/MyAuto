@@ -1,6 +1,6 @@
 import { JSX } from 'react'
 import { Button, Card, Icon, IconButton } from 'react-native-paper'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 // eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'
@@ -14,6 +14,21 @@ export const MileageCard = (): JSX.Element => {
   const numberCar = useAppSelector(state => state.numberCar)
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
   const { colors } = useAppTheme()
+
+  const pressResetMileage = () => {
+    Alert.alert('Вы уверены?', 'Все точки пробега будут удалены', [
+      {
+        text: 'Cancel',
+        // ***
+        /* onPress: () => console.log('Cancel Pressed'), */
+        style: 'cancel'
+      },
+      {
+        text: 'OK',
+        onPress: () => { dispatch(delAllMileage({ numberCar })) }
+      }
+    ])
+  }
 
   return (
     <Card style={{ marginVertical: 5 }}>
@@ -29,8 +44,8 @@ export const MileageCard = (): JSX.Element => {
             Список точек пробега
           </Button>
         </View>
-        <View style={{ paddingRight: 10 }}>
-          <IconButton icon={'close'} iconColor={colors.error} onPress={() => dispatch(delAllMileage({ numberCar }))} />
+        <View style={{ paddingRight: 5 }}>
+          <IconButton icon={'close'} iconColor={colors.error} onPress={pressResetMileage} />
         </View>
       </View>
     </Card>
