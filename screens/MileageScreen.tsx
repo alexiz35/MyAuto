@@ -30,13 +30,9 @@ const MileageScreen = (): JSX.Element => {
   const currentMiles = useAppSelector(state =>
     state.cars[getIndexCar(state.cars, state.numberCar)].currentMiles
   )
-  const [itemChecked, setItemChecked] = useState<CurrentMiles>(tempNullMileage)
   const [itemMileage, setItemMileage] = useState<CurrentMiles>(tempNullMileage)
   const [mileageError, setMileageError] = useState('')
-
-  const [isList, setIsList] = useState(true)
   const [dateList, setDateList] = useState('last')
-
   const [visibleEditMileage, setVisibleEditMileage] = useState(false)
 
   const clearInput = (): void => {
@@ -62,7 +58,6 @@ const MileageScreen = (): JSX.Element => {
   const pressRowMileage = (item: CurrentMiles): void => {
     setMileageError('')
     setItemMileage(item)
-    setItemChecked(item)
     setVisibleEditMileage(true)
   }
 
@@ -211,7 +206,6 @@ const MileageScreen = (): JSX.Element => {
         {
           /* ----------------------- List Fuel ---------------------------------------- */
         }
-        {isList &&
           <View style={styles.flatList}>
             <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                               value={dateList}
@@ -225,7 +219,7 @@ const MileageScreen = (): JSX.Element => {
             <MileageList delPress={delRowMileage} handlePress={pressRowMileage} filterList={dateList} editPress={pressRowMileage} />
 
           </View>
-        }
+
         {
           /* -------------------------------------------------------------------------- */
         }
