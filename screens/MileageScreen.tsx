@@ -1,40 +1,18 @@
 import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
-import { SellerList } from '../components/SellerScreenComponents/SellerList'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { useAppTheme } from '../CommonComponents/Theme'
-import { CurrentMiles, getIndexCar, Seller } from '../type'
-import { JSX, useCallback, useState } from 'react'
+import { CurrentMiles, getIndexCar } from '../type'
+import { JSX, useState } from 'react'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import {
-  Button, Card,
+  Card,
   HelperText, IconButton,
-  List,
-  Portal,
-  RadioButton,
-  Surface,
   TextInput,
   ToggleButton
 } from 'react-native-paper'
-import { ModalInfoSeller } from '../components/SellerScreenComponents/ModalInfoSeller'
-import { RootStackParamList } from '../components/Navigation/TypeNavigation'
-// eslint-disable-next-line import/named
-import { StackScreenProps } from '@react-navigation/stack'
-import { useFocusEffect } from '@react-navigation/native'
-import { addedSeller, editedSeller } from '../components/Redux/SellerSlice'
-import { Controller, useForm } from 'react-hook-form'
 import { MileageList } from '../components/MileageScreenComponents/MileageList'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { editedCurrentMiles, editedItemMileage } from '../components/Redux/CarsSlice'
-
-interface FormSeller {
-  name: string
-  phone: string
-  web: string
-  type: string
-  specialism: string
-}
-
-type Props = StackScreenProps<RootStackParamList, 'MileageScreen'>
+import { delItemMileage, editedCurrentMiles, editedItemMileage } from '../components/Redux/CarsSlice'
 
 const MileageScreen = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -52,10 +30,8 @@ const MileageScreen = (): JSX.Element => {
   const currentMiles = useAppSelector(state =>
     state.cars[getIndexCar(state.cars, state.numberCar)].currentMiles
   )
-  const [openAccordion, setOpenAccordion] = useState(false)
   const [itemChecked, setItemChecked] = useState<CurrentMiles>(tempNullMileage)
   const [itemMileage, setItemMileage] = useState<CurrentMiles>(tempNullMileage)
-  const [isError, setIsError] = useState(false)
   const [mileageError, setMileageError] = useState('')
 
   const [isList, setIsList] = useState(true)
@@ -83,11 +59,31 @@ const MileageScreen = (): JSX.Element => {
     })
   }
 
-  const pressRowSeller = (item: CurrentMiles): void => {
+  const pressRowMileage = (item: CurrentMiles): void => {
     setMileageError('')
     setItemMileage(item)
     setItemChecked(item)
     setVisibleEditMileage(true)
+  }
+
+  const delRowMileage = (item: CurrentMiles): void => {
+    // ************ check deleting item is currentMileage **************************************
+    if (Date.parse(String(item.dateMileage)) === Date.parse(String(currentMiles.dateMileage))) {
+      // **************** check deleting item isn't one ***************************************
+      if (listMileage.length !== 1) {
+        const tempListMileage = listMileage.slice().sort((a, b) =>
+          a.currentMileage - b.currentMileage
+        )
+        const index = tempListMileage.findIndex((value) =>
+          Date.parse(String(value.dateMileage)) === Date.parse(String(item.dateMileage))
+        )
+        const tempItem: CurrentMiles = tempListMileage[index - 1]
+        // ******* if deleting item is currentMileage then currentMiles  = before item ********
+        dispatch(editedCurrentMiles({ numberCar, currentMiles: tempItem }))
+        // ********if deleting item is one then delete currentMiles ***************************
+      } else dispatch(editedCurrentMiles({ numberCar, currentMiles: tempNullMileage }))
+    }
+    dispatch(delItemMileage({ numberCar, item }))
   }
   const closeEditMileage = (): void => {
     clearInput()
@@ -103,7 +99,7 @@ const MileageScreen = (): JSX.Element => {
   // ------------------------- button result -----------------------------------
 
   const checkMileage = (array: CurrentMiles[], item: CurrentMiles) => {
-    const index = array.findIndex((value, index, obj) =>
+    const index = array.findIndex((value) =>
       Date.parse(String(value.dateMileage)) === Date.parse(String(item.dateMileage))
     )
     const isLessPrev = () => {
@@ -144,7 +140,6 @@ const MileageScreen = (): JSX.Element => {
 
   const handleOk = (): void => {
     listMileage = listMileage.slice().sort((a, b) => a.currentMileage - b.currentMileage)
-    console.log('current1', currentMiles)
     if (checkMileage(listMileage, itemMileage)) {
       if (Date.parse(String(itemMileage.dateMileage)) === Date.parse(String(currentMiles.dateMileage))) {
         dispatch(editedCurrentMiles({ numberCar, currentMiles: itemMileage }))
@@ -152,7 +147,6 @@ const MileageScreen = (): JSX.Element => {
       dispatch(editedItemMileage({ numberCar, item: itemMileage }))
       closeEditMileage()
     }
-    console.log('current2', currentMiles)
   }
 
   return (
@@ -228,7 +222,7 @@ const MileageScreen = (): JSX.Element => {
               <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
             </ToggleButton.Row>
 
-            <MileageList handlePress={pressRowSeller} filterList={dateList} editPress={pressRowSeller} />
+            <MileageList delPress={delRowMileage} handlePress={pressRowMileage} filterList={dateList} editPress={pressRowMileage} />
 
           </View>
         }

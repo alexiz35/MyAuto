@@ -1,4 +1,4 @@
-import { CurrentMiles, getIndexCar, Seller } from '../../type'
+import { CurrentMiles, getIndexCar } from '../../type'
 import { useAppSelector } from '../Redux/hook'
 import { JSX, useEffect, useState } from 'react'
 import { BusyIndicator } from '../useIsReadyHook'
@@ -8,10 +8,11 @@ import { RenderRowMileage } from './RenderRowMileage'
 interface handleProp {
   handlePress: (item: CurrentMiles) => void
   editPress: (item: CurrentMiles) => void
+  delPress: (item: CurrentMiles) => void
   filterList: string
 }
 
-export const MileageList = ({ handlePress, editPress, filterList = 'last' }: handleProp): JSX.Element => {
+export const MileageList = ({ handlePress, editPress, delPress, filterList = 'last' }: handleProp): JSX.Element => {
   let listMileage = useAppSelector(
     state => state.cars[getIndexCar(state.cars, state.numberCar)].mileage
   )
@@ -40,7 +41,7 @@ export const MileageList = ({ handlePress, editPress, filterList = 'last' }: han
           scrollEnabled
           data={filter()}
           extraData={isSortMileage}
-          renderItem={({ item }) => <RenderRowMileage item={item} handlePress={handlePress} editPress={editPress}/>}
+          renderItem={({ item }) => <RenderRowMileage delPress={delPress} item={item} handlePress={handlePress} editPress={editPress}/>}
           keyExtractor={(item, index) => index.toString()}
           getItemLayout={(data, index) => (
             {

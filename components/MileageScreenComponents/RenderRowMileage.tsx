@@ -1,21 +1,17 @@
 import { CurrentMiles } from '../../type'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { JSX, useState } from 'react'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Menu } from 'react-native-paper'
-import { delItemMileage } from '../Redux/CarsSlice'
 
 interface propsRowMileage {
   handlePress: (item: CurrentMiles) => void
   editPress: (item: CurrentMiles) => void
+  delPress: (item: CurrentMiles) => void
   item: CurrentMiles
 }
 
-export const RenderRowMileage = ({ item, handlePress, editPress }: propsRowMileage): JSX.Element => {
-  const dispatch = useAppDispatch()
-  const numberCar = useAppSelector(state => state.numberCar)
-
+export const RenderRowMileage = ({ item, handlePress, editPress, delPress }: propsRowMileage): JSX.Element => {
   const formString = (item: any): string => {
     if (item === undefined || item === null) return ''
     else if (typeof item === 'number') return String(item)
@@ -72,7 +68,7 @@ export const RenderRowMileage = ({ item, handlePress, editPress }: propsRowMilea
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delItemMileage({ numberCar, item }))
+                         delPress(item)
                          closeMenu()
                        }}
             />
