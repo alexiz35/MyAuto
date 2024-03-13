@@ -71,7 +71,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const numberCar = useAppSelector((state) => state.numberCar)
   const car = useAppSelector((state) => state.cars)
   const [indexCar, setIndexCar] = useState<number>(getIndexCar(car, numberCar))
-  const [isSave, setIsSave] = useState(false)
+  const [isSave, setIsSave] = useState<boolean>(false)
   const { colors } = useAppTheme()
 
   // ------------------------ Alert ConfirmAction -------------------------------
@@ -136,7 +136,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       onChange: (event, date = new Date()) => { setValue('dateBuy', date) }
     })
   }
-  // ----------------------button Ok handler-------------------------------
+  // ----------------------button's handler-------------------------------
   const handleOkCarInfo = (dataForm: FormCarInfo): void => {
     if (valueNameCar === '' || valueNameCar === undefined) {
       setVisibleNameCar(true)
@@ -149,6 +149,11 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         carInfo: formToData(dataForm)
       })
     )
+    navigation.goBack()
+  }
+
+  const handleClose = () => {
+    setIsSave(false)
     navigation.goBack()
   }
 
@@ -235,7 +240,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           }
         ])
       }),
-    [navigation]
+    [navigation, isSave]
   )
 
   const isReady = useIsReady()
@@ -590,7 +595,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           <View style={styles.viewButton}>
             <Button
               icon={'close-thick'}
-              onPress={() => { navigation.goBack() }}
+              /* onPress={() => { navigation.goBack() }} */
+              onPress={handleClose}
               mode="outlined"
               rippleColor={colors.error}
               textColor={colors.error}

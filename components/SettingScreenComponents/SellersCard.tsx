@@ -17,7 +17,7 @@ export const SellersCard = (): JSX.Element => {
   return (
     <Card style={{ marginVertical: 5 }}>
       <View
-        style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
       >
         <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />

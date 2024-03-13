@@ -1,6 +1,6 @@
 import { JSX, useCallback } from 'react'
 import { View } from 'react-native'
-import { Card, Icon, IconButton, Text } from 'react-native-paper'
+import { Button, Card, Icon, IconButton, Text } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { themeChanged } from '../Redux/SettingSlice'
 import { useAppTheme } from '../../CommonComponents/Theme'
@@ -22,11 +22,11 @@ export const ThemeCard = (): JSX.Element => {
   return (
     <Card style={{ marginVertical: 5 }}>
       <View
-        style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+        style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
       >
         <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
-          <Text style={stylesSettingScreen.text}>Переключение темы</Text>
+          <Button style={stylesSettingScreen.text} onPress={toggleTheme}>Переключение темы</Button>
         </View>
         <View style={{ paddingRight: 10 }}>
           <IconButton
