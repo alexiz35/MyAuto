@@ -142,13 +142,15 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       setVisibleNameCar(true)
       return
     }
+
     setIsSave(true)
-    setCar(
+
+    /* setCar(
       editedCarInfo({
         numberCar,
         carInfo: formToData(dataForm)
       })
-    )
+    ) */
     navigation.goBack()
   }
 
