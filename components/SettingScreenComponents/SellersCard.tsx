@@ -1,6 +1,6 @@
 import { JSX } from 'react'
 import { Button, Card, Icon, IconButton } from 'react-native-paper'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { deletedAllSeller } from '../Redux/SellerSlice'
 import { useAppDispatch } from '../Redux/hook'
 // eslint-disable-next-line import/named
@@ -13,6 +13,21 @@ export const SellersCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
   const { colors } = useAppTheme()
+
+  const pressResetSellers = () => {
+    Alert.alert('Вы уверены?', 'Список продавцов будет очищен', [
+      {
+        text: 'Cancel',
+        // ***
+        /* onPress: () => console.log('Cancel Pressed'), */
+        style: 'cancel'
+      },
+      {
+        text: 'OK',
+        onPress: () => { dispatch(deletedAllSeller()) }
+      }
+    ])
+  }
 
   return (
     <Card style={{ marginVertical: 5 }}>
@@ -30,7 +45,7 @@ export const SellersCard = (): JSX.Element => {
         </View>
 
         <View style={{ paddingRight: 5 }}>
-            <IconButton icon={'close'} iconColor={colors.error} onPress={() => dispatch(deletedAllSeller())}/>
+            <IconButton icon={'close'} iconColor={colors.error} onPress={pressResetSellers}/>
         </View>
       </View>
     </Card>

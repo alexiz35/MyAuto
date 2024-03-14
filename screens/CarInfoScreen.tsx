@@ -145,12 +145,12 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
 
     setIsSave(true)
 
-    /* setCar(
+    setCar(
       editedCarInfo({
         numberCar,
         carInfo: formToData(dataForm)
       })
-    ) */
+    )
     navigation.goBack()
   }
 
@@ -172,7 +172,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
     name: 'brand'
   })
   // --------------------Update IndexCar------------------------------------
-  useCallback(() => {
+  useEffect(() => {
     setIndexCar(getIndexCar(car, numberCar))
   }, [numberCar])
   // ---------------------Pick Service-----------------------------------
