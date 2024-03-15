@@ -103,7 +103,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       gear: item.gear,
       vin: item.vin,
       dateBuy: item.dateBuy,
-      buyMileage: String(item.buyMileage)
+      buyMileage: item.buyMileage === 0 ? '' : String(item.buyMileage)
     }
   }
   const [itemCarInfo, setItemCarInfo] = useState<StateInfo>(

@@ -76,7 +76,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   }, []) */
   // ******************************************************************************************************
   const pressList = () => {
-    return 1
+
   }
   // ----------------------------------
 
@@ -122,7 +122,12 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
           </View>
 
         <View style={(orientation < 3) ? { flex: 4 } : { flex: 1.5 }}>
-          <Text onPress={async () => await Notifications.scheduleNotificationAsync({
+          <Surface elevation={2} style={{ marginBottom: 10, borderRadius: 5 }}>
+          <Text style={{ textAlign: 'center', padding: 5 }}>
+            Ближайшие задачи
+          </Text>
+          </Surface>
+         {/*  <Text onPress={async () => await Notifications.scheduleNotificationAsync({
             content: {
               title: 'Look at that notification',
               body: 'Вам необходимо обновить пробег в программе ',
@@ -134,11 +139,11 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
               repeats: true,
               weekday: 3
             }
-          })} style={{ textAlign: 'center' }}> Current Task</Text>
-          <Text onPress={async () => { await Notifications.cancelAllScheduledNotificationsAsync() }}>Cancel</Text>
+          })} style={{ textAlign: 'center' }}> Current Task</Text> */}
+          {/* <Text onPress={async () => { await Notifications.cancelAllScheduledNotificationsAsync() }}>Cancel</Text> */}
           <TasksList handlePress={pressList} filterList={'last'}/>
-        </View>
 
+        </View>
       </View>
       <Portal>
         <Dialog

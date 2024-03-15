@@ -1,6 +1,6 @@
 import { FlatList } from 'react-native'
 import { JSX, useEffect, useState } from 'react'
-import { StateTask } from '../../type'
+import { getIndexCar, StateTask } from '../../type'
 import { useAppSelector } from '../Redux/hook'
 import { BusyIndicator } from '../useIsReadyHook'
 import { RenderRowTask } from './TaskRow'
@@ -12,10 +12,10 @@ interface handleProp {
 }
 
 export const TasksList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
-  const listTasks = useAppSelector(state => state.cars[0].tasks)
+  const listTasks = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].tasks)
   const [isSortTasks, setIsSortTasks] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
-
+  console.log(listTasks)
   /* const renderRow: ListRenderItem<StatePart> = ({ item }: { item: StatePart }) => {
     return (
       <View style={styles.listItem}>
@@ -113,7 +113,7 @@ export const TasksList = ({ handlePress, filterList = 'last' }: handleProp): JSX
     )
   } */
 
- /*  useEffect(() => {
+  /*  useEffect(() => {
     if (listTasks.length > 1) {
       listTasks.sort(function (a, b) {
         // @ts-expect-error date
@@ -124,8 +124,8 @@ export const TasksList = ({ handlePress, filterList = 'last' }: handleProp): JSX
   }, [listTasks]) */
 
   useEffect(() => {
-    setTimeout(() => setIsLoad(false), 10)
-    return setIsLoad(true)
+    setTimeout(() => { setIsLoad(false) }, 10)
+    setIsLoad(true)
   }, [filterList])
 
   const filter = (): StateTask[] => {

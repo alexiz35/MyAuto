@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
 import { JSX, useEffect, useState } from 'react'
 import { StateTask } from '../../type'
@@ -23,6 +23,24 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
   }
   const closeMenu = (): void => {
     setVisibleMenu(false)
+  }
+
+  const pressDel = () => {
+    Alert.alert('Удалить задачу?', 'Задача будет полностью удалена', [
+      {
+        text: 'Cancel',
+        // ***
+        onPress: () => { closeMenu() },
+        style: 'cancel'
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          dispatch(delStateCarReducer({ type: 'tasks', numberCar: carId, id: item.id }))
+          closeMenu()
+        }
+      }
+    ])
   }
 
   useEffect(() => {
@@ -52,7 +70,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
         style={{ height: 70, borderRadius: 5 }}
         contentStyle={{ flexDirection: 'row' }}
 
-        onPress={() => handlePress(item)}
+        onPress={() => { handlePress(item) }}
       >
 
         <Card.Title
@@ -107,10 +125,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
             <Menu.Item title={'delete'}
                        dense
                        leadingIcon={'delete'}
-                       onPress={() => {
-                         dispatch(delStateCarReducer({type:'tasks',numberCar:carId, id:item.id}))
-                         closeMenu()
-                       }}
+                       onPress={pressDel}
             />
             <Menu.Item title={'edit'}
                        onPress={() => {
