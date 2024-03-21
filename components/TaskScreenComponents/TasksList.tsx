@@ -15,7 +15,6 @@ export const TasksList = ({ handlePress, filterList = 'last' }: handleProp): JSX
   const listTasks = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].tasks)
   const [isSortTasks, setIsSortTasks] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
-  console.log(listTasks)
   /* const renderRow: ListRenderItem<StatePart> = ({ item }: { item: StatePart }) => {
     return (
       <View style={styles.listItem}>

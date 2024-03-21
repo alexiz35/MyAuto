@@ -19,7 +19,7 @@ import { ModalPickNameCar } from '../components/CarInfoScreenComponents/ModalPic
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { editedCarInfo, initialStateCar } from '../components/Redux/CarsSlice'
 import * as Notifications from 'expo-notifications'
-import { getIndexCar } from '../type'
+import { getIndexCar, StateTask } from '../type'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
@@ -75,8 +75,8 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
     }
   }, []) */
   // ******************************************************************************************************
-  const pressList = () => {
-
+  const pressList = (item: StateTask) => {
+    navigation.navigate('TaskScreen', { editable: true, itemTask: item })
   }
   // ----------------------------------
 

@@ -1,5 +1,5 @@
 import { type CompositeScreenProps, type NavigatorScreenParams } from '@react-navigation/native'
-import { type Seller } from '../../type'
+import { type Seller, StateTask } from '../../type'
 import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 
@@ -16,7 +16,7 @@ export type RootTabParamList = {
   Home: undefined
   InputDoneScreen: { editable: boolean, taskId?: number, typeTask: string }
   Fuel: undefined
-  TaskScreen: undefined
+  TaskScreen: { editable: boolean, itemTask: StateTask }
   StatScreen: undefined
 }
 

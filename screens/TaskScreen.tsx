@@ -2,6 +2,7 @@ import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native
 import { StateTask } from '../type'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { RootTabParamList } from '../components/Navigation/TypeNavigation'
+// eslint-disable-next-line import/named
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
@@ -14,7 +15,7 @@ import { addStateCarReducer, editStateCarReducer } from '../components/Redux/Car
 
 type Props = BottomTabScreenProps<RootTabParamList, 'TaskScreen'>
 
-const TaskScreen = ({ navigation }: Props): JSX.Element => {
+const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
@@ -35,6 +36,17 @@ const TaskScreen = ({ navigation }: Props): JSX.Element => {
     setItemTasks(undefined)
   }
 
+  // -------------------------- route editable ---------------------------------
+  useEffect(() => {
+    if (route.params !== undefined) {
+      if (route.params.editable) {
+        setIsEditSTask(true)
+        setItemTasks(route.params.itemTask)
+        handleOpen(route.params.itemTask)
+      }
+    }
+  }, [])
+
   // --------------------------Hide tabBottom when openAccordion-----------------
   useEffect(() => {
     if (openAccordion) nav.setOptions({ tabBarStyle: { display: 'none', backgroundColor: colors.background } })
@@ -52,7 +64,7 @@ const TaskScreen = ({ navigation }: Props): JSX.Element => {
   const handleOnPress = (): void => {
     if (!openAccordion) {
       setIsList(false)
-    } else setTimeout(() => setIsList(true), 100)
+    } else setTimeout(() => { setIsList(true) }, 100)
     setOpenAccordion(!openAccordion)
     clearInput()
   }
@@ -65,8 +77,8 @@ const TaskScreen = ({ navigation }: Props): JSX.Element => {
   const handleOk = (dataForm: StateTask): void => {
     setTimeout(() => {
       isEditTask
-        ? dispatch(editStateCarReducer({type:'tasks',numberCar:carId, item: dataForm}))
-        : dispatch(addStateCarReducer({type:'tasks',numberCar:carId,item: dataForm}))
+        ? dispatch(editStateCarReducer({ type: 'tasks', numberCar: carId, item: dataForm }))
+        : dispatch(addStateCarReducer({ type: 'tasks', numberCar: carId, item: dataForm }))
       if (dataForm.isFinished) {
         setTypeTask(dataForm.typeTask)
         showDialog()
@@ -85,7 +97,7 @@ const TaskScreen = ({ navigation }: Props): JSX.Element => {
     setIsDialog(false)
   }
   const okDialog = (): void => {
-    setTimeout(() => hideDialog(), 100)
+    setTimeout(() => { hideDialog() }, 100)
     navigation.navigate('InputDoneScreen', { editable: true, typeTask })
   }
   // ---------------------------------------------------------------------------
@@ -118,7 +130,7 @@ const TaskScreen = ({ navigation }: Props): JSX.Element => {
 
       {isList &&
         <View style={styles.flatList}>
-          <ToggleButton.Row onValueChange={value => setDateList(value)}
+          <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                             value={dateList}
                             style={{ alignSelf: 'flex-end', marginBottom: 10 }}
           >
