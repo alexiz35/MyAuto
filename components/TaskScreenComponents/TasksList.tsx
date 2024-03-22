@@ -147,8 +147,8 @@ export const TasksList = ({ handlePress, filterList = 'last' }: handleProp): JSX
         keyExtractor={(item, index) => index.toString()}
         getItemLayout={(data, index) => (
           {
-            length: 70,
-            offset: 70 * index,
+            length: 126,
+            offset: 126 * index,
             index
           }
         )}

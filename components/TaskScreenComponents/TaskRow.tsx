@@ -1,9 +1,10 @@
 import { Alert, StyleSheet, View } from 'react-native'
-import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
+import { Card, Divider, IconButton, List, Menu } from 'react-native-paper'
 import { JSX, useEffect, useState } from 'react'
-import { StateTask } from '../../type'
+import { getIndexCar, StateTask } from '../../type'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { delStateCarReducer } from '../Redux/CarsSlice'
+import { useAppTheme } from '../../CommonComponents/Theme'
 
 interface propsRowTask {
   handlePress: (item: StateTask) => void
@@ -13,10 +14,46 @@ interface propsRowTask {
 export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
-
+  const currentMileage = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].currentMiles)
+  const [leftMileageState, setLeftMileageState] = useState<number | undefined>()
+  const [leftDayState, setLeftDayState] = useState<number | undefined>()
   const [visibleMenu, setVisibleMenu] = useState(false)
+  const [styleBorder, setStyleBorder] = useState({
+    width: 0,
+    color: ''
+  })
   const [icon, setIcon] = useState('basket-check')
-  const { colors } = useTheme()
+  const { colors } = useAppTheme()
+
+  const dayOrMonth = (day: number): string => {
+    if (day <= 30) return `${String(day)}дней`
+    else return `${String(Math.round(day / 30))} мес`
+  }
+
+  const checkBorder = () => {
+    if (item.isFinished) {
+      setStyleBorder({
+        width: 2,
+        color: colors.tertiary
+      })
+      setLeftMileageState(undefined)
+      setLeftDayState(undefined)
+    } else {
+      if (item.milesEndTask !== undefined) {
+        const leftMileage = item.milesEndTask - currentMileage.currentMileage
+        const leftDay = Math.round((Number(new Date(item.dateEndTask)) - Date.now()) / (1000 * 3600 * 24))
+        setLeftMileageState(leftMileage <= 0 ? 0 : leftMileage)
+        setLeftDayState(leftDay <= 0 ? 0 : leftDay)
+        if (leftMileage <= 0 || leftDay <= 0) {
+          setStyleBorder({ width: 2, color: colors.error })
+        } else if (leftMileage <= 100 || leftDay <= 30) {
+          setStyleBorder({ width: 2, color: colors.yellow })
+        } else {
+          setStyleBorder({ width: 0, color: '' })
+        }
+      }
+    }
+  }
 
   const openMenu = (): void => {
     setVisibleMenu(true)
@@ -44,6 +81,10 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
   }
 
   useEffect(() => {
+    checkBorder()
+  }, [])
+
+  useEffect(() => {
     typeIcon()
   }, [])
   const typeIcon = (): void => {
@@ -67,75 +108,60 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
     <View style={styles.listItem}>
 
       <Card
-        style={{ height: 70, borderRadius: 5 }}
-        contentStyle={{ flexDirection: 'row' }}
+        style={{ borderRadius: 5, borderWidth: styleBorder.width, borderColor: styleBorder.color }}
 
         onPress={() => { handlePress(item) }}
       >
+        <List.Item title={String(item.name)}
+                   titleEllipsizeMode={'tail'}
+                   left={() => <List.Icon icon={icon} color={colors.tertiary} />}
+                   right={() => <View style={{ justifyContent: 'flex-start' }}>
+                     <Menu
 
-        <Card.Title
-          style={{ flex: 3.6, paddingLeft: 0 }}
-          leftStyle={{ marginRight: 2, padding: 0 }}
-          left={(props) =>
-            <View style={{ alignItems: 'center' }}>
-              <IconButton {...props} icon={icon} size={22} iconColor={colors.tertiary} style={{ height: 22, margin: 0, paddingTop: 2 }}/>
-              <IconButton icon={'check-decagram'} size={22} iconColor={item.isFinished ? colors.tertiary : colors.secondary} style={{ margin: 0, paddingTop: 2 }}/>
-              {/* <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/> */}
-              {/* <Icon name={'check-decagram' } type='material-community' size={22}
-                    color={ item.isInstall ? colors.tertiary : colors.secondary} /> */}
-            </View>
-          }
-          title={String(item.name)}
-          subtitle={item.isFinished ? 'выполнено' : 'не выполнено'}
-
-          titleStyle={{ paddingRight: 2 }}
-          subtitleStyle={{ paddingRight: 2 }}
-          titleVariant={'bodyMedium'}
-          subtitleVariant={'bodySmall'}
+                       anchor={
+                         <IconButton icon={'dots-vertical'} size={24} style={{ margin: 0, alignItems: 'flex-end', height: 20 }} onPress={openMenu}/>
+                       }
+                       visible={visibleMenu}
+                       onDismiss={closeMenu}
+                     >
+                       <Menu.Item title={'delete'}
+                                  dense
+                                  leadingIcon={'delete'}
+                                  onPress={pressDel}
+                       />
+                       <Menu.Item title={'edit'}
+                                  onPress={() => {
+                                    handlePress(item)
+                                  }}
+                                  dense
+                                  leadingIcon={'file-document-edit'}
+                       />
+                     </Menu>
+                   </View>}
+                   style={{ paddingHorizontal: 10, paddingVertical: 2 }}
+                   contentStyle={{ }}
         />
-
-        <Card.Title
-          style={{ flex: 2.3 }}
-          title={String(new Date(item.dateEndTask).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))}
-          subtitle={(item.milesEndTask != null) ? String(item.milesEndTask) : null}
-
-          titleVariant={'bodyMedium'}
-          subtitleVariant={'bodySmall'}
-          titleStyle={{ paddingRight: 2 }}
-          subtitleStyle={{ paddingRight: 2 }}
+        <Divider bold/>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <List.Item title={`До пробега: ${(item.milesEndTask != null) ? String(item.milesEndTask) : null} km`}
+                   style={{ paddingHorizontal: 0, paddingVertical: 2 }} titleStyle={{ fontSize: 13 }}
+                   description={leftMileageState !== undefined
+                     ? `Осталось: ${String(leftMileageState)} km`
+                     : ''
+                   }
+                   descriptionStyle={{ fontSize: 12 }}
         />
-
-        <Card.Title
-          style={{ flex: 2.2 }}
-          title={`${String(item.amount)} грн`}
-          titleVariant={'bodyMedium'}
-          subtitleVariant={'bodyMedium'}
-          titleStyle={{ paddingRight: 2 }}
-          subtitleStyle={{ paddingRight: 2 }}
+        <List.Item title={`До даты: ${String(new Date(item.dateEndTask).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))}`}
+                   style={{ paddingHorizontal: 0, paddingVertical: 2 }} titleStyle={{ fontSize: 13 }}
+                   description={leftDayState !== undefined
+                     ? `Осталось: ${dayOrMonth(leftDayState)}`
+                     : ''
+                   }
+                   descriptionStyle={{ fontSize: 12 }}
         />
-        <View style={{ justifyContent: 'flex-start' }}>
-          <Menu
-
-            anchor={
-              <IconButton icon={'dots-vertical'} size={24} style={{ margin: 2, alignItems: 'flex-end' }} onPress={openMenu}/>
-            }
-            visible={visibleMenu}
-            onDismiss={closeMenu}
-          >
-            <Menu.Item title={'delete'}
-                       dense
-                       leadingIcon={'delete'}
-                       onPress={pressDel}
-            />
-            <Menu.Item title={'edit'}
-                       onPress={() => {
-                         handlePress(item)
-                       }}
-                       dense
-                       leadingIcon={'file-document-edit'}
-            />
-          </Menu>
         </View>
+        <List.Item title={`Стоимость: ${String(item.amount)} грн`} titleStyle={{ fontSize: 13 }} style={{ paddingTop: 0, paddingBottom: 5 }}/>
+
       </Card>
 
     </View>
@@ -144,8 +170,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
 }
 const styles = StyleSheet.create({
   listItem: {
-    height: 70,
-    paddingRight: 0,
+    /* paddingRight: 0, */
     marginHorizontal: 5,
     marginVertical: 5,
     flex: 1
