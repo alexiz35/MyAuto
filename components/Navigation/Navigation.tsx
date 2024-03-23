@@ -23,13 +23,12 @@ import { current } from '@reduxjs/toolkit' */
 import CarInfoScreen from '../../screens/CarInfoScreen'
 import SettingScreen from '../../screens/SettingScreen'
 import {
-  useTheme,
   PaperProvider,
   Text,
   IconButton, Surface, TouchableRipple, Icon
 } from 'react-native-paper'
 import { useAppSelector } from '../Redux/hook'
-import { CombinedDarkTheme, CombinedDefaultTheme } from '../../CommonComponents/Theme'
+import { CombinedDarkTheme, CombinedDefaultTheme, useAppTheme } from '../../CommonComponents/Theme'
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
 import { JSX } from 'react'
@@ -71,16 +70,14 @@ export const Navigation = (): JSX.Element => {
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
     /* void AsyncStorage.clear() */
 
-    const theme = useTheme()
+    const theme = useAppTheme()
     const FabTab = (): null => null
-    /* console.log('first', useAppSelector((state) => state)) */
 
     return (
       <Tab.Navigator
         initialRouteName={'Home'}
         screenOptions={{
           headerShown: false,
-          /* tabBarActiveBackgroundColor: theme.colors.backdrop, */
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.secondary,
           tabBarStyle: { backgroundColor: theme.colors.background },
@@ -123,14 +120,6 @@ export const Navigation = (): JSX.Element => {
         <Tab.Screen name={'Fuel'} component={FabTab}
                     options={{
                       tabBarLabel: 'Fuel',
-                      /* tabBarIcon: ({ color, focused }) => (
-                        <MaterialCommunityIcons
-                          name={focused ? 'gas-station' : 'gas-station-outline'}
-                          /!* type='material-community' *!/
-                          color={color}
-                          size={focused ? 22 : 20}
-                        />
-                      ), */
                       tabBarButton: () => (
                         <IconButton
                           mode={'contained'}
@@ -143,14 +132,9 @@ export const Navigation = (): JSX.Element => {
                             height: 65,
                             width: 65
                           }}
-                          /* containerStyle={{
-                            borderWidth: 5,
-                            borderColor: /!* 'rgba(68,67,67,0.49)' *!/ theme.colors.primary
-                          }} */
                           icon={ 'gas-station'}
                           onPress={() => {
                             navigation.navigate('FuelScreen')
-                            /* navigation.navigate('InputDoneScreen', { editable: false, typeTask: 0 }) */
                           }}
                         ></IconButton>
                       )
@@ -194,12 +178,6 @@ export const Navigation = (): JSX.Element => {
   // ------------------------- Toggle Theme --------------------------------------
   const theme2 = useAppSelector(state => state.setting.themeSet)
   const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme
-
-  /*  const toggleTheme = useCallback(() => {
-    (theme2 === 'dark')
-      ? dispatch(changeTheme('light'))
-      : dispatch(changeTheme('dark'))
-  }, [theme2]) */
 
   // -----------------------------------------------------------------------------
   /*  const [initial, setInitial] = useState(true)
@@ -266,49 +244,7 @@ export const Navigation = (): JSX.Element => {
       <Stack.Navigator screenOptions={ {
         headerTransparent: false,
         statusBarStyle: 'dark'
-
-        /* headerRight: (navigation) => (
-            <IconButton
-              mode='outlined'
-              rippleColor={theme.colors.primary}
-              icon={'tune'}
-              size={20}
-              onPress={() => toggleTheme
-                }/>
-        ) */
       }}>
-        {/* <Stack.Screen
-          name='Home'
-          component={HomeScreen}
-          options={{
-            headerTitleAlign: 'center',
-            headerStyle: { backgroundColor: BACK_CARD },
-            headerTitle: () => (
-              <LogoTitle />
-            ),
-            headerLeft: () => (
-              <View>
-                <Text>Today: {Math.trunc(distance)} m</Text>
-              </View>
-            ),
-            title: 'title',
-            headerRight: () => (
-              <Button
-                type='outline'
-                size='md'
-                icon={{
-                  name: 'gear',
-                  type: 'font-awesome',
-                  size: 20
-                }}
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onPress={
-                  async () => {
-                    await AsyncStorage.clear()
-                  }}
-              />)
-          }
-          } /> */}
         <Stack.Screen
           name='BottomTabNav'
           // @ts-expect-error typeBottomTabNav
@@ -345,14 +281,6 @@ export const Navigation = (): JSX.Element => {
           }
           )}
         />
-   {/*      <Stack.Screen
-          name='InputDoneScreen'
-          component={InputDoneScreen}
-          options={{
-            headerStyle: { backgroundColor: theme.colors.background },
-            title: 'Edit Task',
-            headerTintColor: theme.colors.text
-          }} /> */}
         {
 // ------------------------------CarInfoScreen----------------------------------
         }
@@ -434,16 +362,6 @@ export const Navigation = (): JSX.Element => {
             )
           })} />
         {
-// ----------------------------TaskPartScreen-------------------------------
-        }
-        {/* <Stack.Screen
-          name='InputTaskPartScreen'
-          component={InputTaskPartScreen}
-          options={{
-            title: 'Запланируйте покупку запчастей',
-            headerTintColor: theme.colors.text
-          }} /> */}
-        {
 // ----------------------------SettingScreen-------------------------------
         }
         <Stack.Screen
@@ -454,36 +372,7 @@ export const Navigation = (): JSX.Element => {
             headerStyle: { backgroundColor: theme.colors.background },
             headerTintColor: theme.colors.onBackground
           }} />
-        {
-// ----------------------------InfoScreen-------------------------------
-        }
 
-        {/* <Stack.Screen
-          name='Info'
-          component={InfoScreen}
-          initialParams={{ taskId: 0 }}
-          options={({ navigation, route }) => ({
-            title: 'Info task',
-            headerTintColor: theme.colors.text,
-            headerRight: () => (
-
-                <Button
-                type='outline'
-                size='md'
-                buttonStyle={{ borderColor: theme.colors.border }}
-                icon={{
-                  name: 'pencil',
-                  type: 'material-community',
-                  color: theme.colors.text,
-                  size: 20
-                }}
-                onPress={() => {
-                  navigation.navigate('InputDoneScreen', { editable: true, taskId: route.params.taskId })
-                  console.log('navigate', route.params.taskId)
-                }}
-              />
-            )
-          })} /> */}
       </Stack.Navigator>
 
     </NavigationContainer>
