@@ -112,7 +112,6 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
             <Surface
               style={[styles.containerMainCard, {
                 backgroundColor: theme.colors.background,
-                borderWidth: 1,
                 borderColor: theme.colors.primary
               }]}
               elevation={4}
@@ -177,27 +176,10 @@ const styles = StyleSheet.create({
     margin: 20,
     alignSelf: 'center',
     width: '100%',
-    borderRadius: 10
+    borderRadius: 10,
+    borderWidth: 1
   }
 })
-
-// eslint-disable-next-line no-lone-blocks
-{ /*  <View style={styles.viewFab}>
-        <FAB
-          style={styles.fab}
-          placement={'right'}
-          icon={{ name: 'add', color: 'white' }}
-          onPress={() => {
-            navigation.navigate('InputDoneScreen', { editable: false })
-          }}
-        />
-        <FAB
-          style={{ marginBottom: 70 }}
-          placement={'right'}
-          icon={{ name: 'save', color: 'white' }}
-          onPress={() => { void printToFile() }}
-        />
-      </View> */ }
 
 // eslint-disable-next-line no-lone-blocks
 { /* <MapView

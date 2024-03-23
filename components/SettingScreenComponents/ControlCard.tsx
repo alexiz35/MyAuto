@@ -68,50 +68,6 @@ export const ControlCard = () => {
     }
   }
 
-  // ************************************************ PERIOD NOTIFICATION *********************************************
-  /* const startPeriodNotification = async () => {
-    const listNotification = await Notifications.getAllScheduledNotificationsAsync()
-    if (listNotification.length === 0) {
-      Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-          shouldShowAlert: true,
-          shouldPlaySound: true,
-          shouldSetBadge: false
-        })
-      })
-      void Notifications.scheduleNotificationAsync({
-        content: {
-          title: 'Look at that notification',
-          body: 'Вам необходимо обновить пробег в программе ',
-          priority: Notifications.AndroidNotificationPriority.MAX
-        },
-        trigger: {
-          seconds: 10,
-          repeats: true
-          /!* hour: 16,
-            minute: 0,
-            repeats: true,
-            weekday: 3 *!/
-        }
-      }).then(() => {
-        Toast.show({
-          type: 'success',
-          text1: 'Еженедельные напоминания запущены',
-          visibilityTime: 2500
-          /!* text2: 'This is some something 👋' *!/
-        })
-      })
-        .catch((e) => { console.log('errorOkNotification', e) })
-    } else {
-      Toast.show({
-        type: 'info',
-        text1: 'Еженедельные напоминания уже запущены',
-        visibilityTime: 2500
-        /!* text2: 'This is some something 👋' *!/
-      })
-    }
-  } */
-
   useEffect(() => {
     if (checkAlarmPeriod === 'checked' && isFirst) {
       void startPeriodNotification()

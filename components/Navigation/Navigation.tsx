@@ -68,10 +68,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const Navigation = (): JSX.Element => {
-  /* const state = useAppSelector(state =>state )
-  const dispatch = useAppDispatch()
-  dispatch(changedNumberCar(state.cars[0].carId)) */
-
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
     /* void AsyncStorage.clear() */
 
