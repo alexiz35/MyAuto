@@ -4,11 +4,21 @@ import BackgroundView from '../CommonComponents/BackgroundView'
 import { RootTabParamList } from '../components/Navigation/TypeNavigation'
 // eslint-disable-next-line import/named
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { JSX, useEffect, useState } from 'react'
+import { JSX, useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { TasksList } from '../components/TaskScreenComponents/TasksList'
-import { useNavigation } from '@react-navigation/native'
-import { Button, Dialog, List, Portal, ToggleButton, Text } from 'react-native-paper'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import {
+  Button,
+  Dialog,
+  List,
+  Portal,
+  ToggleButton,
+  Text,
+  Menu,
+  IconButton,
+  RadioButton
+} from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import InputTaskComponent from '../components/TaskScreenComponents/InputTaskComponent'
 import { addStateCarReducer, editStateCarReducer } from '../components/Redux/CarsSlice'
@@ -27,6 +37,8 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
   const [isList, setIsList] = useState(true)
   const [dateList, setDateList] = useState('last')
+  const [checkFilter, setCheckFilter] = useState<'finish' | 'unFinish' | 'all' | string>('unFinish')
+  const [visibleFilter, setVisibleFilter] = useState(false)
 
   const [isDialog, setIsDialog] = useState(false)
   const [typeTask, setTypeTask] = useState('part')
@@ -37,7 +49,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   }
 
   // -------------------------- route editable ---------------------------------
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     if (route.params !== undefined) {
       if (route.params.editable) {
         setIsEditSTask(true)
@@ -45,7 +57,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
         handleOpen(route.params.itemTask)
       }
     }
-  }, [])
+  }, []))
 
   // --------------------------Hide tabBottom when openAccordion-----------------
   useEffect(() => {
@@ -102,6 +114,16 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   }
   // ---------------------------------------------------------------------------
 
+  const closeMenu = () => {
+    setVisibleFilter(false)
+  }
+
+  const pressFilter = (value: 'finish' | 'unFinish' | 'all' | string) => {
+    setCheckFilter(value)
+    closeMenu()
+  }
+
+  // --------------------------------------------------------------------------
   return (
     <BackgroundView props={{ flex: 1 }}>
 
@@ -130,16 +152,62 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
       {isList &&
         <View style={styles.flatList}>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <View style={{ justifyContent: 'flex-start', paddingLeft: 10 }}>
+              <Menu
+                anchor={
+                  <IconButton icon={'filter-menu'} size={16} style={{ borderWidth: 1, borderRadius: 5, margin: 0 }} onPress={() => { setVisibleFilter(true) }}/>
+                }
+                visible={visibleFilter}
+                anchorPosition={'bottom'}
+                statusBarHeight={2}
+                onDismiss={() => { closeMenu() }}
+              >
+                <RadioButton.Group onValueChange={value => { pressFilter(value) }} value={checkFilter} >
+                <RadioButton.Item
+                  label={'завершенные'}
+                  mode={'ios'}
+                  position={'leading'}
+                  value="finish"
+                  labelStyle={{ textAlign: 'left' }}
+                  labelVariant={'bodyMedium'}
+                  color={colors.tertiary}
+                />
+                  <RadioButton.Item
+                  label={'не завершенные'}
+                  mode={'ios'}
+                  position={'leading'}
+                  value="unFinish"
+                  labelStyle={{ textAlign: 'left' }}
+                  labelVariant={'bodyMedium'}
+                  color={colors.tertiary}
+                />
+                  <RadioButton.Item
+                  label={'все'}
+                  mode={'ios'}
+                  position={'leading'}
+                  value="all"
+                  labelStyle={{ textAlign: 'left' }}
+                  labelVariant={'bodyMedium'}
+                  color={colors.tertiary}
+                />
+                </RadioButton.Group>
+
+              </Menu>
+            </View>
           <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                             value={dateList}
-                            style={{ alignSelf: 'flex-end', marginBottom: 10 }}
+                            style={{ justifyContent: 'flex-end', marginBottom: 10, paddingRight: 10 }}
           >
+
             <ToggleButton icon="numeric-3" value="last" size={20} style={{ height: 20 }}/>
             <ToggleButton icon="numeric-10" value="ten" size={20} style={{ height: 20 }}/>
             <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
           </ToggleButton.Row>
+          </View>
 
-          <TasksList handlePress={handleOpen} filterList={dateList}/>
+          <TasksList handlePress={handleOpen} filterList={dateList} checkedFilter={checkFilter}/>
 
         </View>
       }

@@ -9,7 +9,6 @@ import { JSX, useEffect, useState } from 'react'
 import { StatePart } from '../../../type'
 
 import {
-  useTheme,
   List,
   ToggleButton
 } from 'react-native-paper'
@@ -17,12 +16,13 @@ import { useNavigation } from '@react-navigation/native'
 import { PartsList } from './PartsList'
 import InputPartComponent from './InputPartComponent'
 import { addStateCarReducer, editStateCarReducer } from '../../Redux/CarsSlice'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 const InputPart = (): JSX.Element => {
   const dispatch = useAppDispatch()
   /* const state = useAppSelector((state) => state.cars[state.numberCar]) */
   const carId = useAppSelector(state => state.numberCar)
-  const { colors } = useTheme()
+  const { colors } = useAppTheme()
   const nav = useNavigation()
 
   const [openAccordion, setOpenAccordion] = useState(false)
@@ -53,7 +53,7 @@ const InputPart = (): JSX.Element => {
   const handleOnPress = (): void => {
     if (!openAccordion) {
       setIsList(false)
-    } else setTimeout(() => setIsList(true), 100)
+    } else setTimeout(() => { setIsList(true) }, 100)
     setOpenAccordion(!openAccordion)
     clearInput()
   }
@@ -65,8 +65,8 @@ const InputPart = (): JSX.Element => {
   const handleOk = (dataForm: StatePart): void => {
     setTimeout(() =>
       isEditPart
-        ? dispatch(editStateCarReducer({type:'parts', numberCar: carId, item: dataForm }))
-        : dispatch(addStateCarReducer({ type:'parts', numberCar: carId, item: dataForm }))
+        ? dispatch(editStateCarReducer({ type: 'parts', numberCar: carId, item: dataForm }))
+        : dispatch(addStateCarReducer({ type: 'parts', numberCar: carId, item: dataForm }))
     , 100)
     handleOnPress()
   }
@@ -100,7 +100,7 @@ const InputPart = (): JSX.Element => {
 
         {isList &&
           <View style={styles.flatList}>
-            <ToggleButton.Row onValueChange={value => setDateList(value)}
+            <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                               value={dateList}
                               style={{ alignSelf: 'flex-end', marginBottom: 10 }}
             >

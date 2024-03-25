@@ -14,6 +14,7 @@ import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { type StackNavigationProp } from '@react-navigation/stack'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import { useAppTheme } from '../../../CommonComponents/Theme'
 
 interface InputPartProps {
   isCancel: () => void
@@ -37,7 +38,7 @@ interface FormPart {
 }
 
 const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): JSX.Element => {
-  const theme = useTheme()
+  const theme = useAppTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   // ---------------------- handle ModalPickSeller -----------------------------

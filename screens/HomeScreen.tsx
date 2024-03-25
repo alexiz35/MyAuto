@@ -140,7 +140,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
             }
           })} style={{ textAlign: 'center' }}> Current Task</Text> */}
           {/* <Text onPress={async () => { await Notifications.cancelAllScheduledNotificationsAsync() }}>Cancel</Text> */}
-          <TasksList handlePress={pressList} filterList={'last'}/>
+          <TasksList handlePress={pressList} filterList={'last'} checkedFilter={'unFinish'}/>
 
         </View>
       </View>
