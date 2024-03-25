@@ -37,6 +37,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
   const [isList, setIsList] = useState(true)
   const [dateList, setDateList] = useState('last')
+  const [typeSort, setTypeSort] = useState<'dateSort' | 'mileageSort' | string>('dateSort')
   const [checkFilter, setCheckFilter] = useState<'finish' | 'unFinish' | 'all' | string>('unFinish')
   const [visibleFilter, setVisibleFilter] = useState(false)
 
@@ -196,18 +197,22 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
 
               </Menu>
             </View>
-          <ToggleButton.Row onValueChange={value => { setDateList(value) }}
-                            value={dateList}
-                            style={{ justifyContent: 'flex-end', marginBottom: 10, paddingRight: 10 }}
-          >
+            <ToggleButton.Row onValueChange={value => { setTypeSort(value) }} value={typeSort}>
+              <ToggleButton icon="speedometer" value="mileageSort" size={20} style={{ height: 30 }}/>
+              <ToggleButton icon="calendar" value="dateSort" size={20} style={{ height: 30 }}/>
+            </ToggleButton.Row>
+            <ToggleButton.Row onValueChange={value => { setDateList(value) }}
+                              value={dateList}
+                              style={{ justifyContent: 'flex-end', marginBottom: 10, paddingRight: 10 }}
+            >
 
-            <ToggleButton icon="numeric-3" value="last" size={20} style={{ height: 20 }}/>
-            <ToggleButton icon="numeric-10" value="ten" size={20} style={{ height: 20 }}/>
-            <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
-          </ToggleButton.Row>
+              <ToggleButton icon="numeric-3" value="last" size={20} style={{ height: 30 }}/>
+              <ToggleButton icon="numeric-10" value="ten" size={20} style={{ height: 30 }}/>
+              <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 30 }}/>
+            </ToggleButton.Row>
           </View>
 
-          <TasksList handlePress={handleOpen} filterList={dateList} checkedFilter={checkFilter}/>
+          <TasksList handlePress={handleOpen} filterList={dateList} checkedFilter={checkFilter} typeSort={typeSort}/>
 
         </View>
       }

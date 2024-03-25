@@ -9,68 +9,64 @@ interface handleProp {
   handlePress: (item: StateTask) => void
   filterList: string
   checkedFilter: 'finish' | 'unFinish' | 'all' | string
+  typeSort: 'mileageSort' | 'dateSort' | string
 }
 
-export const TasksList = ({ handlePress, filterList = 'last', checkedFilter }: handleProp): JSX.Element => {
+export const TasksList = ({ handlePress, filterList = 'last', checkedFilter = 'unFinish', typeSort = 'dateSort' }: handleProp): JSX.Element => {
   const listTasks = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].tasks)
   const [listIsFilter, setListIsFilter] = useState(listTasks)
   const [isSortTasks, setIsSortTasks] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
+
+  const functionSort = (arrayTasks: StateTask[], typeSort: string) => {
+    if (typeSort === 'dateSort') {
+      arrayTasks.sort(function (a, b) {
+        // @ts-expect-error date
+        return Date.parse(a.dateEndTask) - Date.parse(b.dateEndTask)
+      })
+      setListIsFilter(arrayTasks)
+    } else if (typeSort === 'mileageSort') {
+      arrayTasks.sort(function (a, b) {
+        // @ts-expect-error date
+        return Date.parse(a.milesEndTask) - Date.parse(b.milesEndTask)
+      })
+      setListIsFilter(arrayTasks)
+    }
+  }
 
   useEffect(() => {
     if (listTasks.length > 0) {
       switch (checkedFilter) {
         case 'unFinish': {
           const tempListTasks = listTasks.filter(value => !value.isFinished)
-          tempListTasks.sort(function (a, b) {
-            // @ts-expect-error date
-            return Date.parse(a.dateBuy) - Date.parse(b.dateBuy)
-          })
-          setListIsFilter(tempListTasks)
+          functionSort(tempListTasks, typeSort)
           setIsSortTasks(!isSortTasks)
         }
           break
         case 'finish': {
           const tempListTasks = listTasks.filter(value => value.isFinished)
-          tempListTasks.sort(function (a, b) {
-            // @ts-expect-error date
-            return Date.parse(a.dateBuy) - Date.parse(b.dateBuy)
-          })
-          setListIsFilter(tempListTasks)
+          functionSort(tempListTasks, typeSort)
           setIsSortTasks(!isSortTasks)
         }
           break
         case 'all': {
-          listTasks.sort(function (a, b) {
+          const tempLIstTasks = listTasks.slice()
+          tempLIstTasks.sort(function (a, b) {
             // @ts-expect-error date
-            return Date.parse(a.dateBuy) - Date.parse(b.dateBuy)
+            return Date.parse(a.dateEndTask) - Date.parse(b.dateEndTask)
           })
-          setListIsFilter(listTasks)
+          functionSort(tempLIstTasks, typeSort)
           setIsSortTasks(!isSortTasks)
         }
+          break
       }
-
-      /*  if (filterIsFinished) {
-        const tempListTasks = listTasks.filter(value => !value.isFinished)
-        tempListTasks.sort(function (a, b) {
-          // @ts-expect-error date
-          return Date.parse(a.dateBuy) - Date.parse(b.dateBuy)
-        })
-        setListIsFilter(tempListTasks)
-      } else {
-        listTasks.sort(function (a, b) {
-          // @ts-expect-error date
-          return Date.parse(a.dateBuy) - Date.parse(b.dateBuy)
-        })
-        setListIsFilter(listTasks)
-      } */
     }
-  }, [listTasks, checkedFilter])
+  }, [listTasks, checkedFilter, typeSort])
 
   useEffect(() => {
     setTimeout(() => { setIsLoad(false) }, 10)
     setIsLoad(true)
-  }, [filterList, checkedFilter])
+  }, [filterList, checkedFilter, typeSort])
 
   const filter = (): StateTask[] => {
     switch (filterList) {
