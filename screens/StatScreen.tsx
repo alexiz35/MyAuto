@@ -22,20 +22,7 @@ import BackgroundView from '../CommonComponents/BackgroundView'
 import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
 import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
 import { getIndexCar } from '../type'
-
-export interface TypePickedDate {
-  type: 'year' | 'month' | 'period' | string
-  valueYear: string
-  valueMonth: number
-  valueMonthYear: string
-  period: {
-    valueStartYear: string
-    valueStartMonth: number
-    valueEndYear: string
-    valueEndMonth: number
-  }
-}
-export const NAME_MONTH = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
+import { NAME_MONTH, TypePickedDate } from '../components/StatScreenComponents/TypeStat'
 
 export const initialDate: TypePickedDate = {
   type: 'year',

@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { JSX, useState } from 'react'
 import { useAppSelector } from '../Redux/hook'
-import { NAME_MONTH, TypePickedDate } from '../../screens/StatScreen'
 import WheelPickerSelectDate from './WheelPickerSelectDate'
 import WheelPickerSelectDouble, { TypeResultPicker } from './WheelPickerSelectDouble'
 import { Dialog, Divider, Button, RadioButton, Portal, Modal } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { getIndexCar } from '../../type'
+import { NAME_MONTH, TypePickedDate } from './TypeStat'
 
 interface Props {
   handleOk: (selectModal: TypePickedDate) => void

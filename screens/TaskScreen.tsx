@@ -221,10 +221,10 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
       }
         <Portal >
           <Dialog visible={isDialog} onDismiss={hideDialog} dismissableBackButton style={{ borderWidth: 1 }}>
-              <Dialog.Title>Hello</Dialog.Title>
+              <Dialog.Title>Создать покупку?</Dialog.Title>
               <Dialog.Content>
                 <Text>Задача завершена.</Text>
-                <Text> Создать покупку?</Text>
+                <Text>Перейти для создания покупки?</Text>
                 </Dialog.Content>
             <Dialog.Actions>
               <Button onPress={hideDialog}>Cancel</Button>
