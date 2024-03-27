@@ -1,4 +1,4 @@
-import { Card, Checkbox, Divider, Icon, Text } from 'react-native-paper'
+import { Badge, Card, Checkbox, Divider, HelperText, Icon, Text, Tooltip } from 'react-native-paper'
 import { View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useEffect, useRef, useState } from 'react'
@@ -97,12 +97,15 @@ export const ControlCard = () => {
         labelVariant={'bodyMedium'}
       />
       <Divider horizontalInset />
+      <Tooltip title={'функция в разработке'} enterTouchDelay={200} leaveTouchDelay={2000}>
       <Checkbox.Item
-        status={checkAlarmPeriodNumber}
+        disabled
+        status={'unchecked'}
         label={'Синхронизация пробега с авто'}
         onPress={() => { pressAlarm('alarmPeriodNumber') }}
         labelVariant={'bodyMedium'}
       />
+      </Tooltip>
     </Card>
 
   )

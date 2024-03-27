@@ -76,7 +76,7 @@ const StatScreen = (): JSX.Element => {
         break
       case 'month':
         if (selectModal.valueMonth !== undefined) {
-          setButtonDate(`${String(NAME_MONTH[selectModal.valueMonth])} ${String(selectModal.valueYear)}`)
+          setButtonDate(`${String(NAME_MONTH[selectModal.valueMonth])} ${String(selectModal.valueMonthYear)}`)
           setSumFuel(monthDataFuelChart(selectedDate, state).amountFuel)
           setVolumeFuel(monthDataFuelChart(selectedDate, state).volumeFuel)
           setSumMileage(monthDataMilesChart(selectedDate, state))
@@ -167,19 +167,19 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
             <Text style={styles.textKm}>{sumMileage} (km)</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.textKm}>Использовано топлива {volumeFuel} (l)</Text>
+            <Text style={styles.textKm}>Куплено топлива {volumeFuel} (l)</Text>
             <Text style={styles.textKm}>на {sumFuel} (грн)</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>Средний расход </Text>
-            <Text style={styles.textKm}>{String(averageFuel(selectedDate, state))} (l/100km)</Text>
+            <Text style={styles.textKm}>{isNaN(averageFuel(selectedDate, state)) ? ' -- -- ' : String(averageFuel(selectedDate, state)) } (l/100km)</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.textKm}>Использовано на ремонт</Text>
+            <Text style={styles.textKm}>Потрачено на ремонт, грн</Text>
             <Text style={styles.textKm}>{sumParts} (грн)</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.textKm}>Использовано на другое, грн</Text>
+            <Text style={styles.textKm}>Потрачено на другое, грн</Text>
             <Text style={styles.textKm}>{sumOther} (грн)</Text>
           </View>
         </View>

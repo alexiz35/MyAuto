@@ -1,5 +1,5 @@
 import { StateCar, StateFuel, StateService } from '../../type'
-import { TypePickedDate } from '../../screens/StatScreen'
+import { TypePickedDate } from './TypeStat'
 
 export const ALL_BAR = '#23C50AFF'
 export const FUEL_BAR = '#177AD5'
@@ -70,9 +70,10 @@ export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataSta
 export const yearDataMilesChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
   const selectYear = dataState.mileage.filter((value) => new Date(value.dateMileage).getFullYear() === searchYear)
   const selectMiles = selectYear.map(item => item.currentMileage)
+  console.log('statMiles', selectMiles)
   if (selectMiles.length === 0) return 0
   //* *****************************************************************************
-  selectMiles.splice(0, 1) // temp string
+  /* selectMiles.splice(0, 1) // temp string */
   //* *****************************************************************************
   const minMiles = (arr: number[]): number => Math.min(...arr)
   const maxMiles = (arr: number[]): number => Math.max(...arr)
