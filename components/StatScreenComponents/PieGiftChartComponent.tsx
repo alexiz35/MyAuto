@@ -34,11 +34,12 @@ const PieGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
       radius={100}
       showTextBackground={false}
       textBackgroundColor="white"
-      textBackgroundRadius={22}
+      textBackgroundRadius={20}
       data={(dataProps.fuel === 0 && dataProps.parts === 0 && dataProps.other === 0) ? pieDataNull : pieData}
       focusOnPress
       sectionAutoFocus
-      /* labelsPosition={'mid'} */
+      /* labelsPosition={'inward'} */
+
     />
     <View>
       <List.Item title={'fuel'}

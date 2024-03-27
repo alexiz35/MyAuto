@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { JSX, useEffect, useState } from 'react'
+import { JSX, useCallback, useEffect, useState } from 'react'
 import { getIndexCar, type StateFuel } from '../type'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { type RootStackParamList, type RootTabParamList } from '../components/Navigation/TypeNavigation'
@@ -24,7 +24,7 @@ import {
 } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
-import { type CompositeScreenProps, useNavigation } from '@react-navigation/native'
+import { type CompositeScreenProps, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { /* addedFuel, */
   addStateCarReducer,
@@ -90,6 +90,23 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const [isList, setIsList] = useState(true)
   const [dateList, setDateList] = useState('last')
 
+  // ----------------------------- fuel value  ----------------------------------
+
+  const volumeFuel = () => {
+    const tempVolumeFuel = state.fuel.filter((value) =>
+      new Date(value.dateFuel).getFullYear() === new Date().getFullYear() &&
+      new Date(value.dateFuel).getMonth() === new Date().getMonth()
+    )
+    setSumFuel(tempVolumeFuel.reduce((accumulator, currentValue) =>
+      accumulator + Number(currentValue.volumeFuel), 0)
+    )
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      volumeFuel()
+    }, [state.fuel])
+  )
   // ------------------------- Controller Form-----------------------------------
   const {
     control,
@@ -179,7 +196,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         }
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontStyle: 'italic' }}>
-              Сумма заправок в текущем месяце {sumFuel}
+              Заправлено в текущем месяце {sumFuel} л
             </Text>
             <IconButton icon={'calendar-month'} onPress={() => {
               // @ts-expect-error temp error navigate props
