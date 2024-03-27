@@ -70,7 +70,6 @@ export const yearDataFuelChart = (searchYear = new Date().getFullYear(), dataSta
 export const yearDataMilesChart = (searchYear = new Date().getFullYear(), dataState: StateCar): number => {
   const selectYear = dataState.mileage.filter((value) => new Date(value.dateMileage).getFullYear() === searchYear)
   const selectMiles = selectYear.map(item => item.currentMileage)
-  console.log('statMiles', selectMiles)
   if (selectMiles.length === 0) return 0
   //* *****************************************************************************
   /* selectMiles.splice(0, 1) // temp string */
@@ -208,17 +207,14 @@ export const averageFuel = (selectDate: TypePickedDate, dataState: StateCar): nu
   if (filteredArrayByDate.length === 0) return 0
   // array is sorted by ascending order
   filteredArrayByDate.sort((a, b) => a.mileageFuel - b.mileageFuel)
-  console.log('ARRAY', filteredArrayByDate)
   // mileage - difference between last and first mileageFuel
   const mileage = filteredArrayByDate[filteredArrayByDate.length - 1].mileageFuel - filteredArrayByDate[0].mileageFuel
-  console.log('Mile', mileage, filteredArrayByDate[filteredArrayByDate.length - 1].volumeFuel, filteredArrayByDate.length - 1)
   // amount of fuel - sum fuel without last refueling
   const amountFuel = filteredArrayByDate.reduce((accumulator, currentValue, currentIndex) =>
     (currentIndex === (filteredArrayByDate.length - 1))
       ? accumulator
       : (accumulator + Number(currentValue.volumeFuel))
   , 0)
-  console.log('fuel', amountFuel)
   return Number(((amountFuel / mileage) * 100).toFixed(2))
   /* const mileage = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.mileageFuel), 0) */
 }
