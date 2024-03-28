@@ -8,7 +8,14 @@
     "scheme": "devizcar",
     "jsEngine": "hermes",
     "plugins": [
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to set on icon App."
+        }
+      ]
+
     ],
     "splash": {
       "image": "./assets/mySplash.png",

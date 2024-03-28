@@ -6,7 +6,8 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
-import { Image, Platform, View } from 'react-native'
+import { Platform, View } from 'react-native'
+import { Image } from 'expo-image'
 /* import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
@@ -31,25 +32,10 @@ import { useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme, useAppTheme } from '../../CommonComponents/Theme'
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
-import { JSX } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MileageScreen from '../../screens/MileageScreen'
-
-function LogoTitle (): JSX.Element {
-  return (
-    <Surface elevation={3} >
-    <Image
-      style={{
-        width: 50,
-        height: 50
-      }}
-      source={
-        require('../../assets/renaultLogo2.png')
-      }
-    />
-    </Surface>
-  )
-}
+import * as ImagePicker from 'expo-image-picker'
 
 /* function MyButton (): JSX.Element {
   return (
@@ -67,6 +53,40 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const Navigation = (): JSX.Element => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const [image, setImage] = useState(require('../../assets/renaultLogo2.png'))
+  /* const tempLogo = require('../../assets/renaultLogo2.png') */
+
+  // ******************************************************************************
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [3, 3],
+      quality: 1
+    })
+    if (!result.canceled) {
+      setImage(result.assets[0].uri)
+    }
+  }
+
+  const LogoTitle = () => {
+    return (
+      <Surface elevation={5} style={{ borderRadius: 5 }}>
+        <Image
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 5
+          }}
+          source={image}
+        />
+      </Surface>
+    )
+  }
+
+  // ******************************************************************************
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
     /* void AsyncStorage.clear() */
 
@@ -254,10 +274,11 @@ export const Navigation = (): JSX.Element => {
             headerStyle: { backgroundColor: theme.colors.background },
             headerTitle: () => (
                   <TouchableRipple
-                    onPress={() =>
-                      navigation.navigate('SettingScreen')
+                    onPress={async () =>
+                    /*  navigation.navigate('SettingScreen') */
+                    { await pickImage() }
                     }>
-                    <LogoTitle />
+                    <LogoTitle/>
                   </TouchableRipple>
             ),
             headerLeft: () => (

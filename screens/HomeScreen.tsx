@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { editedCarInfo, initialStateCar } from '../components/Redux/CarsSlice'
 import * as Notifications from 'expo-notifications'
 import { getIndexCar, StateTask } from '../type'
+import * as ImagePicker from 'expo-image-picker'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
