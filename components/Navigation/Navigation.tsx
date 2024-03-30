@@ -7,8 +7,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
 import { Platform, View } from 'react-native'
-import { Image } from 'expo-image'
-import * as FileSystem from 'expo-file-system'
 /* import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
@@ -16,7 +14,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage' */
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
 import TaskScreen from '../../screens/TaskScreen'
-/* import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs' */
 import FuelScreen from '../../screens/FuelScreen'
 /* import * as Print from 'expo-print'
 import { shareAsync } from 'expo-sharing'
@@ -27,30 +24,16 @@ import SettingScreen from '../../screens/SettingScreen'
 import {
   PaperProvider,
   Text,
-  IconButton, Surface, TouchableRipple, Icon
+  IconButton, Icon
 } from 'react-native-paper'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme, useAppTheme } from '../../CommonComponents/Theme'
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
-import { JSX, useEffect, useState } from 'react'
+import { JSX } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MileageScreen from '../../screens/MileageScreen'
-import * as ImagePicker from 'expo-image-picker'
-import { getIndexCar } from '../../type'
 import { LogoTitle } from './LogoTitle'
-
-/* function MyButton (): JSX.Element {
-  return (
-    <View style={{ width: 100, marginRight: 20 }}>
-      <Button title={'Set'} color='violet' onPress={() => alert('Hello')}/>
-    </View>
-  )
-} */
-
-/* -----------------------------    THEME   ---------------------------------- */
-
-/* ----------------------------------------------------------------------------- */
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()

@@ -42,7 +42,7 @@ export const LogoTitle = (): JSX.Element => {
   return (
 
     <Surface elevation={5} style={{ borderRadius: 5 }} >
-      <TouchableRipple onPress={pickImage}>
+      <TouchableRipple onPress={async () => { await pickImage() }}>
       <Image
         style={{
           width: 50,
