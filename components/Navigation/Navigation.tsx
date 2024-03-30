@@ -38,6 +38,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import MileageScreen from '../../screens/MileageScreen'
 import * as ImagePicker from 'expo-image-picker'
 import { getIndexCar } from '../../type'
+import { LogoTitle } from './LogoTitle'
 
 /* function MyButton (): JSX.Element {
   return (
@@ -56,54 +57,6 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const Navigation = (): JSX.Element => {
   // *********************** Picked Logo ********************************
-  const numberCar = useAppSelector(state => state.numberCar)
-
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const [image, setImage] = useState(require('../../assets/renaultLogo2.png'))
-  useEffect(() => {
-    setImage(FileSystem.documentDirectory + String(numberCar) + '.jpeg')
-  }, [numberCar])
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [3, 3],
-      quality: 1
-    })
-    if (!result.canceled) {
-      // удаляем файл 1.png , с опцией игнора ошибки если файл не существует
-      await FileSystem.deleteAsync(FileSystem.documentDirectory + String(numberCar) + '.jpeg', { idempotent: true })
-      // копируем файл из временного кэша ImagePicker в папку программы
-      await FileSystem.copyAsync({
-        from: result.assets[0].uri,
-        to: FileSystem.documentDirectory + String(numberCar) + '.jpeg'
-      })
-        .then(() => {
-          setImage(result.assets[0].uri)
-        })
-        .catch((reason) => {
-          console.log('ERROR', reason)
-        })
-    }
-  }
-
-  const LogoTitle = () => {
-    return (
-      <Surface elevation={5} style={{ borderRadius: 5 }}>
-        <Image
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 5
-          }}
-          source={ image }
-          cachePolicy={'none'}
-        />
-      </Surface>
-    )
-  }
 
   // ******************************************************************************
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
@@ -292,12 +245,7 @@ export const Navigation = (): JSX.Element => {
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: theme.colors.background },
             headerTitle: () => (
-                  <TouchableRipple
-                    onPress={async () => { await pickImage() }
-                      /*  navigation.navigate('SettingScreen') */
-                    }>
                     <LogoTitle/>
-                  </TouchableRipple>
             ),
             headerLeft: () => (
                   <View>
