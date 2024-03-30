@@ -8,6 +8,7 @@ import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
 import { Platform, View } from 'react-native'
 import { Image } from 'expo-image'
+import * as FileSystem from 'expo-file-system'
 /* import * as TaskManager from 'expo-task-manager'
 import haversineDistance from 'haversine-distance'
 import * as Location from 'expo-location'
@@ -28,7 +29,7 @@ import {
   Text,
   IconButton, Surface, TouchableRipple, Icon
 } from 'react-native-paper'
-import { useAppSelector } from '../Redux/hook'
+import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { CombinedDarkTheme, CombinedDefaultTheme, useAppTheme } from '../../CommonComponents/Theme'
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
@@ -36,6 +37,7 @@ import { JSX, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MileageScreen from '../../screens/MileageScreen'
 import * as ImagePicker from 'expo-image-picker'
+import { getIndexCar } from '../../type'
 
 /* function MyButton (): JSX.Element {
   return (
@@ -53,11 +55,15 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const Navigation = (): JSX.Element => {
+  // *********************** Picked Logo ********************************
+  const numberCar = useAppSelector(state => state.numberCar)
+
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const [image, setImage] = useState(require('../../assets/renaultLogo2.png'))
-  /* const tempLogo = require('../../assets/renaultLogo2.png') */
+  useEffect(() => {
+    setImage(FileSystem.documentDirectory + String(numberCar) + '.jpeg')
+  }, [numberCar])
 
-  // ******************************************************************************
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -67,7 +73,19 @@ export const Navigation = (): JSX.Element => {
       quality: 1
     })
     if (!result.canceled) {
-      setImage(result.assets[0].uri)
+      // удаляем файл 1.png , с опцией игнора ошибки если файл не существует
+      await FileSystem.deleteAsync(FileSystem.documentDirectory + String(numberCar) + '.jpeg', { idempotent: true })
+
+      await FileSystem.copyAsync({
+        from: result.assets[0].uri,
+        to: FileSystem.documentDirectory + String(numberCar) + '.jpeg'
+      })
+        .then(() => {
+          setImage(result.assets[0].uri)
+        })
+        .catch((reason) => {
+          console.log('ERROR', reason)
+        })
     }
   }
 
@@ -80,7 +98,8 @@ export const Navigation = (): JSX.Element => {
             height: 50,
             borderRadius: 5
           }}
-          source={image}
+          source={ image }
+          cachePolicy={'none'}
         />
       </Surface>
     )
@@ -274,9 +293,8 @@ export const Navigation = (): JSX.Element => {
             headerStyle: { backgroundColor: theme.colors.background },
             headerTitle: () => (
                   <TouchableRipple
-                    onPress={async () =>
-                    /*  navigation.navigate('SettingScreen') */
-                    { await pickImage() }
+                    onPress={async () => { await pickImage() }
+                      /*  navigation.navigate('SettingScreen') */
                     }>
                     <LogoTitle/>
                   </TouchableRipple>
