@@ -75,7 +75,7 @@ export const Navigation = (): JSX.Element => {
     if (!result.canceled) {
       // удаляем файл 1.png , с опцией игнора ошибки если файл не существует
       await FileSystem.deleteAsync(FileSystem.documentDirectory + String(numberCar) + '.jpeg', { idempotent: true })
-
+      // копируем файл из временного кэша ImagePicker в папку программы
       await FileSystem.copyAsync({
         from: result.assets[0].uri,
         to: FileSystem.documentDirectory + String(numberCar) + '.jpeg'
