@@ -4,6 +4,7 @@ import { getIndexCar, StateTask } from '../../type'
 import { useAppSelector } from '../Redux/hook'
 import { BusyIndicator } from '../useIsReadyHook'
 import { RenderRowTask } from './TaskRow'
+import { Text } from 'react-native-paper'
 
 interface handleProp {
   handlePress: (item: StateTask) => void
@@ -32,6 +33,12 @@ export const TasksList = ({ handlePress, filterList = 'last', checkedFilter = 'u
       })
       setListIsFilter(arrayTasks)
     }
+  }
+
+  const EmptyList = (): JSX.Element => {
+    return (
+      <Text style={{ textAlign: 'center' }}>Задач пока нет</Text>
+    )
   }
 
   useEffect(() => {
@@ -83,6 +90,7 @@ export const TasksList = ({ handlePress, filterList = 'last', checkedFilter = 'u
       ? <BusyIndicator />
       : <FlatList
         data={filter()}
+        ListEmptyComponent={() => <EmptyList/> }
         extraData={isSortTasks}
         renderItem={({ item }) => <RenderRowTask handlePress={handlePress} item={item}/>}
         keyExtractor={(item, index) => index.toString()}
