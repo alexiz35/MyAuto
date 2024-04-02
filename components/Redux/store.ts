@@ -14,6 +14,7 @@ import sellerSlice from './SellerSlice'
 import numberCarSlice from './NumberCarSlice'
 import carsSlice from './CarsSlice'
 import hardSet from 'redux-persist/es/stateReconciler/hardSet'
+import tireSlice from './TireSlice'
 
 export const initialState: StateMain = {
   numberCar: 0,
@@ -24,6 +25,7 @@ export const initialState: StateMain = {
     name: 'rerere',
     phone: '2'
   }],
+  tireList: [],
   token: '',
   setting: {
     themeSet: 'light',
@@ -36,6 +38,13 @@ export const initialState: StateMain = {
     {
       info: initialStateInfo,
       carId: 0,
+      tire: {
+        id: Date.now(),
+        valueTire: '',
+        nameTire: '',
+        yearTire: '',
+        typeTire: 'all'
+      },
       currentMiles: {
         currentMileage: 0,
         dateMileage: new Date()
@@ -63,7 +72,8 @@ const rootReducer = combineReducers<StateMain>({
   token: tokenSlice, // настроить токен
   cars: carsSlice, //
   numberCar: numberCarSlice, //
-  sellerList: sellerSlice // ok
+  sellerList: sellerSlice, // ok
+  tireList: tireSlice
 })
 
 // ------------------------------- devTool -----------------------------------------------

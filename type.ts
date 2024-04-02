@@ -88,11 +88,13 @@ export interface StateMain {
   token: string
   setting: Setting
   sellerList: Seller[]
+  tireList: StateTire[]
 }
 
 export interface StateCar {
   carId: number
   info: StateInfo
+  tire: StateTire
   currentMiles: CurrentMiles
   fuel: StateFuel[]
   services: StateService[]
@@ -115,6 +117,20 @@ export interface Seller {
   web?: string
   type?: string
   specialism?: string
+}
+export interface StateTire {
+  id: number
+  valueTire: string
+  nameTire: string
+  yearTire: string
+  typeTire: string
+}
+export const initialTire: StateTire = {
+  id: Date.now(),
+  valueTire: '',
+  nameTire: '',
+  yearTire: '',
+  typeTire: 'all'
 }
 
 /* export interface StateListSeller {

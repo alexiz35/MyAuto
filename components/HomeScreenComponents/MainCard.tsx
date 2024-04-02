@@ -1,5 +1,5 @@
 import { View, StyleSheet, Vibration } from 'react-native'
-import { CurrentMiles, getIndexCar, initialStateInfo, StateInfo } from '../../type'
+import { CurrentMiles, getIndexCar, initialStateInfo, initialTire, StateInfo, StateTire } from '../../type'
 /* import { NativeStackNavigationProp } from '@react-navigation/native-stack' */
 import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -20,6 +20,7 @@ import { addedCurrentMiles } from '../Redux/CarsSlice'
 // eslint-disable-next-line import/named
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { TireInput } from './TireInput'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -48,15 +49,29 @@ export const MainCard = (): JSX.Element => {
       ? { currentMileage: 0, dateMileage: new Date() }
       : state.cars[indexCar].currentMiles
   ))
+  const tireState: StateTire = useAppSelector(state => (
+    state.cars[indexCar].tire === undefined
+      ? initialTire
+      : state.cars[indexCar].tire
+  ))
   const dispatch = useAppDispatch()
 
   const [visibleMileage, setVisibleMileage] = useState(false)
+  const [visibleTire, setVisibleTire] = useState(false)
+  const [tire, setTire] = useState(tireState)
   const [isNeedUpdate, setIsNeedUpdate] = useState(false)
   const [valueMileage, setValueMileage] = useState<number>(currentMiles.currentMileage)
   const [errorInput, setErrorInput] = useState(false)
   const toggleMileage = (): void => {
     setVisibleMileage(!visibleMileage)
   }
+  const toggleTireDialog = (): void => {
+    setVisibleTire(!visibleTire)
+  }
+
+  useEffect(() => {
+    setTire(tireState)
+  }, [tireState])
 
   useEffect(() => {
     setIndexCar(getIndexCar(state.cars, numberCar))
@@ -105,6 +120,10 @@ export const MainCard = (): JSX.Element => {
       } else setValueMileage(currentMiles.currentMileage)
     }, [currentMiles, infoCar.buyMileage])
 
+  useEffect(() => {
+
+  }, [])
+
   useFocusEffect(
     useCallback(() => {
       void checkFirstRun()
@@ -151,7 +170,6 @@ export const MainCard = (): JSX.Element => {
   }
 
   return (
-    /* <ImageBackground source={require('../../assets/whiteBack2.jpg')} resizeMethod={'auto'} resizeMode={'cover'} > */
     <View>
 
     <View>
@@ -189,10 +207,14 @@ export const MainCard = (): JSX.Element => {
 
         <View style={styles.costView} >
 
-          <Button icon={({ size, color }) => (<Icon name='car-wrench' size={20} color={colors.onBackground}/>)}
+          <Button
+                  icon={require('../../assets/wheel.png') }
+                  /* icon={({ size }) => (<Image source={require('../../assets/wheel.png')}/>)} */
                   textColor={colors.onBackground} labelStyle={{ fontSize: 16 }} rippleColor={colors.primary}
-                  onPress={() => { navTab.navigate('InputDoneScreen', { editable: false, typeTask: 'part' }) }}>
-          2200 грн
+                  /* onPress={() => { navTab.navigate('InputDoneScreen', { editable: false, typeTask: 'part' }) }} */
+                  onPress={toggleTireDialog}
+          >
+            {tire.valueTire}
           </Button>
           <Button icon={({ size }) => (<Icon name='gas-station' size={20} color={colors.onBackground}/>)}
                   textColor={colors.onBackground} labelStyle={{ fontSize: 16 }} rippleColor={colors.primary}
@@ -212,6 +234,12 @@ export const MainCard = (): JSX.Element => {
       </View>
     </View>
       <Portal>
+        <Dialog visible={visibleTire} onDismiss={toggleTireDialog} >
+          <TireInput closeTire={toggleTireDialog} itemTire={tireState} />
+        </Dialog>
+      </Portal>
+      <Portal>
+
       <Dialog
             visible={visibleMileage}
             onDismiss={toggleMileage}
@@ -277,8 +305,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   costView: {
-    flex: 1
-
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start'
   },
   costTOView: {
     flexDirection: 'row'

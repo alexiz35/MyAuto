@@ -2,20 +2,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   CurrentMiles, getIndexCar,
-  initialStateInfo,
+  initialStateInfo, initialTire,
   StateCar,
   StateFuel,
   StateInfo,
   StateOther,
   StatePart,
   StateService,
-  StateTask
+  StateTask, StateTire
 } from '../../type'
 
 export const initialStateCar: StateCar[] = [
   {
     info: initialStateInfo, // ok
     carId: 0,
+    tire: initialTire,
     currentMiles: {
       currentMileage: 0,
       dateMileage: new Date()
@@ -142,6 +143,19 @@ const carsSlice = createSlice({
     // ----------------------------------------------------------------------------------------
     updateStateCars (state, action: PayloadAction<StateCar[]>) {
       return action.payload
+    },
+    // ----------------------------------------------------------------------------------------
+    editedTires (state, action: PayloadAction<{ tire: StateTire, numberCar: number }>) {
+      state[getIndexCar(state, action.payload.numberCar)].tire = action.payload.tire
+      /* const tempTires = state[getIndexCar(state, action.payload.numberCar)].tire
+     *  if (tempTires.length === 0) {
+         tempTires.push(action.payload.tire)
+         state[getIndexCar(state, action.payload.numberCar)].tires = tempTires
+       } else {
+         const tempFilter = tempTires.filter(item => item.id !== action.payload.tire.id)
+         tempFilter.push(action.payload.tire)
+         state[getIndexCar(state, action.payload.numberCar)].tires = tempTires
+       } */
     }
   }
 })
@@ -154,7 +168,7 @@ export const {
   deletedCar, delNowCar,
   updateStateCars,
   delAllMileage, delItemMileage,
-  editedItemMileage
+  editedItemMileage, editedTires
 } = carsSlice.actions
 
 export default carsSlice.reducer
