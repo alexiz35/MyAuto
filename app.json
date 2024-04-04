@@ -1,9 +1,9 @@
 {
   "expo": {
     "name": "DevizCar",
-    "slug": "DevizCar",
-    "version": "1.0.0",
-    "icon": "./assets/icon7.png",
+    "slug": "devizcar",
+    "version": "1.0.2",
+    "icon": "./assets/icon71.png",
     "userInterfaceStyle": "dark",
     "scheme": "devizcar",
     "jsEngine": "hermes",
@@ -15,10 +15,9 @@
           "photosPermission": "The app accesses your photos to set on icon App."
         }
       ]
-
     ],
     "splash": {
-      "image": "./assets/mySplash.png",
+      "image": "./assets/mySplash2.png",
       "resizeMode": "cover",
       "backgroundColor": "#000000"
     },
@@ -34,26 +33,24 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon7.png"
-
+        "foregroundImage": "./assets/icon_adapt.png"
       },
       "package": "com.deviz.devizcar",
       "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION",
-        "FOREGROUND_SERVICE",
-        "ACCESS_BACKGROUND_LOCATION",
-        "WRITE_EXTERNAL_STORAGE",
-        "READ_EXTERNAL_STORAGE"
-      ]
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "872349f7-1492-4da4-b5ec-4b501afa5508"
+        "projectId": "e2b0faf4-4cf0-48e6-af81-ece0785f388f"
       }
-    }
+    },
+    "owner": "aleksiz35"
   }
 }

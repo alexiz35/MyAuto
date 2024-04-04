@@ -1,6 +1,6 @@
 import { useAppSelector } from './Redux/hook'
 import { JSX, useEffect } from 'react'
-import { Platform, View } from 'react-native'
+import { Platform } from 'react-native'
 import * as Notifications from 'expo-notifications'
 import Toast from 'react-native-toast-message'
 export const startPeriodNotification = async () => {
