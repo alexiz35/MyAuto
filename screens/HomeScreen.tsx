@@ -18,7 +18,6 @@ import { TasksList } from '../components/TaskScreenComponents/TasksList'
 import { ModalPickNameCar } from '../components/CarInfoScreenComponents/ModalPickNameCar'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { editedCarInfo, initialStateCar } from '../components/Redux/CarsSlice'
-import * as Notifications from 'expo-notifications'
 import { getIndexCar, StateTask } from '../type'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
@@ -80,22 +79,6 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   }
   // ----------------------------------
 
-  useEffect(() => {
-    /* setMiles(updateMiles(15)) */
-    // First, set the handler that will cause the notification
-    // to show the alert
-
-    // Second, call the method
-
-    /*    Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Look at that notification',
-        body: "I'm so proud of myself!",
-      },
-      trigger: null,
-    }); */
-  }, [])
-
   // **************************** Block HomeScreen for input NameCar ***************************************************
   useFocusEffect(() => {
     if (state.cars.length === 1 && state.cars[0].info.nameCar === '') {
@@ -126,22 +109,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
             Ближайшие задачи
           </Text>
           </Surface>
-         {/*  <Text onPress={async () => await Notifications.scheduleNotificationAsync({
-            content: {
-              title: 'Look at that notification',
-              body: 'Вам необходимо обновить пробег в программе ',
-              priority: Notifications.AndroidNotificationPriority.MAX
-            },
-            trigger: {
-              hour: 16,
-              minute: 0,
-              repeats: true,
-              weekday: 3
-            }
-          })} style={{ textAlign: 'center' }}> Current Task</Text> */}
-          {/* <Text onPress={async () => { await Notifications.cancelAllScheduledNotificationsAsync() }}>Cancel</Text> */}
           <TasksList handlePress={pressList} filterList={'last'} checkedFilter={'unFinish'} typeSort={'mileageSort'}/>
-
         </View>
       </View>
       <Portal>

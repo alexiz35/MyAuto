@@ -1,6 +1,6 @@
-import React, { JSX, useRef, useState } from 'react'
+import { JSX, useRef, useState } from 'react'
 import { Dialog, HelperText, IconButton, Surface, TextInput } from 'react-native-paper'
-import { Keyboard, View, TextInput as TypeTextInput } from 'react-native'
+import { View, TextInput as TypeTextInput } from 'react-native'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { useAppSelector } from '../Redux/hook'
 import { getIndexCar } from '../../type'

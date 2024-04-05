@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { StateFuel } from '../../type'
 import { Card, IconButton, Menu } from 'react-native-paper'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { delStateCarReducer } from '../Redux/CarsSlice'
@@ -32,39 +32,6 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
       <Card
         style={{ height: 70, borderRadius: 5 }}
         contentStyle={{ flexDirection: 'row' }}
-        /* bottomDivider
-        topDivider */
-        /* leftContent={() => (
-          <Button
-            title='info'
-            icon={{
-              name: 'info',
-              color: 'white'
-            }}
-            buttonStyle={{ minHeight: '100%' }}
-            onPress={() => {
-              handlePress(item)
-            }}
-            /!* onPress={() => { nav() }} *!/
-          />
-        )} */
-        /* rightContent={() => (
-          <Button
-            title='delete'
-            icon={{
-              name: 'delete',
-              color: 'white'
-            }}
-            buttonStyle={{
-              minHeight: '100%',
-              backgroundColor: 'red'
-            }}
-            onPress={() => {
-              dispatch(delFuel(carId, item.id))
-            }}
-          />
-        )} */
-
         onPress={() => { handlePress(item) }}
       >
 
@@ -81,12 +48,6 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
         />
-        {/* <ListItem.Title style={{ fontSize: 14, color: colors.onSurface }}>
-              {String(new Date(item.dateFuel).toLocaleDateString())}
-            </ListItem.Title> */}
-        {/* <ListItem.Subtitle style={{ fontSize: 14, color: colors.onSurface }}>
-              {item.StationFuel}
-            </ListItem.Subtitle> */}
 
         <Card.Title
           style={{ flex: 2.3 }}

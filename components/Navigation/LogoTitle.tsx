@@ -9,7 +9,7 @@ export const LogoTitle = (): JSX.Element => {
   const numberCar = useAppSelector(state => state.numberCar)
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const [image, setImage] = useState(require('../../assets/renaultLogo2.png'))
+  const [image, setImage] = useState(require('../../assets/renaultLogo.png'))
   useEffect(() => {
     setImage(FileSystem.documentDirectory + String(numberCar) + '.jpeg')
   }, [numberCar])

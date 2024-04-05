@@ -51,7 +51,7 @@ export const TireInput = ({ itemTire = initialTire, closeTire }: TireProps): JSX
         numberCar
       }))
       closeTire()
-    } else setErrorTire('неправильный формат размера шин')
+    } else setErrorTire('неправильный формат размера шин(Rxx/xxx/xx')
   }
 
   return (

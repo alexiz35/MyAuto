@@ -1,4 +1,5 @@
 import { AppDispatch, RootState } from './store'
+// eslint-disable-next-line import/named
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 export const useAppDispatch: () => AppDispatch = useDispatch

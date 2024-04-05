@@ -9,7 +9,10 @@ import { JSX, useEffect } from 'react'
 import { NotificationComponent } from './components/NotificationComponent'
 import { CloseFunction } from './components/CloseFunction'
 import Toast from 'react-native-toast-message'
+import * as SplashScreen from 'expo-splash-screen'
 
+void SplashScreen.preventAutoHideAsync()
+setTimeout(SplashScreen.hideAsync, 2000)
 export default function App (): JSX.Element {
   /*   const theme = createTheme({
     mode: 'dark',

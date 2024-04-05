@@ -1,7 +1,7 @@
 import { View, StyleSheet, Vibration } from 'react-native'
 import { CurrentMiles, getIndexCar, initialStateInfo, initialTire, StateInfo, StateTire } from '../../type'
 /* import { NativeStackNavigationProp } from '@react-navigation/native-stack' */
-import { RootStackParamList, RootTabParamList } from '../Navigation/TypeNavigation'
+import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { JSX, useCallback, useEffect, useState } from 'react'
@@ -26,14 +26,16 @@ type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
 'CarInfoScreen'
 >
+/*
 type ProfileTabNavigationProp = NativeStackNavigationProp<
 RootTabParamList,
 'StatScreen'
 >
+*/
 
 export const MainCard = (): JSX.Element => {
   const navStack = useNavigation<ProfileScreenNavigationProp>()
-  const navTab = useNavigation<ProfileTabNavigationProp>()
+  /* const navTab = useNavigation<ProfileTabNavigationProp>() */
   const { colors } = useAppTheme()
   const numberCar = useAppSelector(state => state.numberCar)
   const state = useAppSelector(state => state)
@@ -80,14 +82,6 @@ export const MainCard = (): JSX.Element => {
   useEffect(() => {
     periodTimeMileage()
   }, [currentMiles])
-
-  /* useFocusEffect(() => {
-
-  }, [currentMiles, infoCar]) */
-
-  /* useEffect(() => {
-    setVisibleMileage(true)
-  }, [isNeedUpdate]) */
 
   const checkFirstRun = async () => {
     try {
@@ -136,11 +130,15 @@ export const MainCard = (): JSX.Element => {
   // period alarm to update mileage
   const periodTimeMileage = (): void => {
     const tempState = new Date(currentMiles.dateMileage)
+    if (currentMiles.currentMileage === 0) {
+      setIsNeedUpdate(true)
+      return
+    }
     if (tempState !== undefined) {
       const currentDate = new Date()
       if (currentDate.getFullYear() === (tempState.getFullYear())) {
         if (currentDate.getMonth() === tempState.getMonth()) {
-          if ((currentDate.getDate() - tempState.getDate()) > 0) {
+          if ((currentDate.getDate() - tempState.getDate()) > 7) {
             setIsNeedUpdate(true)
           } else setIsNeedUpdate(false)
         } else {
@@ -165,6 +163,7 @@ export const MainCard = (): JSX.Element => {
     } else setErrorInput(true)
   }
   const handleCancelMileage = (): void => {
+    setValueMileage(currentMiles.currentMileage)
     setVisibleMileage(false)
     setErrorInput(false)
   }
@@ -209,9 +208,7 @@ export const MainCard = (): JSX.Element => {
 
           <Button
                   icon={require('../../assets/wheel.png') }
-                  /* icon={({ size }) => (<Image source={require('../../assets/wheel.png')}/>)} */
                   textColor={colors.onBackground} labelStyle={{ fontSize: 16 }} rippleColor={colors.primary}
-                  /* onPress={() => { navTab.navigate('InputDoneScreen', { editable: false, typeTask: 'part' }) }} */
                   onPress={toggleTireDialog}
           >
             {tire.valueTire}
@@ -223,13 +220,6 @@ export const MainCard = (): JSX.Element => {
           </Button>
 
         </View>
-
-        {/* <View style={{ position: 'relative', left: 0, flex: 0.5 }}>
-            <Image source={require('../assets/renaultLogo2.png')} resizeMethod={'scale'} resizeMode={'cover'} style={{ height: 70, width: 70 }}/>
-          </View> */}
-        {/*  <Text style={{ fontSize: 16, color: TEXT_CARD }}>
-                  Заправка: 22000 грн
-                </Text> */}
 
       </View>
     </View>

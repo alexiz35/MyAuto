@@ -7,18 +7,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import HomeScreen from '../../screens/HomeScreen'
 import InputDoneScreen from '../../screens/InputDoneScreen'
 import { Platform, View } from 'react-native'
-/* import * as TaskManager from 'expo-task-manager'
-import haversineDistance from 'haversine-distance'
-import * as Location from 'expo-location'
-import AsyncStorage from '@react-native-async-storage/async-storage' */
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StatScreen from '../../screens/StatScreen'
 import TaskScreen from '../../screens/TaskScreen'
 import FuelScreen from '../../screens/FuelScreen'
-/* import * as Print from 'expo-print'
-import { shareAsync } from 'expo-sharing'
-import { printToFile } from '../Print/Print'
-import { current } from '@reduxjs/toolkit' */
+
 import CarInfoScreen from '../../screens/CarInfoScreen'
 import SettingScreen from '../../screens/SettingScreen'
 import {
@@ -31,7 +25,6 @@ import { CombinedDarkTheme, CombinedDefaultTheme, useAppTheme } from '../../Comm
 import SellerScreen from '../../screens/SellerScreen'
 import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation'
 import { JSX } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import MileageScreen from '../../screens/MileageScreen'
 import { LogoTitle } from './LogoTitle'
 
@@ -143,7 +136,6 @@ export const Navigation = (): JSX.Element => {
                           size={focused ? 22 : 20}
                         />
                       )
-                      /* tabBarButton: () => (<FAB style={{ marginBottom: 30 }}/>) */
                     }}
         />
       </Tab.Navigator>
@@ -153,65 +145,6 @@ export const Navigation = (): JSX.Element => {
   // ------------------------- Toggle Theme --------------------------------------
   const theme2 = useAppSelector(state => state.setting.themeSet)
   const theme = (theme2 === 'dark') ? CombinedDarkTheme : CombinedDefaultTheme
-
-  // -----------------------------------------------------------------------------
-  /*  const [initial, setInitial] = useState(true)
-  const [location, setLocation] = useState(0)
-  const [prevCoords, setPrevCoords] = useState({ latitude: 0, longitude: 0 })
-  const [newCoords, setNewCoords] = useState({ latitude: 0, longitude: 0 })
-  const [distance, setDistance] = useState(0) */
-
-  /*
-
- // --------------------------------backgroundTracking ---------------------------
- // @ts-expect-error temp
-  TaskManager.defineTask('TRACKING', (data, error) => {
-    if (error != null) {
-      console.log('err', error)
-      return
-    }
-    if (data !== undefined) {
-      const { locations } = data.data
-      console.log('locations', locations)
-      const tempCoords = {
-        latitude: locations[0].coords.latitude,
-        longitude: locations[0].coords.longitude
-      }
-
-      if (initial) {
-        setPrevCoords(tempCoords)
-        setInitial(false)
-      } else {
-        setPrevCoords(newCoords)
-        setNewCoords(tempCoords)
-
-        const temp = haversineDistance(prevCoords, newCoords)
-        if (isNaN(temp)) return
-
-        setLocation(temp)
-        setDistance(distance + location)
-        console.log('distance', distance)
-      }
-    }
-  }) */
-
-  /* useEffect(() => {
-    void (async () => {
-      const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync()
-      if (foregroundStatus === 'granted') {
-        const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync()
-        if (backgroundStatus === 'granted') {
-          console.log('permission allowed')
-          await Location.startLocationUpdatesAsync('TRACKING', {
-            accuracy: Location.Accuracy.BestForNavigation,
-            /!* timeInterval: 2000, *!/
-            /!* deferredUpdatesDistance: 3, *!/
-            distanceInterval: 20
-          })
-        }
-      }
-    })()
-  }, []) */
 
   return (
     <PaperProvider theme={theme}>
@@ -272,17 +205,6 @@ export const Navigation = (): JSX.Element => {
             headerStyle: { backgroundColor: theme.colors.background },
             title: 'Список поставщиков',
             headerTintColor: theme.colors.onBackground
-            /*  headerRight: () => (
-              <IconButton
-                mode='outlined'
-                rippleColor={theme.colors.primary}
-                icon={'tune'}
-                size={20}
-                onPress={() =>
-                  navigation.navigate('SettingScreen')
-                }
-              />
-            ) */
           })} />
         {
   // ---------------------------------------------------------------------------

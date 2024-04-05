@@ -3,7 +3,7 @@
     "name": "DevizCar",
     "slug": "devizcar",
     "version": "1.0.2",
-    "icon": "./assets/icon71.png",
+    "icon": "./assets/icon1.png",
     "userInterfaceStyle": "dark",
     "scheme": "devizcar",
     "jsEngine": "hermes",
@@ -17,9 +17,9 @@
       ]
     ],
     "splash": {
-      "image": "./assets/mySplash2.png",
+      "image": "./assets/mySplash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#000000"
+      "backgroundColor": "#000001"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -31,17 +31,22 @@
       "supportsTablet": true
     },
     "android": {
+      "splash": {
+        "image": "./assets/mySplash.png",
+        "resizeMode": "cover",
+        "backgroundColor": "#000001"
+      },
       "googleServicesFile": "./google-services.json",
+      "icon": "./assets/icon1.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_adapt.png"
       },
       "package": "com.deviz.devizcar",
       "permissions": [
-        "android.permission.FOREGROUND_SERVICE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.READ_EXTERNAL_STORAGE"
       ],
-      "versionCode": 3
+      "versionCode": 7
     },
     "web": {
       "favicon": "./assets/favicon.png"

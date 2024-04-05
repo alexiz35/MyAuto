@@ -43,9 +43,7 @@ export const InfoTaskHTML = (task: StateService): string => `
         <tbody>
         <tr>
           <td>${task.id}</td>
-          <td>${task.startDate}</td>
-          <td>${task.startKm}</td>
-          <td>${task.title}</td>
+          
         </tr>
         </tbody>
       </table>
