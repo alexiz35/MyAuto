@@ -10,6 +10,7 @@ import { NotificationComponent } from './components/NotificationComponent'
 import { CloseFunction } from './components/CloseFunction'
 import Toast from 'react-native-toast-message'
 import * as SplashScreen from 'expo-splash-screen'
+import './i18n/i18n'
 
 void SplashScreen.preventAutoHideAsync()
 setTimeout(SplashScreen.hideAsync, 2000)

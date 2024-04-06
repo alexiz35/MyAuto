@@ -27,16 +27,18 @@ import { PropsTab, RootStackParamList, RootTabParamList } from './TypeNavigation
 import { JSX } from 'react'
 import MileageScreen from '../../screens/MileageScreen'
 import { LogoTitle } from './LogoTitle'
+import { useTranslation } from 'react-i18next'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()
 
 export const Navigation = (): JSX.Element => {
   // *********************** Picked Logo ********************************
-
+  const { t } = useTranslation()
   // ******************************************************************************
   const BottomTabNav = ({ navigation }: PropsTab): JSX.Element => {
     /* void AsyncStorage.clear() */
+    const { t } = useTranslation()
 
     const theme = useAppTheme()
     const FabTab = (): null => null
@@ -72,7 +74,7 @@ export const Navigation = (): JSX.Element => {
         }
         <Tab.Screen name={'InputDoneScreen'} component={InputDoneScreen}
                     options={{
-                      tabBarLabel: 'Buy',
+                      tabBarLabel: `${t('translation:BUY')}`,
                       tabBarIcon: ({ color, focused }) => (
                         <Icon
                           source={focused ? 'cart' : 'cart-outline'}

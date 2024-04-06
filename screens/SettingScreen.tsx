@@ -18,6 +18,7 @@ import { CarsCard } from '../components/SettingScreenComponents/CarsCard'
 import { SellersCard } from '../components/SettingScreenComponents/SellersCard'
 import { ControlCard } from '../components/SettingScreenComponents/ControlCard'
 import { MileageCard } from '../components/SettingScreenComponents/MileageCard'
+import { LangCard } from '../components/SettingScreenComponents/LangCard'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 
@@ -32,6 +33,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       >
 
           <ThemeCard/>
+        <LangCard/>
 
           <SellersCard/>
 

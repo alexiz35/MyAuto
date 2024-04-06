@@ -21,6 +21,7 @@ import { addedCurrentMiles } from '../Redux/CarsSlice'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TireInput } from './TireInput'
+import { useTranslation } from 'react-i18next'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -37,6 +38,8 @@ export const MainCard = (): JSX.Element => {
   const navStack = useNavigation<ProfileScreenNavigationProp>()
   /* const navTab = useNavigation<ProfileTabNavigationProp>() */
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
+
   const numberCar = useAppSelector(state => state.numberCar)
   const state = useAppSelector(state => state)
   const [indexCar, setIndexCar] = useState<number>(getIndexCar(state.cars, numberCar))
@@ -193,7 +196,7 @@ export const MainCard = (): JSX.Element => {
                            setVisibleMileage(true)
                          }}>
           <>
-            <Text style={{ textAlign: 'center' }}>Текущий пробег</Text>
+            <Text style={{ textAlign: 'center' }}>{`${t('TITLE')}`}</Text>
             {isNeedUpdate && <Text style={{ textAlign: 'center', fontSize: 10, color: colors.error }}>Обновите пробег</Text>}
 
             <Button icon={({ size, color }) => (<Icon name='navigation-variant' size={22}
