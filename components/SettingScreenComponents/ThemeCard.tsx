@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { themeChanged } from '../Redux/SettingSlice'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from './StyleSettingScreen'
+import { useTranslation } from 'react-i18next'
 
 export const ThemeCard = (): JSX.Element => {
   // ****************************** THEME change *********************************
@@ -12,6 +13,7 @@ export const ThemeCard = (): JSX.Element => {
   const theme2 = useAppSelector((state) => state.setting.themeSet)
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   const toggleTheme = useCallback(() => {
     theme2 === 'dark'
@@ -26,7 +28,7 @@ export const ThemeCard = (): JSX.Element => {
       >
         <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
-          <Button style={stylesSettingScreen.text} onPress={toggleTheme}>Переключение темы</Button>
+          <Button style={stylesSettingScreen.text} onPress={toggleTheme}>{`${t('setting:CHANGE_THEME')}`}</Button>
         </View>
         <View style={{ paddingRight: 10 }}>
           <IconButton

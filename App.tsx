@@ -11,6 +11,9 @@ import { CloseFunction } from './components/CloseFunction'
 import Toast from 'react-native-toast-message'
 import * as SplashScreen from 'expo-splash-screen'
 import './i18n/i18n'
+import { useTranslation } from 'react-i18next'
+import { langChanged } from './components/Redux/SettingSlice'
+import { getLocales } from 'expo-localization'
 
 void SplashScreen.preventAutoHideAsync()
 setTimeout(SplashScreen.hideAsync, 2000)

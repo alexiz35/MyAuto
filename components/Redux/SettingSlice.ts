@@ -1,12 +1,13 @@
 // eslint-disable-next-line import/named
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Setting } from '../../type'
+import { LangType, Setting } from '../../type'
 
 const initialState: Setting = {
   alarmMileagePeriodNumber: 6,
   alarmMileagePeriod: true,
   alarmMileageStart: true,
   themeSet: 'dark',
+  lang: '',
   isGoogle: false
 }
 
@@ -18,6 +19,10 @@ const settingSlice = createSlice({
     themeChanged (state, action: PayloadAction<'dark' | 'light'>) {
       // "Mutating" update syntax thanks to Immer, and no `return` needed
       state.themeSet = action.payload
+    },
+    langChanged (state, action: PayloadAction<LangType>) {
+      // "Mutating" update syntax thanks to Immer, and no `return` needed
+      state.lang = action.payload
     },
     changeAlarmStart (state, action: PayloadAction<boolean>) {
       state.alarmMileageStart = action.payload
@@ -42,7 +47,8 @@ const settingSlice = createSlice({
 export const {
   themeChanged, changeAlarmStart,
   changeAlarmPeriod, changeAlarmPeriodNumber,
-  setGoogle, updateSetting
+  setGoogle, updateSetting,
+  langChanged
 } = settingSlice.actions
 
 // Export the slice reducer as the default export

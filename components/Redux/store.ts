@@ -29,6 +29,7 @@ export const initialState: StateMain = {
   token: '',
   setting: {
     themeSet: 'light',
+    lang: '',
     alarmMileageStart: true,
     alarmMileagePeriod: true,
     alarmMileagePeriodNumber: 6,

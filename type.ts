@@ -103,8 +103,11 @@ export interface StateCar {
   others: StateOther[]
   tasks: StateTask[]
 }
+
+export type LangType = 'ru' | 'en' | ''
 export interface Setting {
   themeSet: string
+  lang: LangType
   alarmMileageStart: boolean
   alarmMileagePeriod: boolean
   alarmMileagePeriodNumber: number

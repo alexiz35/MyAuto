@@ -14,7 +14,8 @@
         {
           "photosPermission": "The app accesses your photos to set on icon App."
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "splash": {
       "image": "./assets/mySplash.png",
