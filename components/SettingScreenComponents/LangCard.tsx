@@ -1,6 +1,6 @@
 import { JSX, useEffect, useState } from 'react'
 import { View } from 'react-native'
-import { Button, Card, Dialog, Icon, Portal, RadioButton } from 'react-native-paper'
+import { Button, Card, Dialog, Divider, Icon, Portal, RadioButton } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from './StyleSettingScreen'
 import { useTranslation } from 'react-i18next'
@@ -46,11 +46,13 @@ export const LangCard = (): JSX.Element => {
       </View>
       <Portal>
         <Dialog visible={visibleDialog} onDismiss={() => { setVisibleDialog(false) }}>
-          <Dialog.Title>{`${t('setting:TITLE_LANG')}`}</Dialog.Title>
+          <Dialog.Title >{`${t('setting:TITLE_LANG')}`}</Dialog.Title>
+          <Divider bold/>
           <Dialog.Content>
-            <RadioButton.Group onValueChange={(value) => { resultCheckLang(value) }} value={checkedLang}>
-              <RadioButton.Item value={'ru'} label={'Русский'} mode={'ios'}/>
-              <RadioButton.Item value={'en'} label={'English'} mode={'ios'}/>
+            <RadioButton.Group onValueChange={(value) => { resultCheckLang(value) }} value={checkedLang} >
+              <RadioButton.Item value={'ru'} label={'Русский'} mode={'ios'} color={colors.tertiary}/>
+              <Divider horizontalInset bold/>
+              <RadioButton.Item value={'en'} label={'English'} mode={'ios'} color={colors.tertiary}/>
             </RadioButton.Group>
           </Dialog.Content>
         </Dialog>
