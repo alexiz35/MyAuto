@@ -22,7 +22,11 @@ export const LangCard = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    i18n.changeLanguage(checkedLang)
+    try {
+      i18n.changeLanguage(checkedLang)
+    } catch (e) {
+      console.log(e)
+    }
   }, [checkedLang])
 
   return (
@@ -32,7 +36,7 @@ export const LangCard = (): JSX.Element => {
       >
         <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
-          <Button style={stylesSettingScreen.text} >{`${t('setting:SET_LANG')}`}</Button>
+          <Button style={stylesSettingScreen.text} >{`${t('setting.SET_LANG')}`}</Button>
         </View>
         <View style={{ paddingRight: 10 }}>
           <Button
@@ -41,12 +45,12 @@ export const LangCard = (): JSX.Element => {
             /* size={18} */
             mode={'text'}
             onPress={() => { setVisibleDialog(true) }}
-          >{`${t('setting:LANG')}`}</Button>
+          >{`${t('setting.LANG')}`}</Button>
         </View>
       </View>
       <Portal>
         <Dialog visible={visibleDialog} onDismiss={() => { setVisibleDialog(false) }}>
-          <Dialog.Title >{`${t('setting:TITLE_LANG')}`}</Dialog.Title>
+          <Dialog.Title >{`${t('setting.TITLE_LANG')}`}</Dialog.Title>
           <Divider bold/>
           <Dialog.Content>
             <RadioButton.Group onValueChange={(value) => { resultCheckLang(value) }} value={checkedLang} >

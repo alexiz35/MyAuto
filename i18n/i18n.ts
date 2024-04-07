@@ -7,22 +7,23 @@ import naviEn from './en/navi'
 import naviRu from './ru/navi'
 import setRu from './ru/setting'
 import setEn from './en/setting'
+import * as constants from 'constants'
 const { languageDetectorPlugin } = require('./languageDetectorPlugin')
 /* import ru from './translation/ru.json'
 import en from './translation/en.json' */
 
-const resources = { // list of languages
+export const resources = { // list of languages
   ru: {
-    translation: commonRu,
-    navigation: naviRu,
-    setting: setRu
+    translation: commonRu
+    /* navigation: naviRu,
+    setting: setRu */
   },
   en: {
-    translation: commonEn,
-    navigation: naviEn,
-    setting: setEn
+    translation: commonEn
+    /* navigation: naviEn,
+    setting: setEn */
   }
-}
+} as const
 
 void i18n
   .use(initReactI18next)

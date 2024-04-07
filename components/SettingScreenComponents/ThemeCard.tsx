@@ -28,7 +28,7 @@ export const ThemeCard = (): JSX.Element => {
       >
         <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
-          <Button style={stylesSettingScreen.text} onPress={toggleTheme}>{`${t('setting:CHANGE_THEME')}`}</Button>
+          <Button style={stylesSettingScreen.text} onPress={toggleTheme}>{`${t('setting.CHANGE_THEME')}`}</Button>
         </View>
         <View style={{ paddingRight: 10 }}>
           <IconButton

@@ -59,7 +59,7 @@ export const Navigation = (): JSX.Element => {
 
         <Tab.Screen name={'Home'} component={HomeScreen}
                     options={{
-                      tabBarLabel: 'Home',
+                      tabBarLabel: `${t('navi.HOME')}`,
                       tabBarIcon: ({ color, focused }) => (
                         <Icon
                           source={focused ? 'home' : 'home-outline'}
@@ -74,7 +74,7 @@ export const Navigation = (): JSX.Element => {
         }
         <Tab.Screen name={'InputDoneScreen'} component={InputDoneScreen}
                     options={{
-                      tabBarLabel: `${t('translation:BUY')}`,
+                      tabBarLabel: `${t('navi.BUY')}`,
                       tabBarIcon: ({ color, focused }) => (
                         <Icon
                           source={focused ? 'cart' : 'cart-outline'}
@@ -115,7 +115,7 @@ export const Navigation = (): JSX.Element => {
         }
         <Tab.Screen name={'TaskScreen'} component={TaskScreen}
                     options={{
-                      tabBarLabel: 'Tasks',
+                      tabBarLabel: `${t('navi.TASKS')}`,
                       tabBarIcon: ({ color, focused }) => (
                         <Icon
                           source='calendar-check'
@@ -130,7 +130,7 @@ export const Navigation = (): JSX.Element => {
         }
         <Tab.Screen name={'StatScreen'} component={StatScreen}
                     options={{
-                      tabBarLabel: 'Statistic',
+                      tabBarLabel: `${t('navi.STATISTIC')}`,
                       tabBarIcon: ({ color, focused }) => (
                         <Icon
                           source={focused ? 'chart-box' : 'chart-box-outline'}
@@ -194,7 +194,7 @@ export const Navigation = (): JSX.Element => {
           component={CarInfoScreen}
           options={{
             headerStyle: { backgroundColor: theme.colors.background },
-            title: 'Car Info',
+            title: `${t('navi.CAR_INFO_TITLE')}`,
             headerTintColor: theme.colors.onBackground
           }} />
         {
@@ -205,7 +205,7 @@ export const Navigation = (): JSX.Element => {
           component={SellerScreen}
           options={({ navigation }) => ({
             headerStyle: { backgroundColor: theme.colors.background },
-            title: 'Список поставщиков',
+            title: `${t('navi.SELLER_TITLE')}`,
             headerTintColor: theme.colors.onBackground
           })} />
         {
@@ -217,7 +217,7 @@ export const Navigation = (): JSX.Element => {
           component={MileageScreen}
           options={({ navigation }) => ({
             headerStyle: { backgroundColor: theme.colors.background },
-            title: 'Список точек пробега',
+            title: `${t('navi.MILEAGE_TITLE')}`,
             headerTintColor: theme.colors.onBackground
             /*  headerRight: () => (
               <IconButton
@@ -240,7 +240,7 @@ export const Navigation = (): JSX.Element => {
           component={FuelScreen}
           options={({ navigation }) => ({
             headerStyle: { backgroundColor: theme.colors.background },
-            title: 'Fuel',
+            title: `${t('navi.FUEL_TITLE')}`,
             headerTintColor: theme.colors.onBackground,
             headerRight: () => (
               <IconButton
@@ -262,7 +262,7 @@ export const Navigation = (): JSX.Element => {
           name='SettingScreen'
           component={SettingScreen}
           options={{
-            title: 'Setting',
+            title: `${t('navi.SETTING_TITLE')}`,
             headerStyle: { backgroundColor: theme.colors.background },
             headerTintColor: theme.colors.onBackground
           }} />
