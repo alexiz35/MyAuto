@@ -8,17 +8,19 @@ import { deletedCar } from '../Redux/CarsSlice'
 // eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootTabParamList } from '../Navigation/TypeNavigation'
+import { useTranslation } from 'react-i18next'
 
 export const CarsList = (): JSX.Element => {
   const state = useAppSelector(state => state)
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const navigation =
     useNavigation<NavigationProp<RootTabParamList>>()
 
   // ------------------------ Alert ConfirmAction -------------------------------
   const createDeleteAlert = (id: number) => {
-    Alert.alert('Удалить машину?', 'Все данные по этой машине будут удалены', [
+    Alert.alert(t('setting.alertCarsCard.TITLE'), t('setting.alertCarsCard.MESSAGE'), [
       {
         text: 'Cancel',
         /* onPress: () => console.log('Cancel Pressed'), */

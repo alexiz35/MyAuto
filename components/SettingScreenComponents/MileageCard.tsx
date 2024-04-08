@@ -8,15 +8,16 @@ import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from './StyleSettingScreen'
 import { delAllMileage } from '../Redux/CarsSlice'
+import { useTranslation } from 'react-i18next'
 
 export const MileageCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
   const { colors } = useAppTheme()
-
+  const { t } = useTranslation()
   const pressResetMileage = () => {
-    Alert.alert('Вы уверены?', 'Все точки пробега будут удалены', [
+    Alert.alert(t('setting.alertMileageCard.TITLE'), t('setting.alertMileageCard.MESSAGE'), [
       {
         text: 'Cancel',
         // ***
@@ -41,7 +42,7 @@ export const MileageCard = (): JSX.Element => {
             style={stylesSettingScreen.text}
             onPress={() => { navigation.navigate('MileageScreen') }}
           >
-            Список точек пробега
+            {t('navi.MILEAGE_TITLE')}
           </Button>
         </View>
         <View style={{ paddingRight: 5 }}>

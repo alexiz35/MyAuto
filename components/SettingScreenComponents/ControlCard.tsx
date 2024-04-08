@@ -6,6 +6,7 @@ import { changeAlarmPeriod, changeAlarmPeriodNumber, changeAlarmStart } from '..
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from './StyleSettingScreen'
 import { cancelNotification, startPeriodNotification } from '../NotificationComponent'
+import { useTranslation } from 'react-i18next'
 
 export const useFirstMount = () => {
   const ref = useRef()
@@ -21,6 +22,7 @@ export const ControlCard = () => {
   const state = useAppSelector((state) => state)
   const { colors } = useAppTheme()
   const isFirst = useFirstMount()
+  const { t } = useTranslation()
 
   // ************************************************ ALARM section ***************************************************
 
@@ -81,27 +83,27 @@ export const ControlCard = () => {
     <Card style={{ marginVertical: 5 }}>
       <View style={stylesSettingScreen.iconText}>
         <Icon source={'circle'} color={colors.tertiary} size={10} />
-        <Text style={stylesSettingScreen.text}>Контроль пробега</Text>
+        <Text style={stylesSettingScreen.text}>{t('setting.TITLE_CONTROL_CARD')}</Text>
       </View>
       <Checkbox.Item
         status={checkAlarmStart}
-        label={'Напоминание при входе в приложении'}
+        label={t('setting.NOTIFICATION_START')}
         onPress={() => { pressAlarm('alarmStart') }}
         labelVariant={'bodyMedium'}
       />
       <Divider horizontalInset />
       <Checkbox.Item
         status={checkAlarmPeriod}
-        label={'Периодическое напоминание в фоне'}
+        label={t('setting.NOTIFICATION_PERIOD')}
         onPress={() => { pressAlarm('alarmPeriod') }}
         labelVariant={'bodyMedium'}
       />
       <Divider horizontalInset />
-      <Tooltip title={'функция в разработке'} enterTouchDelay={200} leaveTouchDelay={2000}>
+      <Tooltip title={t('DEV_FUNCTION')} enterTouchDelay={200} leaveTouchDelay={2000}>
       <Checkbox.Item
         disabled
         status={'unchecked'}
-        label={'Синхронизация пробега с авто'}
+        label={t('setting.SYNCHRON_MILEAGE')}
         onPress={() => { pressAlarm('alarmPeriodNumber') }}
         labelVariant={'bodyMedium'}
       />

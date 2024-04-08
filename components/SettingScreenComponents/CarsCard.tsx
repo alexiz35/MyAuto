@@ -11,6 +11,7 @@ import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { ModalPickNameCar } from '../CarInfoScreenComponents/ModalPickNameCar'
 import { stylesSettingScreen } from './StyleSettingScreen'
+import { useTranslation } from 'react-i18next'
 
 export const CarsCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -19,6 +20,7 @@ export const CarsCard = (): JSX.Element => {
   const state = useAppSelector((state) => state)
   const { colors } = useAppTheme()
   const [visibleNameCar, setVisibleNameCar] = useState(false)
+  const { t } = useTranslation()
 
   // ****************************** ADD NEW CAR *********************************
   const addNewCar = () => {
@@ -43,13 +45,13 @@ export const CarsCard = (): JSX.Element => {
     <Card style={{ marginVertical: 5 }}>
       <View style={stylesSettingScreen.iconText}>
         <Icon source={'circle'} color={colors.tertiary} size={10} />
-        <Text style={stylesSettingScreen.text}>Мои машины</Text>
+        <Text style={stylesSettingScreen.text}>{t('setting.ADD_CAR_TITLE')}</Text>
       </View>
       <Divider bold />
 
       <CarsList />
       <Divider horizontalInset />
-      <Button onPress={() => { addNewCar() }}>Добавить машину</Button>
+      <Button onPress={() => { addNewCar() }}>{t('setting.ADD_CAR')}</Button>
     </Card>
       <Portal>
         <Dialog

@@ -19,6 +19,7 @@ import { updateStateCars } from '../Redux/CarsSlice'
 import { changedNumberCar } from '../Redux/NumberCarSlice'
 import { updatedAllSeller } from '../Redux/SellerSlice'
 import { stylesSettingScreen } from './StyleSettingScreen'
+import { useTranslation } from 'react-i18next'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -33,7 +34,7 @@ export const GoogleCard = (): JSX.Element => {
   const state = useAppSelector((state) => state)
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
-
+  const { t } = useTranslation()
   // ******************************************************************************
 
   const [token, setToken] = useState('')
@@ -91,7 +92,7 @@ export const GoogleCard = (): JSX.Element => {
       switch (typedError.code) {
         case statusCodes.SIGN_IN_CANCELLED:
           // user cancelled the login flow
-          console.log('error_INCANC')
+          console.log('error_Cancel')
 
           break
         case statusCodes.IN_PROGRESS:
@@ -342,7 +343,7 @@ export const GoogleCard = (): JSX.Element => {
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
-          <Text style={stylesSettingScreen.text}>Использовать GoogleDisk для бэкапа</Text>
+          <Text style={stylesSettingScreen.text}>{t('setting.TITLE_GOOGLE_CARD')}</Text>
 
         </View>
         <View style={{ paddingRight: 10 }}>
@@ -377,8 +378,7 @@ export const GoogleCard = (): JSX.Element => {
                 /* void promptAsync() */
               }}
             >
-              Log in with Google
-
+              {t('setting.LOGIN_GOOGLE')}
             </Button>
             )
           : (
@@ -401,7 +401,7 @@ export const GoogleCard = (): JSX.Element => {
         }}
         disabled={!auth || checkGoogle !== 'checked'}
       >
-        Импорт данных
+        {t('setting.IMPORT_DATA')}
       </Button>
 
       <Divider horizontalInset />
@@ -411,7 +411,7 @@ export const GoogleCard = (): JSX.Element => {
         }}
         disabled={!auth || checkGoogle !== 'checked'}
       >
-        Экспорт данных
+        {t('setting.EXPORT_DATA')}
       </Button>
     </Card>
   )

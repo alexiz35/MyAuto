@@ -8,14 +8,16 @@ import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from './StyleSettingScreen'
+import { useTranslation } from 'react-i18next'
 
 export const SellersCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   const pressResetSellers = () => {
-    Alert.alert('Вы уверены?', 'Список продавцов будет очищен', [
+    Alert.alert(t('setting.alertSellerCard.TITLE'), t('setting.alertSellerCard.MESSAGE'), [
       {
         text: 'Cancel',
         // ***
@@ -40,7 +42,7 @@ export const SellersCard = (): JSX.Element => {
             style={stylesSettingScreen.text}
             onPress={() => { navigation.navigate('SellerScreen') }}
           >
-            Список поставщиков
+            {t('navi.SELLER_TITLE')}
           </Button>
         </View>
 
