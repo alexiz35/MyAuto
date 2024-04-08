@@ -19,12 +19,14 @@ import { ModalPickNameCar } from '../components/CarInfoScreenComponents/ModalPic
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
 import { editedCarInfo, initialStateCar } from '../components/Redux/CarsSlice'
 import { getIndexCar, StateTask } from '../type'
+import { useTranslation } from 'react-i18next'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'BottomTabNav'> */
 export type PropsTab = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'Home'>, NativeStackScreenProps<RootStackParamList>>
 
 const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
   const theme = useAppTheme()
+  const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state)
   const [visibleNameCar, setVisibleNameCar] = useState(false)
@@ -106,7 +108,7 @@ const HomeScreen = ({ navigation }: PropsTab): JSX.Element => {
         <View style={(orientation < 3) ? { flex: 4 } : { flex: 1.5 }}>
           <Surface elevation={2} style={{ marginBottom: 10, borderRadius: 5 }}>
           <Text style={{ textAlign: 'center', padding: 5 }}>
-            Ближайшие задачи
+            {t('homeScreen.TITLE_TASK')}
           </Text>
           </Surface>
           <TasksList handlePress={pressList} filterList={'last'} checkedFilter={'unFinish'} typeSort={'mileageSort'}/>

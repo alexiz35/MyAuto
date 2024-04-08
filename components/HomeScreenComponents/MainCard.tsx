@@ -196,8 +196,11 @@ export const MainCard = (): JSX.Element => {
                            setVisibleMileage(true)
                          }}>
           <>
-            <Text style={{ textAlign: 'center' }}>{`${t('TITLE')}`}</Text>
-            {isNeedUpdate && <Text style={{ textAlign: 'center', fontSize: 10, color: colors.error }}>Обновите пробег</Text>}
+            <Text style={{ textAlign: 'center' }}>{t('homeScreen.mainCard.CURRENT_MILEAGE')}</Text>
+            {isNeedUpdate &&
+              <Text style={{ textAlign: 'center', fontSize: 10, color: colors.error }}>
+                {t('homeScreen.mainCard.UPDATE_MILEAGE')}
+              </Text>}
 
             <Button icon={({ size, color }) => (<Icon name='navigation-variant' size={22}
                     color={colors.onBackground}/>)} textColor={colors.onBackground} labelStyle={{ fontSize: 16 }}
@@ -237,12 +240,12 @@ export const MainCard = (): JSX.Element => {
             visible={visibleMileage}
             onDismiss={toggleMileage}
           >
-            <Dialog.Title >Обновите пробег</Dialog.Title>
+            <Dialog.Title >{t('homeScreen.mainCard.modalMileage.TITLE')}</Dialog.Title>
             <Dialog.Content>
               <TextInput
-                label={'введите пробег'}
+                label={t('homeScreen.mainCard.modalMileage.INPUT_MILEAGE')}
                 maxLength={8}
-                placeholder={'введите пробег'}
+                placeholder={t('homeScreen.mainCard.modalMileage.INPUT_MILEAGE')}
                 right={<TextInput.Affix text="km" />}
                 onChangeText={(value) => { setValueMileage(Number(value)) }}
                 keyboardType={'numeric'}
@@ -250,7 +253,7 @@ export const MainCard = (): JSX.Element => {
                 error={errorInput}
               />
               <HelperText type="error" visible={errorInput}>
-                Пробег меньше текущего!
+                {t('homeScreen.mainCard.modalMileage.ERROR_INPUT')}
               </HelperText>
             </Dialog.Content>
               <Dialog.Actions >

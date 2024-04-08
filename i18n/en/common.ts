@@ -39,6 +39,26 @@ export default {
     LOGIN_GOOGLE: 'Log In with Google',
     IMPORT_DATA: 'Import Data',
     EXPORT_DATA: 'Export Data'
+  },
+  homeScreen: {
+    mainCard: {
+      CURRENT_MILEAGE: 'Current Mileage',
+      UPDATE_MILEAGE: 'Need to Update Mileage',
+      modalMileage: {
+        TITLE: 'Update Mileage',
+        INPUT_MILEAGE: 'Input Mileage',
+        ERROR_INPUT: 'Mileage less than current!'
+      },
+      modalTire: {
+        TITLE: 'Tire Details',
+        INPUT_SIZE: 'Tire Size',
+        INPUT_BRAND: 'Tire Brand',
+        INPUT_YEAR: 'Tire Year',
+        HELPER_INFO: 'Size tire in format Rxx/xxx/xx',
+        HELPER_ERROR: 'Incorrect tire size format (Rxx/xxx/xx)'
+      }
+    },
+    TITLE_TASK: 'Upcoming Tasks'
   }
 
 }

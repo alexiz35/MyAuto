@@ -1,6 +1,5 @@
 export default {
   DEV_FUNCTION: 'Функция в разработке',
-  TITLE: 'Текущий пробег',
   navi: {
     HOME: 'Главная',
     BUY: 'Покупки',
@@ -39,5 +38,25 @@ export default {
     LOGIN_GOOGLE: 'Войти с Google',
     IMPORT_DATA: 'Импорт данных',
     EXPORT_DATA: 'Экспорт данных'
+  },
+  homeScreen: {
+    mainCard: {
+      CURRENT_MILEAGE: 'Текущий пробег',
+      UPDATE_MILEAGE: 'Обновите пробег',
+      modalMileage: {
+        TITLE: 'Обновите пробег',
+        INPUT_MILEAGE: 'Введите пробег',
+        ERROR_INPUT: 'Пробег меньше текущего!'
+      },
+      modalTire: {
+        TITLE: 'Данный шин',
+        INPUT_SIZE: 'Размер шин',
+        INPUT_BRAND: 'Производитель шин',
+        INPUT_YEAR: 'Год изготовления шин',
+        HELPER_INFO: 'Размер шин в формате Rxx/xxx/xx',
+        HELPER_ERROR: 'Неправильный формат размера шин (Rxx/xxx/xx)'
+      }
+    },
+    TITLE_TASK: 'Ближайшие задачи'
   }
 }

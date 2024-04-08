@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { editedTires } from '../Redux/CarsSlice'
 import { initialTire, StateTire } from '../../type'
 import { createNumberMask, Masks, useMaskedInputProps } from 'react-native-mask-input'
+import { useTranslation } from 'react-i18next'
 
 interface TireProps {
   itemTire: StateTire
@@ -13,6 +14,7 @@ interface TireProps {
 export const TireInput = ({ itemTire = initialTire, closeTire }: TireProps): JSX.Element => {
   const dispatch = useAppDispatch()
   const numberCar = useAppSelector(state => state.numberCar)
+  const { t } = useTranslation()
 
   const [typeTire, setTypeTire] =
     useState<'allSeason' | 'summer' | 'winter' | string>(itemTire.typeTire)
@@ -51,12 +53,12 @@ export const TireInput = ({ itemTire = initialTire, closeTire }: TireProps): JSX
         numberCar
       }))
       closeTire()
-    } else setErrorTire('неправильный формат размера шин(Rxx/xxx/xx')
+    } else setErrorTire(t('homeScreen.mainCard.modalTire.HELPER_ERROR'))
   }
 
   return (
     <Card>
-      <Card.Title title={'Введите данные шин'}/>
+      <Card.Title title={t('homeScreen.mainCard.modalTire.TITLE')}/>
       <Card.Content >
 
         <ToggleButton.Row onValueChange={value => { setTypeTire(value) }} value={typeTire} style={{ justifyContent: 'center' }}>
@@ -68,7 +70,7 @@ export const TireInput = ({ itemTire = initialTire, closeTire }: TireProps): JSX
         <TextInput
           {...maskedInputProps}
           dense
-          label={'размер'}
+          label={t('homeScreen.mainCard.modalTire.INPUT_SIZE')}
           /* maxLength={8} */
           /* left={<TextInput.Affix text="R" />} */
           /* onChangeText={(value) => { handleInputTire(value) }} */
@@ -77,20 +79,20 @@ export const TireInput = ({ itemTire = initialTire, closeTire }: TireProps): JSX
           error={Boolean(errorTire)}
         />
         {errorTire === ''
-          ? <HelperText type={'info'}>Размерность шин в формате Rxx/xxx/xx</HelperText>
+          ? <HelperText type={'info'}>{t('homeScreen.mainCard.modalTire.HELPER_INFO')}</HelperText>
           : <HelperText type={'error'}>{errorTire}</HelperText>
         }
         <TextInput
           style={{ marginBottom: 5 }}
           dense
-          label={'производитель'}
+          label={t('homeScreen.mainCard.modalTire.INPUT_BRAND')}
           maxLength={8}
           onChangeText={(value) => { setNameTire(value) }}
           value={nameTire}
         />
         <TextInput
           dense
-          label={'год выпуска'}
+          label={t('homeScreen.mainCard.modalTire.INPUT_YEAR')}
           maxLength={8}
           onChangeText={(value) => { setYearTire(value) }}
           keyboardType={'numeric'}
