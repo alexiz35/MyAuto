@@ -58,5 +58,19 @@ export default {
       }
     },
     TITLE_TASK: 'Ближайшие задачи'
+  },
+  carInfo: {
+    BRAND: 'Бренд',
+    MODEL: 'Модель',
+    FUEL: 'Топливо',
+    BODY: 'Кузов',
+    Year: 'Год',
+    ENGINE: 'Двигатель',
+    GEAR: 'Трансмиссия',
+    VIN: 'VIN код',
+    DATE_BUY: 'Дата покупки',
+    MILEAGE_BUY: 'Пробег при покупке',
+    BUTTON_TO: 'Регламент ТО',
+    RESET_TO: 'Сброс ТО'
   }
 }

@@ -59,6 +59,20 @@ export default {
       }
     },
     TITLE_TASK: 'Upcoming Tasks'
+  },
+  carInfo: {
+    BRAND: 'Brand',
+    MODEL: 'Model',
+    FUEL: 'Fuel',
+    BODY: 'Body',
+    Year: 'Year',
+    ENGINE: 'Engine',
+    GEAR: 'Gear',
+    VIN: 'VIN code',
+    DATE_BUY: 'Date of Purchase',
+    MILEAGE_BUY: 'Mileage upon Purchase',
+    BUTTON_TO: 'Maintenance Schedule',
+    RESET_TO: 'Reset Maintenance'
   }
 
 }

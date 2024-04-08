@@ -31,6 +31,7 @@ import {
   year
 } from '../components/CarInfoScreenComponents/InitialConstants'
 import { ModalPickNameCar } from '../components/CarInfoScreenComponents/ModalPickNameCar'
+import { useTranslation } from 'react-i18next'
 
 interface FormCarInfo {
   brand: string | TypeValueDrop
@@ -73,6 +74,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const [indexCar, setIndexCar] = useState<number>(getIndexCar(car, numberCar))
   const [isSave, setIsSave] = useState<boolean>(false)
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   // ------------------------ Alert ConfirmAction -------------------------------
 
@@ -283,7 +285,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                     data={brand}
                     labelField={'label'}
                     valueField={'value'}
-                    placeholder={'Select Brand'}
+                    placeholder={t('carInfo.BRAND')}
                     placeholderStyle={{ color: colors.onBackground }}
                     search
                     searchPlaceholder="Search..."
@@ -322,7 +324,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                     data={itemsModel}
                     labelField={'label'}
                     valueField={'value'}
-                    placeholder={'Select Model'}
+                    placeholder={t('carInfo.MODEL')}
                     search
                     searchPlaceholder="Search..."
                     value={value}
@@ -359,7 +361,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                     data={itemsFuel}
                     labelField={'label'}
                     valueField={'value'}
-                    placeholder={'Топливо'}
+                    placeholder={t('carInfo.FUEL')}
                     placeholderStyle={{ color: colors.onBackground }}
                     value={value}
                     onChange={(value) => {
@@ -394,7 +396,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                     data={itemsBody}
                     labelField={'label'}
                     valueField={'value'}
-                    placeholder={'Тип'}
+                    placeholder={t('carInfo.BODY')}
                     value={value}
                     onChange={(value) => {
                       onChange(value)
@@ -425,7 +427,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                     data={year}
                     labelField={'label'}
                     valueField={'value'}
-                    placeholder={'Year'}
+                    placeholder={t('carInfo.Year')}
                     value={value}
                     onChange={(value) => {
                       onChange(value)
@@ -448,8 +450,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       dense
                       /* ref={inputSellerName} */
                       style={{ flex: 1, backgroundColor: colors.surface }}
-                      placeholder={'тип двигателя'}
-                      label={'тип двигателя'}
+                      placeholder={t('carInfo.ENGINE')}
+                      label={t('carInfo.ENGINE')}
                       value={value}
                       onChangeText={(value) => { onChange(value) }}
                     />
@@ -468,8 +470,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       style={{ flex: 1, backgroundColor: colors.surface }}
                       dense
                       /* ref={inputSellerPhone} */
-                      label={'трансмиссия'}
-                      placeholder={'трансмиссия'}
+                      label={t('carInfo.GEAR')}
+                      placeholder={t('carInfo.GEAR')}
                       value={value}
                       onChangeText={(value) => { onChange(value) }}
                     />
@@ -490,8 +492,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                     style={{ flex: 1, backgroundColor: colors.surface }}
                     dense
                     /* ref={inputSellerLink} */
-                    placeholder={'VIN код автомобиля'}
-                    label={'VIN код автомобиля'}
+                    placeholder={t('carInfo.VIN')}
+                    label={t('carInfo.VIN')}
                     onChangeText={(value) => { onChange(value) }}
                     value={value}
                   />
@@ -512,9 +514,9 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       style={{ flex: 1, backgroundColor: colors.surface }}
                       dense
                       ref={ref}
-                      placeholder={'дата покупки'}
+                      placeholder={t('carInfo.DATE_BUY')}
                       showSoftInputOnFocus={false}
-                      label={'дата покупки'}
+                      label={t('carInfo.DATE_BUY')}
                       onPressIn={inputDateBuy}
                       value={new Date(value).toLocaleDateString()}
                     />
@@ -533,8 +535,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       style={{ flex: 1, backgroundColor: colors.surface }}
                       dense
                       /* ref={inputSellerPhone} */
-                      placeholder={'пробег при покупке'}
-                      label={'пробег при покупке'}
+                      placeholder={t('carInfo.MILEAGE_BUY')}
+                      label={t('carInfo.MILEAGE_BUY')}
                       keyboardType={'numeric'}
                       value={value}
                       onChangeText={(value) => { onChange(value) }}
@@ -570,7 +572,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               }}
               onPress={() => { setVisibleModalService(true) }}
             >
-              Регламент ТО
+              {t('carInfo.BUTTON_TO')}
             </Button>
             <Button
               icon={'restore'}
@@ -583,7 +585,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               }}
               onPress={() => { setRegMaintenance(listService) }}
             >
-              Сброс ТО
+              {t('carInfo.RESET_TO')}
             </Button>
           </View>
           <Divider
