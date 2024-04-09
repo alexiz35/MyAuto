@@ -1,4 +1,9 @@
 export default {
+  CURRENCY: '$',
+  MONTH: 'Month',
+  MONTHS: 'Months',
+  YEAR: 'Year',
+  KM: 'Km',
   DEV_FUNCTION: 'Feature in Development',
   TITLE: 'Current miles',
   navi: {
@@ -72,7 +77,32 @@ export default {
     DATE_BUY: 'Date of Purchase',
     MILEAGE_BUY: 'Mileage upon Purchase',
     BUTTON_TO: 'Maintenance Schedule',
-    RESET_TO: 'Reset Maintenance'
+    RESET_TO: 'Reset',
+    modalNameCar: {
+      TITLE_NEW: 'Enter unique Car Name to get Started',
+      TITLE_EDIT: 'Change the Name car',
+      TITLE_ADD_NEW: 'Enter unique Car Name',
+      INPUT: 'Name Car',
+      ERROR_NUL: 'Enter car name',
+      ERROR_UNIQ: 'This name already exists'
+    },
+    regMaintenance: {
+      TITLE_ADD: 'Add new maintenance',
+      TITLE_EDIT: 'Change maintenance',
+      INPUT_SERVICE: 'Service',
+      INPUT_MILES: '',
+      INPUT_MONTH: '',
+      BUTTON_ADD: 'Add maintenance',
+      BUTTON_SAVE: 'Save changes'
+    },
+    alert: {
+      TITLE: 'Leave Page?',
+      MESSAGE: 'The entered data is not saved'
+    }
+  },
+  menu: {
+    EDIT: 'Edit',
+    DELETE: 'Delete'
   }
 
 }

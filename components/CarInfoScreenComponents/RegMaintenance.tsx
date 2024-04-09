@@ -4,11 +4,12 @@
 // OkPress callback function passes the selected value typeService to the parent screen
 
 import { FlatList, View } from 'react-native'
-import { Button, Divider, List, Surface, Text, TextInput } from 'react-native-paper'
+import { Button, Card, Divider, List, Surface, Text, TextInput } from 'react-native-paper'
 import { JSX, useState } from 'react'
 import { ListService } from '../../type'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { RenderRowMaintenance } from './RenderRowMaintenance'
+import { useTranslation } from 'react-i18next'
 
 interface PickServiceProps {
   cancelPress: () => void
@@ -24,6 +25,7 @@ export const RegMaintenance = ({ cancelPress, okPress, listMaintenance }: PickSe
   }
 
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   const [stateListMaintenance, setStateListMaintenance] = useState<ListService[]>(listMaintenance)
   const [selectedService, setSelectedService] = useState<ListService>(nullSelectedService)
@@ -57,11 +59,11 @@ export const RegMaintenance = ({ cancelPress, okPress, listMaintenance }: PickSe
       ListHeaderComponent={
         <View>
         <View style={{ flexDirection: 'row', backgroundColor: colors.background }}>
-          <List.Item title={'service'} style={{ flex: 2 }}/>
-          <List.Item title={'| км |'} style={{ flex: 1 }}/>
-          <List.Item title={'| лет |'} style={{ flex: 1 }}/>
+          <Card.Title title={t('carInfo.regMaintenance.INPUT_SERVICE')} style={{ flex: 1.1 }}/>
+          <Card.Title title={`| ${t('KM')} |`} style={{ flex: 0.7 }} titleStyle={{ paddingRight: 5 }}/>
+          <Card.Title title={`| ${t('MONTHS')} |`} style={{ flex: 1.0 }} titleStyle={{ paddingRight: 5 }}/>
         </View>
-          <Divider horizontalInset style={{ marginVertical: 4 }}/>
+          <Divider horizontalInset style={{ marginBottom: 4 }}/>
         </View>}
       renderItem={({ item }) => <RenderRowMaintenance handlePick={handlePick} handleDelMaintenance={handleDelMaintenance} item={item}/>}
       keyExtractor={(item, index) => index.toString()}
@@ -78,29 +80,35 @@ export const RegMaintenance = ({ cancelPress, okPress, listMaintenance }: PickSe
     />
       </View>
       <Surface >
-      <Text style={{ textAlign: 'center' }}>{typeAction === 'edit' ? 'Изменение регламента' : 'Добавьте новый регламент'}</Text>
+      <Text style={{ textAlign: 'center' }}>
+        {typeAction === 'edit'
+          ? t('carInfo.regMaintenance.TITLE_EDIT')
+          : t('carInfo.regMaintenance.TITLE_ADD')}
+      </Text>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, marginHorizontal: 5, gap: 5 }}>
-      <TextInput label={'service'} style={{ flex: 2 }} mode={'outlined'}
+      <TextInput label={t('carInfo.regMaintenance.INPUT_SERVICE')} style={{ flex: 2 }} mode={'outlined'}
                  value={selectedService.nameService}
-                 onChangeText={(value) => setSelectedService({ ...selectedService, nameService: value })}/>
-      <TextInput label={'km'} style={{ flex: 1 }} mode={'outlined'}
+                 onChangeText={(value) => { setSelectedService({ ...selectedService, nameService: value }) }}/>
+      <TextInput label={t('KM')} style={{ flex: 1 }} mode={'outlined'}
                  keyboardType={'numeric'}
                  value={String(selectedService.mileage)}
-                 onChangeText={(value) => setSelectedService({ ...selectedService, mileage: Number(value) })}/>
-      <TextInput label={'лет'} style={{ flex: 1 }} mode={'outlined'}
+                 onChangeText={(value) => { setSelectedService({ ...selectedService, mileage: Number(value) }) }}/>
+      <TextInput label={t('MONTHS')} style={{ flex: 1 }} mode={'outlined'}
                  keyboardType={'numeric'}
                  value={String(selectedService.date)}
-                 onChangeText={(value) => setSelectedService({ ...selectedService, date: Number(value) })}/>
+                 onChangeText={(value) => { setSelectedService({ ...selectedService, date: Number(value) }) }}/>
       </View>
       <Button mode={'contained'} style={{ borderRadius: 5, margin: 10 }} onPress={editListMaintenance}>
-        {typeAction === 'edit' ? 'Сохранить изменения' : 'Добавить регламент'}
+        {typeAction === 'edit'
+          ? t('carInfo.regMaintenance.BUTTON_SAVE')
+          : t('carInfo.regMaintenance.BUTTON_ADD')}
       </Button>
       </Surface>
       <Divider horizontalInset style={{ marginVertical: 10 }}/>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, gap: 10 }}>
         <Button mode={'outlined'} style={{ borderRadius: 5, flex: 1, marginHorizontal: 10 }} onPress={cancelPress}>Cancel</Button>
-        <Button mode={'outlined'} style={{ borderRadius: 5, flex: 1, marginHorizontal: 10 }} onPress={() => okPress(stateListMaintenance)}>Ok</Button>
+        <Button mode={'outlined'} style={{ borderRadius: 5, flex: 1, marginHorizontal: 10 }} onPress={() => { okPress(stateListMaintenance) }}>Ok</Button>
       </View>
     </View>
   )

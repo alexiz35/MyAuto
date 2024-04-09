@@ -1,4 +1,9 @@
 export default {
+  CURRENCY: '₴',
+  MONTH: 'Месяц',
+  MONTHS: 'Месяцев',
+  YEAR: 'Год',
+  KM: 'Км',
   DEV_FUNCTION: 'Функция в разработке',
   navi: {
     HOME: 'Главная',
@@ -71,6 +76,31 @@ export default {
     DATE_BUY: 'Дата покупки',
     MILEAGE_BUY: 'Пробег при покупке',
     BUTTON_TO: 'Регламент ТО',
-    RESET_TO: 'Сброс ТО'
+    RESET_TO: 'Сброс',
+    modalNameCar: {
+      TITLE_NEW: 'Введите уникальное название машины для начала',
+      TITLE_EDIT: 'Измените название авто',
+      TITLE_ADD_NEW: 'Введите уникальное название авто',
+      INPUT: 'Название авто',
+      ERROR_NUL: 'Введите название авто',
+      ERROR_UNIQ: 'Такое название уже существует'
+    },
+    regMaintenance: {
+      TITLE_ADD: 'Добавьте новый регламент',
+      TITLE_EDIT: 'Изменить регламент',
+      INPUT_SERVICE: 'Сервис',
+      INPUT_MILES: '',
+      INPUT_MONTH: '',
+      BUTTON_ADD: 'Добавить новый регламент',
+      BUTTON_SAVE: 'Сохранить изменения'
+    },
+    alert: {
+      TITLE: 'Покинуть страницу?',
+      MESSAGE: 'Все введенные данные не сохранятся'
+    }
+  },
+  menu: {
+    EDIT: 'Изменить',
+    DELETE: 'Удалить'
   }
 }

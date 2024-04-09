@@ -4,6 +4,7 @@ import { View, TextInput as TypeTextInput } from 'react-native'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { useAppSelector } from '../Redux/hook'
 import { getIndexCar } from '../../type'
+import { useTranslation } from 'react-i18next'
 
 type TypeMode = 'new' | 'addNewCar' | 'editCar'
 interface PropsDialogNameCar {
@@ -22,23 +23,24 @@ export const ModalPickNameCar = ({ mode, handlePressOk, handlePressCancel }: Pro
   )
 
   const inputRef = useRef<TypeTextInput>(null)
+  const { t } = useTranslation()
 
   const Tittle = (): string => {
     switch (mode) {
-      case 'new': return 'Введите уникальное название машины для начала работы'
-      case 'editCar': return 'Измените название машины'
-      case 'addNewCar': return 'Введите уникальное название машины'
+      case 'new': return t('carInfo.modalNameCar.TITLE_NEW')
+      case 'editCar': return t('carInfo.modalNameCar.TITLE_EDIT')
+      case 'addNewCar': return t('carInfo.modalNameCar.TITLE_ADD_NEW')
     }
   }
   const pressOk = () => {
     if (valueNameCar === '') {
-      setErrorNameCar('введите название авто')
+      setErrorNameCar(t('carInfo.modalNameCar.ERROR_NUL'))
       setIsErrorNameCar(true)
       return
     }
-    if (car.length > 1) {
+    if (car.length > 0) {
       if (car.some((element) => element.info.nameCar === valueNameCar)) {
-        setErrorNameCar('такое имя уже существует')
+        setErrorNameCar(t('carInfo.modalNameCar.ERROR_UNIQ'))
         setIsErrorNameCar(true)
         return
       }
@@ -62,8 +64,8 @@ export const ModalPickNameCar = ({ mode, handlePressOk, handlePressCancel }: Pro
   <Dialog.Content>
     <TextInput
       ref={inputRef}
-      label={'введите название'}
-      placeholder={'введите название'}
+      label={t('carInfo.modalNameCar.INPUT')}
+      placeholder={t('carInfo.modalNameCar.INPUT')}
       onChangeText={(value) => { setValueNameCar(String(value)) }}
       value={String(valueNameCar)}
       error={isErrorNameCar}

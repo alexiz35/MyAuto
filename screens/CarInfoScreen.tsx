@@ -19,7 +19,7 @@ import {
 } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
-import { RegMaintenance } from '../components/HomeScreenComponents/RegMaintenance'
+import { RegMaintenance } from '../components/CarInfoScreenComponents/RegMaintenance'
 import { editedCarInfo } from '../components/Redux/CarsSlice'
 import { useFocusEffect } from '@react-navigation/native'
 import { useForm, Controller, useWatch } from 'react-hook-form'
@@ -231,7 +231,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
         e.preventDefault()
         // Prompt the user before leaving the screen
 
-        Alert.alert('Покинуть страницу?', 'Введенные данные не сохранятся', [
+        Alert.alert(t('carInfo.alert.TITLE'), t('carInfo.alert.MESSAGE'), [
           {
             text: 'Cancel',
             // ***
@@ -557,18 +557,20 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'center',
+              justifyContent: 'space-around',
               marginVertical: 5,
-              columnGap: 10
+              columnGap: 8
             }}
           >
             <Button
               mode={'elevated'}
               elevation={5}
+              /* labelStyle={{ textAlign: 'center' }} */
               style={{
+                justifyContent: 'center',
                 borderRadius: 5,
                 /* backgroundColor: colors.surface, */
-                flex: 1
+                flex: 10
               }}
               onPress={() => { setVisibleModalService(true) }}
             >
@@ -577,11 +579,14 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             <Button
               icon={'restore'}
               mode={'elevated'}
+              elevation={5}
               style={{
+                justifyContent: 'center',
                 borderRadius: 5,
                 height: 45,
+                marginRight: 2,
                 /* backgroundColor: colors.surface, */
-                flex: 1
+                flex: 2
               }}
               onPress={() => { setRegMaintenance(listService) }}
             >
