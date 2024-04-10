@@ -3,7 +3,8 @@ export default {
   MONTH: 'Month',
   MONTHS: 'Months',
   YEAR: 'Year',
-  KM: 'Km',
+  KM: 'km',
+  L: 'l',
   DEV_FUNCTION: 'Feature in Development',
   TITLE: 'Current miles',
   navi: {
@@ -103,6 +104,18 @@ export default {
   menu: {
     EDIT: 'Edit',
     DELETE: 'Delete'
+  },
+  fuelScreen: {
+    TITLE_SUM_FUEL: 'Filled fuel in current month: ',
+    TITLE_ACCORDION_ADD: 'Add filling fuel',
+    TITLE_ACCORDION_EDIT: 'Edit filling fuel',
+    DATE_FUEL: 'Refueling date',
+    MILEAGE_FUEL: 'Mileage',
+    VOLUME_FUEL: 'Fuel volume',
+    COST_FUEL: 'Fuel cost',
+    TOTAL_COST: 'Total cost',
+    FUEL_STATION: 'Gas Station'
+
   }
 
 }

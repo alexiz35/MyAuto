@@ -5,6 +5,7 @@ import { JSX, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { delStateCarReducer } from '../Redux/CarsSlice'
+import { useTranslation } from 'react-i18next'
 
 interface propsRowFuel {
   handlePress: (item: StateFuel) => void
@@ -13,6 +14,7 @@ interface propsRowFuel {
 
 export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const carId = useAppSelector(state => state.numberCar)
 
   const [visibleMenu, setVisibleMenu] = useState(false)
@@ -77,7 +79,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
             visible={visibleMenu}
             onDismiss={closeMenu}
           >
-            <Menu.Item title={'delete'}
+            <Menu.Item title={t('menu.DELETE')}
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
@@ -85,7 +87,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
                          closeMenu()
                        }}
             />
-            <Menu.Item title={'edit'}
+            <Menu.Item title={t('menu.EDIT')}
                        onPress={() => {
                          handlePress(item)
                        }}

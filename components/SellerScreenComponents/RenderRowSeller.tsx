@@ -5,6 +5,7 @@ import { useAppTheme } from '../../CommonComponents/Theme'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Menu } from 'react-native-paper'
 import { deletedSeller } from '../Redux/SellerSlice'
+import { useTranslation } from 'react-i18next'
 
 interface propsRowSeller {
   handlePress: (item: Seller) => void
@@ -14,6 +15,7 @@ interface propsRowSeller {
 
 export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller): JSX.Element => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
 
   const formString = (item: any): string => {
     if (item === undefined || item === null) return ''
@@ -42,7 +44,7 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
       <Card
         style={{ height: 40, borderRadius: 5 }}
         contentStyle={{ flexDirection: 'row' }}
-        onPress={() => handlePress(item)}
+        onPress={() => { handlePress(item) }}
       >
 
         <Card.Title
@@ -93,7 +95,7 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
             visible={visibleMenu}
             onDismiss={closeMenu}
           >
-            <Menu.Item title={'delete'}
+            <Menu.Item title={t('menu.DELETE')}
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
@@ -101,7 +103,7 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
                          closeMenu()
                        }}
             />
-            <Menu.Item title={'edit'}
+            <Menu.Item title={t('menu.EDIT')}
                        onPress={() => {
                          editPress(item)
                        }}

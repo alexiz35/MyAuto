@@ -4,6 +4,7 @@ export default {
   MONTHS: 'Месяцев',
   YEAR: 'Год',
   KM: 'Км',
+  L: 'л',
   DEV_FUNCTION: 'Функция в разработке',
   navi: {
     HOME: 'Главная',
@@ -102,5 +103,17 @@ export default {
   menu: {
     EDIT: 'Изменить',
     DELETE: 'Удалить'
+  },
+  fuelScreen: {
+    TITLE_SUM_FUEL: 'Заправлено топлива в текушем месяце: ',
+    TITLE_ACCORDION_ADD: 'Добавьте заправку',
+    TITLE_ACCORDION_EDIT: 'Редактируйте заправку',
+    DATE_FUEL: 'Дата заправки',
+    MILEAGE_FUEL: 'Пробег',
+    VOLUME_FUEL: 'Объем топлива',
+    COST_FUEL: 'Цена топлива',
+    TOTAL_COST: 'Стоимость топлива',
+    FUEL_STATION: 'Название заправки'
+
   }
 }

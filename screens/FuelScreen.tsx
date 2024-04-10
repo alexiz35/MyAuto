@@ -30,6 +30,7 @@ import { /* addedFuel, */
   addStateCarReducer,
   editStateCarReducer /* editedFuel, */ /* editStateCarReducer */
 } from '../components/Redux/CarsSlice'
+import { useTranslation } from 'react-i18next'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'FuelScreen'> */
 type Props = CompositeScreenProps<BottomTabScreenProps<RootTabParamList, 'StatScreen'>, NativeStackScreenProps<RootStackParamList, 'FuelScreen'>>
@@ -49,6 +50,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
   const navigation = useNavigation<Props>()
+  const { t } = useTranslation()
 
   const tempNullFuel: FormFuel = {
     dateFuel: new Date(),
@@ -196,7 +198,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         }
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontStyle: 'italic' }}>
-              Заправлено в текущем месяце {sumFuel} л
+               {`${t('fuelScreen.TITLE_SUM_FUEL')}${sumFuel} l`}
             </Text>
             <IconButton icon={'calendar-month'} onPress={() => {
               // @ts-expect-error temp error navigate props
@@ -209,7 +211,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         <KeyboardAvoidingView>
         <ScrollView style={{ marginTop: 5 }}>
             <List.Accordion
-              title={isEditFuel ? 'Редактируйте заправку' : 'Добавьте заправку'}
+              title={isEditFuel ? t('fuelScreen.TITLE_ACCORDION_EDIT') : t('fuelScreen.TITLE_ACCORDION_ADD')}
               description={ state.info.fuel }
               style={{ backgroundColor: colors.secondaryContainer }}
               expanded={openAccordion}
@@ -228,9 +230,9 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                 render={ ({ field: { value, ref } }) => (
                                   <TextInput
                                     ref={ref}
-                                    placeholder={'Дата заправки'}
+                                    placeholder={t('fuelScreen.DATE_FUEL')}
                                     style={{ flex: 1, backgroundColor: colors.surface }}
-                                    label={'Дата заправки'}
+                                    label={t('fuelScreen.DATE_FUEL')}
                                     showSoftInputOnFocus={false}
                                     value = {new Date(value).toLocaleDateString()}
                                     /* value={value} */
@@ -250,7 +252,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                                      label={'пробег'}
+                                      label={t('fuelScreen.MILEAGE_FUEL')}
                                       onChangeText={(value) => { onChange(value) }}
                                       onSubmitEditing={() => {
                                         setFocus('volumeFuel')
@@ -259,7 +261,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                       keyboardType={'numeric'}
                                       value={value}
                                       error={(error != null) && true}
-                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="km"/>}
+                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('KM')}/>}
                                     />
                                     { (error != null)
                                       ? <HelperText type="error">1..10000000 km</HelperText>
@@ -283,7 +285,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                   <>
                                     <TextInput
                                       ref={ref}
-                                      label={'объем'}
+                                      label={t('fuelScreen.VOLUME_FUEL')}
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
                                       onChangeText={(value) => { onChange(value) }}
                                       keyboardType={'numeric'}
@@ -291,7 +293,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                       onSubmitEditing={() => { setFocus('CostFuel') }}
                                       error={(error != null) && true}
                                       onBlur={onBlur}
-                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="л"/>}
+                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('L')}/>}
 
                                     />
                                     { (error != null)
@@ -309,14 +311,14 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                 render={ ({ field: { onChange, value, ref } }) => (
                                   <TextInput
                                     ref={ref}
-                                    label={'цена'}
+                                    label={t('fuelScreen.COST_FUEL')}
                                     style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
                                     onChangeText={(value) => { onChange(value) }}
                                     keyboardType={'numeric'}
                                     value={value}
                                     onSubmitEditing={() => { setFocus('AmountFuel') }/* handleOnSubmitCost() */}
                                     onBlur={() => { handleOnSubmitCost() }}
-                                    right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="грн"/>}
+                                    right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('CURRENCY')}/>}
                                   />
                                 )}
                     />
@@ -328,14 +330,14 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                 render={ ({ field: { onChange, value, ref } }) => (
                                   <TextInput
                                     ref={ref}
-                                    label={'сумма'}
+                                    label={t('fuelScreen.TOTAL_COST')}
                                     style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
                                     onChangeText={(value) => { onChange(value) }}
                                     keyboardType={'numeric'}
                                     value={value}
                                     onSubmitEditing={() => { setFocus('StationFuel') }/* handleOnSubmitAmount() */}
                                     onBlur={() => { handleOnSubmitAmount() }}
-                                    right={<TextInput.Affix textStyle={{ fontSize: 10 }} text="грн"/>}
+                                    right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('CURRENCY')}/>}
                                   />
                                 )}
                     />
@@ -353,7 +355,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                     <TextInput
                                       ref={ref}
                                       /* placeholder={'название заправки'} */
-                                      label={'название заправки'}
+                                      label={t('fuelScreen.FUEL_STATION')}
                                       style={{ flex: 1, backgroundColor: colors.surface }}
                                       onChangeText={(value) => { onChange(String(value)) }}
                                       value={String(value)}
