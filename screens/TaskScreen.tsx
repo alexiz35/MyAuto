@@ -22,11 +22,13 @@ import {
 import { useAppTheme } from '../CommonComponents/Theme'
 import InputTaskComponent from '../components/TaskScreenComponents/InputTaskComponent'
 import { addStateCarReducer, editStateCarReducer } from '../components/Redux/CarsSlice'
+import { useTranslation } from 'react-i18next'
 
 type Props = BottomTabScreenProps<RootTabParamList, 'TaskScreen'>
 
 const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
   const nav = useNavigation()
@@ -133,7 +135,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
       <KeyboardAvoidingView >
         <ScrollView style={{ marginTop: 5 }}>
           <List.Accordion
-            title={isEditTask ? 'Редактируйте задачу' : 'Добавьте задачу'}
+            title={isEditTask ? t('taskScreen.TITLE_ACCORDION_EDIT') : t('taskScreen.TITLE_ACCORDION_ADD')}
             /* description={ state.info.fuel } */
             style={{ backgroundColor: colors.secondaryContainer }}
             /* left={props => <List.Icon {...props} icon="car-cog" />} */
@@ -167,7 +169,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
               >
                 <RadioButton.Group onValueChange={value => { pressFilter(value) }} value={checkFilter} >
                 <RadioButton.Item
-                  label={'завершенные'}
+                  label={t('taskScreen.FILTER_FINISH')}
                   mode={'ios'}
                   position={'leading'}
                   value="finish"
@@ -176,7 +178,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
                   color={colors.tertiary}
                 />
                   <RadioButton.Item
-                  label={'не завершенные'}
+                  label={t('taskScreen.FILTER_UNFINISH')}
                   mode={'ios'}
                   position={'leading'}
                   value="unFinish"
@@ -185,7 +187,7 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
                   color={colors.tertiary}
                 />
                   <RadioButton.Item
-                  label={'все'}
+                  label={t('taskScreen.FILTER_ALL')}
                   mode={'ios'}
                   position={'leading'}
                   value="all"

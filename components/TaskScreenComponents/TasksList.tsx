@@ -5,6 +5,7 @@ import { useAppSelector } from '../Redux/hook'
 import { BusyIndicator } from '../useIsReadyHook'
 import { RenderRowTask } from './TaskRow'
 import { Text } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
 
 interface handleProp {
   handlePress: (item: StateTask) => void
@@ -18,6 +19,7 @@ export const TasksList = ({ handlePress, filterList = 'last', checkedFilter = 'u
   const [listIsFilter, setListIsFilter] = useState(listTasks)
   const [isSortTasks, setIsSortTasks] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
+  const { t } = useTranslation()
 
   const functionSort = (arrayTasks: StateTask[], typeSort: string) => {
     if (typeSort === 'dateSort') {
@@ -37,7 +39,7 @@ export const TasksList = ({ handlePress, filterList = 'last', checkedFilter = 'u
 
   const EmptyList = (): JSX.Element => {
     return (
-      <Text style={{ textAlign: 'center' }}>Задач пока нет</Text>
+      <Text style={{ textAlign: 'center' }}>{t('taskScreen.TASKS_NOT')}</Text>
     )
   }
 

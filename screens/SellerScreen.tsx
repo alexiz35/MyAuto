@@ -22,6 +22,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/native'
 import { addedSeller, editedSeller } from '../components/Redux/SellerSlice'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 interface FormSeller {
   name: string
@@ -36,6 +37,7 @@ type Props = StackScreenProps<RootStackParamList, 'SellerScreen'>
 const SellerScreen = ({ route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   const tempNullSeller: FormSeller = {
     name: '',
@@ -152,7 +154,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
         <KeyboardAvoidingView>
           <ScrollView style={{ marginTop: 5 }}>
             <List.Accordion
-              title={isEditSeller ? 'Изменить поставщика' : 'Добавьте поставщика'}
+              title={isEditSeller ? t('seller.TITLE_ACCORDION_EDIT') : t('seller.TITLE_ACCORDION_ADD')}
               /* description={ state.info.fuel } */
               style={{ backgroundColor: colors.secondaryContainer }}
               expanded={openAccordion}
@@ -168,13 +170,13 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'name'}
                                 control={control}
-                                rules={{ required: 'введите имя/название' }}
+                                rules={{ required: t('seller.ERROR_SELLER') }}
                                 render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
                                   <>
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                                      label={'название/имя'}
+                                      label={t('seller.NAME_SELLER')}
                                       onChangeText={(value) => { onChange(value) }}
                                       onSubmitEditing={() => {
                                         setFocus('phone')
@@ -205,7 +207,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                                   <>
                                     <TextInput
                                       ref={ref}
-                                      label={'телефон'}
+                                      label={t('seller.PHONE_SELLER')}
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
                                       onChangeText={(value) => { onChange(value) }}
                                       keyboardType={'phone-pad'}
@@ -231,7 +233,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                                     <TextInput
                                       ref={ref}
                                       /* placeholder={'название заправки'} */
-                                      label={'специализация'}
+                                      label={t('seller.SPECIALIZATION')}
                                       style={{ flex: 1, backgroundColor: colors.surface }}
                                       onChangeText={(value) => { onChange(value) }}
                                       onSubmitEditing={() => { setFocus('web') }}
@@ -272,7 +274,7 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                               render={ ({ field: { onChange, value, ref } }) => (
                                 <TextInput
                                   ref={ref}
-                                  label={'ссылка'}
+                                  label={t('seller.WEB_SELLER')}
                                   style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
                                   onChangeText={(value) => { onChange(value) }}
                                   keyboardType={'url'}
@@ -294,10 +296,10 @@ const SellerScreen = ({ route }: Props): JSX.Element => {
                                 <RadioButton.Group onValueChange={value => { onChange(value) }} value={value} >
                                   <View style={{ flexDirection: 'row' }}>
                                     <View style={{ flex: 1 }}>
-                                  <RadioButton.Item label="Запчасти" value="seller" />
+                                  <RadioButton.Item label={t('seller.PART_SELLER')} value="seller" />
                                     </View>
                                     <View style={{ flex: 1 }}>
-                                    <RadioButton.Item label="Сервис" value="service"/>
+                                    <RadioButton.Item label={t('seller.SERVICE_SELLER')} value="service"/>
                                     </View>
                                   </View>
                                 </RadioButton.Group>

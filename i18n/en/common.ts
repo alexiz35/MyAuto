@@ -116,6 +116,41 @@ export default {
     TOTAL_COST: 'Total cost',
     FUEL_STATION: 'Gas Station'
 
+  },
+  taskScreen: {
+    TASKS_NOT: 'No tasks yet',
+    FILTER_FINISH: 'Finished',
+    FILTER_UNFINISH: 'Unfinished',
+    FILTER_ALL: 'All',
+    TITLE_ACCORDION_ADD: 'Add Task',
+    TITLE_ACCORDION_EDIT: 'Edit Task',
+    TITLE_PART: 'Part',
+    TITLE_SERVICE: 'Service',
+    TITLE_OTHER: 'Other',
+    NAME_TASK: 'Name Task',
+    DATE: 'By Date',
+    MILEAGE: 'By Mileage',
+    COST: 'Cost',
+    AMOUNT: 'Quantity',
+    TOTAL_COST: 'Total Cost',
+    parts: {
+      PARTS: 'Parts',
+      NUMBER_PART: 'Number Part',
+      ANALOG_PART: 'Analogs',
+      ADDITION: 'Additionally'
+    }
+  },
+  seller: {
+    TITLE_ACCORDION_ADD: 'Add Seller',
+    TITLE_ACCORDION_EDIT: 'Edit Seller',
+    DATA_SELLER: 'Seller details',
+    NAME_SELLER: 'Name',
+    PHONE_SELLER: 'Phone',
+    SPECIALIZATION: 'Specialization',
+    WEB_SELLER: 'Link',
+    PART_SELLER: 'Part',
+    SERVICE_SELLER: 'Service',
+    ERROR_SELLER: 'Name required'
   }
 
 }

@@ -18,6 +18,8 @@ import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { ModalPickSeller } from '../SellerScreenComponents/ModalPickSeller'
 // eslint-disable-next-line import/named
 import { StackNavigationProp } from '@react-navigation/stack'
+import { useTranslation } from 'react-i18next'
+import taskScreen from '../../screens/TaskScreen'
 
 interface InputTaskProps {
   isCancel: () => void
@@ -45,7 +47,7 @@ interface FormTask {
 
 const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskProps): JSX.Element => {
   /* const stateSecond = useAppSelector((state) => state) */
-
+  const { t } = useTranslation()
   const theme = useAppTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
@@ -207,21 +209,21 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                   <SegmentedButtons value={value} onValueChange={value => { onChange(value) }} buttons={[
                     {
                       value: 'part',
-                      label: 'Part',
+                      label: t('taskScreen.TITLE_PART'),
                       showSelectedCheck: true,
                       style: { borderRadius: 2, borderWidth: 0 },
                       icon: 'car-cog'
                     },
                     {
                       value: 'service',
-                      label: 'Service',
+                      label: t('taskScreen.TITLE_SERVICE'),
                       showSelectedCheck: true,
                       style: { borderRadius: 2, borderWidth: 0 },
                       icon: 'car-wrench'
                     },
                     {
                       value: 'other',
-                      label: 'Other',
+                      label: t('taskScreen.TITLE_OTHER'),
                       showSelectedCheck: true,
                       style: { borderRadius: 2, borderWidth: 0 },
                       icon: 'car-clock'
@@ -249,7 +251,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'название задачи'}
+                                    label={t('taskScreen.NAME_TASK')}
                                     value={value}
                                     onChangeText={(value) => { onChange(value) }}
                                     onBlur={onBlur}
@@ -266,7 +268,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
               <Surface elevation={2} style={styles.surface}>
                 <Accordion
                   /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
-                  title={'Комплектующие'}
+                  title={t('taskScreen.parts.PARTS')}
                   textBannerStyle={{
                     fontSize: 14,
                     color: theme.colors.secondary
@@ -284,7 +286,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                         dense
                                         ref={ref}
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                        label={'Номер детали'}
+                                        label={t('taskScreen.parts.NUMBER_PART')}
                                         /* keyboardType={'phone-pad'} */
                                         onChangeText={value => { onChange(value) }}
                                         value={value}
@@ -305,7 +307,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                           ref={ref}
                                           dense
                                           style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                          label={'аналог'}
+                                          label={t('taskScreen.parts.ANALOG_PART')}
                                           onChangeText={(value) => { onChange(value) }}
                                           value={value}
                                           onSubmitEditing={() => {
@@ -328,7 +330,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                           dense
                                           numberOfLines={2}
                                           style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                          label={'дополнительно'}
+                                          label={t('taskScreen.parts.ADDITION')}
                                           onChangeText={(value) => { onChange(value) }}
                                           value={value}
                                           /* onSubmitEditing={() => {
@@ -357,7 +359,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'до даты'}
+                                    label={t('taskScreen.DATE')}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
                                     /* onChangeText={(value) => onChange(value)} */
@@ -375,7 +377,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'до пробега'}
+                                    label={t('taskScreen.MILEAGE')}
                                     showSoftInputOnFocus={true}
                                     keyboardType={'numeric'}
                                     value={value}
@@ -399,7 +401,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                 ref={ref}
                                 dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                label={'цена'}
+                                label={t('taskScreen.COST')}
                                 onChangeText={(value) => { onChange(value) }}
                                 value={value}
                                 keyboardType={'numeric'}
@@ -417,7 +419,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                 ref={ref}
                                 dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                label={'кол-во'}
+                                label={t('taskScreen.AMOUNT')}
                                 onChangeText={(value) => { onChange(value) }}
                                 value={value}
                                 keyboardType={'numeric'}
@@ -435,7 +437,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                 ref={ref}
                                 dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                label={'сумма'}
+                                label={t('taskScreen.TOTAL_COST')}
                                 onChangeText={(value) => { onChange(value) }}
                                 value={value}
                                 keyboardType={'numeric'}
@@ -454,7 +456,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
             <Surface elevation={2} style={styles.surface}>
               <Accordion
                 /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
-                title={'Данные продавца'}
+                title={t('seller.DATA_SELLER')}
                 textBannerStyle={{
                   fontSize: 14,
                   color: theme.colors.secondary
@@ -470,7 +472,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                       ref={ref}
                                       dense
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                      label={'Продавец'}
+                                      label={t('seller.NAME_SELLER')}
                                       /* keyboardType={'phone-pad'} */
                                       right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
                                                              color={theme.colors.tertiary}
@@ -498,7 +500,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                         ref={ref}
                                         dense
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                        label={'телефон'}
+                                        label={t('seller.PHONE_SELLER')}
                                         keyboardType={'phone-pad'}
                                         onChangeText={(value) => { onChange(value) }}
                                         value={value}
@@ -518,7 +520,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                         ref={ref}
                                         dense
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                        label={'интернет'}
+                                        label={t('seller.WEB_SELLER')}
                                         keyboardType={'url'}
                                         onChangeText={(value) => { onChange(value) }}
                                         value={value}
