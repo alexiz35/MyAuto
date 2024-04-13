@@ -9,10 +9,12 @@ import { SegmentedButtons } from 'react-native-paper'
 // eslint-disable-next-line import/named
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { useFocusEffect } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next'
 
   type Props = BottomTabScreenProps<RootTabParamList, 'InputDoneScreen'>
 const InputDoneScreen = ({ route }: Props): JSX.Element => {
   const [typeBuy, setTypeBuy] = useState('part')
+  const { t } = useTranslation()
 
   useFocusEffect(
     useCallback(() => {
@@ -29,9 +31,9 @@ const InputDoneScreen = ({ route }: Props): JSX.Element => {
       <SegmentedButtons
         value={typeBuy} onValueChange={setTypeBuy}
         buttons={[
-          { value: 'part', label: 'part' },
-          { value: 'service', label: 'service' },
-          { value: 'other', label: 'other' }
+          { value: 'part', label: t('PART') },
+          { value: 'service', label: t('SERVICE') },
+          { value: 'other', label: t('OTHER') }
         ]}
       />
       <View style={{ marginTop: 10, flex: 1 }}>

@@ -1,10 +1,20 @@
 export default {
   CURRENCY: '$',
+  PCS: 'pcs',
   MONTH: 'Month',
   MONTHS: 'Months',
   YEAR: 'Year',
   KM: 'km',
   L: 'l',
+  PART: 'Part',
+  SERVICE: 'Service',
+  OTHER: 'Other',
+  COST: 'Cost',
+  AMOUNT: 'Amount',
+  TOTAL_COST: 'Total Cost',
+  SUPPLIER: 'Supplier',
+  PHONE: 'Phone',
+  LINK: 'Web',
   DEV_FUNCTION: 'Feature in Development',
   TITLE: 'Current miles',
   navi: {
@@ -115,7 +125,6 @@ export default {
     COST_FUEL: 'Fuel cost',
     TOTAL_COST: 'Total cost',
     FUEL_STATION: 'Gas Station'
-
   },
   taskScreen: {
     TASKS_NOT: 'No tasks yet',
@@ -141,16 +150,38 @@ export default {
     }
   },
   seller: {
-    TITLE_ACCORDION_ADD: 'Add Seller',
-    TITLE_ACCORDION_EDIT: 'Edit Seller',
-    DATA_SELLER: 'Seller details',
+    TITLE_ACCORDION_ADD: 'Add Supplier',
+    TITLE_ACCORDION_EDIT: 'Edit Supplier',
+    DATA_SELLER: 'Supplier details',
     NAME_SELLER: 'Name',
     PHONE_SELLER: 'Phone',
     SPECIALIZATION: 'Specialization',
     WEB_SELLER: 'Link',
     PART_SELLER: 'Part',
     SERVICE_SELLER: 'Service',
-    ERROR_SELLER: 'Name required'
+    ERROR_SELLER: 'Name required',
+    TITLE_DIALOG: 'List Suppliers/Services',
+    EDIT_LIST: 'Edit List Suppliers/Services'
+  },
+  inputPart: {
+    TITLE_ACCORDION_ADD: 'Add Part',
+    TITLE_ACCORDION_EDIT: 'Edit Part',
+    NAME: 'Name',
+    DATE: 'Purchase date',
+    NUMBER: 'Number Part'
+  },
+  inputService: {
+    TITLE_ACCORDION_ADD: 'Add Service',
+    TITLE_ACCORDION_EDIT: 'Edit Service',
+    SELECT_TO: 'Select Maintenance Type',
+    CURRENT_MILEAGE: 'Current Mileage',
+    REPLACE_MILEAGE: 'Replacement Mileage',
+    DATE_SERVICE: 'Date of Service',
+    DATE_REPLACE: 'Replacement Date',
+    COST_SERVICE: 'Cost Service',
+    REMINDER: 'Create \nReminder',
+    ADD_PARTS: 'Add Parts',
+    ADD_SUM: 'Added: {{amountPart}} $t(PCS) for a total of {{sumCost}} $t(CURRENCY)'
   }
 
 }

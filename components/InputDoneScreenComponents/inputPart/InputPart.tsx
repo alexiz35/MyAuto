@@ -17,6 +17,7 @@ import { PartsList } from './PartsList'
 import InputPartComponent from './InputPartComponent'
 import { addStateCarReducer, editStateCarReducer } from '../../Redux/CarsSlice'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { useTranslation } from 'react-i18next'
 
 const InputPart = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -24,6 +25,7 @@ const InputPart = (): JSX.Element => {
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
   const nav = useNavigation()
+  const { t } = useTranslation()
 
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isEditPart, setIsEditPart] = useState(false)
@@ -81,7 +83,7 @@ const InputPart = (): JSX.Element => {
         <KeyboardAvoidingView>
         <ScrollView style={{ marginTop: 5 }}>
             <List.Accordion
-              title={isEditPart ? 'Редактируйте деталь' : 'Добавьте деталь'}
+              title={isEditPart ? t('inputPart.TITLE_ACCORDION_EDIT') : t('inputPart.TITLE_ACCORDION_ADD')}
               /* description={ state.info.fuel } */
               style={{ backgroundColor: colors.secondaryContainer }}
               /* left={props => <List.Icon {...props} icon="car-cog" />} */

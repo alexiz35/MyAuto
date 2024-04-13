@@ -15,6 +15,8 @@ import { type StackNavigationProp } from '@react-navigation/stack'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { useTranslation } from 'react-i18next'
+import inputPart from './InputPart'
 
 interface InputPartProps {
   isCancel: () => void
@@ -40,6 +42,7 @@ interface FormPart {
 const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): JSX.Element => {
   const theme = useAppTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const { t } = useTranslation()
 
   // ---------------------- handle ModalPickSeller -----------------------------
   const [visibleSeller, setVisibleSeller] = useState(false)
@@ -194,7 +197,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                    label={'название'}
+                                    label={t('inputPart.NAME')}
                                     onChangeText={(value) => { onChange(value) }}
                                     value={value}
                                     onBlur={onBlur}
@@ -214,7 +217,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'Дата покупки'}
+                                    label={t('inputPart.DATE')}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
                                     onPressOut={inputDate}
@@ -236,7 +239,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                       ref={ref}
                       dense
                       style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                      label={'артикул'}
+                      label={t('inputPart.NUMBER')}
                       onChangeText={(value) => { onChange(value) }}
                       value={value}
                       onBlur={onBlur}
@@ -260,7 +263,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                      label={'цена'}
+                                      label={t('COST')}
                                       onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       keyboardType={'numeric'}
@@ -277,7 +280,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                      label={'кол-во'}
+                                      label={t('AMOUNT')}
                                       onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       keyboardType={'numeric'}
@@ -294,7 +297,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                      label={'сумма'}
+                                      label={t('TOTAL_COST')}
                                       onChangeText={(value) => { onChange(value) }}
                                       value={value}
                                       keyboardType={'numeric'}
@@ -318,7 +321,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                   <TextInput
                                     ref={ref}
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'продавец'}
+                                    label={t('SUPPLIER')}
                                     onChangeText={(value) => { onChange(value) }}
                                     value={value}
                                     showSoftInputOnFocus={true}
@@ -349,7 +352,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                 <Surface elevation={2} style={styles.surface}>
                   <Accordion
                     /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
-                    title={'Данные продавца'}
+                    title={t('seller.DATA_SELLER')}
                     textBannerStyle={{
                       fontSize: 14,
                       color: theme.colors.secondary
@@ -366,7 +369,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                               <TextInput
                                 ref={ref}
                                 style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                label={'телефон'}
+                                label={t('PHONE')}
                                 keyboardType={'phone-pad'}
                                 onChangeText={(value) => { onChange(value) }}
                                 value={value}
@@ -385,7 +388,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                             <TextInput
                                               ref={ref}
                                               style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                              label={'интернет'}
+                                              label={t('LINK')}
                                               keyboardType={'url'}
                                               onChangeText={(value) => { onChange(value) }}
                                               value={value}

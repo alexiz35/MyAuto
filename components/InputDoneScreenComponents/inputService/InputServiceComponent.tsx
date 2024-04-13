@@ -30,6 +30,7 @@ import { useNavigation } from '@react-navigation/native'
 // eslint-disable-next-line import/named
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../Navigation/TypeNavigation'
+import { useTranslation } from 'react-i18next'
 
 interface InputServiceProps {
   isCancel: () => void
@@ -56,6 +57,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   const theme = useAppTheme()
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const { t } = useTranslation()
 
   const tempNullService: FormService = {
     startKm: '',
@@ -260,7 +262,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
             <Button mode={'elevated'} onPress={showModalService} style={{ marginHorizontal: 5, borderRadius: 1 }} >
               {typeService !== undefined
                 ? `${String(typeService?.nameService)} / ${String(typeService?.mileage)} km / ${String(typeService?.date)} год`
-                : 'Выберите тип ТО'
+                : t('inputService.SELECT_TO')
               }
             </Button>
     {
@@ -279,7 +281,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'текущий пробег'}
+                                    label={t('inputService.CURRENT_MILEAGE')}
                                     keyboardType={'numeric'}
                                     value={value}
                                     onSubmitEditing={updateTypeService}
@@ -298,7 +300,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'пробег замены'}
+                                    label={t('inputService.REPLACE_MILEAGE')}
                                     keyboardType={'numeric'}
                                     value={value}
                                     onChangeText={(value) => { onChange(value) }}
@@ -321,7 +323,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'дата сервиса'}
+                                    label={t('inputService.DATE_SERVICE')}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
                                     /* onChangeText={(value) => onChange(value)} */
@@ -339,7 +341,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     ref={ref}
                                     dense
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                    label={'дата замены'}
+                                    label={t('inputService.DATE_REPLACE')}
                                     showSoftInputOnFocus={false}
                                     value={new Date(value).toLocaleDateString()}
                                     onPressOut={() => { inputDate('endDate') }}
@@ -381,7 +383,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                 ref={ref}
                                 dense
                                 style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                                label={'цена сервиса'}
+                                label={t('inputService.COST_SERVICE')}
                                 keyboardType={'numeric'}
                                 onChangeText={(value) => { onChange(value) }}
                                 value={value}
@@ -395,7 +397,8 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                 <Checkbox.Item
                   status={'unchecked'}
                   color={theme.colors.tertiary}
-                  label={'Создать \nнапоминание'}
+                  /* label={'Создать \nнапоминание'} */
+                  label={t('inputService.REMINDER')}
                   labelVariant={'bodySmall'}
                 />
               </Surface>
@@ -408,8 +411,9 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                   showModalAddParts()
                 }}>
                   <>
-                  <Text style={{ fontWeight: 'bold' }}>Добавить комплектующие</Text>
-                  <Text >{`Добавлено: ${amountPart} шт на сумму ${sumCost} грн`}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{t('inputService.ADD_PARTS')}</Text>
+                  {/* <Text >{`Добавлено: ${amountPart} шт на сумму ${sumCost} грн`}</Text> */}
+                  <Text >{t('inputService.ADD_SUM', { amountPart, sumCost })}</Text>
                   </>
                 </TouchableRipple>
               </Surface>
@@ -421,7 +425,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
             <Surface elevation={2} style={styles.surface}>
               <Accordion
                 /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
-                title={'Данные продавца'}
+                title={t('seller.DATA_SELLER')}
                 textBannerStyle={{
                   fontSize: 14,
                   color: theme.colors.secondary
@@ -436,7 +440,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                      label={'название'}
+                                      label={t('seller.NAME_SELLER')}
                                       /* keyboardType={'phone-pad'} */
                                       onChangeText={(value) => { onChange(value) }}
                                       value={value}
@@ -461,7 +465,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                       <TextInput
                                         ref={ref}
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                        label={'телефон'}
+                                        label={t('PHONE')}
                                         keyboardType={'phone-pad'}
                                         onChangeText={(value) => { onChange(value) }}
                                         value={value}
@@ -480,7 +484,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                       <TextInput
                                         ref={ref}
                                         style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                        label={'интернет'}
+                                        label={t('LINK')}
                                         keyboardType={'url'}
                                         onChangeText={(value) => { onChange(value) }}
                                         value={value}

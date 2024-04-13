@@ -4,6 +4,7 @@ import { useAppSelector } from '../Redux/hook'
 import { RenderRowSeller } from './RenderRowSeller'
 import { Seller } from '../../type'
 import { JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface PropsPickSeller {
   handlePress: (item: Seller) => void
@@ -12,9 +13,10 @@ interface PropsPickSeller {
 }
 
 export const ModalPickSeller = ({ handlePress, editPress, navigation }: PropsPickSeller): JSX.Element => {
+  const { t } = useTranslation()
   return (
     <>
-    <Dialog.Title>Список поставщиков/сервисов</Dialog.Title>
+    <Dialog.Title>{t('seller.TITLE_DIALOG')}</Dialog.Title>
   <Dialog.Content style={{ height: 300 }}>
               <FlatList
           scrollEnabled
@@ -33,8 +35,8 @@ export const ModalPickSeller = ({ handlePress, editPress, navigation }: PropsPic
         />
 
   </Dialog.Content>
-      <Dialog.Actions>
-        <Button icon={'file-edit'} onPress={navigation} >Редактировать список продавцов</Button>
+      <Dialog.Actions style={{ justifyContent: 'center' }}>
+        <Button icon={'file-edit'} onPress={navigation} >{t('seller.EDIT_LIST')}</Button>
       </Dialog.Actions>
     </>
 

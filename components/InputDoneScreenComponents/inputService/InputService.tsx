@@ -5,13 +5,13 @@ import {
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { StateService } from '../../../type'
-import { addService, editService } from '../../../oldFiles/actions'
 import InputServiceComponent from './InputServiceComponent'
 import { List, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { ServicesList } from './ServicesList'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { addStateCarReducer, editStateCarReducer } from '../../Redux/CarsSlice'
+import { useTranslation } from 'react-i18next'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 
@@ -20,6 +20,7 @@ const InputService = (): JSX.Element => {
   const carId = useAppSelector(state => state.numberCar)
   const { colors } = useAppTheme()
   const nav = useNavigation()
+  const { t } = useTranslation()
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isEditService, setIsEditService] = useState(false)
 
@@ -79,7 +80,7 @@ const InputService = (): JSX.Element => {
     <KeyboardAvoidingView >
       <ScrollView style={{ marginTop: 5 }}>
       <List.Accordion
-        title={isEditService ? 'Редактируйте сервис' : 'Добавьте сервис'}
+        title={isEditService ? t('inputService.TITLE_ACCORDION_EDIT') : t('inputService.TITLE_ACCORDION_ADD')}
         /* description={ state.info.fuel } */
         style={{ backgroundColor: colors.secondaryContainer }}
         /* left={props => <List.Icon {...props} icon="car-cog" />} */

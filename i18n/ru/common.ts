@@ -1,10 +1,20 @@
 export default {
   CURRENCY: '₴',
+  PCS: 'шт',
   MONTH: 'Месяц',
   MONTHS: 'Месяцев',
   YEAR: 'Год',
   KM: 'Км',
   L: 'л',
+  PART: 'Детали',
+  SERVICE: 'Сервис',
+  OTHER: 'Другое',
+  COST: 'Цена',
+  AMOUNT: 'Количество',
+  TOTAL_COST: 'Стоимость',
+  SUPPLIER: 'Поставщик',
+  PHONE: 'Телефон',
+  LINK: 'Ссылки',
   DEV_FUNCTION: 'Функция в разработке',
   navi: {
     HOME: 'Главная',
@@ -114,6 +124,63 @@ export default {
     COST_FUEL: 'Цена топлива',
     TOTAL_COST: 'Стоимость топлива',
     FUEL_STATION: 'Название заправки'
-
+  },
+  taskScreen: {
+    TASKS_NOT: 'Задач пока нет',
+    FILTER_FINISH: 'Завершенные',
+    FILTER_UNFINISH: 'Не завершенные',
+    FILTER_ALL: 'Все',
+    TITLE_ACCORDION_ADD: 'Добавьте задачу',
+    TITLE_ACCORDION_EDIT: 'Редактируйте задачу',
+    TITLE_PART: 'Комплектующие',
+    TITLE_SERVICE: 'Сервис',
+    TITLE_OTHER: 'Другое',
+    NAME_TASK: 'Название задачи',
+    DATE: 'До даты',
+    MILEAGE: 'До пробега',
+    COST: 'Цена',
+    AMOUNT: 'Количество',
+    TOTAL_COST: 'Сумма',
+    parts: {
+      PARTS: 'Комплектующие',
+      NUMBER_PART: 'Номер детали',
+      ANALOG_PART: 'Аналоги',
+      ADDITION: 'Дополнительно'
+    }
+  },
+  seller: {
+    TITLE_ACCORDION_ADD: 'Добавить поставщика',
+    TITLE_ACCORDION_EDIT: 'Редактировать поставщика',
+    DATA_SELLER: 'Данные поставщика',
+    NAME_SELLER: 'Имя/Название',
+    PHONE_SELLER: 'Телефон',
+    SPECIALIZATION: 'Специализация',
+    WEB_SELLER: 'Ссылки',
+    PART_SELLER: 'Комплектующие',
+    SERVICE_SELLER: 'Сервис',
+    ERROR_SELLER: 'Имя обязательно',
+    TITLE_DIALOG: 'Список поставщиков/Сервисов',
+    EDIT_LIST: 'Редактировать список поставщиков'
+  },
+  inputPart: {
+    TITLE_ACCORDION_ADD: 'Добавьте деталь',
+    TITLE_ACCORDION_EDIT: 'Редактируйте деталь',
+    NAME: 'Название',
+    DATE: 'Дата покупки',
+    NUMBER: 'Артикул'
+  },
+  inputService: {
+    TITLE_ACCORDION_ADD: 'Добавьте сервис',
+    TITLE_ACCORDION_EDIT: 'Редактируйте сервис',
+    SELECT_TO: 'Выберите тип сервиса',
+    CURRENT_MILEAGE: 'Текущий пробег',
+    REPLACE_MILEAGE: 'Пробег замены',
+    DATE_SERVICE: 'Дата сервиса',
+    DATE_REPLACE: 'Дата замены',
+    COST_SERVICE: 'Цена сервиса',
+    REMINDER: 'Создать \nнапоминание',
+    ADD_PARTS: 'Добавить комплектующие',
+    ADD_SUM: 'Добавлено: {{amountPart}} $t(PCS) на общую сумму {{sumCost}} $t(CURRENCY)'
   }
+
 }
