@@ -5,6 +5,7 @@ import { JSX, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { delStateCarReducer } from '../../Redux/CarsSlice'
+import { useTranslation } from 'react-i18next'
 
 interface propsRowPart {
   handlePress: (item: StateOther) => void
@@ -14,6 +15,7 @@ interface propsRowPart {
 export const RenderRowOther = ({ item, handlePress }: propsRowPart): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
+  const { t } = useTranslation()
 
   const [visibleMenu, setVisibleMenu] = useState(false)
   const { colors } = useAppTheme()
@@ -65,7 +67,7 @@ export const RenderRowOther = ({ item, handlePress }: propsRowPart): JSX.Element
           />
         )} */
 
-        onPress={() => handlePress(item)}
+        onPress={() => { handlePress(item) }}
       >
 
         <Card.Title
@@ -110,15 +112,15 @@ export const RenderRowOther = ({ item, handlePress }: propsRowPart): JSX.Element
             visible={visibleMenu}
             onDismiss={closeMenu}
           >
-            <Menu.Item title={'delete'}
+            <Menu.Item title={t('menu.DELETE')}
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
-                         dispatch(delStateCarReducer({type:'others',numberCar:carId,id: item.id}))
+                         dispatch(delStateCarReducer({ type: 'others', numberCar: carId, id: item.id }))
                          closeMenu()
                        }}
             />
-            <Menu.Item title={'edit'}
+            <Menu.Item title={t('menu.EDIT')}
                        onPress={() => {
                          handlePress(item)
                        }}
