@@ -23,6 +23,7 @@ import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftCha
 import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
 import { getIndexCar } from '../type'
 import { NAME_MONTH, TypePickedDate } from '../components/StatScreenComponents/TypeStat'
+import { useTranslation } from 'react-i18next'
 
 export const initialDate: TypePickedDate = {
   type: 'year',
@@ -57,6 +58,7 @@ const StatScreen = (): JSX.Element => {
   const [visiblePickDate, setVisiblePickDate] = useState(false)
 
   const [typeChart, setTypeChart] = useState('pie')
+  const { t } = useTranslation()
 
   /*   const calcSum = (targetArray: number[]): number => {
     if (targetArray.length !== 0) {
@@ -126,7 +128,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
     <BackgroundView props={{ height: Dimensions.get('window').height }}>
       <View style={styles.viewTitleStat}>
         <Text style={styles.titleStat}>
-          Статистика за
+          {t('statScreen.TITLE')}
         </Text>
         <Button
                 onPress={() => {
@@ -154,33 +156,51 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
             { value: 'bar', label: '', icon: () => <Icon source={'chart-bar'} size={26}/> }
           ]}
         />
-
-         {typeChart === 'pie'
-           ? <PieGiftChartComponent dataProps={{ fuel: sumFuel, parts: sumParts, other: sumOther }}/>
-           : <BarGiftChartComponent dataProps={ { all: dataBarChart.all, fuel: dataBarChart.fuel, parts: dataBarChart.parts, other: dataBarChart.other } } />}
-
+      {!(sumFuel === 0 && sumParts === 0 && sumOther === 0)
+        ? typeChart === 'pie'
+          ? <PieGiftChartComponent dataProps={{ fuel: sumFuel, parts: sumParts, other: sumOther }}/>
+          : <BarGiftChartComponent dataProps={{
+            all: dataBarChart.all,
+            fuel: dataBarChart.fuel,
+            parts: dataBarChart.parts,
+            other: dataBarChart.other
+          }} />
+        : <Text style={{ paddingVertical: 20, textAlign: 'center' }}>{t('statScreen.NO_COST')}</Text>
+      }
         <Divider horizontalInset bold />
         <Surface elevation={3} style={styles.viewAllInput} >
         <View style={{ paddingTop: 10 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.textKm}>Пробег за  {textButtonDate ?? ' -- --'}</Text>
-            <Text style={styles.textKm}>{sumMileage} (km)</Text>
+            <Text style={styles.textKm}>
+              {t('statScreen.MILEAGE', { date: textButtonDate ?? ' -- --' })}
+            </Text>
+            <Text style={styles.textKm}>{sumMileage}</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.textKm}>Куплено топлива {volumeFuel} (l)</Text>
-            <Text style={styles.textKm}>на {sumFuel} (грн)</Text>
+            <Text style={styles.textKm}>
+              {t('statScreen.FUEL_BUY', { fuel: volumeFuel })}
+            </Text>
+            <Text style={styles.textKm}>
+              {t('statScreen.FUEL_COST', { fuel_cost: sumFuel })}
+            </Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.textKm}>Средний расход </Text>
-            <Text style={styles.textKm}>{isNaN(averageFuel(selectedDate, state)) ? ' -- -- ' : String(averageFuel(selectedDate, state)) } (l/100km)</Text>
+            <Text style={styles.textKm}>
+              {t('statScreen.FUEL_AVERAGE')}
+            </Text>
+            <Text style={styles.textKm}>{isNaN(averageFuel(selectedDate, state)) ? ' -- -- ' : String(averageFuel(selectedDate, state)) }</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.textKm}>Потрачено на ремонт, грн</Text>
-            <Text style={styles.textKm}>{sumParts} (грн)</Text>
+            <Text style={styles.textKm}>
+              {t('statScreen.SERVICE_COSTS')}
+            </Text>
+            <Text style={styles.textKm}>{sumParts}</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.textKm}>Потрачено на другое, грн</Text>
-            <Text style={styles.textKm}>{sumOther} (грн)</Text>
+            <Text style={styles.textKm}>
+              {t('statScreen.OTHER_COSTS')}
+            </Text>
+            <Text style={styles.textKm}>{sumOther}</Text>
           </View>
         </View>
         </Surface>

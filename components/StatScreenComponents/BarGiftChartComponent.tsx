@@ -10,6 +10,7 @@ import {
 } from './FunctionStatistic'
 import { Icon, SegmentedButtons } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
+import { useTranslation } from 'react-i18next'
 
 export interface PropsBarChat {
   dataProps: {
@@ -26,6 +27,7 @@ interface BarChartData {
 
 const BarGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Oct', 'Nov', 'Dec']
 
@@ -76,10 +78,30 @@ const BarGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
         style={{ width: '90%', alignSelf: 'center', paddingBottom: 10, paddingTop: 15, borderRadius: 0 }}
 
         buttons={[
-          { value: 'all', label: 'all', icon: () => <Icon source={'cart'} size={20} color={ALL_BAR} />, style: styles.segmentButton },
-          { value: 'fuel', label: 'fuel', icon: () => <Icon source={'gas-station'} size={20} color={FUEL_BAR}/>, style: styles.segmentButton },
-          { value: 'parts', label: 'part', icon: () => <Icon source={'car-wrench'} size={20} color={PART_BAR}/>, style: styles.segmentButton },
-          { value: 'other', label: 'other', icon: () => <Icon source={'account-cash'} size={20} color={OTHER_BAR}/>, style: styles.segmentButton }
+          {
+            value: 'all',
+            label: t('statScreen.ALL'),
+            icon: () => <Icon source={'cart'} size={20} color={ALL_BAR} />,
+            style: styles.segmentButton
+          },
+          {
+            value: 'fuel',
+            label: t('statScreen.FUEL'),
+            icon: () => <Icon source={'gas-station'} size={20} color={FUEL_BAR}/>,
+            style: styles.segmentButton
+          },
+          {
+            value: 'parts',
+            label: t('statScreen.PART'),
+            icon: () => <Icon source={'car-wrench'} size={20} color={PART_BAR}/>,
+            style: styles.segmentButton
+          },
+          {
+            value: 'other',
+            label: t('statScreen.OTHER'),
+            icon: () => <Icon source={'account-cash'} size={20} color={OTHER_BAR}/>,
+            style: styles.segmentButton
+          }
         ]}
       />
       <View style={{ paddingVertical: 10 }}>

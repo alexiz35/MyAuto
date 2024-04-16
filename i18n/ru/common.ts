@@ -4,8 +4,10 @@ export default {
   MONTH: 'Месяц',
   MONTHS: 'Месяцев',
   YEAR: 'Год',
-  KM: 'Км',
+  CUSTOM: 'Свой',
+  KM: 'км',
   L: 'л',
+  CONSUMPTION: 'л/100 км',
   PART: 'Детали',
   SERVICE: 'Сервис',
   OTHER: 'Другое',
@@ -194,6 +196,20 @@ export default {
     TITLE_ACCORDION_ADD: 'Добавьте другие затраты',
     TITLE_ACCORDION_EDIT: 'Редактируйте другие затраты',
     DATE_BUY: 'Дата покупки'
+  },
+  statScreen: {
+    TITLE: 'Статистика за: ',
+    MILEAGE: 'Пробег за {{date}}, $t(KM) ',
+    FUEL_BUY: 'Топлива заправлено {{fuel}} $t(L)',
+    FUEL_COST: 'на {{fuel_cost}} $t(CURRENCY)',
+    FUEL_AVERAGE: 'Средний расход, $t(CONSUMPTION)',
+    SERVICE_COSTS: 'Затраты на ремонт, $t(CURRENCY)',
+    OTHER_COSTS: 'Затраты на другое, $t(CURRENCY)',
+    ALL: 'Все',
+    FUEL: 'Топливо',
+    PART: 'Детали',
+    OTHER: 'Другое',
+    NO_COST: 'Нет затрат за выбранный период'
   }
 
 }

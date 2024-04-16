@@ -7,6 +7,7 @@ import { Dialog, Divider, Button, RadioButton, Portal, Modal } from 'react-nativ
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { getIndexCar } from '../../type'
 import { NAME_MONTH, TypePickedDate } from './TypeStat'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   handleOk: (selectModal: TypePickedDate) => void
@@ -17,6 +18,7 @@ interface Props {
 export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props): JSX.Element => {
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   const [checked, setChecked] = useState<'year' | 'month' | 'period' | string >('year')
   const [visibleYear, setVisibleYear] = useState(false)
@@ -113,7 +115,7 @@ export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props)
           <RadioButton.Group onValueChange={(item) => { setChecked(item) }} value={checked} >
             <View style={styles.viewRowChecked}>
           <RadioButton.Item
-            label={'год'}
+            label={t('YEAR')}
             value={'year'}
             position={'leading'}
           />
@@ -133,7 +135,7 @@ export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props)
         <View style={styles.viewRowChecked}>
         <RadioButton.Item
           position={'leading'}
-          label={'месяц'}
+          label={t('MONTH')}
           value={'month'}
         />
           <Button onPress={ () => { setVisibleMonth(true) }} disabled={checked !== 'month'} mode={'elevated'}>
@@ -155,7 +157,7 @@ export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props)
         <View style={styles.viewRowChecked}>
         <RadioButton.Item
           position={'leading'}
-          label={'свой'}
+          label={t('CUSTOM')}
           value={'period'}
           />
           <View style={{ flexDirection: 'column', gap: 10 }}>

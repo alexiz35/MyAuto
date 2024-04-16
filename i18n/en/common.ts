@@ -4,8 +4,10 @@ export default {
   MONTH: 'Month',
   MONTHS: 'Months',
   YEAR: 'Year',
+  CUSTOM: 'Custom',
   KM: 'km',
   L: 'l',
+  CONSUMPTION: 'l/100km',
   PART: 'Part',
   SERVICE: 'Service',
   OTHER: 'Other',
@@ -195,6 +197,20 @@ export default {
     TITLE_ACCORDION_ADD: 'Add Other Costs',
     TITLE_ACCORDION_EDIT: 'Edit Other Costs',
     DATE_BUY: 'Date of Purchase'
+  },
+  statScreen: {
+    TITLE: 'Statistics for: ',
+    MILEAGE: 'Mileage for {{date}}, $t(KM) ',
+    FUEL_BUY: 'Fuel purchased {{fuel}} $t(L)',
+    FUEL_COST: 'for {{fuel_cost}} $t(CURRENCY)',
+    FUEL_AVERAGE: 'Average consumption, $t(CONSUMPTION)',
+    SERVICE_COSTS: 'Spent on services, $t(CURRENCY)',
+    OTHER_COSTS: 'Spent on another, $t(CURRENCY)',
+    ALL: 'All',
+    FUEL: 'Fuel',
+    PART: 'Parts',
+    OTHER: 'Other',
+    NO_COST: 'No cost for selected date range'
   }
 
 }

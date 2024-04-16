@@ -3,6 +3,7 @@ import { PieChart } from 'react-native-gifted-charts'
 import { List } from 'react-native-paper'
 import { FUEL_BAR, OTHER_BAR, PART_BAR } from './FunctionStatistic'
 import { JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface PropsBarChat {
   dataProps: {
@@ -19,10 +20,11 @@ const PieGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
     { value: dataProps.other, color: OTHER_BAR, text: String(dataProps.other) }
   ]
   const pieDataNull = [
-    { value: 1, color: FUEL_BAR, text: String('нет трат') },
+    { value: 0, color: FUEL_BAR, text: String('нет трат') },
     { value: 0, color: PART_BAR, text: String(dataProps.parts) },
     { value: 0, color: OTHER_BAR, text: String(dataProps.other) }
   ]
+  const { t } = useTranslation()
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -42,16 +44,16 @@ const PieGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
 
     />
     <View>
-      <List.Item title={'fuel'}
+      <List.Item title={t('statScreen.FUEL')}
                  left={() => <List.Icon color={'#177AD5'} icon="circle"/>}
                  description={dataProps.fuel}
       />
-      <List.Item title={'parts'}
+      <List.Item title={t('statScreen.PART')}
                  left={() => <List.Icon color={'#79D2DE'} icon="circle"/>}
                  description={dataProps.parts}
 
       />
-      <List.Item title={'other'}
+      <List.Item title={t('statScreen.OTHER')}
                  left={() => <List.Icon color={'#ED6665'} icon="circle"/>}
                  description={dataProps.other}
 
