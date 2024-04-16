@@ -12,6 +12,7 @@ import { List, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { addStateCarReducer, editStateCarReducer } from '../../Redux/CarsSlice'
+import { useTranslation } from 'react-i18next'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 const InputDoc = (): JSX.Element => {
@@ -20,6 +21,7 @@ const InputDoc = (): JSX.Element => {
 
   const { colors } = useAppTheme()
   const nav = useNavigation()
+  const { t } = useTranslation()
 
   const [openAccordion, setOpenAccordion] = useState(false)
   const [isEditOther, setIsEditOther] = useState(false)
@@ -76,7 +78,7 @@ const InputDoc = (): JSX.Element => {
         <ScrollView style={{ marginTop: 5 }}>
 
             <List.Accordion
-              title={isEditOther ? 'Редактируйте другие затраты' : 'Добавьте другие затраты'}
+              title={isEditOther ? t('inputOther.TITLE_ACCORDION_EDIT') : t('inputOther.TITLE_ACCORDION_ADD')}
               /* description={ state.info.fuel } */
               style={{ backgroundColor: colors.secondaryContainer }}
               /* left={props => <List.Icon {...props} icon="car-cog" />} */

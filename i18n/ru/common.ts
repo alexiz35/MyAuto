@@ -9,6 +9,8 @@ export default {
   PART: 'Детали',
   SERVICE: 'Сервис',
   OTHER: 'Другое',
+  NAME: 'Название',
+  NUMBER: 'Артикул',
   COST: 'Цена',
   AMOUNT: 'Количество',
   TOTAL_COST: 'Стоимость',
@@ -181,6 +183,11 @@ export default {
     REMINDER: 'Создать \nнапоминание',
     ADD_PARTS: 'Добавить комплектующие',
     ADD_SUM: 'Добавлено: {{amountPart}} $t(PCS) на общую сумму {{sumCost}} $t(CURRENCY)'
+  },
+  inputOther: {
+    TITLE_ACCORDION_ADD: 'Добавьте другие затраты',
+    TITLE_ACCORDION_EDIT: 'Редактируйте другие затраты',
+    DATE_BUY: 'Дата покупки'
   }
 
 }

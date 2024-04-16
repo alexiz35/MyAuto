@@ -9,6 +9,8 @@ export default {
   PART: 'Part',
   SERVICE: 'Service',
   OTHER: 'Other',
+  NAME: 'Name',
+  NUMBER: 'Number',
   COST: 'Cost',
   AMOUNT: 'Amount',
   TOTAL_COST: 'Total Cost',
@@ -182,6 +184,11 @@ export default {
     REMINDER: 'Create \nReminder',
     ADD_PARTS: 'Add Parts',
     ADD_SUM: 'Added: {{amountPart}} $t(PCS) for a total of {{sumCost}} $t(CURRENCY)'
+  },
+  inputOther: {
+    TITLE_ACCORDION_ADD: 'Add Other Costs',
+    TITLE_ACCORDION_EDIT: 'Edit Other Costs',
+    DATE_BUY: 'Date of Purchase'
   }
 
 }

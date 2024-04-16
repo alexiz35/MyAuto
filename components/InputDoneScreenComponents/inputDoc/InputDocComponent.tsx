@@ -16,6 +16,7 @@ import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { useNavigation } from '@react-navigation/native'
 import { type StackNavigationProp } from '@react-navigation/stack'
 import { type RootStackParamList } from '../../Navigation/TypeNavigation'
+import { useTranslation } from 'react-i18next'
 
 interface InputDocProps {
   isCancel: () => void
@@ -39,6 +40,7 @@ interface FormOther {
 const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JSX.Element => {
   const theme = useTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const { t } = useTranslation()
 
   const tempNullOther: FormOther = {
     nameOther: '',
@@ -143,7 +145,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                               ref={ref}
                               dense
                               style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                              label={'название'}
+                              label={t('NAME')}
                               onChangeText={(value) => { onChange(value) }}
                               value={value}
                               onBlur={onBlur}
@@ -163,7 +165,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                               ref={ref}
                               dense
                               style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                              label={'Дата покупки'}
+                              label={t('inputOther.DATE_BUY')}
                               showSoftInputOnFocus={false}
                               value={new Date(value).toLocaleDateString()}
                               onPressOut={inputDate}
@@ -185,7 +187,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                             <TextInput
                               ref={ref}
                               style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                              label={'продавец'}
+                              label={t('SUPPLIER')}
                               onChangeText={(value) => { onChange(value) }}
                               value={value}
                               right={<TextInput.Icon icon="notebook" forceTextInputFocus={false}
@@ -211,7 +213,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
             <Surface elevation={2} style={styles.surface}>
             <Accordion
               /* bannerStyle={{ backgroundColor: mode === 'dark' ? BACK_INPUT : TEXT_WHITE }} */
-              title={'Данные продавца'}
+              title={t('seller.DATA_SELLER')}
               textBannerStyle={{
                 fontSize: 14,
                 color: theme.colors.secondary
@@ -228,7 +230,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                      label={'телефон'}
+                                      label={t('PHONE')}
                                       keyboardType={'phone-pad'}
                                       onChangeText={(value) => { onChange(value) }}
                                       value={value}
@@ -247,7 +249,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                                     <TextInput
                                       ref={ref}
                                       style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                                      label={'интернет'}
+                                      label={t('LINK')}
                                       keyboardType={'url'}
                                       onChangeText={(value) => { onChange(value) }}
                                       value={value}
@@ -281,7 +283,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                             <TextInput
                               ref={ref}
                               style={{ flex: 1, backgroundColor: theme.colors.surface, paddingHorizontal: 10 }}
-                              label={'сумма'}
+                              label={t('TOTAL_COST')}
                               onChangeText={(value) => { onChange(value) }}
                               value={value}
                               keyboardType={'numeric'}
