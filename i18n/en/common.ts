@@ -183,7 +183,13 @@ export default {
     COST_SERVICE: 'Cost Service',
     REMINDER: 'Create \nReminder',
     ADD_PARTS: 'Add Parts',
-    ADD_SUM: 'Added: {{amountPart}} $t(PCS) for a total of {{sumCost}} $t(CURRENCY)'
+    ADD_SUM: 'Added: {{amountPart}} $t(PCS) for a total of {{sumCost}} $t(CURRENCY)',
+    ENTER_VALUE: 'or Enter your value',
+    add_parts: {
+      TITLE: 'Add the parts you used',
+      SEARCH: 'Search in stock',
+      ADD: 'Add this part'
+    }
   },
   inputOther: {
     TITLE_ACCORDION_ADD: 'Add Other Costs',

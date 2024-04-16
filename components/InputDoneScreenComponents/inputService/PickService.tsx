@@ -9,6 +9,7 @@ import { JSX, useState } from 'react'
 import { ListService } from '../../../type'
 import { listService } from './ListServices'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { useTranslation } from 'react-i18next'
 
 interface PickServiceProps {
   cancelPress: () => void
@@ -24,6 +25,7 @@ export const PickService = ({ cancelPress, okPress, typeService }: PickServicePr
   }
 
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   const [service, setService] = useState<ListService >(
     typeService !== undefined
@@ -43,15 +45,15 @@ export const PickService = ({ cancelPress, okPress, typeService }: PickServicePr
       /* extraData={isSortOthers} */
       ListHeaderComponent={
         <View style={{ flexDirection: 'row', backgroundColor: colors.background }}>
-          <List.Item title={'service'} style={{ flex: 2 }}/>
-          <List.Item title={'| км |'} style={{ flex: 1 }}/>
-          <List.Item title={'| лет |'} style={{ flex: 1 }}/>
+          <List.Item title={t('SERVICE')} style={{ flex: 2 }}/>
+          <List.Item title={t('KM')} style={{ flex: 0.9 }} />
+          <List.Item title={t('MONTHS')} style={{ flex: 1.1 }}/>
         </View>}
       renderItem={({ item }) =>
         <Card
           style={{ borderRadius: 5, margin: 5 }}
           contentStyle={{ flexDirection: 'row' }}
-          onPress={() => handlePick(item)}
+          onPress={() => { handlePick(item) }}
         >
           <List.Item left={props => <List.Icon {...props} icon={'oil'} />} title={item.nameService} style={{ flex: 2 }}/>
           <List.Item title={item.mileage} style={{ flex: 1 }}/>
@@ -70,25 +72,25 @@ export const PickService = ({ cancelPress, okPress, typeService }: PickServicePr
       initialNumToRender={6}
     />
       </View>
-      <Text style={{ textAlign: 'center' }}>или введите свое значение</Text>
+      <Text style={{ textAlign: 'center' }}>{t('inputService.ENTER_VALUE')}</Text>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, marginHorizontal: 5, gap: 5 }}>
-      <TextInput label={'service'} style={{ flex: 2 }} mode={'outlined'}
+      <TextInput label={t('SERVICE')} style={{ flex: 2 }} mode={'outlined'}
                  value={service.nameService}
-                 onChangeText={(value) => setService({ ...service, nameService: value })}/>
-      <TextInput label={'km'} style={{ flex: 1 }} mode={'outlined'}
+                 onChangeText={(value) => { setService({ ...service, nameService: value }) }}/>
+      <TextInput label={t('KM')} style={{ flex: 1 }} mode={'outlined'}
                  keyboardType={'numeric'}
                  value={String(service.mileage)}
-                 onChangeText={(value) => setService({ ...service, mileage: Number(value) })}/>
-      <TextInput label={'лет'} style={{ flex: 1 }} mode={'outlined'}
+                 onChangeText={(value) => { setService({ ...service, mileage: Number(value) }) }}/>
+      <TextInput label={t('MONTH')} style={{ flex: 1 }} mode={'outlined'}
                  keyboardType={'numeric'}
                  value={String(service.date)}
-                 onChangeText={(value) => setService({ ...service, date: Number(value) })}/>
+                 onChangeText={(value) => { setService({ ...service, date: Number(value) }) }}/>
       </View>
       <Divider horizontalInset style={{ marginVertical: 10 }}/>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, gap: 10 }}>
         <Button mode={'outlined'} style={{ borderRadius: 5, flex: 1, marginHorizontal: 10 }} onPress={cancelPress}>Cancel</Button>
-        <Button mode={'outlined'} style={{ borderRadius: 5, flex: 1, marginHorizontal: 10 }} onPress={() => okPress(service)}>Ok</Button>
+        <Button mode={'outlined'} style={{ borderRadius: 5, flex: 1, marginHorizontal: 10 }} onPress={() => { okPress(service) }}>Ok</Button>
       </View>
     </View>
   )

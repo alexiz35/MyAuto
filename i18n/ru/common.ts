@@ -182,7 +182,13 @@ export default {
     COST_SERVICE: 'Цена сервиса',
     REMINDER: 'Создать \nнапоминание',
     ADD_PARTS: 'Добавить комплектующие',
-    ADD_SUM: 'Добавлено: {{amountPart}} $t(PCS) на общую сумму {{sumCost}} $t(CURRENCY)'
+    ADD_SUM: 'Добавлено: {{amountPart}} $t(PCS) на общую сумму {{sumCost}} $t(CURRENCY)',
+    ENTER_VALUE: 'или введите свое значение',
+    add_parts: {
+      TITLE: 'Добавьте детали, которые использовали',
+      SEARCH: 'Поиск на складе',
+      ADD: 'Добавьте эту деталь в список'
+    }
   },
   inputOther: {
     TITLE_ACCORDION_ADD: 'Добавьте другие затраты',

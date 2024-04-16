@@ -10,6 +10,7 @@ import Accordion from '../../Accordion'
 import { Surface, TextInput, TouchableRipple, Button, IconButton, Text, Divider } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { useAppTheme } from '../../../CommonComponents/Theme'
+import { useTranslation } from 'react-i18next'
 
 interface FormAddParts {
   namePart: string
@@ -24,6 +25,7 @@ interface FormAddParts {
 export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: ModalAddPartsProps): JSX.Element => {
   const state = useAppSelector(state => state.cars[0].parts)
   const theme = useAppTheme()
+  const { t } = useTranslation()
 
   const tempNullAddParts: FormAddParts = {
     namePart: '',
@@ -112,7 +114,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
 
   const listSearch = (item: StatePart): JSX.Element => {
     return (
-      <TouchableRipple onPress={() => selectSearch(item.id) }>
+      <TouchableRipple onPress={() => { selectSearch(item.id) } }>
         <>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 2, padding: 10 }}>
           <Text style={{ flex: 2, textAlign: 'left', fontSize: 16 }}>{item.namePart}</Text>
@@ -135,7 +137,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
           <Text style={{ flex: 0.5, textAlign: 'center', fontSize: 16 }}>{`${item.quantityPart} x`}</Text>
           <Text style={{ flex: 1, textAlign: 'center', fontSize: 16 }}>{item.costPart}</Text>
           <IconButton icon={'delete'} style={{ margin: 2, alignSelf: 'center' }}
-                      onPress={() => delPart(item.id)}
+                      onPress={() => { delPart(item.id) }}
           />
         </View>
       <Divider horizontalInset bold/>
@@ -154,17 +156,17 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
       <View>
 
         <Text style={styles.textPart} >
-          Добавьте детали, которые вы использовали
+          {t('inputService.add_parts.TITLE')}
         </Text>
 
         <View style={{ zIndex: 2 }}>
           <Surface style={{ margin: 5, flex: 1 }}>
             <TextInput
               dense
-              placeholder={'поиск на складе'}
+              placeholder={t('inputService.add_parts.SEARCH')}
               value={searchPart}
-              onChangeText={(search) => setSearchPart(String(search))}
-              onFocus={() => setVisibleSearchList(true)}
+              onChangeText={(search) => { setSearchPart(String(search)) }}
+              onFocus={() => { setVisibleSearchList(true) }}
               right={
                 <TextInput.Icon
                   style={{ zIndex: 10 }}
@@ -198,13 +200,13 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                     </View>
                   ))
                 }
-                <Button mode={'text'} onPress={() => setVisibleSearchList(false)}>^ Close ^</Button>
+                <Button mode={'text'} onPress={() => { setVisibleSearchList(false) }}>^ Close ^</Button>
               </View>
             }
           </Surface>
         </View>
         <Text style={styles.textPart} >
-          деталь
+          {t('PART')}
         </Text>
         <View style={styles.viewGroupInput}>
           <Surface elevation={2} style={styles.surface}>
@@ -216,11 +218,11 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                             ref={ref}
                             dense
                             style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                            label={'название'}
+                            label={t('NAME')}
                             value={value}
-                            onChangeText={(value) => onChange(value)}
+                            onChangeText={(value) => { onChange(value) }}
                             onBlur={onBlur}
-                            onSubmitEditing={() => setFocus('numberPart')}
+                            onSubmitEditing={() => { setFocus('numberPart') }}
                             error={(error != null) && true}
                           />
                         )}
@@ -234,11 +236,11 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                             ref={ref}
                             dense
                             style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                            label={'номер детали'}
+                            label={t('NUMBER')}
                             value={value}
-                            onChangeText={(value) => onChange(value)}
+                            onChangeText={(value) => { onChange(value) }}
                             onBlur={onBlur}
-                            onSubmitEditing={() => setFocus('quantityPart')}
+                            onSubmitEditing={() => { setFocus('quantityPart') }}
                           />
                         )}
             />
@@ -255,11 +257,11 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                             dense
                             keyboardType={'numeric'}
                             style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                            label={'количество'}
+                            label={t('AMOUNT')}
                             value={value}
-                            onChangeText={(value) => onChange(value)}
+                            onChangeText={(value) => { onChange(value) }}
                             onBlur={onBlur}
-                            onSubmitEditing={() => setFocus('costPart')}
+                            onSubmitEditing={() => { setFocus('costPart') }}
                           />
                         )}
             />
@@ -273,9 +275,9 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                             dense
                             keyboardType={'numeric'}
                             style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                            label={'цена детали'}
+                            label={t('COST')}
                             value={value}
-                            onChangeText={(value) => onChange(value)}
+                            onChangeText={(value) => { onChange(value) }}
                             onBlur={onBlur}
                           />
                         )}
@@ -295,11 +297,11 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                               ref={ref}
                               dense
                               style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                              label={'продавец'}
+                              label={t('SUPPLIER')}
                               value={value}
-                              onChangeText={(value) => onChange(value)}
+                              onChangeText={(value) => { onChange(value) }}
                               onBlur={onBlur}
-                              onSubmitEditing={() => setFocus('sellerPhone')}
+                              onSubmitEditing={() => { setFocus('sellerPhone') }}
                             />
                           )}
               />
@@ -313,11 +315,11 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                               dense
                               keyboardType={'phone-pad'}
                               style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                              label={'телефон продавца'}
+                              label={t('PHONE')}
                               value={value}
-                              onChangeText={(value) => onChange(value)}
+                              onChangeText={(value) => { onChange(value) }}
                               onBlur={onBlur}
-                              onSubmitEditing={() => setFocus('sellerLink')}
+                              onSubmitEditing={() => { setFocus('sellerLink') }}
                             />
                           )}
               />
@@ -331,9 +333,9 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
                               ref={ref}
                               dense
                               style={{ flex: 1, backgroundColor: theme.colors.surface }}
-                              label={'данные продавца'}
+                              label={t('LINK')}
                               value={value}
-                              onChangeText={(value) => onChange(value)}
+                              onChangeText={(value) => { onChange(value) }}
                               onBlur={onBlur}
                             />
                           )}
@@ -341,7 +343,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
             </Surface>
           </>
         }
-          title={'Информация о продавце'}
+          title={t('seller.DATA_SELLER')}
           controlled={false}
           textBannerStyle={{
             fontSize: 14,
@@ -355,7 +357,9 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
             mode={'elevated'}
             icon={'basket-plus'}
             onPress={handleSubmit(addPart)}
-          >Добавьте деталь</Button>
+          >
+            {t('inputService.add_parts.ADD')}
+          </Button>
         </View>
         <View style={styles.flatList}>
 
