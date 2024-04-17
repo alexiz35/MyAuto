@@ -17,7 +17,6 @@ export interface TypeResultPicker {
 
 const WheelPickerSelectDouble = ({ listLeft, listRight, handlerEnterPicker, initial }: PropsPicker): JSX.Element => {
   const { colors } = useAppTheme()
-  console.log('Picker', initial, listLeft, listRight)
   const [checkedLeft, setCheckedLeft] = useState(initial.left)
   const [checkedRight, setCheckedRight] = useState(initial.right)
 

@@ -6,7 +6,7 @@ import WheelPickerSelectDouble, { TypeResultPicker } from './WheelPickerSelectDo
 import { Dialog, Divider, Button, RadioButton, Portal, Modal } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { getIndexCar } from '../../type'
-import { NAME_MONTH, TypePickedDate } from './TypeStat'
+import { NAME_MONTH_RU, NAME_MONTH_EN, TypePickedDate } from './TypeStat'
 import { useTranslation } from 'react-i18next'
 
 interface Props {
@@ -18,13 +18,14 @@ interface Props {
 export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props): JSX.Element => {
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
   const { colors } = useAppTheme()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const [checked, setChecked] = useState<'year' | 'month' | 'period' | string >('year')
   const [visibleYear, setVisibleYear] = useState(false)
   const [visibleMonth, setVisibleMonth] = useState(false)
   const [visibleStartDate, setVisibleStartDate] = useState(false)
   const [visibleEndDate, setVisibleEndDate] = useState(false)
+  const [NAME_MONTH, SET_NAME_MONTH] = useState(i18n.language === 'en' ? NAME_MONTH_EN : NAME_MONTH_RU)
 
   const [pickedYear, setPickedYear] = useState<string>(selectedDate.valueYear === undefined
     ? String(new Date().getFullYear())
@@ -72,7 +73,6 @@ export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props)
     setVisibleYear(false)
   }
   const resultPickerMonth = (result: TypeResultPicker): void => {
-    console.log('RESULT', result)
     setPickedMonth(result.left)
     setPickedMonthYear(result.right)
     setVisibleMonth(false)
@@ -107,7 +107,9 @@ export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props)
   return (
     <View>
 
-        <Dialog.Title>Выберите дату</Dialog.Title>
+        <Dialog.Title>{
+          t('statScreen.TITLE_SELECT')
+        }</Dialog.Title>
         {
           // ------------------------------------ select Year ---------------------------------------------------------
         }
@@ -162,12 +164,14 @@ export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props)
           />
           <View style={{ flexDirection: 'column', gap: 10 }}>
             <Button onPress={() => { setVisibleStartDate(true) }} disabled={checked !== 'period'} mode={'elevated'}>
-              <Text>{`с  ${String(pickedStartMonth)}`}</Text>
+              {/* <Text>{`с  ${String(pickedStartMonth)}`}</Text> */}
+              <Text>{t('statScreen.FROM', { date: String(pickedStartMonth) })}</Text>
               <Text style={{ paddingHorizontal: 2 }}>{` ${String(pickedStartYear)}`}</Text>
             </Button>
 
             <Button onPress={() => { setVisibleEndDate(true) }} disabled={checked !== 'period'} mode={'elevated'}>
-              <Text>{`до ${String(pickedEndMonth)}`}</Text>
+              {/* <Text>{`до ${String(pickedEndMonth)}`}</Text> */}
+              <Text>{t('statScreen.TO', { date: String(pickedEndMonth) })}</Text>
               <Text style={{ paddingHorizontal: 2 }}>{` ${String(pickedEndYear)}`}</Text>
             </Button>
           </View>

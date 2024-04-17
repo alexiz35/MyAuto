@@ -210,7 +210,10 @@ export default {
     FUEL: 'Fuel',
     PART: 'Parts',
     OTHER: 'Other',
-    NO_COST: 'No cost for selected date range'
+    NO_COST: 'No cost for selected date range',
+    TITLE_SELECT: 'Select the Date',
+    FROM: 'from {{date}}',
+    TO: 'to {{date}}'
   }
 
 }

@@ -22,7 +22,7 @@ import BackgroundView from '../CommonComponents/BackgroundView'
 import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
 import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftChartComponent'
 import { getIndexCar } from '../type'
-import { NAME_MONTH, TypePickedDate } from '../components/StatScreenComponents/TypeStat'
+import { NAME_MONTH_EN, NAME_MONTH_RU, TypePickedDate } from '../components/StatScreenComponents/TypeStat'
 import { useTranslation } from 'react-i18next'
 
 export const initialDate: TypePickedDate = {
@@ -58,7 +58,8 @@ const StatScreen = (): JSX.Element => {
   const [visiblePickDate, setVisiblePickDate] = useState(false)
 
   const [typeChart, setTypeChart] = useState('pie')
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const [NAME_MONTH, SET_NAME_MONTH] = useState(i18n.language === 'en' ? NAME_MONTH_EN : NAME_MONTH_RU)
 
   /*   const calcSum = (targetArray: number[]): number => {
     if (targetArray.length !== 0) {
