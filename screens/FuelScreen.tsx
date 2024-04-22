@@ -20,7 +20,7 @@ import {
   Button,
   HelperText,
   IconButton,
-  ToggleButton
+  ToggleButton, Checkbox, Card, Badge
 } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -28,7 +28,8 @@ import { type CompositeScreenProps, useFocusEffect, useNavigation } from '@react
 import { useAppTheme } from '../CommonComponents/Theme'
 import { /* addedFuel, */
   addStateCarReducer,
-  editStateCarReducer /* editedFuel, */ /* editStateCarReducer */
+  editStateCarReducer, /* editedFuel, */ /* editStateCarReducer */
+  setConsumption
 } from '../components/Redux/CarsSlice'
 import { useTranslation } from 'react-i18next'
 
@@ -42,6 +43,7 @@ interface FormFuel {
   CostFuel: string
   AmountFuel: string
   StationFuel: string
+  restFuel: string
 }
 
 export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
@@ -58,7 +60,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
     volumeFuel: '',
     CostFuel: '',
     AmountFuel: '',
-    StationFuel: ''
+    StationFuel: '',
+    restFuel: ''
   }
 
   const dataToForm = (data: StateFuel): FormFuel => {
@@ -68,7 +71,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
       volumeFuel: data.volumeFuel === 0 ? '' : String(data.volumeFuel),
       CostFuel: data.CostFuel === 0 ? '' : String(data.CostFuel),
       AmountFuel: data.AmountFuel === 0 ? '' : String(data.AmountFuel),
-      StationFuel: data.StationFuel
+      StationFuel: data.StationFuel,
+      restFuel: data.restFuel === 0 || data.restFuel === undefined ? '' : String(data.restFuel)
     }
   }
   const formToData = (data: FormFuel): StateFuel => {
@@ -80,7 +84,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
       CostFuel: Number(data.CostFuel),
       AmountFuel: Number(data.AmountFuel),
       StationFuel: data.StationFuel,
-      typeFuel: state.info.fuel !== '' ? state.info.fuel : 'diesel'
+      typeFuel: state.info.fuel !== '' ? state.info.fuel : 'diesel',
+      restFuel: Number(data.restFuel)
     }
   }
 
@@ -149,6 +154,16 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
     )
     setSumFuel(sumFuel)
   }, [state.fuel]) */
+  // -------------------------- consumption ------------------------------------
+  const [isConsumption, setIsConsumption] = useState<'checked' | 'unchecked'>(state.isConsumption ? 'checked' : 'unchecked')
+
+  const toggleConsumption = () => {
+    dispatch(setConsumption({ numberCar: carId, isConsumption: !state.isConsumption }))
+  }
+
+  useEffect(() => {
+    setIsConsumption(state.isConsumption ? 'checked' : 'unchecked')
+  }, [state.isConsumption])
 
   // ------------------------- function calc input -----------------------------
   const handleOnSubmitCost = (): void => {
@@ -218,12 +233,12 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
               onPress={handleOnPress}
             >
 
-              <View style={{ backgroundColor: colors.background, rowGap: 10 }}>
+              <View style={{ backgroundColor: colors.background, rowGap: 5 }}>
 
     {
 /* ----------------------- Date and Miles ----------------------------------- */
     }
-                <View style={[styles.viewGroupInput, { marginTop: 20 }]}>
+                <View style={[styles.viewGroupInput, { marginTop: 0 }]}>
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'dateFuel'}
                                 control={control}
@@ -242,41 +257,6 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                 )}
                     />
                   </Surface>
-                  <Surface elevation={2} style={styles.surface}>
-                    <Controller name={'mileageFuel'}
-                                control={control}
-                                rules={{ required: 'введите пробег', maxLength: 7, minLength: 1, min: 1, max: 10000000, pattern: /\d/ }}
-                                defaultValue={'100'}
-                                render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
-                                  <>
-                                    <TextInput
-                                      ref={ref}
-                                      style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                                      label={t('fuelScreen.MILEAGE_FUEL')}
-                                      onChangeText={(value) => { onChange(value) }}
-                                      onSubmitEditing={() => {
-                                        setFocus('volumeFuel')
-                                      }}
-                                      onBlur={onBlur}
-                                      keyboardType={'numeric'}
-                                      value={value}
-                                      error={(error != null) && true}
-                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('KM')}/>}
-                                    />
-                                    { (error != null)
-                                      ? <HelperText type="error">1..10000000 km</HelperText>
-                                      : null
-                                    }
-                                  </>
-                                )}
-                    />
-
-                  </Surface>
-                </View>
-                {
-/* ----------------------- Value, Cost, Amount Fuel-------------------------- */
-                }
-                <View style={styles.viewGroupInput}>
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'volumeFuel'}
                                 control={control}
@@ -304,6 +284,11 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                 )}
                     />
                   </Surface>
+                </View>
+                {
+/* ----------------------- Value, Cost, Amount Fuel-------------------------- */
+                }
+                <View style={styles.viewGroupInput}>
 
                   <Surface elevation={2} style={styles.surface}>
                     <Controller name={'CostFuel'}
@@ -368,6 +353,97 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                     />
                 </Surface>
                 {/* <Text style={styles.button}>{errorMsg}</Text> */}
+
+                {
+                  /* ----------------------- Date and Miles ----------------------------------- */
+                }
+                <Card style={{ padding: 10, marginHorizontal: 10, marginTop: 5 }}>
+                  <Badge size={16} style={{ alignSelf: 'flex-start', backgroundColor: colors.onBackground }}>I</Badge>
+                  {/* <Surface elevation={2} style={styles.surface}> */}
+                  <Checkbox.Item
+                    style={{ paddingVertical: 0 }}
+                    status={isConsumption}
+                    label={'Вести точный расчет расхода'}
+                    /* mode={'ios'} */
+                    onPress={() => { toggleConsumption() }}
+                    labelVariant={'bodySmall'}
+                  />
+                  {/* </Surface> */}
+                  <View style={[styles.viewGroupInput, { marginTop: 10 }]}>
+                    <Controller name={'mileageFuel'}
+                                control={control}
+                                rules={{
+                                  required: state.isConsumption ? 'введите пробег' : state.isConsumption,
+                                  maxLength: 7,
+                                  minLength: 1,
+                                  min: 1,
+                                  max: 10000000,
+                                  pattern: /\d/
+                                }}
+                                defaultValue={'100'}
+                                render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                                  <View style={styles.surface}>
+                                    <TextInput
+                                      ref={ref}
+                                      dense
+                                      style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
+                                      label={t('fuelScreen.MILEAGE_FUEL')}
+                                      onChangeText={(value) => { onChange(value) }}
+                                      onSubmitEditing={() => {
+                                        setFocus('volumeFuel')
+                                      }}
+                                      onBlur={onBlur}
+                                      keyboardType={'numeric'}
+                                      value={value}
+                                      error={(error != null) && true}
+                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('KM')}/>}
+                                    />
+                                    { (error != null)
+                                      ? <HelperText type="error">1..10000000 km</HelperText>
+                                      : null
+                                    }
+                                  </View>
+                                )}
+                    />
+                    <Controller name={'restFuel'}
+                                control={control}
+                                rules={{
+                                  required: state.isConsumption ? 'введите остаток' : state.isConsumption,
+                                  maxLength: 4,
+                                  minLength: 1,
+                                  min: 1,
+                                  max: 1000,
+                                  pattern: /\d/
+                                }}
+                                defaultValue={'10'}
+                                render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                                  <View style={styles.surface}>
+                                    <TextInput
+                                      ref={ref}
+                                      dense
+                                      style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
+                                      label={'Остаток топлива'}
+                                      /* label={t('fuelScreen.MILEAGE_FUEL')} */
+                                      onChangeText={(value) => { onChange(value) }}
+                                     /*  onSubmitEditing={() => {
+                                        setFocus('volumeFuel')
+                                      }} */
+                                      onBlur={onBlur}
+                                      keyboardType={'numeric'}
+                                      value={value}
+                                      error={(error != null) && true}
+                                      right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('L')}/>}
+                                    />
+                                    { (error != null)
+                                      ? <HelperText type="error">1..1000 l</HelperText>
+                                      : null
+                                    }
+                                  </View>
+                                )}
+                    />
+
+                  </View>
+                </Card>
                 {
 /* --------------------------- Buttons -------------------------------------- */
                 }

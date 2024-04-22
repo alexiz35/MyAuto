@@ -95,6 +95,7 @@ export interface StateCar {
   carId: number
   info: StateInfo
   tire: StateTire
+  isConsumption: boolean
   currentMiles: CurrentMiles
   fuel: StateFuel[]
   services: StateService[]
@@ -155,6 +156,7 @@ export interface StateFuel {
   AmountFuel: number
   StationFuel: string
   typeFuel?: string
+  restFuel: number
 }
 
 export interface StateInfo {

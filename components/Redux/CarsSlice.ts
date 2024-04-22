@@ -17,6 +17,7 @@ export const initialStateCar: StateCar[] = [
     info: initialStateInfo, // ok
     carId: 0,
     tire: initialTire,
+    isConsumption: false,
     currentMiles: {
       currentMileage: 0,
       dateMileage: new Date()
@@ -156,6 +157,10 @@ const carsSlice = createSlice({
          tempFilter.push(action.payload.tire)
          state[getIndexCar(state, action.payload.numberCar)].tires = tempTires
        } */
+    },
+    // ----------------------------------------------------------------------------------------
+    setConsumption (state, action: PayloadAction<{ isConsumption: boolean, numberCar: number }>) {
+      state[getIndexCar(state, action.payload.numberCar)].isConsumption = action.payload.isConsumption
     }
   }
 })
@@ -168,7 +173,8 @@ export const {
   deletedCar, delNowCar,
   updateStateCars,
   delAllMileage, delItemMileage,
-  editedItemMileage, editedTires
+  editedItemMileage, editedTires,
+  setConsumption
 } = carsSlice.actions
 
 export default carsSlice.reducer
