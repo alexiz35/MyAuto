@@ -5,16 +5,14 @@ import { useAppSelector } from '../components/Redux/hook'
 import { JSX, useEffect, useState } from 'react'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import {
-  averageFuel,
+  averageFuel, DataMilesChart,
   initialBarChart,
   monthDataFuelChart,
-  monthDataMilesChart,
   monthDataOtherChart,
   monthDataPartsChart,
-  periodDataFuelChart, periodDataMilesChart, periodDataOtherChart, periodDataPartsChart,
+  periodDataFuelChart, periodDataOtherChart, periodDataPartsChart,
   yearDataAllChart,
   yearDataFuelChart,
-  yearDataMilesChart,
   yearDataOtherChart,
   yearDataPartsChart
 } from '../components/StatScreenComponents/FunctionStatistic'
@@ -73,7 +71,7 @@ const StatScreen = (): JSX.Element => {
         setButtonDate(selectModal.valueYear)
         setSumFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).amountFuel)
         setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
-        setSumMileage(yearDataMilesChart(Number(selectedDate.valueYear), state))
+        setSumMileage(DataMilesChart(selectModal, state))
         setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
         setSumOther(yearDataOtherChart(Number(selectedDate.valueYear), state))
         break
@@ -82,7 +80,7 @@ const StatScreen = (): JSX.Element => {
           setButtonDate(`${String(NAME_MONTH[selectModal.valueMonth])} ${String(selectModal.valueMonthYear)}`)
           setSumFuel(monthDataFuelChart(selectedDate, state).amountFuel)
           setVolumeFuel(monthDataFuelChart(selectedDate, state).volumeFuel)
-          setSumMileage(monthDataMilesChart(selectedDate, state))
+          setSumMileage(DataMilesChart(selectModal, state))
           setSumParts(monthDataPartsChart(selectedDate, state))
           setSumOther(monthDataOtherChart(selectedDate, state))
         }
@@ -93,7 +91,7 @@ const StatScreen = (): JSX.Element => {
 ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.period?.valueEndYear)}`)
           setSumFuel(periodDataFuelChart(selectedDate, state).amountFuel)
           setVolumeFuel(periodDataFuelChart(selectedDate, state).volumeFuel)
-          setSumMileage(periodDataMilesChart(selectedDate, state))
+          setSumMileage(DataMilesChart(selectedDate, state))
           setSumParts(periodDataPartsChart(selectedDate, state))
           setSumOther(periodDataOtherChart(selectedDate, state))
         }

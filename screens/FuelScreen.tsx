@@ -223,7 +223,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         {
 /* ----------------------- Form Accordion ----------------------------------- */
         }
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView style={{ flex: 1 }}>
         <ScrollView style={{ marginTop: 5 }}>
             <List.Accordion
               title={isEditFuel ? t('fuelScreen.TITLE_ACCORDION_EDIT') : t('fuelScreen.TITLE_ACCORDION_ADD')}
@@ -339,7 +339,6 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                   <>
                                     <TextInput
                                       ref={ref}
-                                      /* placeholder={'название заправки'} */
                                       label={t('fuelScreen.FUEL_STATION')}
                                       style={{ flex: 1, backgroundColor: colors.surface }}
                                       onChangeText={(value) => { onChange(String(value)) }}
@@ -358,17 +357,20 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                   /* ----------------------- Date and Miles ----------------------------------- */
                 }
                 <Card style={{ padding: 10, marginHorizontal: 10, marginTop: 5 }}>
-                  <Badge size={16} style={{ alignSelf: 'flex-start', backgroundColor: colors.onBackground }}>I</Badge>
-                  {/* <Surface elevation={2} style={styles.surface}> */}
+                  {/* <Badge size={16} style={{ alignSelf: 'flex-start', backgroundColor: colors.onBackground }}>I</Badge> */}
+                  <Surface style={[styles.surface, { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }]}>
                   <Checkbox.Item
                     style={{ paddingVertical: 0 }}
+                    position={'leading'}
                     status={isConsumption}
                     label={'Вести точный расчет расхода'}
                     /* mode={'ios'} */
                     onPress={() => { toggleConsumption() }}
                     labelVariant={'bodySmall'}
                   />
-                  {/* </Surface> */}
+                    <IconButton icon={'help-circle-outline'}/>
+
+                  </Surface>
                   <View style={[styles.viewGroupInput, { marginTop: 10 }]}>
                     <Controller name={'mileageFuel'}
                                 control={control}
@@ -386,11 +388,19 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                     <TextInput
                                       ref={ref}
                                       dense
-                                      style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
+                                      style={{
+                                        flex: 1,
+                                        backgroundColor: colors.surface,
+                                        paddingHorizontal: 10
+                                      }}
+                                      theme={{
+                                        colors:
+                                          { onSurfaceVariant: state.isConsumption ? colors.text : colors.outline }
+                                      }}
                                       label={t('fuelScreen.MILEAGE_FUEL')}
                                       onChangeText={(value) => { onChange(value) }}
                                       onSubmitEditing={() => {
-                                        setFocus('volumeFuel')
+                                        setFocus('restFuel')
                                       }}
                                       onBlur={onBlur}
                                       keyboardType={'numeric'}
@@ -423,6 +433,10 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
                                       dense
                                       style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
                                       label={'Остаток топлива'}
+                                      theme={{
+                                        colors:
+                                          { onSurfaceVariant: state.isConsumption ? colors.text : colors.outline }
+                                      }}
                                       /* label={t('fuelScreen.MILEAGE_FUEL')} */
                                       onChangeText={(value) => { onChange(value) }}
                                      /*  onSubmitEditing={() => {
