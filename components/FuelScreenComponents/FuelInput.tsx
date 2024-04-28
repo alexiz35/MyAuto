@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import { Button, Card, Checkbox, HelperText, IconButton, Surface, TextInput } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { useAppTheme } from '../../CommonComponents/Theme'
@@ -121,12 +121,42 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
   const [isConsumption, setIsConsumption] = useState<'checked' | 'unchecked'>(state.isConsumption ? 'checked' : 'unchecked')
 
   const toggleConsumption = () => {
-    dispatch(setConsumption({ numberCar: carId, isConsumption: !state.isConsumption }))
+    if (state.isConsumption) {
+      Alert.alert(t('fuelScreen.TITLE_OFF_CONSUMPTION'), t('fuelScreen.OFF_CONSUMPTION'), [
+        {
+          text: 'Cancel',
+          // ***
+          /* onPress: () => console.log('Cancel Pressed'), */
+          style: 'cancel'
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(setConsumption({ numberCar: carId, isConsumption: !state.isConsumption }))
+          }
+        }
+      ])
+    } else dispatch(setConsumption({ numberCar: carId, isConsumption: !state.isConsumption }))
   }
 
   useEffect(() => {
     setIsConsumption(state.isConsumption ? 'checked' : 'unchecked')
   }, [state.isConsumption])
+
+  const alertConsumption = () => {
+    Alert.alert(t('carInfo.alert.TITLE'), t('carInfo.alert.MESSAGE'), [
+      {
+        text: 'Cancel',
+        // ***
+        /* onPress: () => console.log('Cancel Pressed'), */
+        style: 'cancel'
+      },
+      {
+        text: 'OK'
+        /* onPress: () => { navigation.dispatch(e.data.action) } */
+      }
+    ])
+  }
 
   return (
     <View style={{ backgroundColor: colors.background, rowGap: 5 }}>
@@ -254,24 +284,28 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
       }
       <Card style={{ padding: 10, marginHorizontal: 10, marginTop: 5 }}>
         {/* <Badge size={16} style={{ alignSelf: 'flex-start', backgroundColor: colors.onBackground }}>I</Badge> */}
-        <Surface style={[styles.surface, { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }]}>
+        <Surface style={[styles.surface, { flexDirection: 'row', alignItems: 'center' }]}>
+          <View style={{ flex: 5 }}>
           <Checkbox.Item
-            style={{ paddingVertical: 0 }}
+            style={{ paddingVertical: 0, maxWidth: '100%', paddingLeft: 2 }}
             position={'leading'}
             status={isConsumption}
-            label={'Вести точный расчет расхода'}
+            label={t('fuelScreen.TITLE_CHECKBOX_CONSUMPTION')}
+            labelStyle={{ flexWrap: 'wrap', textAlign: 'left', paddingLeft: 5 }}
             /* mode={'ios'} */
             onPress={() => { toggleConsumption() }}
             labelVariant={'bodySmall'}
           />
-          <IconButton icon={'help-circle-outline'}/>
-
+          </View>
+          <View style={{ flex: 1 }}>
+          <IconButton icon={'help-circle-outline'} onPress={alertConsumption} style={{ marginRight: 0 }}/>
+          </View>
         </Surface>
         <View style={[styles.viewGroupInput, { marginTop: 10 }]}>
           <Controller name={'mileageFuel'}
                       control={control}
                       rules={{
-                        required: state.isConsumption ? 'введите пробег' : state.isConsumption,
+                        required: state.isConsumption ? t('fuelScreen.INPUT_MILEAGE') : state.isConsumption,
                         maxLength: 7,
                         minLength: 1,
                         min: 1,
@@ -328,7 +362,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
                             ref={ref}
                             dense
                             style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
-                            label={'Остаток топлива'}
+                            label={t('fuelScreen.REST_FUEL')}
                             theme={{
                               colors:
                                 { onSurfaceVariant: state.isConsumption ? colors.text : colors.outline }

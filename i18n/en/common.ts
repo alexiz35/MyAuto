@@ -128,7 +128,16 @@ export default {
     VOLUME_FUEL: 'Fuel volume',
     COST_FUEL: 'Fuel cost',
     TOTAL_COST: 'Total cost',
-    FUEL_STATION: 'Gas Station'
+    FUEL_STATION: 'Gas Station',
+    TITLE_OFF_CONSUMPTION: 'Disable more correct calculate of average consumption fuel?',
+    OFF_CONSUMPTION: 'When you disable this function, you will be able to record refueling' +
+      ' without having to enter the remaining fuel in the tank and the mileage when refueling. ' +
+      'This will simplify the accounting of refueling, but will greatly reduce the accuracy of ' +
+      'calculating average fuel consumption.\n \n Disable the feature?',
+    TITLE_CHECKBOX_CONSUMPTION: 'Accurate calculation of fuel consumption',
+    INPUT_MILEAGE: 'Input mileage',
+    REST_FUEL: 'Fuel remaining'
+
   },
   taskScreen: {
     TASKS_NOT: 'No tasks yet',

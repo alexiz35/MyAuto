@@ -224,9 +224,14 @@ export const averageFuel = (selectDate: TypePickedDate, dataState: StateCar): nu
   if (filteredArrayByDate.length === 0) return 0
   // array is sorted by ascending order
   filteredArrayByDate.sort((a, b) => a.mileageFuel - b.mileageFuel)
+  let mileage: number
+  if (filteredArrayByDate[filteredArrayByDate.length - 1].mileageFuel === 0 || filteredArrayByDate[0].mileageFuel === 0) {
+    mileage = DataMilesChart(selectDate, dataState)
+  } else {
+    mileage = filteredArrayByDate[filteredArrayByDate.length - 1].mileageFuel - filteredArrayByDate[0].mileageFuel
+  }
   // mileage - difference between last and first mileageFuel
 
-  const mileage = filteredArrayByDate[filteredArrayByDate.length - 1].mileageFuel - filteredArrayByDate[0].mileageFuel
   const remainderStart = filteredArrayByDate[0].restFuel
   const remainderEnd = filteredArrayByDate[filteredArrayByDate.length - 1].restFuel
   // amount of fuel - sum fuel without last refueling

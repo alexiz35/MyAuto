@@ -19,7 +19,6 @@ import { ModalPickSeller } from '../SellerScreenComponents/ModalPickSeller'
 // eslint-disable-next-line import/named
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useTranslation } from 'react-i18next'
-import taskScreen from '../../screens/TaskScreen'
 
 interface InputTaskProps {
   isCancel: () => void
