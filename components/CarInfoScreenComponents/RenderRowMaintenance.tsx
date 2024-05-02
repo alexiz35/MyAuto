@@ -27,7 +27,7 @@ export const RenderRowMaintenance = ({ item, handlePick, handleDelMaintenance }:
       contentStyle={{ flexDirection: 'row' }}
       onPress={() => { handlePick(item) }}
     >
-      <Card.Title title={item.nameService} style={{ flex: 2.2, paddingRight: 12 }} titleStyle={{ paddingRight: 5 }}/>
+      <Card.Title title={item.nameService} style={{ flex: 2.2, paddingRight: 12 }} titleStyle={{ paddingRight: 5 }} titleVariant={'bodyMedium'} titleNumberOfLines={2}/>
       <Card.Title title={item.mileage} style={{ flex: 1.5, paddingRight: 5 }} titleStyle={{ paddingRight: 5 }}/>
       <Card.Title title={item.date} style={{ flex: 0.8, paddingRight: 5 }} titleStyle={{ paddingRight: 5 }}/>
       <View style={{ justifyContent: 'flex-start' }}>

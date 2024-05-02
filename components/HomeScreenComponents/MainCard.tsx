@@ -1,5 +1,14 @@
 import { View, StyleSheet, Vibration } from 'react-native'
-import { CurrentMiles, getIndexCar, initialStateInfo, initialTire, StateInfo, StateTire } from '../../type'
+import {
+  CurrentMiles,
+  getIndexCar,
+  initialStateInfo,
+  initialTire,
+  StateCar,
+  StateFuel,
+  StateInfo,
+  StateTire
+} from '../../type'
 /* import { NativeStackNavigationProp } from '@react-navigation/native-stack' */
 import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -22,6 +31,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TireInput } from './TireInput'
 import { useTranslation } from 'react-i18next'
+import { averageFuel } from '../StatScreenComponents/FunctionStatistic'
+import wheelPickerSelectDate from '../StatScreenComponents/WheelPickerSelectDate'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -59,11 +70,15 @@ export const MainCard = (): JSX.Element => {
       ? initialTire
       : state.cars[indexCar].tire
   ))
+  const fuelState: StateCar = useAppSelector(state => (
+    state.cars[indexCar]
+  ))
   const dispatch = useAppDispatch()
 
   const [visibleMileage, setVisibleMileage] = useState(false)
   const [visibleTire, setVisibleTire] = useState(false)
   const [tire, setTire] = useState(tireState)
+  const [sumFuel, setSumFuel] = useState(0)
   const [isNeedUpdate, setIsNeedUpdate] = useState(false)
   const [valueMileage, setValueMileage] = useState<number>(currentMiles.currentMileage)
   const [errorInput, setErrorInput] = useState(false)
@@ -117,9 +132,21 @@ export const MainCard = (): JSX.Element => {
       } else setValueMileage(currentMiles.currentMileage)
     }, [currentMiles, infoCar.buyMileage])
 
-  useEffect(() => {
+  const volumeFuel = () => {
+    const tempVolumeFuel = fuelState.fuel.filter((value) =>
+      new Date(value.dateFuel).getFullYear() === new Date().getFullYear() &&
+      new Date(value.dateFuel).getMonth() === new Date().getMonth()
+    )
+    setSumFuel(tempVolumeFuel.reduce((accumulator, currentValue) =>
+      accumulator + Number(currentValue.volumeFuel), 0)
+    )
+  }
 
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      volumeFuel()
+    }, [fuelState.fuel])
+  )
 
   useFocusEffect(
     useCallback(() => {
@@ -222,7 +249,7 @@ export const MainCard = (): JSX.Element => {
           <Button icon={({ size }) => (<Icon name='gas-station' size={20} color={colors.onBackground}/>)}
                   textColor={colors.onBackground} labelStyle={{ fontSize: 16 }} rippleColor={colors.primary}
                   onPress={() => { navStack.navigate('FuelScreen') }}>
-            2200 грн
+            {sumFuel + ' ' + t('L') }
           </Button>
 
         </View>

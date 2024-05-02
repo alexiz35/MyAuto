@@ -7,7 +7,7 @@ import { FlatList, View } from 'react-native'
 import { Button, Card, Divider, List, Text, TextInput } from 'react-native-paper'
 import { JSX, useState } from 'react'
 import { ListService } from '../../../type'
-import { listService } from './ListServices'
+import { listServiceRu } from './ListServices'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { useTranslation } from 'react-i18next'
 
@@ -41,7 +41,7 @@ export const PickService = ({ cancelPress, okPress, typeService }: PickServicePr
     <View>
       <View style={{ height: 250 }}>
     <FlatList
-      data={listService}
+      data={listServiceRu}
       /* extraData={isSortOthers} */
       ListHeaderComponent={
         <View style={{ flexDirection: 'row', backgroundColor: colors.background }}>

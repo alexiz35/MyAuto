@@ -31,11 +31,6 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
   const closeMenu = (): void => {
     setVisibleMenu(false)
   }
-  /*
-  useEffect(() => {
-    setItemRow(formItem(item))
-    console.log('render', itemRow)
-  }, [item]) */
 
   return (
 
@@ -49,42 +44,26 @@ export const RenderRowSeller = ({ item, handlePress, editPress }: propsRowSeller
 
         <Card.Title
           style={{ flex: 3.6, paddingLeft: 2, minHeight: 20 }}
-          leftStyle={{ marginRight: 2 }}
+          leftStyle={{ marginRight: 2, alignItems: 'center', alignSelf: 'center', paddingBottom: 10 }}
           left={(props) =>
             <Icon {...props} source={item.type === 'seller' ? 'car-cog' : 'car-wrench'} size={22} color={colors.tertiary} />
           }
           title={formString(item.name)}
-          titleStyle={{ paddingRight: 2, textAlignVertical: 'center' }}
-          subtitleStyle={{ paddingRight: 2 }}
-          /* subtitle={item.StationFuel} */
+          titleStyle={{ paddingRight: 2, textAlignVertical: 'auto' }}
           titleVariant={'bodyMedium'}
-          subtitleVariant={'bodyMedium'}
         />
-        {/* <ListItem.Title style={{ fontSize: 14, color: colors.onSurface }}>
-              {String(new Date(item.dateFuel).toLocaleDateString())}
-            </ListItem.Title> */}
-        {/* <ListItem.Subtitle style={{ fontSize: 14, color: colors.onSurface }}>
-              {item.StationFuel}
-            </ListItem.Subtitle> */}
-
         <Card.Title
           style={{ flex: 2.3 }}
-
           title={formString(item.phone)}
-          /* subtitle = {String(item.CostFuel) + ' грн/л'} */
           titleVariant={'bodyMedium'}
-          subtitleVariant={'bodyMedium'}
-          titleStyle={{ paddingRight: 2 }}
-          subtitleStyle={{ paddingRight: 2 }}
+          titleStyle={{ paddingRight: 2, textAlignVertical: 'auto' }}
         />
 
         <Card.Title
           style={{ flex: 2.2 }}
           title={formString(item.specialism)}
           titleVariant={'bodyMedium'}
-          subtitleVariant={'bodyMedium'}
-          titleStyle={{ paddingRight: 2 }}
-          subtitleStyle={{ paddingRight: 2 }}
+          titleStyle={{ paddingRight: 2, textAlignVertical: 'auto' }}
         />
         <View style={{ justifyContent: 'flex-start' }}>
           <Menu

@@ -246,46 +246,4 @@ export const averageFuel = (selectDate: TypePickedDate, dataState: StateCar): nu
   /* const mileage = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.mileageFuel), 0) */
 }
 
-// ----------------------------------------------------------------------------
-
-export const averagePreciseFuel = (selectDate: TypePickedDate, dataState: StateCar): number => {
-  // array is filtered by period time
-  let filteredArrayByDate: StateFuel[]
-
-  switch (selectDate.type) {
-    case 'year':
-      filteredArrayByDate = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === Number(selectDate.valueYear))
-      break
-    case 'month':
-      filteredArrayByDate = dataState.fuel.filter((value) =>
-        new Date(value.dateFuel).getFullYear() === Number(selectDate.valueYear) &&
-        new Date(value.dateFuel).getMonth() === selectDate.valueMonth)
-      break
-    case 'period': {
-      const { startDate, endDate } = createPeriodDate(selectDate)
-      filteredArrayByDate = dataState.fuel.filter((value) => {
-        const tempDate = new Date(value.dateFuel)
-        return startDate <= tempDate && tempDate <= endDate
-      })
-    }
-      break
-    default: {
-      filteredArrayByDate = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === Number(selectDate.valueYear))
-    }
-  }
-  if (filteredArrayByDate.length === 0) return 0
-  // array is sorted by ascending order
-  filteredArrayByDate.sort((a, b) => a.mileageFuel - b.mileageFuel)
-  // mileage - difference between last and first mileageFuel
-  const mileage = filteredArrayByDate[filteredArrayByDate.length - 1].mileageFuel - filteredArrayByDate[0].mileageFuel
-  // amount of fuel - sum fuel without last refueling
-  const amountFuel = filteredArrayByDate.reduce((accumulator, currentValue, currentIndex) =>
-    (currentIndex === (filteredArrayByDate.length - 1))
-      ? accumulator
-      : (accumulator + Number(currentValue.volumeFuel))
-  , 0)
-  return Number(((amountFuel / mileage) * 100).toFixed(2))
-  /* const mileage = selectYear.reduce((accumulator, currentValue) => accumulator + Number(currentValue.mileageFuel), 0) */
-}
-
 // ----------------------------------- function fuel/miles ------------------------------------------

@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { JSX, useCallback, useEffect, useState } from 'react'
+import { JSX, useCallback, useState } from 'react'
 import { getIndexCar, type StateFuel } from '../type'
 import { type RootStackParamList, type RootTabParamList } from '../components/Navigation/TypeNavigation'
 import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -106,7 +106,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         }
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontStyle: 'italic' }}>
-               {`${t('fuelScreen.TITLE_SUM_FUEL')}${sumFuel} l`}
+               {`${t('fuelScreen.TITLE_SUM_FUEL')}${sumFuel} ${t('L')}` }
             </Text>
             <IconButton icon={'calendar-month'} onPress={() => {
               // @ts-expect-error temp error navigate props
@@ -125,7 +125,9 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
               expanded={openAccordion}
               onPress={handleOnPress}
             >
+
                 <FuelInput isCancel={handleCancel} isOk={handleOk} isEdit={isEditFuel} fuel={itemFuel}/>
+
             </List.Accordion>
         </ScrollView>
         </KeyboardAvoidingView>
@@ -133,7 +135,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
 /* ----------------------- List Fuel ---------------------------------------- */
         }
         {isList &&
-          <View style={styles.flatList}>
+          <View style={styles.flatList} >
             <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                               value={dateList}
                               style={{ alignSelf: 'flex-end', marginBottom: 10 }}
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     marginTop: 15,
-    height: 400
+    height: 420
   },
   inputText: {
     textAlign: 'center',

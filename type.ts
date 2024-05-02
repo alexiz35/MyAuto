@@ -1,6 +1,6 @@
 // --------------------------------constant Color --------------------------------------------
 
-import { listService } from './components/InputDoneScreenComponents/inputService/ListServices'
+import { listServiceRu } from './components/InputDoneScreenComponents/inputService/ListServices'
 import { cars } from './cars.json'
 
 export const BACKGROUND = '#13171A'
@@ -187,7 +187,7 @@ export const initialStateInfo = {
   vin: '',
   dateBuy: new Date(),
   buyMileage: 0,
-  regMaintenance: listService
+  regMaintenance: listServiceRu
 }
 
 /* export interface StateServiceTask {

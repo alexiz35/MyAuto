@@ -104,7 +104,7 @@ const InputPart = (): JSX.Element => {
           <View style={styles.flatList}>
             <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                               value={dateList}
-                              style={{ alignSelf: 'flex-end', marginBottom: 10 }}
+                              style={{ alignSelf: 'flex-end', marginBottom: 15 }}
             >
               <ToggleButton icon="numeric-3" value="last" size={20} style={{ height: 20 }}/>
               <ToggleButton icon="numeric-10" value="ten" size={20} style={{ height: 20 }}/>

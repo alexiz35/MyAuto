@@ -18,7 +18,7 @@ import {
   IconButton, Surface
 } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
-import { listService } from '../components/InputDoneScreenComponents/inputService/ListServices'
+import { listServiceEn, listServiceRu } from '../components/InputDoneScreenComponents/inputService/ListServices'
 import { RegMaintenance } from '../components/CarInfoScreenComponents/RegMaintenance'
 import { editedCarInfo } from '../components/Redux/CarsSlice'
 import { useFocusEffect } from '@react-navigation/native'
@@ -74,7 +74,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const [indexCar, setIndexCar] = useState<number>(getIndexCar(car, numberCar))
   const [isSave, setIsSave] = useState<boolean>(false)
   const { colors } = useAppTheme()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   // ------------------------ Alert ConfirmAction -------------------------------
 
@@ -116,7 +116,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   const [itemsModel, setItemsModel] = useState<ListCar[]>([])
   const [regMaintenance, setRegMaintenance] = useState<ListService[]>(
     car[indexCar].info.regMaintenance === undefined
-      ? listService
+      ? i18n.language === 'ru' ? listServiceRu : listServiceEn
       : car[indexCar].info.regMaintenance
   )
 
@@ -588,7 +588,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 /* backgroundColor: colors.surface, */
                 flex: 2
               }}
-              onPress={() => { setRegMaintenance(listService) }}
+              onPress={() => { setRegMaintenance(i18n.language === 'ru' ? listServiceRu : listServiceEn) }}
             >
               {t('carInfo.RESET_TO')}
             </Button>
