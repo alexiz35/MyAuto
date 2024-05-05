@@ -40,7 +40,7 @@ interface FormCarInfo {
   body: string | TypeValueDrop
   year: string | TypeValueDrop
   engine?: string
-  capacity?: string
+  fuelTank: string
   gear?: string
   vin?: string
   dateBuy: Date
@@ -56,6 +56,7 @@ const tempNullCarInfo: FormCarInfo = {
   brand: '',
   model: '',
   fuel: '',
+  fuelTank: '',
   body: '',
   year: '',
   engine: '',
@@ -86,6 +87,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       fuel: typeof item.fuel === 'string' ? item.fuel : item.fuel.value,
       body: typeof item.body === 'string' ? item.body : item.body.value,
       year: typeof item.year === 'string' ? item.year : item.year.value,
+      fuelTank: Number(item.fuelTank),
       engine: item.engine,
       gear: item.gear,
       vin: item.vin,
@@ -99,6 +101,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       brand: item.brand,
       model: item.model,
       fuel: item.fuel,
+      fuelTank: item.fuelTank === 0 ? '' : String(item.fuelTank),
       body: item.body,
       year: item.year,
       engine: item.engine,
@@ -261,9 +264,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             height: '100%'
           }}
         >
-          <View style={styles.row1}>
-            <View style={{ flex: 1 }}>
-              <Surface elevation={2} >
+          <View style={styles.row}>
+              <Surface elevation={2} style={{ flex: 1 }} >
               <Controller
                 name={'brand'}
                 control={control}
@@ -297,9 +299,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 )}
               />
               </Surface>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Surface elevation={2} >
+              <Surface elevation={2} style={{ flex: 1 }}>
               <Controller
                 name={'model'}
                 control={control}
@@ -335,45 +335,9 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 )}
               />
               </Surface>
-            </View>
           </View>
-          <View style={styles.row2}>
-            <View style={{ flex: 1 }}>
-              <Surface elevation={2} >
-              <Controller
-                name={'fuel'}
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Dropdown
-                    style={[styles.dropDown, { backgroundColor: colors.surface }]}
-
-                    selectedTextStyle={{
-                      paddingHorizontal: 10,
-                      color: colors.onBackground
-                    }}
-                    activeColor={colors.primaryContainer}
-                    itemTextStyle={{ color: colors.onSurface }}
-                    inputSearchStyle={{
-                      backgroundColor: colors.surfaceVariant,
-                      color: colors.onSurfaceVariant
-                    }}
-                    containerStyle={{ backgroundColor: colors.surface }}
-                    data={itemsFuel}
-                    labelField={'label'}
-                    valueField={'value'}
-                    placeholder={t('carInfo.FUEL')}
-                    placeholderStyle={{ color: colors.onBackground }}
-                    value={value}
-                    onChange={(value) => {
-                      onChange(value)
-                    }}
-                  />
-                )}
-              />
-              </Surface>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Surface elevation={2} >
+          <View style={styles.row}>
+              <Surface elevation={2} style={{ flex: 1 }} >
               <Controller
                 name={'body'}
                 control={control}
@@ -405,9 +369,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 )}
               />
               </Surface>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Surface elevation={2} >
+              <Surface elevation={2} style={{ flex: 1 }} >
               <Controller
                 name={'year'}
                 control={control}
@@ -436,9 +398,62 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 )}
               />
               </Surface>
-            </View>
           </View>
-          <View style={styles.row3}>
+          <View style={styles.row}>
+            <Surface elevation={2} style={{ flex: 1 }}>
+              <Controller
+                name={'fuel'}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Dropdown
+                    style={[styles.dropDown, { height: 52, backgroundColor: colors.surface }]}
+
+                    selectedTextStyle={{
+                      paddingHorizontal: 10,
+                      color: colors.onBackground
+                    }}
+                    activeColor={colors.primaryContainer}
+                    itemTextStyle={{ color: colors.onSurface }}
+                    inputSearchStyle={{
+                      backgroundColor: colors.surfaceVariant,
+                      color: colors.onSurfaceVariant
+                    }}
+                    containerStyle={{ backgroundColor: colors.surface }}
+                    data={itemsFuel}
+                    labelField={'label'}
+                    valueField={'value'}
+                    placeholder={t('carInfo.FUEL')}
+                    placeholderStyle={{ color: colors.onBackground }}
+                    value={value}
+                    onChange={(value) => {
+                      onChange(value)
+                    }}
+                  />
+                )}
+              />
+            </Surface>
+            <Surface elevation={2} style={{ flex: 1 }}>
+              <Controller
+                name={'fuelTank'}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <TextInput
+                      mode={'flat'}
+                      dense
+                      keyboardType={'numeric'}
+                      right={<TextInput.Affix text= {t('L')}/>}
+                      style={{ flex: 1, backgroundColor: colors.surface }}
+                      label={t('FUEL_TANK')}
+                      value={value}
+                      onChangeText={(value) => { onChange(value) }}
+                    />
+                  </>
+                )}
+              />
+            </Surface>
+          </View>
+          <View style={styles.row}>
             <Surface elevation={2} style={{ flex: 1 }}>
               <Controller
                 name={'engine'}
@@ -450,7 +465,6 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       dense
                       /* ref={inputSellerName} */
                       style={{ flex: 1, backgroundColor: colors.surface }}
-                      placeholder={t('carInfo.ENGINE')}
                       label={t('carInfo.ENGINE')}
                       value={value}
                       onChangeText={(value) => { onChange(value) }}
@@ -471,7 +485,6 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       dense
                       /* ref={inputSellerPhone} */
                       label={t('carInfo.GEAR')}
-                      placeholder={t('carInfo.GEAR')}
                       value={value}
                       onChangeText={(value) => { onChange(value) }}
                     />
@@ -492,7 +505,6 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                     style={{ flex: 1, backgroundColor: colors.surface }}
                     dense
                     /* ref={inputSellerLink} */
-                    placeholder={t('carInfo.VIN')}
                     label={t('carInfo.VIN')}
                     onChangeText={(value) => { onChange(value) }}
                     value={value}
@@ -502,8 +514,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             />
             </Surface>
           </View>
-          <View style={styles.viewGroupEngine}>
-            <Surface elevation={2} style={styles.input}>
+          <View style={styles.row}>
+            <Surface elevation={2} style={{ flex: 1 }}>
               <Controller
                 name={'dateBuy'}
                 control={control}
@@ -514,7 +526,6 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       style={{ flex: 1, backgroundColor: colors.surface }}
                       dense
                       ref={ref}
-                      placeholder={t('carInfo.DATE_BUY')}
                       showSoftInputOnFocus={false}
                       label={t('carInfo.DATE_BUY')}
                       onPressIn={inputDateBuy}
@@ -524,7 +535,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 )}
               />
             </Surface>
-            <Surface elevation={2} style={styles.input}>
+            <Surface elevation={2} style={{ flex: 1 }}>
               <Controller
                 name={'buyMileage'}
                 control={control}
@@ -534,8 +545,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       mode={'flat'}
                       style={{ flex: 1, backgroundColor: colors.surface }}
                       dense
-                      /* ref={inputSellerPhone} */
-                      placeholder={t('carInfo.MILEAGE_BUY')}
+                      right={<TextInput.Affix text= {t('KM')}/>}
                       label={t('carInfo.MILEAGE_BUY')}
                       keyboardType={'numeric'}
                       value={value}
@@ -550,7 +560,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             horizontalInset
             bold
             style={{
-              marginTop: 8,
+              marginTop: 12,
               marginBottom: 6
             }}
           />
@@ -565,11 +575,9 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             <Button
               mode={'elevated'}
               elevation={5}
-              /* labelStyle={{ textAlign: 'center' }} */
               style={{
                 justifyContent: 'center',
                 borderRadius: 5,
-                /* backgroundColor: colors.surface, */
                 flex: 10
               }}
               onPress={() => { setVisibleModalService(true) }}
@@ -585,7 +593,6 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 borderRadius: 5,
                 height: 45,
                 marginRight: 2,
-                /* backgroundColor: colors.surface, */
                 flex: 2
               }}
               onPress={() => { setRegMaintenance(i18n.language === 'ru' ? listServiceRu : listServiceEn) }}
@@ -604,7 +611,6 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           <View style={styles.viewButton}>
             <Button
               icon={'close-thick'}
-              /* onPress={() => { navigation.goBack() }} */
               onPress={handleClose}
               mode="outlined"
               rippleColor={colors.error}
@@ -675,41 +681,19 @@ export default CarInfoScreen
 
 // ----------------------- Styles function ------------------------------
 const styles = StyleSheet.create({
-  viewAllInput: {},
-  row1: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 15,
-    columnGap: 7
-  },
-  row2: {
+  row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 15,
-    columnGap: 7,
-    marginBottom: 12
-  },
-  row3: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    columnGap: 7,
-    marginBottom: 5
+    marginTop: 12,
+    columnGap: 7
   },
   dropDown: {
     padding: 5,
-    /* borderWidth: 1, */
-    /* borderColor: colors.outline, */
+    paddingLeft: 16,
     borderRadius: 5
-    /* backgroundColor: colors.surface */
-  },
-  viewGroupEngine: {
-    flexDirection: 'row',
-    columnGap: 7,
-    justifyContent: 'space-around'
   },
   input: {
-    marginVertical: 7,
-    /* marginHorizontal: 5, */
+    marginTop: 12,
     flex: 1
   },
   errorInput: {
@@ -717,7 +701,6 @@ const styles = StyleSheet.create({
     marginTop: 1,
     textAlign: 'center'
   },
-
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -726,6 +709,5 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     flex: 1
-    /* marginHorizontal: 10 */
   }
 })

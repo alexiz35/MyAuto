@@ -2,10 +2,10 @@ import { Alert, StyleSheet, View } from 'react-native'
 import {
   Button,
   Card,
-  Checkbox,
+  Checkbox, Dialog,
   HelperText,
   Icon,
-  IconButton,
+  IconButton, Portal,
   Surface,
   Text,
   TextInput,
@@ -13,12 +13,12 @@ import {
 } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { useAppTheme } from '../../CommonComponents/Theme'
-import { getIndexCar, StateFuel } from '../../type'
+import { getIndexCar, StateFuel, StateInfo } from '../../type'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useTranslation } from 'react-i18next'
-import { setConsumption } from '../Redux/CarsSlice'
+import { editedCarInfo, setConsumption } from '../Redux/CarsSlice'
 
 interface InputFuelProps {
   isCancel: () => void
@@ -43,10 +43,12 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
   const carId = useAppSelector(state => state.numberCar)
   const dispatch = useAppDispatch()
 
-  const [visibleToolTip, setVisibleToolTip] = useState(false)
-  const [isFullFuel, setIsFullFuel] = useState(false)
+  const [visibleToolTip, setVisibleToolTip] = useState<boolean>(false)
+  const [isFullFuel, setIsFullFuel] = useState<boolean>(fuel === null ? false : fuel?.isFullFuel)
   const [colorFullFuel, setColorFullFuel] = useState<string | undefined>()
   const [colorToolTip, setColorToolTip] = useState<string | undefined>()
+  const [alertFuelTank, setAlertFuelTank] = useState<boolean>(false)
+  const [valueFuelTank, setValueFuelTank] = useState('')
   const focusRestFuel = () => {
     setVisibleToolTip(true)
     setColorToolTip(colors.surfaceDisabled)
@@ -58,13 +60,27 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
 
   const setFullFuel = () => {
     setIsFullFuel(!isFullFuel)
-    setValue('restFuel', String(10))
+  }
+
+  const okAlertFullFuel = () => {
+    const tempInfo: StateInfo = { ...state.info, fuelTank: Number(valueFuelTank) }
+    dispatch(editedCarInfo({ numberCar: carId, carInfo: tempInfo }))
+    setAlertFuelTank(false)
+    const temp = Number(valueFuelTank) - Number(getValues('volumeFuel'))
+    setValue('restFuel', String(temp))
+    setColorFullFuel(colors.tertiary)
   }
 
   useEffect(() => {
-    if (isFullFuel) setColorFullFuel(colors.tertiary)
-
-    else setColorFullFuel(undefined)
+    if (isFullFuel) {
+      if (state.info.fuelTank === 0) {
+        setAlertFuelTank(true)
+      } else {
+        const temp = state.info.fuelTank - Number(getValues('volumeFuel'))
+        setValue('restFuel', String(temp))
+        setColorFullFuel(colors.tertiary)
+      }
+    } else setColorFullFuel(undefined)
   }, [isFullFuel])
 
   // ----------------------------------------------------------------------------
@@ -99,7 +115,8 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
       AmountFuel: Number(data.AmountFuel),
       StationFuel: data.StationFuel,
       typeFuel: state.info.fuel !== '' ? state.info.fuel : 'diesel',
-      restFuel: Number(data.restFuel)
+      restFuel: Number(data.restFuel),
+      isFullFuel
     }
   }
 
@@ -483,6 +500,23 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
           Ok
         </Button>
       </View>
+      <Portal>
+        <Dialog visible={alertFuelTank} dismissable onDismiss={() => { setAlertFuelTank(false) }}>
+          <Dialog.Icon icon={'alert'} size={34} color={colors.yellow}/>
+          <Dialog.Content>
+            <Text>Вы не внесли объем бака в характеристиках автомобиля, хотите это сделать сейчас?</Text>
+            <TextInput mode={'flat'}
+                       value={valueFuelTank}
+                       onChangeText={(value) => { setValueFuelTank(value) }}
+                       keyboardType={'numeric'}
+            />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => { setAlertFuelTank(false) }}>Cancel</Button>
+            <Button onPress={okAlertFullFuel}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
 
   )

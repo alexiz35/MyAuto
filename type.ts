@@ -157,6 +157,7 @@ export interface StateFuel {
   StationFuel: string
   typeFuel?: string
   restFuel: number
+  isFullFuel
 }
 
 export interface StateInfo {
@@ -164,6 +165,7 @@ export interface StateInfo {
   brand: string
   model: string
   fuel: string
+  fuelTank: number
   body: string
   year: string
   engine?: string
@@ -179,6 +181,7 @@ export const initialStateInfo = {
   brand: '',
   model: '',
   fuel: '',
+  fuelTank: 0,
   body: '',
   year: '',
   engine: '',

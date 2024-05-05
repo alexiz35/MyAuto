@@ -8,6 +8,7 @@ export default {
   KM: 'km',
   L: 'l',
   CONSUMPTION: 'l/100km',
+  FUEL_TANK: 'Fuel Tank',
   PART: 'Part',
   SERVICE: 'Service',
   OTHER: 'Other',

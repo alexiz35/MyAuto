@@ -38,6 +38,7 @@ export const initialState: StateMain = {
   cars: [
     {
       info: initialStateInfo,
+      isConsumption: false,
       carId: 0,
       tire: {
         id: Date.now(),

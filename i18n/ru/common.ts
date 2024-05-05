@@ -8,6 +8,7 @@ export default {
   KM: 'км',
   L: 'л',
   CONSUMPTION: 'л/100 км',
+  FUEL_TANK: 'Объем бака',
   PART: 'Детали',
   SERVICE: 'Сервис',
   OTHER: 'Другое',
