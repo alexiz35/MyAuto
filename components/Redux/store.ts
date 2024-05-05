@@ -1,11 +1,9 @@
-import { applyMiddleware, combineReducers } from 'redux'
+import { combineReducers } from 'redux'
 
 import thunk from 'redux-thunk'
-import { rootOldReducer } from '../../oldFiles/redusers'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore } from '@reduxjs/toolkit'
-import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants'
 import { createLogger } from 'redux-logger'
 import { initialStateInfo, StateMain } from '../../type'
 import tokenSlice from './TokenSlice'
@@ -13,7 +11,6 @@ import settingSlice from './SettingSlice'
 import sellerSlice from './SellerSlice'
 import numberCarSlice from './NumberCarSlice'
 import carsSlice from './CarsSlice'
-import hardSet from 'redux-persist/es/stateReconciler/hardSet'
 import tireSlice from './TireSlice'
 
 export const initialState: StateMain = {

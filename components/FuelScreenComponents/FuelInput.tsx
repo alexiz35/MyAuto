@@ -8,8 +8,7 @@ import {
   IconButton, Portal,
   Surface,
   Text,
-  TextInput,
-  Tooltip
+  TextInput
 } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { useAppTheme } from '../../CommonComponents/Theme'

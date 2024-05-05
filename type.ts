@@ -157,7 +157,7 @@ export interface StateFuel {
   StationFuel: string
   typeFuel?: string
   restFuel: number
-  isFullFuel
+  isFullFuel: boolean
 }
 
 export interface StateInfo {
