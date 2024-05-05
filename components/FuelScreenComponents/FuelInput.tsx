@@ -1,5 +1,16 @@
 import { Alert, StyleSheet, View } from 'react-native'
-import { Button, Card, Checkbox, HelperText, IconButton, Surface, TextInput } from 'react-native-paper'
+import {
+  Button,
+  Card,
+  Checkbox,
+  HelperText,
+  Icon,
+  IconButton,
+  Surface,
+  Text,
+  TextInput,
+  Tooltip
+} from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { getIndexCar, StateFuel } from '../../type'
@@ -31,6 +42,30 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
   const carId = useAppSelector(state => state.numberCar)
   const dispatch = useAppDispatch()
+
+  const [visibleToolTip, setVisibleToolTip] = useState(false)
+  const [isFullFuel, setIsFullFuel] = useState(false)
+  const [colorFullFuel, setColorFullFuel] = useState<string | undefined>()
+  const [colorToolTip, setColorToolTip] = useState<string | undefined>()
+  const focusRestFuel = () => {
+    setVisibleToolTip(true)
+    setColorToolTip(colors.surfaceDisabled)
+    setTimeout(() => {
+      setVisibleToolTip(false)
+      setColorToolTip(undefined)
+    }, 3000)
+  }
+
+  const setFullFuel = () => {
+    setIsFullFuel(!isFullFuel)
+    setValue('restFuel', String(10))
+  }
+
+  useEffect(() => {
+    if (isFullFuel) setColorFullFuel(colors.tertiary)
+
+    else setColorFullFuel(undefined)
+  }, [isFullFuel])
 
   // ----------------------------------------------------------------------------
   const tempNullFuel: FormFuel = {
@@ -301,7 +336,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
           <IconButton icon={'help-circle-outline'} onPress={alertConsumption} style={{ marginRight: 0 }}/>
           </View>
         </Surface>
-        <View style={[styles.viewGroupInput, { marginTop: 10 }]}>
+        <View style={{ marginTop: 5, columnGap: 5, justifyContent: 'space-evenly', flexDirection: 'row' }}>
           <Controller name={'mileageFuel'}
                       control={control}
                       rules={{
@@ -319,7 +354,6 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
                             ref={ref}
                             dense
                             style={{
-                              flex: 1,
                               backgroundColor: colors.surface,
                               paddingHorizontal: 10
                             }}
@@ -345,6 +379,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
                         </View>
                       )}
           />
+
           <Controller name={'restFuel'}
                       control={control}
                       rules={{
@@ -357,36 +392,72 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
                       }}
                       defaultValue={'10'}
                       render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
-                        <View style={styles.surface}>
+
+                        <View style={[styles.surface, { flex: 2 }]}>
+
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          {/* <IconButton icon={'fuel'} iconColor={colors.tertiary} size={25} style={{ borderRadius: 0, marginRight: 0, backgroundColor: colors.surface, flex: 1 }}/>
+ */}
                           <TextInput
                             ref={ref}
                             dense
-                            style={{ flex: 1, backgroundColor: colors.surface, paddingHorizontal: 10 }}
+                            style={{ backgroundColor: colors.surface, flex: 1, paddingRight: 5 }}
                             label={t('fuelScreen.REST_FUEL')}
+                            disabled={isFullFuel}
                             theme={{
                               colors:
                                 { onSurfaceVariant: state.isConsumption ? colors.text : colors.outline }
                             }}
-                            /* label={t('fuelScreen.MILEAGE_FUEL')} */
                             onChangeText={(value) => { onChange(value) }}
                             /*  onSubmitEditing={() => {
                                setFocus('volumeFuel')
                              }} */
+                            onFocus={focusRestFuel}
+                            onPressIn={focusRestFuel}
                             onBlur={onBlur}
                             keyboardType={'numeric'}
                             value={value}
                             error={(error != null) && true}
+                            left={<TextInput.Icon icon={'gauge-full'}
+                                                  style={{ borderEndWidth: 1, backgroundColor: colorToolTip }}
+                                                  color={colorFullFuel}
+                                                  onPress={setFullFuel}
+                                                  forceTextInputFocus={false}
+                            />}
                             right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('L')}/>}
                           />
+                            {visibleToolTip
+                              ? <View
+                              style={{
+                                position: 'absolute',
+                                top: -20,
+                                left: 20,
+                                backgroundColor: colors.surfaceDisabled,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-start',
+                                paddingTop: 0,
+                                columnGap: 3
+                              }}>
+                              <Icon source={'arrow-down-left-bold'} size={20}></Icon>
+                              <Text style={{ textAlign: 'justify' }}>
+                                Заправка до полного
+                              </Text>
+                            </View>
+                              : null}
+
                           { (error != null)
                             ? <HelperText type="error">1..1000 l</HelperText>
                             : null
                           }
+                          </View>
                         </View>
+
                       )}
           />
 
+            {/* <Checkbox status={'checked'} /> */}
         </View>
+
       </Card>
       {
         /* --------------------------- Buttons -------------------------------------- */
