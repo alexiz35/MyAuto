@@ -18,7 +18,7 @@ import {
   Surface,
   TextInput,
   TouchableRipple,
-  Checkbox, Dialog
+  Checkbox, Dialog, Card, SegmentedButtons
 } from 'react-native-paper'
 import { PickService } from './PickService'
 import { Controller, useForm, useWatch } from 'react-hook-form'
@@ -40,12 +40,13 @@ interface InputServiceProps {
 }
 
 interface FormService {
+  title: string
   startKm: string
   endKm: string
   startDate: Date
   endDate: Date
   sumCostParts: string
-  sunCostService: string
+  sumCostService: string
   sellerName: string
   sellerPhone: string
   sellerWeb: string
@@ -60,12 +61,13 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   const { t } = useTranslation()
 
   const tempNullService: FormService = {
+    title: '',
     startKm: '',
     endKm: '',
     startDate: new Date(),
     endDate: new Date(),
     sumCostParts: '',
-    sunCostService: '',
+    sumCostService: '',
     sellerName: '',
     sellerPhone: '',
     sellerWeb: ''
@@ -83,12 +85,13 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
         : String(state.currentMiles.currentMileage)
     }
     return {
+      title: data.title === undefined ? '' : data.title,
       startKm: tempStartKm,
       endKm: data.endKm === undefined || data.endKm === 0 ? '' : String(data.endKm),
       startDate: data.startDate,
       endDate: data.endData,
       sumCostParts: data.sumCostParts === undefined || data.sumCostParts === 0 ? '' : String(data.sumCostParts),
-      sunCostService: data.sumCostService === undefined || data.sumCostService === 0 ? '' : String(data.sumCostService),
+      sumCostService: data.sumCostService === undefined || data.sumCostService === 0 ? '' : String(data.sumCostService),
       sellerName: data.addition?.services?.name === undefined ? '' : String(data.addition?.services?.name),
       sellerPhone: data.addition?.services?.phone === undefined ? '' : String(data.addition?.services?.phone),
       sellerWeb: data.addition?.services?.web === undefined ? '' : String(data.addition?.services?.web)
@@ -100,12 +103,12 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       id: isEdit ? itemService?.id : Date.now(),
       // @ts-expect-error -typeService may be undefined-
       typeService,
-      /* title: typeService?.nameService, */
+      title: data.title,
       startKm: Number(data.startKm),
       endKm: Number(data.endKm),
       startDate: data.startDate,
       endData: data.endDate,
-      sumCostService: Number(data.sunCostService),
+      sumCostService: Number(data.sumCostService),
       sumCostParts: Number(data.sumCostParts),
       addition: {
         parts: addModalParts,
@@ -131,7 +134,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     control,
     name: 'startDate'
   })
-
+  const [typeWork, setTypeWork] = useState<'mt' | 'repair' | string>('mt')
   const [typeService, setTypeService] = useState < ListService | undefined>(isEdit ? service?.typeService : undefined)
   const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>(isEdit ? service?.addition?.parts : undefined)
 
@@ -143,6 +146,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   const hideModalAddParts = (): void => { setVisibleModalAddParts(false) }
 
   /* -------------------- function modal Pick Service ----------------------------------- */
+  const [requireService, setRequireService] = useState(false)
   const showModalService = (): void => { setVisibleModalService(true) }
   const hideModalService = (): void => { setVisibleModalService(false) }
   const okModalService = (item: ListService): void => {
@@ -170,6 +174,9 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   }
 
   const updateTypeService = (): void => {
+    if (typeService?.nameService !== undefined) {
+      setRequireService(false)
+    }
     if (typeService?.mileage !== undefined) {
       setValue('endKm', String(Number(getValues('startKm')) + typeService?.mileage))
     }
@@ -205,6 +212,12 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   }
 
   const handleOk = (dataForm: FormService): void => {
+    if (typeWork === 'mt') {
+      if (typeService?.nameService === undefined) {
+        setRequireService(true)
+        return
+      }
+    }
     isOk(formToData(dataForm))
   }
   // ---------------------------------------------------------------------------
@@ -256,15 +269,77 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     }
     <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 5 }}>
           <View>
-    {
-    // ----------------------------- Button for selecting type of service ---------------------------
-    }
-            <Button mode={'elevated'} onPress={showModalService} style={{ marginHorizontal: 5, borderRadius: 1 }} >
-              {typeService !== undefined
-                ? `${String(typeService?.nameService)} / ${String(typeService?.mileage)} km / ${String(typeService?.date)} год`
-                : t('inputService.SELECT_TO')
+            <Card style={{ marginHorizontal: 10 }}>
+              <Card.Content style={{ paddingTop: 7 }}>
+                <SegmentedButtons
+                  buttons={[{
+                    value: 'mt',
+                    label: 'ТО',
+                    style: { borderRadius: 1 }
+                  }, {
+                    value: 'repair',
+                    label: 'Ремонт',
+                    style: { borderRadius: 1 }
+                  }]}
+                  value={typeWork}
+                  density={'small'}
+                  onValueChange={(value) => { setTypeWork(value) }}
+                  style={{ width: '70%', alignSelf: 'center', marginBottom: 7 }}
+                />
+
+                {
+                 // ---------------------------------------------------------------------------------------------
+                }
+                {typeWork === 'repair'
+                  ? <Surface elevation={2} >
+                    <Controller name={'title'}
+                                control={control}
+                                rules={{ required: typeWork === 'repair' }}
+                                render={({
+                                  field: {
+                                    onChange,
+                                    value,
+                                    ref,
+                                    onBlur
+                                  }, fieldState: { error }
+                                }) => (
+                                  <TextInput
+                                    error={(error != null) && true}
+                                    ref={ref}
+                                    style={{
+                                      flex: 1,
+                                      backgroundColor: theme.colors.surface,
+                                      height: 40
+                                    }}
+                                    /* label={t('NAME')} */
+                                    placeholder={t('NAME')}
+                                    value={value}
+                                    onSubmitEditing={updateTypeService}
+                                    onChangeText={(value) => {
+                                      onChange(value)
+                                    }}
+                                    onBlur={onBlur}
+                                    /* onSubmitEditing={() => setFocus('numberPart')} */
+                                  />
+                                )}
+                    />
+                  </Surface>
+                  : <Button mode={'elevated'} onPress={showModalService} style={{
+                    marginHorizontal: 5,
+                    borderRadius: 1,
+                    borderColor: requireService ? theme.colors.error : undefined,
+                    borderWidth: requireService ? 2 : 0
+                  }}>
+                    {typeService !== undefined
+                      ? `${String(typeService?.nameService)} / ${String(typeService?.mileage)} km / ${String(typeService?.date)} год`
+                      : t('inputService.SELECT_TO')
+                    }
+                  </Button>
               }
-            </Button>
+              </Card.Content>
+
+            </Card>
+
     {
       // -------------------------------------------------------------------------------------------
     }
@@ -375,7 +450,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                   />
                 </Surface> */}
               <Surface elevation={2} style={styles.surface}>
-                <Controller name={'sunCostService'}
+                <Controller name={'sumCostService'}
                             control={control}
                   /* rules={{ required: 'введите название' }} */
                             render={ ({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
@@ -397,7 +472,6 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                 <Checkbox.Item
                   status={'unchecked'}
                   color={theme.colors.tertiary}
-                  /* label={'Создать \nнапоминание'} */
                   label={t('inputService.REMINDER')}
                   labelVariant={'bodySmall'}
                 />

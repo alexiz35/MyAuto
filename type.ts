@@ -205,7 +205,7 @@ export const initialStateInfo = {
 export interface StateService {
   id: number
   typeService: ListService
-  /* title: string */
+  title: string
   startKm: number
   endKm: number
   startDate: Date

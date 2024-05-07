@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native'
 import { StatePart } from '../../../type'
 import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
 import { JSX, useState } from 'react'
-import { delPart } from '../../../oldFiles/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { delStateCarReducer } from '../../Redux/CarsSlice'
 
@@ -32,42 +31,8 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
       <Card
         style={{ height: 70, borderRadius: 5 }}
         contentStyle={{ flexDirection: 'row' }}
-        /* bottomDivider
-        topDivider */
-        /* leftContent={() => (
-          <Button
-            title='info'
-            icon={{
-              name: 'info',
-              color: 'white'
-            }}
-            buttonStyle={{ minHeight: '100%' }}
-            onPress={() => {
-              handlePress(item)
-            }}
-            /!* onPress={() => { nav() }} *!/
-          />
-        )} */
-        /* rightContent={() => (
-          <Button
-            title='delete'
-            icon={{
-              name: 'delete',
-              color: 'white'
-            }}
-            buttonStyle={{
-              minHeight: '100%',
-              backgroundColor: 'red'
-            }}
-            onPress={() => {
-              dispatch(delFuel(carId, item.id))
-            }}
-          />
-        )} */
-
         onPress={() => { handlePress(item) }}
       >
-
         <Card.Title
           style={{ flex: 3.6, paddingLeft: 0 }}
           leftStyle={{ marginRight: 2, padding: 0 }}
@@ -75,9 +40,6 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
             <View style={{ alignItems: 'center' }}>
               <IconButton {...props} icon={'basket-check'} size={22} iconColor={colors.tertiary} style={{ height: 22, margin: 0, paddingTop: 2 }}/>
               <IconButton icon={'check-decagram'} size={22} iconColor={item.isInstall ? colors.tertiary : colors.secondary} style={{ margin: 0, paddingTop: 2 }}/>
-              {/* <Icon name={'basket-check'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/> */}
-              {/* <Icon name={'check-decagram' } type='material-community' size={22}
-                    color={ item.isInstall ? colors.tertiary : colors.secondary} /> */}
             </View>
           }
           title={String(item.namePart)}

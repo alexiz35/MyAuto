@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native'
 import { getIndexCar, StateService } from '../../../type'
 import { Card, IconButton, Menu, ProgressBar } from 'react-native-paper'
 import { JSX, useEffect, useState } from 'react'
-import { delService } from '../../../oldFiles/actions'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { delStateCarReducer } from '../../Redux/CarsSlice'
@@ -22,6 +21,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
   const [visibleMenu, setVisibleMenu] = useState(false)
   const [progress, setProgress] = useState(0)
   const [colorProgress, setColorProgress] = useState(colors.tertiary)
+  const [title, setTitle] = useState('')
 
   const calcProgress = (): void => {
     if (item.endKm !== undefined && item.startKm !== undefined && item.startKm < item.endKm) {
@@ -41,6 +41,14 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
     calcProgress()
     calcColor()
   }, [progress])
+
+  useEffect(() => {
+    if (item.title === '' || item.title === undefined) {
+      if (item.typeService?.nameService !== '' || item.typeService?.nameService !== undefined) {
+        setTitle(String(item.typeService.nameService))
+      } else setTitle('')
+    } else setTitle(String(item.title))
+  }, [])
 
   const openMenu = (): void => {
     setVisibleMenu(true)
@@ -94,16 +102,14 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
 
         <Card.Title
           style={{ flex: 3.6, paddingLeft: 0 }}
-          leftStyle={{ marginRight: 2 }}
+          leftStyle={{ marginRight: 2, padding: 0 }}
           left={(props) =>
-            <>
+            <View style={{ alignItems: 'center' }}>
               <IconButton {...props} icon={'car-cog'} size={22} iconColor={colors.tertiary}/>
-              {/* <Icon name={'car-cog'} type='material-community' size={22} color={colors.tertiary} style={{ paddingBottom: 3 }}/> */}
-            {/*   <Icon name={'check-decagram' } type='material-community' size={22}
-                    color={ item.isInstall ? colors.tertiary : colors.secondary} /> */}
-            </>
+            </View>
           }
-          title={String(item.typeService.nameService)}
+          title={title}
+          titleNumberOfLines={2}
           titleStyle={{ paddingRight: 2, paddingTop: 4 }}
           subtitleStyle={{ paddingRight: 2 }}
           /* subtitle={() => <ProgressBar progress={0.5}/>} */
