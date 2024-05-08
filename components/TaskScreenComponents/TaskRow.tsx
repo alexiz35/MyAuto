@@ -39,18 +39,41 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
       setLeftMileageState(undefined)
       setLeftDayState(undefined)
     } else {
-      if (item.milesEndTask !== undefined) {
+      if (item.milesEndTask !== undefined && item.milesEndTask !== 0) {
         const leftMileage = item.milesEndTask - currentMileage.currentMileage
-        const leftDay = Math.round((Number(new Date(item.dateEndTask)) - Date.now()) / (1000 * 3600 * 24))
         setLeftMileageState(leftMileage <= 0 ? 0 : leftMileage)
+        const leftDay = Math.round((Number(new Date(item.dateEndTask)) - Date.now()) / (1000 * 3600 * 24))
         setLeftDayState(leftDay <= 0 ? 0 : leftDay)
-        if (leftMileage <= 0 || leftDay <= 0) {
+        if (leftMileage <= 0) {
           setStyleBorder({ width: 2, color: colors.error })
-        } else if (leftMileage <= 100 || leftDay <= 30) {
+        } else if (leftMileage <= 100) {
+          if (item.dateEndTask !== '' && item.dateEndTask !== undefined) {
+            if (leftDay <= 0) {
+              setStyleBorder({ width: 2, color: colors.error })
+              return
+            }
+          }
           setStyleBorder({ width: 2, color: colors.yellow })
         } else {
+          if (item.dateEndTask !== '' && item.dateEndTask !== undefined) {
+            if (leftDay <= 0) {
+              setStyleBorder({ width: 2, color: colors.error })
+              return
+            } else if (leftDay <= 30) {
+              setStyleBorder({ width: 2, color: colors.yellow })
+              return
+            }
+          }
           setStyleBorder({ width: 0, color: '' })
         }
+      } else if (item.dateEndTask !== '' && item.dateEndTask !== undefined) {
+        const leftDay = Math.round((Number(new Date(item.dateEndTask)) - Date.now()) / (1000 * 3600 * 24))
+        setLeftDayState(leftDay <= 0 ? 0 : leftDay)
+        if (leftDay <= 0) {
+          setStyleBorder({ width: 2, color: colors.error })
+        } else if (leftDay <= 30) {
+          setStyleBorder({ width: 2, color: colors.yellow })
+        } else setStyleBorder({ width: 0, color: '' })
       }
     }
   }

@@ -44,12 +44,17 @@ interface FormService {
   startKm: string
   endKm: string
   startDate: Date
-  endDate: Date
+  endDate: Date | string
   sumCostParts: string
   sumCostService: string
   sellerName: string
   sellerPhone: string
   sellerWeb: string
+}
+
+export const transformValueDate = (value: Date | string): string => {
+  if (value === '') return value
+  else return new Date(value).toLocaleDateString()
 }
 
 const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServiceProps): JSX.Element => {
@@ -65,7 +70,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     startKm: '',
     endKm: '',
     startDate: new Date(),
-    endDate: new Date(),
+    endDate: '',
     sumCostParts: '',
     sumCostService: '',
     sellerName: '',
@@ -337,7 +342,6 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                   </Button>
               }
               </Card.Content>
-
             </Card>
 
     {
@@ -418,7 +422,15 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                     label={t('inputService.DATE_REPLACE')}
                                     showSoftInputOnFocus={false}
-                                    value={new Date(value).toLocaleDateString()}
+                                    right={value !== ''
+                                      ? <TextInput.Icon
+                                        icon={'backspace'}
+                                        forceTextInputFocus={false}
+                                        onPress={() => { setValue('endDate', '') }}/>
+                                      : null
+                                    }
+                                    /* value={new Date(value).toLocaleDateString()} */
+                                    value={transformValueDate(value)}
                                     onPressOut={() => { inputDate('endDate') }}
                                     /* onSubmitEditing={() => setFocus('numberPart')} */
                                   />

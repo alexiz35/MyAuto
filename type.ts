@@ -209,7 +209,7 @@ export interface StateService {
   startKm: number
   endKm: number
   startDate: Date
-  endData: Date
+  endData: Date | string
   /* isFinished: boolean */
   sumCostParts?: number
   sumCostService?: number

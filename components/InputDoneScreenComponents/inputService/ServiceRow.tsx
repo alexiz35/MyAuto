@@ -5,6 +5,8 @@ import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { delStateCarReducer } from '../../Redux/CarsSlice'
+import { transformValueDate } from './InputServiceComponent'
+import { useTranslation } from 'react-i18next'
 
 interface propsRowService {
   handlePress: (item: StateService) => void
@@ -13,6 +15,7 @@ interface propsRowService {
 
 export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.Element => {
   const { colors } = useAppTheme()
+  const { t } = useTranslation()
 
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
@@ -39,6 +42,9 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
 
   useEffect(() => {
     calcProgress()
+  }, [])
+
+  useEffect(() => {
     calcColor()
   }, [progress])
 
@@ -64,39 +70,6 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
       <Card
         style={{ height: 70, borderRadius: 5 }}
         contentStyle={{ flexDirection: 'row' }}
-        /* bottomDivider
-        topDivider */
-        /* leftContent={() => (
-          <Button
-            title='info'
-            icon={{
-              name: 'info',
-              color: 'white'
-            }}
-            buttonStyle={{ minHeight: '100%' }}
-            onPress={() => {
-              handlePress(item)
-            }}
-            /!* onPress={() => { nav() }} *!/
-          />
-        )} */
-        /* rightContent={() => (
-          <Button
-            title='delete'
-            icon={{
-              name: 'delete',
-              color: 'white'
-            }}
-            buttonStyle={{
-              minHeight: '100%',
-              backgroundColor: 'red'
-            }}
-            onPress={() => {
-              dispatch(delFuel(carId, item.id))
-            }}
-          />
-        )} */
-
         onPress={() => { handlePress(item) }}
       >
 
@@ -112,40 +85,69 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
           titleNumberOfLines={2}
           titleStyle={{ paddingRight: 2, paddingTop: 4 }}
           subtitleStyle={{ paddingRight: 2 }}
-          /* subtitle={() => <ProgressBar progress={0.5}/>} */
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodySmall'}
         />
-        {/* <ListItem.Title style={{ fontSize: 14, color: colors.onSurface }}>
-              {String(new Date(item.dateFuel).toLocaleDateString())}
-            </ListItem.Title> */}
-        {/* <ListItem.Subtitle style={{ fontSize: 14, color: colors.onSurface }}>
-              {item.StationFuel}
-            </ListItem.Subtitle> */}
 
+        <View style={{
+          flex: 2.3,
+          height: 70,
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+          borderStyle: 'dashed',
+          borderColor: colors.backdrop
+        }}>
+          <View>
+              <Card.Title
+                style={{ height: 65, paddingLeft: 0, paddingRight: 0 }}
+                title={String(new Date(item.startDate).toLocaleDateString('ru',
+                  { day: '2-digit', month: '2-digit', year: '2-digit' }))}
+                subtitle = {(item.endData != '')
+                  ? String(new Date(item.endData).toLocaleDateString('ru',
+                    { day: '2-digit', month: '2-digit', year: '2-digit' }))
+                  : ''}
+                titleVariant={'bodyMedium'}
+                subtitleVariant={'bodyMedium'}
+                titleStyle={{ textAlign: 'center', paddingLeft: 0, paddingRight: 0 }}
+                subtitleStyle={{ textAlign: 'center', paddingLeft: 0, paddingRight: 0 }}
+              />
+          </View>
+
+          <ProgressBar progress={progress} color={colorProgress}
+                       style={{
+                         marginBottom: 0,
+                         marginHorizontal: 5,
+                         height: 5
+                       }}
+          />
+        </View>
+        <View style={{
+          flex: 2.3,
+          height: 70,
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+          borderStyle: 'dashed',
+          borderColor: colors.backdrop
+        }}>
+          <View>
         <Card.Title
-          style={{ flex: 2.3 }}
-
-          title={String(new Date(item.startDate).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))}
-          subtitle = {(item.endData != null)
-            ? String(new Date(item.endData).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))
-            : null}
-
+          style={{ height: 65, paddingLeft: 0, paddingRight: 0 }}
+          title={`${String(item.startKm)} ${t('KM')}`}
+          subtitle={item.endKm != 0 ? `${String(item.endKm)} ${t('KM')}` : ''}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
-          titleStyle={{ paddingRight: 2 }}
-          subtitleStyle={{ paddingRight: 2 }}
+          titleStyle={{ textAlign: 'center', paddingLeft: 0, paddingRight: 0 }}
+          subtitleStyle={{ textAlign: 'center', paddingLeft: 0, paddingRight: 0 }}
         />
-
-        <Card.Title
-          style={{ flex: 2.3 }}
-          title={`${String(item.startKm)} km`}
-          subtitle={`${String(item.endKm)} km`}
-          titleVariant={'bodyMedium'}
-          subtitleVariant={'bodyMedium'}
-          titleStyle={{ paddingRight: 1, paddingLeft: 1 }}
-          subtitleStyle={{ paddingRight: 1 }}
-        />
+          </View>
+          <ProgressBar progress={progress} color={colorProgress}
+                       style={{
+                         marginBottom: 0,
+                         marginHorizontal: 5,
+                         height: 5
+                       }}
+          />
+          </View>
         <View style={{ justifyContent: 'flex-start' }}>
           <Menu
 
@@ -173,7 +175,6 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
           </Menu>
         </View>
       </Card>
-      <ProgressBar progress={progress} color={colorProgress}/>
     </View>
 
 </View>
