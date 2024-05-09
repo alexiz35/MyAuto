@@ -1,10 +1,10 @@
 import {
   View,
-  StyleSheet, KeyboardAvoidingView, ScrollView
+  StyleSheet, KeyboardAvoidingView, ScrollView, Alert
 } from 'react-native'
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
-import { StateService } from '../../../type'
+import { StateService, StateTask } from '../../../type'
 import InputServiceComponent from './InputServiceComponent'
 import { List, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
@@ -61,6 +61,21 @@ const InputService = (): JSX.Element => {
     handleOnPress()
   }
 
+  const createTask = (dataForm: StateService) => {
+    const tempTask: StateTask = {
+      id: Date.now(),
+      typeTask: 'service',
+      milesStartTask: dataForm.startKm,
+      milesEndTask: dataForm.endKm,
+      dateStartTask: dataForm.startDate,
+      dateEndTask: dataForm.endData,
+      name: dataForm.title === '' ? dataForm.typeService.nameService : dataForm.title,
+      isFinished: false,
+      amount: dataForm.sumCostService === undefined ? 0 : dataForm.sumCostService
+    }
+    dispatch(addStateCarReducer({ type: 'tasks', numberCar: carId, item: tempTask }))
+  }
+
   const handleOk = (dataForm: StateService): void => {
     setTimeout(() =>
       isEditService
@@ -68,6 +83,14 @@ const InputService = (): JSX.Element => {
         : dispatch(addStateCarReducer({ type: 'services', numberCar: carId, item: dataForm }))
     , 100)
     handleOnPress()
+    Alert.alert('Создать задачу?', 'Создать задачу, чтобы запланировать повторное обслуживание?', [
+      {
+        text: 'Cancel'
+      }, {
+        text: 'Ok',
+        onPress: () => { createTask(dataForm) }
+      }
+    ])
   }
 
   // ---------------------------------------------------------------------------
