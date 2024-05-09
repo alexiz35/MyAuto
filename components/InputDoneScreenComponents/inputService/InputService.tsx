@@ -71,7 +71,13 @@ const InputService = (): JSX.Element => {
       dateEndTask: dataForm.endData,
       name: dataForm.title === '' ? dataForm.typeService.nameService : dataForm.title,
       isFinished: false,
-      amount: dataForm.sumCostService === undefined ? 0 : dataForm.sumCostService
+      amount: dataForm.sumCostService === undefined ? 0 : dataForm.sumCostService,
+      seller: {
+        id: dataForm.addition?.services?.id,
+        name: dataForm.addition?.services?.name === undefined ? '' : dataForm.addition?.services?.name,
+        phone: dataForm.addition?.services?.phone,
+        web: dataForm.addition?.services?.web
+      }
     }
     dispatch(addStateCarReducer({ type: 'tasks', numberCar: carId, item: tempTask }))
   }

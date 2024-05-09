@@ -192,6 +192,13 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   }
 
   useEffect(() => {
+    if (isEdit) {
+      if (service?.title === '') setTypeWork('mt')
+      else if (service?.typeService === undefined) setTypeWork('repair')
+    }
+  }, [])
+
+  useEffect(() => {
     updateTypeService()
   }, [typeService, controlDateInput])
 
