@@ -1,8 +1,12 @@
 export default {
   CURRENCY: '$',
   PCS: 'pcs',
+  UNTIL: 'Until',
+  NOT_TRACKED: 'Not Tracked',
+  LEFT: 'Left',
   MONTH: 'Month',
   MONTHS: 'Months',
+  DAYS: 'Days',
   YEAR: 'Year',
   CUSTOM: 'Custom',
   KM: 'km',
@@ -156,6 +160,9 @@ export default {
     COST: 'Cost',
     AMOUNT: 'Quantity',
     TOTAL_COST: 'Total Cost',
+    UNTIL_MILEAGE: 'Until Mileage',
+    DEL_TASK: 'Delete Task?',
+    WILL_DEL_TASK: 'The Task will be completely deleted',
     parts: {
       PARTS: 'Parts',
       NUMBER_PART: 'Number Part',

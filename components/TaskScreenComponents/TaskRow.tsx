@@ -5,6 +5,7 @@ import { getIndexCar, StateTask } from '../../type'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { delStateCarReducer } from '../Redux/CarsSlice'
 import { useAppTheme } from '../../CommonComponents/Theme'
+import { useTranslation } from 'react-i18next'
 
 interface propsRowTask {
   handlePress: (item: StateTask) => void
@@ -12,22 +13,32 @@ interface propsRowTask {
 }
 
 export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element => {
+  const calcLeftDay = () => {
+    const leftDay = Math.round((Number(new Date(item.dateEndTask)) - Date.now()) / (1000 * 3600 * 24))
+    if (leftDay < 0) return 0
+    else return leftDay
+  }
   const dispatch = useAppDispatch()
+  const { colors } = useAppTheme()
+  const { t } = useTranslation()
   const carId = useAppSelector(state => state.numberCar)
   const currentMileage = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].currentMiles)
-  const [leftMileageState, setLeftMileageState] = useState<number | undefined>()
-  const [leftDayState, setLeftDayState] = useState<number | undefined>()
   const [visibleMenu, setVisibleMenu] = useState(false)
+
+  const [leftMileageState, setLeftMileageState] = useState<number | undefined>()
+  const [leftDayState, setLeftDayState] = useState<number>(calcLeftDay())
   const [styleBorder, setStyleBorder] = useState({
     width: 0,
     color: ''
   })
   const [icon, setIcon] = useState('basket-check')
-  const { colors } = useAppTheme()
+
+  const [titleEndDate, setTitleEndDate] = useState('')
+  const [titleLeftDate, setTitleLeftDate] = useState('')
 
   const dayOrMonth = (day: number): string => {
-    if (day <= 30) return `${String(day)}дней`
-    else return `${String(Math.round(day / 30))} мес`
+    if (day <= 30) return `${String(day)} ${t('DAYS')}`
+    else return `${String(Math.round(day / 30))} ${t('MONTHS')}`
   }
 
   const checkBorder = () => {
@@ -37,18 +48,15 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
         color: colors.tertiary
       })
       setLeftMileageState(undefined)
-      setLeftDayState(undefined)
     } else {
       if (item.milesEndTask !== undefined && item.milesEndTask !== 0) {
         const leftMileage = item.milesEndTask - currentMileage.currentMileage
         setLeftMileageState(leftMileage <= 0 ? 0 : leftMileage)
-        const leftDay = Math.round((Number(new Date(item.dateEndTask)) - Date.now()) / (1000 * 3600 * 24))
-        setLeftDayState(leftDay <= 0 ? 0 : leftDay)
         if (leftMileage <= 0) {
           setStyleBorder({ width: 2, color: colors.error })
         } else if (leftMileage <= 100) {
           if (item.dateEndTask !== '' && item.dateEndTask !== undefined) {
-            if (leftDay <= 0) {
+            if (leftDayState <= 0) {
               setStyleBorder({ width: 2, color: colors.error })
               return
             }
@@ -56,10 +64,10 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
           setStyleBorder({ width: 2, color: colors.yellow })
         } else {
           if (item.dateEndTask !== '' && item.dateEndTask !== undefined) {
-            if (leftDay <= 0) {
+            if (leftDayState <= 0) {
               setStyleBorder({ width: 2, color: colors.error })
               return
-            } else if (leftDay <= 30) {
+            } else if (leftDayState <= 30) {
               setStyleBorder({ width: 2, color: colors.yellow })
               return
             }
@@ -67,11 +75,9 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
           setStyleBorder({ width: 0, color: '' })
         }
       } else if (item.dateEndTask !== '' && item.dateEndTask !== undefined) {
-        const leftDay = Math.round((Number(new Date(item.dateEndTask)) - Date.now()) / (1000 * 3600 * 24))
-        setLeftDayState(leftDay <= 0 ? 0 : leftDay)
-        if (leftDay <= 0) {
+        if (leftDayState <= 0) {
           setStyleBorder({ width: 2, color: colors.error })
-        } else if (leftDay <= 30) {
+        } else if (leftDayState <= 30) {
           setStyleBorder({ width: 2, color: colors.yellow })
         } else setStyleBorder({ width: 0, color: '' })
       }
@@ -86,7 +92,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
   }
 
   const pressDel = () => {
-    Alert.alert('Удалить задачу?', 'Задача будет полностью удалена', [
+    Alert.alert(t('taskScreen.DEL_TASK'), t('taskScreen.WILL_DEL_TASK'), [
       {
         text: 'Cancel',
         // ***
@@ -102,6 +108,20 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
       }
     ])
   }
+
+  useEffect(() => {
+    if (item.dateEndTask === '') {
+      setTitleEndDate(`${t('UNTIL')}: --//--`)
+      setTitleLeftDate(t('NOT_TRACKED'))
+    } else {
+      setTitleEndDate(`${t('UNTIL')}: ${new Date(item.dateEndTask).toLocaleDateString('ru', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit'
+      })}`)
+      setTitleLeftDate(`${t('LEFT')}: ${dayOrMonth(leftDayState)}`)
+    }
+  }, [])
 
   useEffect(() => {
     checkBorder()
@@ -147,12 +167,12 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
                        visible={visibleMenu}
                        onDismiss={closeMenu}
                      >
-                       <Menu.Item title={'delete'}
+                       <Menu.Item title={t('menu.DELETE')}
                                   dense
                                   leadingIcon={'delete'}
                                   onPress={pressDel}
                        />
-                       <Menu.Item title={'edit'}
+                       <Menu.Item title={t('menu.EDIT')}
                                   onPress={() => {
                                     handlePress(item)
                                   }}
@@ -166,24 +186,22 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
         />
         <Divider bold/>
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <List.Item title={`До пробега: ${(item.milesEndTask != null) ? String(item.milesEndTask) : null} km`}
+        <List.Item title={`${t('taskScreen.UNTIL_MILEAGE')}: ${(item.milesEndTask != null) ? String(item.milesEndTask) : null} ${t('KM')}`}
                    style={{ paddingHorizontal: 0, paddingVertical: 2 }} titleStyle={{ fontSize: 13 }}
                    description={leftMileageState !== undefined
-                     ? `Осталось: ${String(leftMileageState)} km`
+                     ? `${t('LEFT')}: ${String(leftMileageState)} ${t('KM')}`
                      : ''
                    }
                    descriptionStyle={{ fontSize: 12 }}
         />
-        <List.Item title={`До даты: ${String(new Date(item.dateEndTask).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' }))}`}
-                   style={{ paddingHorizontal: 0, paddingVertical: 2 }} titleStyle={{ fontSize: 13 }}
-                   description={leftDayState !== undefined
-                     ? `Осталось: ${dayOrMonth(leftDayState)}`
-                     : ''
-                   }
-                   descriptionStyle={{ fontSize: 12 }}
+        <List.Item
+          title={titleEndDate}
+          style={{ paddingHorizontal: 0, paddingVertical: 2 }} titleStyle={{ fontSize: 13 }}
+          description={titleLeftDate}
+          descriptionStyle={{ fontSize: 12 }}
         />
         </View>
-        <List.Item title={`Стоимость: ${String(item.amount)} грн`} titleStyle={{ fontSize: 13 }} style={{ paddingTop: 0, paddingBottom: 5 }}/>
+        <List.Item title={`${t('TOTAL_COST')}: ${String(item.amount)} ${t('CURRENCY')}`} titleStyle={{ fontSize: 13 }} style={{ paddingTop: 0, paddingBottom: 5 }}/>
 
       </Card>
 
@@ -193,7 +211,6 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
 }
 const styles = StyleSheet.create({
   listItem: {
-    /* paddingRight: 0, */
     marginHorizontal: 5,
     marginVertical: 5,
     flex: 1

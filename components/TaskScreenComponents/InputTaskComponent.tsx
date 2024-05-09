@@ -19,6 +19,7 @@ import { ModalPickSeller } from '../SellerScreenComponents/ModalPickSeller'
 // eslint-disable-next-line import/named
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useTranslation } from 'react-i18next'
+import { transformValueDate } from '../InputDoneScreenComponents/inputService/InputServiceComponent'
 
 interface InputTaskProps {
   isCancel: () => void
@@ -33,7 +34,7 @@ interface FormTask {
   numberPart1: string
   numberPart2: string
   numberPart3: string
-  dateEndTask: Date
+  dateEndTask: Date | string
   milesEndTask?: string
   cost: string
   quantity: string
@@ -56,7 +57,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
     numberPart1: '',
     numberPart2: '',
     numberPart3: '',
-    dateEndTask: new Date(),
+    dateEndTask: '',
     milesEndTask: '',
     cost: '',
     quantity: '',
@@ -360,7 +361,8 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                     style={{ flex: 1, backgroundColor: theme.colors.surface }}
                                     label={t('taskScreen.DATE')}
                                     showSoftInputOnFocus={false}
-                                    value={new Date(value).toLocaleDateString()}
+                                    /* value={new Date(value).toLocaleDateString()} */
+                                    value={transformValueDate(value)}
                                     /* onChangeText={(value) => onChange(value)} */
                                     onPressOut={() => { inputDate('dateEndTask') }}
                                     /* onSubmitEditing={updateTypeService} */

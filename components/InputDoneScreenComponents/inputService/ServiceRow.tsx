@@ -5,7 +5,6 @@ import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { delStateCarReducer } from '../../Redux/CarsSlice'
-import { transformValueDate } from './InputServiceComponent'
 import { useTranslation } from 'react-i18next'
 
 interface propsRowService {
@@ -22,8 +21,10 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, carId)])
 
   const [visibleMenu, setVisibleMenu] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [colorProgress, setColorProgress] = useState(colors.tertiary)
+  const [progressMileage, setProgressMileage] = useState(0)
+  const [progressDate, setProgressDate] = useState(0)
+  const [colorProgressMileage, setColorProgressMileage] = useState(colors.tertiary)
+  const [colorProgressDate, setColorProgressDate] = useState(colors.tertiary)
   const [title, setTitle] = useState('')
 
   const calcProgress = (): void => {
@@ -31,13 +32,25 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
       const currentProgress = state.currentMiles.currentMileage - item.startKm
       const totalProgress = item.endKm - item.startKm
       if (currentProgress > 0 && totalProgress > 0) {
-        setProgress(currentProgress / totalProgress)
+        setProgressMileage(currentProgress / totalProgress)
+      }
+    }
+    if (item.endData !== undefined && item.startDate !== undefined && item.endData !== '') {
+      const currentProgress = (Number(Date.now() - Number(new Date(item.startDate)))) / (1000 * 3600 * 24)
+      const totalProgress = (Number(new Date(item.endData)) - Number(new Date(item.startDate))) / (1000 * 3600 * 24)
+      if (currentProgress > 0 && totalProgress > 0) {
+        setProgressDate(currentProgress / totalProgress)
       }
     }
   }
   const calcColor = (): void => {
-    if (progress > 0.8) setColorProgress(colors.error)
-    else if (progress < 0.8 && progress > 0.5) setColorProgress(colors.yellow)
+    if (progressMileage > 0.8) setColorProgressMileage(colors.error)
+    else if (progressMileage < 0.8 && progressMileage > 0.5) setColorProgressMileage(colors.yellow)
+    else setColorProgressMileage(colors.tertiary)
+
+    if (progressDate > 0.8) setColorProgressDate(colors.error)
+    else if (progressDate < 0.8 && progressDate > 0.5) setColorProgressDate(colors.yellow)
+    else setColorProgressDate(colors.tertiary)
   }
 
   useEffect(() => {
@@ -46,7 +59,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
 
   useEffect(() => {
     calcColor()
-  }, [progress])
+  }, [progressMileage, progressDate])
 
   useEffect(() => {
     if (item.title === '' || item.title === undefined) {
@@ -102,7 +115,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
                 style={{ height: 65, paddingLeft: 0, paddingRight: 0 }}
                 title={String(new Date(item.startDate).toLocaleDateString('ru',
                   { day: '2-digit', month: '2-digit', year: '2-digit' }))}
-                subtitle = {(item.endData != '')
+                subtitle = {(item.endData !== '')
                   ? String(new Date(item.endData).toLocaleDateString('ru',
                     { day: '2-digit', month: '2-digit', year: '2-digit' }))
                   : ''}
@@ -113,7 +126,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
               />
           </View>
 
-          <ProgressBar progress={progress} color={colorProgress}
+          <ProgressBar progress={progressDate} color={colorProgressDate}
                        style={{
                          marginBottom: 0,
                          marginHorizontal: 5,
@@ -140,7 +153,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
           subtitleStyle={{ textAlign: 'center', paddingLeft: 0, paddingRight: 0 }}
         />
           </View>
-          <ProgressBar progress={progress} color={colorProgress}
+          <ProgressBar progress={progressMileage} color={colorProgressMileage}
                        style={{
                          marginBottom: 0,
                          marginHorizontal: 5,
@@ -157,7 +170,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
             visible={visibleMenu}
             onDismiss={closeMenu}
           >
-            <Menu.Item title={'delete'}
+            <Menu.Item title={t('menu.DELETE')}
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
@@ -165,7 +178,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
                          closeMenu()
                        }}
             />
-            <Menu.Item title={'edit'}
+            <Menu.Item title={t('menu.EDIT')}
                        onPress={() => {
                          handlePress(item)
                        }}

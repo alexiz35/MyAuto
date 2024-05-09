@@ -258,7 +258,7 @@ export interface StateTask {
   numberPart2?: string
   numberPart3?: string
   dateStartTask?: Date
-  dateEndTask: Date
+  dateEndTask: Date | string
   milesStartTask?: number
   milesEndTask?: number
   cost?: number

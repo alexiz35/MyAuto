@@ -1,8 +1,12 @@
 export default {
   CURRENCY: '₴',
   PCS: 'шт',
+  UNTIL: 'До',
+  NOT_TRACKED: 'Не отслеживается',
+  LEFT: 'Осталось',
   MONTH: 'Месяц',
-  MONTHS: 'Месяцев',
+  MONTHS: 'Мес.',
+  DAYS: 'Дней',
   YEAR: 'Год',
   CUSTOM: 'Свой',
   KM: 'км',
@@ -153,6 +157,9 @@ export default {
     COST: 'Цена',
     AMOUNT: 'Количество',
     TOTAL_COST: 'Сумма',
+    UNTIL_MILEAGE: 'До пробега',
+    DEL_TASK: 'Удалить задачу?',
+    WILL_DEL_TASK: 'Задача будет полностью удалена',
     parts: {
       PARTS: 'Комплектующие',
       NUMBER_PART: 'Номер детали',
