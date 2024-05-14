@@ -14,6 +14,13 @@
         {
           "photosPermission": "The app accesses your photos to set on icon App."
         }
+
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "The app needs to access your calendar."
+        }
       ],
       "expo-localization"
     ],

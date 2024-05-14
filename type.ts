@@ -210,6 +210,7 @@ export interface StateService {
   endKm: number
   startDate: Date
   endData: Date | string
+  calendarEventId: string
   /* isFinished: boolean */
   sumCostParts?: number
   sumCostService?: number

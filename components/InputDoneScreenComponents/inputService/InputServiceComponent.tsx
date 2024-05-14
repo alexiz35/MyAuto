@@ -1,6 +1,7 @@
 import {
   View,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from 'react-native'
 import { JSX, useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
@@ -31,7 +32,8 @@ import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../Navigation/TypeNavigation'
 import { useTranslation } from 'react-i18next'
-
+import * as Calendar from 'expo-calendar'
+import { addEvent, calendarId, createEvent, deleteEvent, updateEvent } from '../CalendarFunction'
 interface InputServiceProps {
   isCancel: () => void
   isOk: (serviceResult: StateService) => void
@@ -146,6 +148,64 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   const [visibleModalService, setVisibleModalService] = useState(false)
   const [visibleModalAddParts, setVisibleModalAddParts] = useState(false)
 
+  /* -------------------------------------Notification ------------------------------------------------------------ */
+  const [checkNotification, setCheckNotification] = useState<'checked' | 'unchecked'>('unchecked')
+  const pressCheckNotification = () => {
+    checkNotification === 'checked' ? setCheckNotification('unchecked') : setCheckNotification('checked')
+  }
+
+  useEffect(() => {
+    if (isEdit) {
+      if (service?.calendarEventId === '') {
+        setCheckNotification('unchecked')
+      } else {
+        setCheckNotification('checked')
+      }
+    } else setCheckNotification('unchecked')
+  }, [])
+
+  /* useEffect(() => {
+    if (checkNotification === 'checked') {
+      const tempId = calendarId()
+      const id = createEvent(tempId);
+
+      (async () => {
+
+        /!* const defaultCalendarSource =
+          Platform.OS === 'ios'
+            ? await Calendar.getDefaultCalendarAsync()
+            : { isLocalAccount: true, name: 'Expo Calendar' }
+
+        const newCalendarID = await Calendar.createCalendarAsync({
+          title: 'DevizCar Calendar',
+          color: theme.colors.primary,
+          entityType: Calendar.EntityTypes.EVENT,
+          sourceId: defaultCalendarSource.id,
+          source: defaultCalendarSource,
+          name: 'DevizCarCalendar',
+          ownerAccount: 'personal',
+          accessLevel: Calendar.CalendarAccessLevel.OWNER
+        })
+
+        const newEvent = {
+          title: 'My Event',
+          startDate: new Date('2024-05-15T10:00:00.000Z'),
+          endDate: new Date('2024-05-15T11:30:00.000Z'),
+          timeZone: 'Europe/Kiev', // Укажите свой часовой пояс
+          location: 'Conference Room',
+          notes: 'Don\'t forget your documents!'
+        }
+
+        try {
+          const eventId = await Calendar.createEventAsync(newCalendarID, newEvent)
+          console.log(`Event created successfully! Event ID: ${eventId}`)
+        } catch (error) {
+          console.error('Error creating event:', error)
+        } *!/
+      })()
+    }
+  }, [checkNotification]) */
+
   /* -------------------- function modal Add Parts --------------------------------------- */
   const showModalAddParts = (): void => { setVisibleModalAddParts(true) }
   const hideModalAddParts = (): void => { setVisibleModalAddParts(false) }
@@ -224,13 +284,48 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   }
 
   const handleOk = (dataForm: FormService): void => {
+    const finish = (idEvent: string) => {
+      const tempData: StateService = {
+        ...formToData(dataForm),
+        calendarEventId: idEvent
+      }
+      isOk(tempData)
+    }
+
     if (typeWork === 'mt') {
       if (typeService?.nameService === undefined) {
         setRequireService(true)
+        console.log('check')
         return
       }
     }
-    isOk(formToData(dataForm))
+
+    if (checkNotification === 'checked') {
+      if (service?.calendarEventId === '') {
+        // create event
+        addEvent()
+          .then(value => { finish(value) })
+      } else if (service?.calendarEventId !== undefined) {
+        // update event
+        const tempUpdate: Calendar.Event = {
+          title: dataForm.title,
+          startDate: dataForm.startDate
+        }
+        updateEvent(service?.calendarEventId)
+          .then(value => { finish(value) })
+      }
+    } else if (checkNotification === 'unchecked') {
+      if (service?.calendarEventId === '') {
+        // nothing
+        finish('')
+      } else if (service?.calendarEventId !== undefined) {
+        // delete event
+        deleteEvent(service?.calendarEventId)
+        finish('')
+      }
+    }
+
+    /* isOk(formToData(dataForm)) */
   }
   // ---------------------------------------------------------------------------
   // ---------------------- handle ModalPickSeller -----------------------------
@@ -489,10 +584,12 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
               </Surface>
               <Surface elevation={2} style={styles.surface}>
                 <Checkbox.Item
-                  status={'unchecked'}
+                  status={checkNotification}
                   color={theme.colors.tertiary}
                   label={t('inputService.REMINDER')}
                   labelVariant={'bodySmall'}
+                  onPress={pressCheckNotification}
+                  mode={'ios'}
                 />
               </Surface>
             </View>
