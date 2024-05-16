@@ -295,7 +295,6 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     if (typeWork === 'mt') {
       if (typeService?.nameService === undefined) {
         setRequireService(true)
-        console.log('check')
         return
       }
     }
@@ -308,10 +307,11 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       } else if (service?.calendarEventId !== undefined) {
         // update event
         const tempUpdate: Calendar.Event = {
-          title: dataForm.title,
+          // @ts-expect-error ddjhnkn
+          title: dataForm.title === '' ? typeService?.nameService : dataForm.title,
           startDate: dataForm.startDate
         }
-        updateEvent(service?.calendarEventId)
+        updateEvent(service?.calendarEventId, tempUpdate)
           .then(value => { finish(value) })
       }
     } else if (checkNotification === 'unchecked') {

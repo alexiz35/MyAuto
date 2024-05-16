@@ -12,7 +12,7 @@ export const calendarId = async () => {
         /* color: theme.colors.primary, */
         entityType: Calendar.EntityTypes.EVENT,
         /* sourceId: { isLocalAccount: true, name: 'Expo Calendar' }, */ /* for IOS */
-        source: { isLocalAccount: true, name: 'DevizCarCalendar' },
+        source: { isLocalAccount: true, name: 'DevizCarCalendar', type: 'LOCAL' },
         name: 'DevizCarCalendar',
         ownerAccount: 'personal',
         accessLevel: Calendar.CalendarAccessLevel.OWNER
@@ -21,6 +21,7 @@ export const calendarId = async () => {
     console.log('IDcalendar', newCalendarID)
     return newCalendarID
   } else {
+    throw Error
     console.log('not granted')
   }
 }
@@ -60,7 +61,7 @@ export const addEvent = async () => {
 export const updateEvent = async (idEvent: string, newEvent: Calendar.Event) => {
   const id = await calendarId()
   if (id !== undefined) {
-    return await Calendar.updateEventAsync(idEvent, { title: 'RERE' })
+    return await Calendar.updateEventAsync(idEvent, newEvent)
   }
 }
 export const deleteEvent = async (idEvent: string) => {
