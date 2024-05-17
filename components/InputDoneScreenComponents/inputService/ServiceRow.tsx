@@ -174,7 +174,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
         <Card.Title
           style={{ height: 65, paddingLeft: 0, paddingRight: 0 }}
           title={`${String(item.startKm)} ${t('KM')}`}
-          subtitle={item.endKm != 0 ? `${String(item.endKm)} ${t('KM')}` : ''}
+          subtitle={item.endKm !== 0 ? `${String(item.endKm)} ${t('KM')}` : ''}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ textAlign: 'center', paddingLeft: 0, paddingRight: 0 }}
