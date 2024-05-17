@@ -1,12 +1,12 @@
 import {
   View,
-  StyleSheet, KeyboardAvoidingView, ScrollView, Alert
+  StyleSheet, KeyboardAvoidingView, ScrollView
 } from 'react-native'
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { StateService, StateTask } from '../../../type'
 import InputServiceComponent from './InputServiceComponent'
-import { List, ToggleButton } from 'react-native-paper'
+import { Banner, Icon, List, Portal, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { ServicesList } from './ServicesList'
 import { useAppTheme } from '../../../CommonComponents/Theme'
@@ -61,50 +61,85 @@ const InputService = (): JSX.Element => {
     handleOnPress()
   }
 
-  const createTask = (dataForm: StateService) => {
-    const tempTask: StateTask = {
-      id: Date.now(),
-      typeTask: 'service',
-      milesStartTask: dataForm.startKm,
-      milesEndTask: dataForm.endKm,
-      dateStartTask: dataForm.startDate,
-      dateEndTask: dataForm.endData,
-      name: dataForm.title === '' ? dataForm.typeService.nameService : dataForm.title,
-      isFinished: false,
-      amount: dataForm.sumCostService === undefined ? 0 : dataForm.sumCostService,
-      seller: {
-        id: dataForm.addition?.services?.id,
-        name: dataForm.addition?.services?.name === undefined ? '' : dataForm.addition?.services?.name,
-        phone: dataForm.addition?.services?.phone,
-        web: dataForm.addition?.services?.web
+  const createTask = (dataForm: StateService | undefined) => {
+    if (dataForm !== undefined) {
+      const tempTask: StateTask = {
+        id: Date.now(),
+        typeTask: 'service',
+        milesStartTask: dataForm.startKm,
+        milesEndTask: dataForm.endKm,
+        dateStartTask: dataForm.startDate,
+        dateEndTask: dataForm.endData,
+        name: dataForm.title === '' ? dataForm.typeService.nameService : dataForm.title,
+        isFinished: false,
+        amount: dataForm.sumCostService === undefined ? 0 : dataForm.sumCostService,
+        seller: {
+          id: dataForm.addition?.services?.id,
+          name: dataForm.addition?.services?.name === undefined ? '' : dataForm.addition?.services?.name,
+          phone: dataForm.addition?.services?.phone,
+          web: dataForm.addition?.services?.web
+        }
       }
+      dispatch(addStateCarReducer({
+        type: 'tasks',
+        numberCar: carId,
+        item: tempTask
+      }))
     }
-    dispatch(addStateCarReducer({ type: 'tasks', numberCar: carId, item: tempTask }))
   }
 
   const handleOk = (dataForm: StateService): void => {
+    setDataOkForm(dataForm)
     setTimeout(() =>
       isEditService
         ? dispatch(editStateCarReducer({ type: 'services', numberCar: carId, item: dataForm }))
         : dispatch(addStateCarReducer({ type: 'services', numberCar: carId, item: dataForm }))
     , 100)
     handleOnPress()
-    Alert.alert('Создать задачу?', 'Создать задачу, чтобы запланировать повторное обслуживание?', [
+    setVisibleBanner(true)
+    setTimeout(() => { setVisibleBanner(false) }, 10000)
+    /* Alert.alert('Создать задачу?', 'Создать задачу, чтобы запланировать повторное обслуживание?', [
       {
         text: 'Cancel'
       }, {
         text: 'Ok',
         onPress: () => { createTask(dataForm) }
       }
-    ])
+    ]) */
   }
 
   // ---------------------------------------------------------------------------
-
+  const [visibleBanner, setVisibleBanner] = useState(false)
+  const [dataOkForm, setDataOkForm] = useState<StateService>()
   // ---------------------------------------------------------------------------
 
   return (
     <View style={{ flex: 1 }}>
+      <Portal>
+        <Banner
+          visible={visibleBanner}
+          actions={[
+            {
+              label: t('button.CANCEL'),
+              onPress: () => {
+                setVisibleBanner(false)
+              }
+            },
+            {
+              label: t('button.CREATE'),
+              onPress: () => {
+                createTask(dataOkForm)
+                setVisibleBanner(false)
+              }
+            }
+          ]}
+          style={{ borderLeftWidth: 10, borderColor: colors.tertiary }}
+          elevation={5}
+          icon={() => (<Icon source={'help-rhombus'} size={34} color={colors.tertiary}/>)}
+        >
+          {t('taskScreen.CREATE_TASK')}
+        </Banner>
+      </Portal>
 
     <KeyboardAvoidingView >
       <ScrollView style={{ marginTop: 5 }}>

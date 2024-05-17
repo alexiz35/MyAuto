@@ -1,4 +1,5 @@
 import * as Calendar from 'expo-calendar'
+
 export const calendarId = async () => {
   const { status } = await Calendar.requestCalendarPermissionsAsync()
   if (status === 'granted') {
@@ -18,10 +19,8 @@ export const calendarId = async () => {
         accessLevel: Calendar.CalendarAccessLevel.OWNER
       })
     } else newCalendarID = calendar.id
-    console.log('IDcalendar', newCalendarID)
     return newCalendarID
   } else {
-    throw Error
     console.log('not granted')
   }
 }
@@ -42,6 +41,7 @@ export const createEvent = async (calendarId: string) => {
     return eventId
   } catch (error) {
     console.error('Error creating event:', error)
+    throw error
   }
   /* calendars.map(value => {
     console.log('value', value.name)
@@ -56,17 +56,17 @@ export const addEvent = async () => {
   const id = await calendarId()
   if (id !== undefined) {
     return await createEvent(id)
-  }
+  } else throw 'Error CalendarID'
 }
 export const updateEvent = async (idEvent: string, newEvent: Calendar.Event) => {
   const id = await calendarId()
   if (id !== undefined) {
     return await Calendar.updateEventAsync(idEvent, newEvent)
-  }
+  } else throw 'Error CalendarID'
 }
 export const deleteEvent = async (idEvent: string) => {
   const id = await calendarId()
   if (id !== undefined) {
     await Calendar.deleteEventAsync(idEvent)
-  }
+  } else throw 'Error CalendarID'
 }

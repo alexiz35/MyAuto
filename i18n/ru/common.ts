@@ -25,6 +25,11 @@ export default {
   PHONE: 'Телефон',
   LINK: 'Ссылки',
   DEV_FUNCTION: 'Функция в разработке',
+  button: {
+    CANCEL: 'Отмена',
+    OK: 'Ok',
+    CREATE: 'Создать'
+  },
   navi: {
     HOME: 'Главная',
     BUY: 'Покупки',
@@ -160,6 +165,7 @@ export default {
     UNTIL_MILEAGE: 'До пробега',
     DEL_TASK: 'Удалить задачу?',
     WILL_DEL_TASK: 'Задача будет полностью удалена',
+    CREATE_TASK: 'Хотите создать задачу, чтобы запланировать повторное обслуживание?',
     parts: {
       PARTS: 'Комплектующие',
       NUMBER_PART: 'Номер детали',
@@ -228,6 +234,14 @@ export default {
     TITLE_SELECT: 'Выберите дату',
     FROM: 'с {{date}}',
     TO: 'до {{date}}'
+  },
+  calendar: {
+    CREATE_EVENT: 'Напоминание в календаре создано',
+    DELETE_EVENT: 'Напоминание в календаре удалено',
+    UPDATE_EVENT: 'Напоминание в календаре обновлено',
+    ERROR_CREATE_EVENT: 'Ошибка создания напоминания',
+    ERROR_DELETE_EVENT: 'Ошибка удаления напоминания',
+    ERROR_UPDATE_EVENT: 'Ошибка обновления напоминания'
   }
 
 }

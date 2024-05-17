@@ -26,6 +26,11 @@ export default {
   LINK: 'Web',
   DEV_FUNCTION: 'Feature in Development',
   TITLE: 'Current miles',
+  button: {
+    CANCEL: 'Cancel',
+    OK: 'Ok',
+    CREATE: 'Create'
+  },
   navi: {
     HOME: 'Home',
     BUY: 'Buy',
@@ -163,6 +168,7 @@ export default {
     UNTIL_MILEAGE: 'Until Mileage',
     DEL_TASK: 'Delete Task?',
     WILL_DEL_TASK: 'The Task will be completely deleted',
+    CREATE_TASK: 'Want to create a task to schedule repeat maintenance?',
     parts: {
       PARTS: 'Parts',
       NUMBER_PART: 'Number Part',
@@ -231,6 +237,14 @@ export default {
     TITLE_SELECT: 'Select the Date',
     FROM: 'from {{date}}',
     TO: 'to {{date}}'
+  },
+  calendar: {
+    CREATE_EVENT: 'Calendar Reminder Created',
+    DELETE_EVENT: 'Calendar Reminder Deleted',
+    UPDATE_EVENT: 'Calendar Reminder Updated',
+    ERROR_CREATE_EVENT: 'Error Creating Reminder',
+    ERROR_DELETE_EVENT: 'Error Deleting Reminder',
+    ERROR_UPDATE_EVENT: 'Error Updating Reminder'
   }
 
 }

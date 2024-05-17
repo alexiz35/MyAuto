@@ -1,7 +1,6 @@
 import {
   View,
-  StyleSheet,
-  Platform
+  StyleSheet
 } from 'react-native'
 import { JSX, useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
@@ -33,7 +32,8 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../Navigation/TypeNavigation'
 import { useTranslation } from 'react-i18next'
 import * as Calendar from 'expo-calendar'
-import { addEvent, calendarId, createEvent, deleteEvent, updateEvent } from '../CalendarFunction'
+import { addEvent, deleteEvent, updateEvent } from '../CalendarFunction'
+import Toast from 'react-native-toast-message'
 interface InputServiceProps {
   isCancel: () => void
   isOk: (serviceResult: StateService) => void
@@ -300,11 +300,28 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     }
 
     if (checkNotification === 'checked') {
-      if (service?.calendarEventId === '') {
+      if (service?.calendarEventId === '' || service?.calendarEventId === undefined) {
         // create event
         addEvent()
-          .then(value => { finish(value) })
-      } else if (service?.calendarEventId !== undefined) {
+          .then(value => {
+            finish(value)
+            Toast.show({
+              type: 'success',
+              text1: t('calendar.CREATE_EVENT'),
+              visibilityTime: 4000,
+              topOffset: 150
+              /* text2: 'This is some something 👋' */
+            })
+          })
+          .catch(reason => {
+            Toast.show({
+              type: 'error',
+              text1: t('calendar.ERROR_CREATE_EVENT'),
+              visibilityTime: 2500,
+              text2: reason
+            })
+          })
+      } else {
         // update event
         const tempUpdate: Calendar.Event = {
           // @ts-expect-error ddjhnkn
@@ -313,6 +330,14 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
         }
         updateEvent(service?.calendarEventId, tempUpdate)
           .then(value => { finish(value) })
+          .catch(reason => {
+            Toast.show({
+              type: 'error',
+              text1: t('calendar.ERROR_UPDATE_EVENT'),
+              visibilityTime: 2500,
+              text2: reason
+            })
+          })
       }
     } else if (checkNotification === 'unchecked') {
       if (service?.calendarEventId === '') {
@@ -321,7 +346,25 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       } else if (service?.calendarEventId !== undefined) {
         // delete event
         deleteEvent(service?.calendarEventId)
-        finish('')
+          .then(value => {
+            finish('')
+            Toast.show({
+              type: 'info',
+              text1: t('calendar.DELETE_EVENT'),
+              visibilityTime: 4000,
+              topOffset: 150
+              /* text2: 'This is some something 👋' */
+            })
+          })
+          .catch(reason => {
+            Toast.show({
+              type: 'error',
+              text1: t('calendar.ERROR_DELETE_EVENT'),
+              visibilityTime: 4000,
+              topOffset: 150,
+              text2: reason
+            })
+          })
       }
     }
 
