@@ -207,6 +207,8 @@ export default {
     ADD_PARTS: 'Добавить комплектующие',
     ADD_SUM: 'Добавлено: {{amountPart}} $t(PCS) на общую сумму {{sumCost}} $t(CURRENCY)',
     ENTER_VALUE: 'или введите свое значение',
+    MAINTENANCE: 'ТО',
+    REPAIR: 'Ремонт',
     add_parts: {
       TITLE: 'Добавьте детали, которые использовали',
       SEARCH: 'Поиск на складе',

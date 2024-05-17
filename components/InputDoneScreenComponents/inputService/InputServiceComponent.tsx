@@ -424,11 +424,11 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                 <SegmentedButtons
                   buttons={[{
                     value: 'mt',
-                    label: 'ТО',
+                    label: t('inputService.MAINTENANCE'),
                     style: { borderRadius: 1 }
                   }, {
                     value: 'repair',
-                    label: 'Ремонт',
+                    label: t('inputService.REPAIR'),
                     style: { borderRadius: 1 }
                   }]}
                   value={typeWork}

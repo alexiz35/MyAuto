@@ -210,6 +210,8 @@ export default {
     ADD_PARTS: 'Add Parts',
     ADD_SUM: 'Added: {{amountPart}} $t(PCS) for a total of {{sumCost}} $t(CURRENCY)',
     ENTER_VALUE: 'or Enter your value',
+    MAINTENANCE: 'Maintenance',
+    REPAIR: 'Repair',
     add_parts: {
       TITLE: 'Add the parts you used',
       SEARCH: 'Search in stock',
