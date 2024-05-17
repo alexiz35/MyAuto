@@ -318,7 +318,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
               type: 'error',
               text1: t('calendar.ERROR_CREATE_EVENT'),
               visibilityTime: 2500,
-              text2: reason
+              text2: reason.message
             })
           })
       } else {
@@ -335,15 +335,19 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
               type: 'error',
               text1: t('calendar.ERROR_UPDATE_EVENT'),
               visibilityTime: 2500,
-              text2: reason
+              text2: reason.message
             })
           })
       }
     } else if (checkNotification === 'unchecked') {
-      if (service?.calendarEventId === '') {
+      console.log('id', service?.calendarEventId)
+
+      if (service?.calendarEventId === '' || service?.calendarEventId === undefined) {
+        console.log('id1', service?.calendarEventId)
         // nothing
         finish('')
-      } else if (service?.calendarEventId !== undefined) {
+      } else {
+        console.log('id2', service?.calendarEventId)
         // delete event
         deleteEvent(service?.calendarEventId)
           .then(value => {
@@ -362,7 +366,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
               text1: t('calendar.ERROR_DELETE_EVENT'),
               visibilityTime: 4000,
               topOffset: 150,
-              text2: reason
+              text2: reason.message
             })
           })
       }

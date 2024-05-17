@@ -56,17 +56,17 @@ export const addEvent = async () => {
   const id = await calendarId()
   if (id !== undefined) {
     return await createEvent(id)
-  } else throw 'Error CalendarID'
+  } else throw new Error('Error CalendarID')
 }
 export const updateEvent = async (idEvent: string, newEvent: Calendar.Event) => {
   const id = await calendarId()
   if (id !== undefined) {
     return await Calendar.updateEventAsync(idEvent, newEvent)
-  } else throw 'Error CalendarID'
+  } else throw new Error('Error CalendarID')
 }
 export const deleteEvent = async (idEvent: string) => {
   const id = await calendarId()
   if (id !== undefined) {
     await Calendar.deleteEventAsync(idEvent)
-  } else throw 'Error CalendarID'
+  } else throw new Error('Error CalendarID')
 }

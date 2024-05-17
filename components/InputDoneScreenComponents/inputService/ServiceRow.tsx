@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { delStateCarReducer } from '../../Redux/CarsSlice'
 import { useTranslation } from 'react-i18next'
+import { deleteEvent } from '../CalendarFunction'
+import Toast from 'react-native-toast-message'
 
 interface propsRowService {
   handlePress: (item: StateService) => void
@@ -74,6 +76,32 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
   }
   const closeMenu = (): void => {
     setVisibleMenu(false)
+  }
+
+  const deleteEventWithService = () => {
+    if (item?.calendarEventId !== '' && item?.calendarEventId !== undefined) {
+      console.log('DELETE', item.calendarEventId)
+      // delete event
+      deleteEvent(item?.calendarEventId)
+        .then(value => {
+          Toast.show({
+            type: 'info',
+            text1: t('calendar.DELETE_EVENT'),
+            visibilityTime: 5000,
+            topOffset: 150
+            /* text2: 'This is some something 👋' */
+          })
+        })
+        .catch(reason => {
+          Toast.show({
+            type: 'error',
+            text1: t('calendar.ERROR_DELETE_EVENT'),
+            visibilityTime: 5000,
+            topOffset: 150,
+            text2: reason.message
+          })
+        })
+    }
   }
 
   return (
@@ -174,6 +202,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
                        dense
                        leadingIcon={'delete'}
                        onPress={() => {
+                         deleteEventWithService()
                          dispatch(delStateCarReducer({ type: 'services', numberCar: carId, id: item.id }))
                          closeMenu()
                        }}
