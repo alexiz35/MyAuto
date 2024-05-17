@@ -283,7 +283,24 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     isCancel()
   }
 
+  // ----------------------------------------------------------------------------
+
   const handleOk = (dataForm: FormService): void => {
+    const calcDate = (currentDate: Date, decrement: number) => {
+      const tempDate = currentDate.setDate(currentDate.getDate() - decrement)
+      return new Date(new Date(tempDate).setHours(10, 0))
+    }
+    const titleService = dataForm.title === '' ? typeService?.nameService : dataForm.title
+
+    const tempDate: Calendar.Event = {
+      // @ts-expect-error ddjhnkn
+      title: titleService,
+      startDate: calcDate(new Date(dataForm.endDate), 10),
+      endDate: calcDate(new Date(dataForm.endDate), 10),
+      notes: t('calendar.NOTE_CALENDAR', { titleService }),
+      location: dataForm.sellerName
+    }
+
     const finish = (idEvent: string) => {
       const tempData: StateService = {
         ...formToData(dataForm),
@@ -302,7 +319,15 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     if (checkNotification === 'checked') {
       if (service?.calendarEventId === '' || service?.calendarEventId === undefined) {
         // create event
-        addEvent()
+        /* const newEvent: Calendar.Event = {
+          // @ts-expect-error title
+          title: dataForm.title === '' ? typeService?.nameService : dataForm.title,
+          startDate: calcDate(new Date(dataForm.endDate), 10),
+          timeZone: 'Europe/Kiev', // Укажите свой часовой пояс
+          location: dataForm.sellerName,
+          notes: `срок ${dataForm.title === '' ? typeService?.nameService : dataForm.title} истекает через 10 дней`
+        } */
+        addEvent(tempDate)
           .then(value => {
             finish(value)
             Toast.show({
@@ -323,12 +348,14 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
           })
       } else {
         // update event
-        const tempUpdate: Calendar.Event = {
+        /* const tempUpdate: Calendar.Event = {
           // @ts-expect-error ddjhnkn
           title: dataForm.title === '' ? typeService?.nameService : dataForm.title,
-          startDate: dataForm.startDate
-        }
-        updateEvent(service?.calendarEventId, tempUpdate)
+          startDate: calcDate(new Date(dataForm.endDate), 10),
+          notes: `срок замены ${dataForm.title === '' ? typeService?.nameService : dataForm.title} истекает через 10 дней`,
+          location: dataForm.sellerName
+        } */
+        updateEvent(service?.calendarEventId, tempDate)
           .then(value => { finish(value) })
           .catch(reason => {
             Toast.show({
@@ -340,14 +367,10 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
           })
       }
     } else if (checkNotification === 'unchecked') {
-      console.log('id', service?.calendarEventId)
-
       if (service?.calendarEventId === '' || service?.calendarEventId === undefined) {
-        console.log('id1', service?.calendarEventId)
         // nothing
         finish('')
       } else {
-        console.log('id2', service?.calendarEventId)
         // delete event
         deleteEvent(service?.calendarEventId)
           .then(value => {

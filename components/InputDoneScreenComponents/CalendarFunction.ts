@@ -25,16 +25,7 @@ export const calendarId = async () => {
   }
 }
 
-export const createEvent = async (calendarId: string) => {
-  const newEvent = {
-    title: 'Замена масла',
-    startDate: new Date('2024-05-16T10:00:00.000Z'),
-    endDate: new Date('2024-05-16T11:30:00.000Z'),
-    timeZone: 'Europe/Kiev', // Укажите свой часовой пояс
-    location: 'Conference Room',
-    notes: 'Don\'t forget your documents!'
-  }
-
+export const createEvent = async (calendarId: string, newEvent: Calendar.Event) => {
   try {
     const eventId = await Calendar.createEventAsync(calendarId, newEvent)
     console.log(`Event created successfully! Event ID: ${eventId}`)
@@ -52,10 +43,10 @@ export const createEvent = async (calendarId: string) => {
   }) */
 }
 
-export const addEvent = async () => {
+export const addEvent = async (newEvent: Calendar.Event) => {
   const id = await calendarId()
   if (id !== undefined) {
-    return await createEvent(id)
+    return await createEvent(id, newEvent)
   } else throw new Error('Error CalendarID')
 }
 export const updateEvent = async (idEvent: string, newEvent: Calendar.Event) => {

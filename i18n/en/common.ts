@@ -246,7 +246,8 @@ export default {
     UPDATE_EVENT: 'Calendar Reminder Updated',
     ERROR_CREATE_EVENT: 'Error Creating Reminder',
     ERROR_DELETE_EVENT: 'Error Deleting Reminder',
-    ERROR_UPDATE_EVENT: 'Error Updating Reminder'
+    ERROR_UPDATE_EVENT: 'Error Updating Reminder',
+    NOTE_CALENDAR: 'The {{titleService}} replacement period expires in 10 days'
   }
 
 }

@@ -243,7 +243,8 @@ export default {
     UPDATE_EVENT: 'Напоминание в календаре обновлено',
     ERROR_CREATE_EVENT: 'Ошибка создания напоминания',
     ERROR_DELETE_EVENT: 'Ошибка удаления напоминания',
-    ERROR_UPDATE_EVENT: 'Ошибка обновления напоминания'
+    ERROR_UPDATE_EVENT: 'Ошибка обновления напоминания',
+    NOTE_CALENDAR: 'Срок замены {{titleService}} истекает через 10 дней'
   }
 
 }
