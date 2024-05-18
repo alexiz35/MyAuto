@@ -286,6 +286,13 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   // ----------------------------------------------------------------------------
 
   const handleOk = (dataForm: FormService): void => {
+    if (typeWork === 'mt') {
+      if (typeService?.nameService === undefined) {
+        setRequireService(true)
+        return
+      }
+    }
+
     const calcDate = (currentDate: Date, decrement: number) => {
       const tempDate = currentDate.setDate(currentDate.getDate() - decrement)
       return new Date(new Date(tempDate).setHours(10, 0))
@@ -309,24 +316,9 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       isOk(tempData)
     }
 
-    if (typeWork === 'mt') {
-      if (typeService?.nameService === undefined) {
-        setRequireService(true)
-        return
-      }
-    }
-
     if (checkNotification === 'checked') {
       if (service?.calendarEventId === '' || service?.calendarEventId === undefined) {
         // create event
-        /* const newEvent: Calendar.Event = {
-          // @ts-expect-error title
-          title: dataForm.title === '' ? typeService?.nameService : dataForm.title,
-          startDate: calcDate(new Date(dataForm.endDate), 10),
-          timeZone: 'Europe/Kiev', // Укажите свой часовой пояс
-          location: dataForm.sellerName,
-          notes: `срок ${dataForm.title === '' ? typeService?.nameService : dataForm.title} истекает через 10 дней`
-        } */
         addEvent(tempDate)
           .then(value => {
             finish(value)
@@ -348,13 +340,6 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
           })
       } else {
         // update event
-        /* const tempUpdate: Calendar.Event = {
-          // @ts-expect-error ddjhnkn
-          title: dataForm.title === '' ? typeService?.nameService : dataForm.title,
-          startDate: calcDate(new Date(dataForm.endDate), 10),
-          notes: `срок замены ${dataForm.title === '' ? typeService?.nameService : dataForm.title} истекает через 10 дней`,
-          location: dataForm.sellerName
-        } */
         updateEvent(service?.calendarEventId, tempDate)
           .then(value => { finish(value) })
           .catch(reason => {
@@ -394,8 +379,6 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
           })
       }
     }
-
-    /* isOk(formToData(dataForm)) */
   }
   // ---------------------------------------------------------------------------
   // ---------------------- handle ModalPickSeller -----------------------------
