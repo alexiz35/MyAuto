@@ -553,7 +553,6 @@ export interface ModalPart {
   quantityPart: number
   numberPart: string
   seller?: Seller
-  fromStock: boolean
 }
 
 export interface ModalAddPartsProps {
