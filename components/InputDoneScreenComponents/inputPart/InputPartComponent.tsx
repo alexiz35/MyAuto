@@ -8,7 +8,7 @@ import { type Seller, type StatePart } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
-import { Button, Dialog, Portal, Surface, TextInput, useTheme } from 'react-native-paper'
+import { Button, Dialog, Portal, Surface, TextInput } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { type StackNavigationProp } from '@react-navigation/stack'
@@ -16,7 +16,6 @@ import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { useTranslation } from 'react-i18next'
-import inputPart from './InputPart'
 
 interface InputPartProps {
   isCancel: () => void
