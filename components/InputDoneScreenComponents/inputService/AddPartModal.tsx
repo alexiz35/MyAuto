@@ -34,7 +34,8 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
     costPart: '',
     sellerName: '',
     sellerPhone: '',
-    sellerLink: ''
+    sellerLink: '',
+    fromStock: false
   }
 
   const dataToForm = (data: ModalPart): FormAddParts => {
@@ -75,6 +76,7 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
   const [searchPart, setSearchPart] = useState('')
   const [filterPart, setFilterPart] = useState<StatePart[]>(state.filter((item) => !item.isInstall))
   const [visibleSearchList, setVisibleSearchList] = useState(false)
+  const [fromStock, setFromStock] = useState(false)
 
   const [parts, setParts] = useState<ModalPart[]>(initialParts)
 
@@ -97,19 +99,22 @@ export const AddPartModal = ({ onPressOk, onPressCancel, initialParts = [] }: Mo
   }
 
   const selectSearch = (id: number): void => {
-    const selectPart = state.filter((item: StatePart) => item.id === id)
-    const tempSelectPart: ModalPart = {
-      id: selectPart[0].id,
-      namePart: selectPart[0].namePart,
-      numberPart: selectPart[0].numberPart,
-      costPart: selectPart[0].costPart,
-      quantityPart: selectPart[0].quantityPart,
-      seller: selectPart[0].seller
+    /* const selectPart = state.filter((item: StatePart) => item.id === id) */
+    const selectPart = state.find((item) => item.id === id)
+    if (selectPart !== undefined) {
+      const tempSelectPart: ModalPart = {
+        id: selectPart.id,
+        namePart: selectPart.namePart,
+        numberPart: selectPart.numberPart,
+        costPart: selectPart.costPart,
+        quantityPart: selectPart.quantityPart,
+        seller: selectPart.seller,
+        fromStock: true
+      }
+      setModalPart(tempSelectPart)
+      setSearchPart(tempSelectPart.namePart)
+      setVisibleSearchList(false)
     }
-
-    setModalPart(tempSelectPart)
-    setSearchPart(tempSelectPart.namePart)
-    setVisibleSearchList(false)
   }
 
   const listSearch = (item: StatePart): JSX.Element => {

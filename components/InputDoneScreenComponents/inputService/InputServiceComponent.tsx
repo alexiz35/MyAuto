@@ -406,6 +406,13 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   const handleOkModal = (parts: [ModalPart]): void => {
     setAddModalParts(parts)
     setVisibleModalAddParts(false)
+    Toast.show({
+      type: 'info',
+      text1: 'Не забудьте отметить на складе ',
+      visibilityTime: 3000,
+      text2: 'установку/снятие деталей после сохранения 👋',
+      text2Style: { fontSize: 11, fontWeight: 'bold', color: theme.colors.text }
+    })
   }
   // ---------------------------------------------------------------------------
 

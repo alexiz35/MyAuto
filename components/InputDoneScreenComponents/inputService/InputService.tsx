@@ -10,7 +10,7 @@ import { Banner, Icon, List, Portal, ToggleButton } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { ServicesList } from './ServicesList'
 import { useAppTheme } from '../../../CommonComponents/Theme'
-import { addStateCarReducer, editStateCarReducer } from '../../Redux/CarsSlice'
+import { addStateCarReducer, editStateCarReducer, installPart } from '../../Redux/CarsSlice'
 import { useTranslation } from 'react-i18next'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
@@ -95,6 +95,7 @@ const InputService = (): JSX.Element => {
         ? dispatch(editStateCarReducer({ type: 'services', numberCar: carId, item: dataForm }))
         : dispatch(addStateCarReducer({ type: 'services', numberCar: carId, item: dataForm }))
     , 100)
+
     handleOnPress()
     setVisibleBanner(true)
     setTimeout(() => { setVisibleBanner(false) }, 10000)

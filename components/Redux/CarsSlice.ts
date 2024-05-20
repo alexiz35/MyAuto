@@ -141,7 +141,13 @@ const carsSlice = createSlice({
       // @ts-expect-error: error type item
       state[getIndexCar(state, action.payload.numberCar)][action.payload.type] = temp
     },
-    // ----------------------------------------------------------------------------------------
+    // --------------------------------------- isInstall -------------------------------------------
+    installPart (state, action: PayloadAction<{ numberCar: number, isInstall: boolean, item: StatePart }>) {
+      const tempArray = state[getIndexCar(state, action.payload.numberCar)].parts.filter(item => item.id !== action.payload.item.id)
+      tempArray.push({ ...action.payload.item, isInstall: action.payload.isInstall })
+      state[getIndexCar(state, action.payload.numberCar)].parts = tempArray
+    },
+    // -----------------------------------------------------------------------------------------------------------
     updateStateCars (state, action: PayloadAction<StateCar[]>) {
       return action.payload
     },
@@ -174,7 +180,7 @@ export const {
   updateStateCars,
   delAllMileage, delItemMileage,
   editedItemMileage, editedTires,
-  setConsumption
+  setConsumption, installPart
 } = carsSlice.actions
 
 export default carsSlice.reducer

@@ -13,6 +13,8 @@ interface handleProp {
 
 export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
   const listParts = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].parts)
+  console.log('parts', listParts)
+
   const [isSortParts, setIsSortParts] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
 

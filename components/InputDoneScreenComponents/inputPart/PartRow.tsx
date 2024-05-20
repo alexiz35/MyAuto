@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import { StatePart } from '../../../type'
-import { Card, IconButton, Menu, useTheme } from 'react-native-paper'
+import { Card, Checkbox, IconButton, Menu, useTheme } from 'react-native-paper'
 import { JSX, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
-import { delStateCarReducer } from '../../Redux/CarsSlice'
+import { delStateCarReducer, installPart } from '../../Redux/CarsSlice'
 
 interface propsRowPart {
   handlePress: (item: StatePart) => void
@@ -39,7 +39,12 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
           left={(props) =>
             <View style={{ alignItems: 'center' }}>
               <IconButton {...props} icon={'basket-check'} size={22} iconColor={colors.tertiary} style={{ height: 22, margin: 0, paddingTop: 2 }}/>
-              <IconButton icon={'check-decagram'} size={22} iconColor={item.isInstall ? colors.tertiary : colors.secondary} style={{ margin: 0, paddingTop: 2 }}/>
+              <IconButton
+                icon={'check'} size={22} iconColor={item.isInstall ? colors.tertiary : colors.surfaceDisabled}
+                style={{ margin: 0, paddingTop: 2 }}
+                onPress={() => dispatch(installPart({ numberCar: carId, isInstall: !item.isInstall, item }))}
+              />
+
             </View>
           }
           title={String(item.namePart)}
