@@ -9,7 +9,8 @@ import { JSX, useEffect, useState } from 'react'
 import { StatePart } from '../../../type'
 
 import {
-  List,
+  Checkbox, IconButton,
+  List, Menu, RadioButton,
   ToggleButton
 } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
@@ -37,6 +38,18 @@ const InputPart = (): JSX.Element => {
   const clearInput = (): void => {
     setIsEditPart(false)
     setItemPart(undefined)
+  }
+
+  // ----------------------------------------------------------------------------
+  const [visibleFilterInstall, setVisibleFilterInstall] = useState<boolean>(false)
+  const [filterInstall, setFilterInstall] = useState<'all' | 'onlyInstall' | 'withoutInstall' | string>('all')
+
+  const checkFilter = (value: 'all' | 'onlyInstall' | 'withoutInstall' | string) => {
+    setFilterInstall(value)
+    closeMenu()
+  }
+  const closeMenu = () => {
+    setVisibleFilterInstall(false)
   }
 
   // --------------------------Hide tabBottom when openAccordion-----------------
@@ -102,16 +115,59 @@ const InputPart = (): JSX.Element => {
 
         {isList &&
           <View style={styles.flatList}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <View style={{ justifyContent: 'flex-start', paddingLeft: 10 }}>
+                <Menu
+                  anchor={
+                    <IconButton icon={'filter-menu'} size={16} style={{ borderWidth: 1, borderRadius: 5, margin: 0 }} onPress={() => { setVisibleFilterInstall(true) }}/>
+                  }
+                  visible={visibleFilterInstall}
+                  anchorPosition={'bottom'}
+                  statusBarHeight={2}
+                  onDismiss={() => { closeMenu() }}
+                >
+                  <RadioButton.Group onValueChange={value => { checkFilter(value) }} value={filterInstall} >
+                    <RadioButton.Item
+                      label={t('inputPart.FILTER_ONLY_INSTALL')}
+                      mode={'ios'}
+                      position={'leading'}
+                      value="onlyInstall"
+                      labelStyle={{ textAlign: 'left' }}
+                      labelVariant={'bodyMedium'}
+                      color={colors.tertiary}
+                    />
+                    <RadioButton.Item
+                      label={t('inputPart.FILTER_WITHOUT_INSTALL')}
+                      mode={'ios'}
+                      position={'leading'}
+                      value="withoutInstall"
+                      labelStyle={{ textAlign: 'left' }}
+                      labelVariant={'bodyMedium'}
+                      color={colors.tertiary}
+                    />
+                    <RadioButton.Item
+                      label={t('inputPart.FILTER_ALL')}
+                      mode={'ios'}
+                      position={'leading'}
+                      value="all"
+                      labelStyle={{ textAlign: 'left' }}
+                      labelVariant={'bodyMedium'}
+                      color={colors.tertiary}
+                    />
+                  </RadioButton.Group>
+
+                </Menu>
+              </View>
             <ToggleButton.Row onValueChange={value => { setDateList(value) }}
                               value={dateList}
-                              style={{ alignSelf: 'flex-end', marginBottom: 15 }}
+                              style={{ alignSelf: 'flex-end', marginVertical: 8 }}
             >
-              <ToggleButton icon="numeric-3" value="last" size={20} style={{ height: 20 }}/>
-              <ToggleButton icon="numeric-10" value="ten" size={20} style={{ height: 20 }}/>
-              <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 20 }}/>
+              <ToggleButton icon="numeric-3" value="last" size={20} style={{ height: 30 }}/>
+              <ToggleButton icon="numeric-10" value="ten" size={20} style={{ height: 30 }}/>
+              <ToggleButton icon="calendar" value="choice" size={15} style={{ height: 30 }}/>
             </ToggleButton.Row>
-
-            <PartsList handlePress={handleOpen} filterList={dateList}/>
+            </View>
+            <PartsList handlePress={handleOpen} filterList={dateList} filterInstall={filterInstall}/>
 
           </View>
         }
@@ -127,7 +183,7 @@ export default InputPart
 const styles = StyleSheet.create({
 
   flatList: {
-    marginTop: 15,
+    marginTop: 1,
     height: 400
   }
 })

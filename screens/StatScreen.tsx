@@ -9,12 +9,12 @@ import {
   initialBarChart,
   monthDataFuelChart,
   monthDataOtherChart,
-  monthDataPartsChart,
-  periodDataFuelChart, periodDataOtherChart, periodDataPartsChart,
+  monthDataPartsChart, monthDataServicesChart,
+  periodDataFuelChart, periodDataOtherChart, periodDataPartsChart, periodDataServicesChart,
   yearDataAllChart,
   yearDataFuelChart,
   yearDataOtherChart,
-  yearDataPartsChart
+  yearDataPartsChart, yearDataServiceChart
 } from '../components/StatScreenComponents/FunctionStatistic'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import PieGiftChartComponent from '../components/StatScreenComponents/PieGiftChartComponent'
@@ -47,6 +47,7 @@ const StatScreen = (): JSX.Element => {
 
   const [volumeFuel, setVolumeFuel] = useState<number>(0)
   const [sumParts, setSumParts] = useState(0)
+  const [sumServices, setSumServices] = useState(0)
   const [sumOther, setSumOther] = useState(0)
   const [sumMileage, setSumMileage] = useState<number>(0)
   // выбранная дата
@@ -73,6 +74,7 @@ const StatScreen = (): JSX.Element => {
         setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
         setSumMileage(DataMilesChart(selectModal, state))
         setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
+        setSumServices(yearDataServiceChart(Number(selectedDate.valueYear), state))
         setSumOther(yearDataOtherChart(Number(selectedDate.valueYear), state))
         break
       case 'month':
@@ -82,6 +84,7 @@ const StatScreen = (): JSX.Element => {
           setVolumeFuel(monthDataFuelChart(selectedDate, state).volumeFuel)
           setSumMileage(DataMilesChart(selectModal, state))
           setSumParts(monthDataPartsChart(selectedDate, state))
+          setSumServices(monthDataServicesChart(selectedDate, state))
           setSumOther(monthDataOtherChart(selectedDate, state))
         }
         break
@@ -93,6 +96,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           setVolumeFuel(periodDataFuelChart(selectedDate, state).volumeFuel)
           setSumMileage(DataMilesChart(selectedDate, state))
           setSumParts(periodDataPartsChart(selectedDate, state))
+          setSumServices(periodDataServicesChart(selectedDate, state))
           setSumOther(periodDataOtherChart(selectedDate, state))
         }
         break
@@ -191,9 +195,15 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>
-              {t('statScreen.SERVICE_COSTS')}
+              {t('statScreen.PARTS_COSTS')}
             </Text>
             <Text style={styles.textKm}>{sumParts}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.textKm}>
+              {t('statScreen.SERVICE_COSTS')}
+            </Text>
+            <Text style={styles.textKm}>{sumServices}</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>

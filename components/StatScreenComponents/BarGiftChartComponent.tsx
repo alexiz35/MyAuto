@@ -92,7 +92,7 @@ const BarGiftChartComponent = ({ dataProps }: PropsBarChat): JSX.Element => {
           },
           {
             value: 'parts',
-            label: t('statScreen.PART'),
+            label: t('statScreen.SERVICE'),
             icon: () => <Icon source={'car-wrench'} size={20} color={PART_BAR}/>,
             style: styles.segmentButton
           },

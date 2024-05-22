@@ -8,10 +8,10 @@ import { RenderRowPart } from './PartRow'
 interface handleProp {
   handlePress: (item: StatePart) => void
   filterList: string
-
+  filterInstall: 'all' | 'onlyInstall' | 'withoutInstall' | string
 }
 
-export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
+export const PartsList = ({ handlePress, filterList = 'last', filterInstall }: handleProp): JSX.Element => {
   const listParts = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].parts)
 
   const [isSortParts, setIsSortParts] = useState(false)
@@ -129,11 +129,20 @@ export const PartsList = ({ handlePress, filterList = 'last' }: handleProp): JSX
     setIsLoad(true)
   }, [filterList])
 
+  const isInstallFilter = () => {
+    if (filterInstall === 'withoutInstall') {
+      return listParts.filter(value => !value.isInstall)
+    } else if (filterInstall === 'onlyInstall') {
+      return listParts.filter(value => value.isInstall)
+    }
+    return listParts
+  }
+
   const filter = (): StatePart[] => {
     switch (filterList) {
-      case 'last': return listParts.slice(0, 3)
-      case 'ten': return listParts.slice(0, 10)
-      default: return listParts
+      case 'last': return isInstallFilter().slice(0, 3)
+      case 'ten': return isInstallFilter().slice(0, 10)
+      default: return isInstallFilter()
     }
   }
 
