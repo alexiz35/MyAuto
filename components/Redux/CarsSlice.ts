@@ -144,7 +144,25 @@ const carsSlice = createSlice({
     // --------------------------------------- isInstall -------------------------------------------
     installPart (state, action: PayloadAction<{ numberCar: number, isInstall: boolean, item: StatePart }>) {
       const tempArray = state[getIndexCar(state, action.payload.numberCar)].parts.filter(item => item.id !== action.payload.item.id)
-      tempArray.push({ ...action.payload.item, isInstall: action.payload.isInstall })
+      if (!action.payload.isInstall) {
+        tempArray.push({
+          ...action.payload.item,
+          isInstall: action.payload.isInstall,
+          dateInstall: new Date()
+        })
+        state[getIndexCar(state, action.payload.numberCar)].parts = tempArray
+      } else {
+        tempArray.push({
+          ...action.payload.item,
+          isInstall: action.payload.isInstall
+        })
+        state[getIndexCar(state, action.payload.numberCar)].parts = tempArray
+      }
+    },
+    // --------------------------------------- dateInstall -------------------------------------------
+    dateInstallPart (state, action: PayloadAction<{ numberCar: number, date: Date, item: StatePart }>) {
+      const tempArray = state[getIndexCar(state, action.payload.numberCar)].parts.filter(item => item.id !== action.payload.item.id)
+      tempArray.push({ ...action.payload.item, dateInstall: action.payload.date })
       state[getIndexCar(state, action.payload.numberCar)].parts = tempArray
     },
     // -----------------------------------------------------------------------------------------------------------
@@ -180,7 +198,8 @@ export const {
   updateStateCars,
   delAllMileage, delItemMileage,
   editedItemMileage, editedTires,
-  setConsumption, installPart
+  setConsumption,
+  installPart, dateInstallPart
 } = carsSlice.actions
 
 export default carsSlice.reducer

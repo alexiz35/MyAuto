@@ -195,18 +195,13 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
   }, [state.isConsumption])
 
   const alertConsumption = () => {
-    Alert.alert(t('carInfo.alert.TITLE'), t('carInfo.alert.MESSAGE'), [
-      {
-        text: 'Cancel',
-        // ***
-        /* onPress: () => console.log('Cancel Pressed'), */
-        style: 'cancel'
-      },
-      {
-        text: 'OK'
+    Alert.alert(t('fuelScreen.alertHelp.TITLE'), t('fuelScreen.alertHelp.MESSAGE'),
+      [
+        {
+          text: 'OK'
         /* onPress: () => { navigation.dispatch(e.data.action) } */
-      }
-    ])
+        }
+      ])
   }
 
   return (

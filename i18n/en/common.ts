@@ -146,8 +146,15 @@ export default {
       'calculating average fuel consumption.\n \n Disable the feature?',
     TITLE_CHECKBOX_CONSUMPTION: 'Accurate calculation of fuel consumption',
     INPUT_MILEAGE: 'Input mileage',
-    REST_FUEL: 'Fuel remaining'
-
+    REST_FUEL: 'Fuel remaining',
+    alertHelp: {
+      TITLE: 'Calculate of average consumption fuel',
+      MESSAGE: 'The program offers several ways to calculate average fuel consumption.\n' +
+        '1. Default, approximate. In this case, the program uses the vehicle mileage data, which you enter periodically, and the amount of fuel filled for the period to calculate the distance traveled. This calculation does not take into account the remaining fuel in the fuel tank when refueling, and the distance traveled may not coincide with the refueling points. Therefore, if it is important for you to keep track of gas stations and their costs without accurately calculating fuel consumption, but without unnecessary input of data, then this option is suitable for you. But, if it is important for you to control the fuel consumption of your car, then choose method 2, which is more accurate.\n' +
+        '2. Accurate calculation of average fuel consumption. In this case, the program will require you to enter the remaining fuel in the tank before refueling and the vehicle mileage during refueling. This will allow you to more accurately calculate average fuel consumption. Also, for convenience, if you refuel a full tank, click the button in the “Fuel Remaining” field and the program will automatically calculate the remaining amount (for this, the volume of the fuel tank must be specified in the car settings).\n' +
+        '\n' +
+        'Attention! Please note that any calculations in the program are approximate and can only be used as additional information.'
+    }
   },
   taskScreen: {
     TASKS_NOT: 'No tasks yet',
@@ -198,7 +205,9 @@ export default {
     FILTER_ALL: 'All',
     NAME: 'Name',
     DATE: 'Purchase date',
-    NUMBER: 'Number Part'
+    NUMBER: 'Number Part',
+    INSTALLED: 'Installed',
+    NOT_INSTALLED: 'Not Installed'
   },
   inputService: {
     TITLE_ACCORDION_ADD: 'Add Service',
