@@ -16,26 +16,27 @@ export const useIsReady = (): boolean => {
 
 export const BusyIndicator = (): JSX.Element => {
   const { colors } = useAppTheme()
-  /*  const animation = useRef(null) */
+  const animation = useRef(null)
 
   return (
 
   <View style={{
     justifyContent: 'center', backgroundColor: colors.background, height: '100%'
   }}>
-    <ActivityIndicator size={'large'} color={colors.tertiary} />
-    <Text style={{ textAlign: 'center' }}>Downloading data...</Text>
-    {/* <LottieView
+    {/* <ActivityIndicator size={'large'} color={colors.tertiary} />
+    <Text style={{ textAlign: 'center' }}>Downloading data...</Text> */}
+    <LottieView
       autoPlay
       ref={animation}
       style={{
         alignSelf: 'center',
+        marginBottom: 200,
         width: 200,
         height: 200
       }}
       // Find more Lottie files at https://lottiefiles.com/featured
-      source={require('../assets/ball.json')}
-    /> */}
+      source={require('../assets/carActivity.json')}
+    />
   </View>
   )
 }

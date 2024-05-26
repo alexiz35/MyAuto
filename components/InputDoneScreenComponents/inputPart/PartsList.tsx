@@ -14,13 +14,10 @@ interface handleProp {
 export const PartsList = ({ handlePress, filterList = 'last', filterInstall }: handleProp): JSX.Element => {
   const listParts = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].parts)
 
-  const [isSortParts, setIsSortParts] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
-  const [isLoadFlatlist, setIsLoadFlatlist] = useState(false)
   const [stateParts, setStateParts] = useState<StatePart[]>(listParts)
 
   useEffect(() => {
-    console.log('Update')
     setTimeout(() => { setIsLoad(false) }, 10)
     setIsLoad(true)
     setStateParts(filter())
@@ -35,11 +32,6 @@ export const PartsList = ({ handlePress, filterList = 'last', filterInstall }: h
     }
     return array
   }
-
-  /* useEffect(() => {
-    setTimeout(() => { setIsLoad(false) }, 10)
-    setIsLoad(true)
-  }, []) */
 
   const isInstallFilter = () => {
     if (filterInstall === 'withoutInstall') {
@@ -69,11 +61,11 @@ export const PartsList = ({ handlePress, filterList = 'last', filterInstall }: h
         /* extraData={isSortParts} */
         renderItem={({ item }) => <RenderRowPart handlePress={handlePress} item={item}/>}
         keyExtractor={(item, index) => item.id.toString()}
-        ListFooterComponent={isLoadFlatlist
+        /* ListFooterComponent={isLoadFlatlist
           ? (
           <BusyIndicator />
             )
-          : null}
+          : null} */
         getItemLayout={(data, index) => (
           {
             length: 70,
