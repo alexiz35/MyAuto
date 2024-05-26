@@ -3,7 +3,10 @@ import { JSX, useEffect } from 'react'
 import { Platform } from 'react-native'
 import * as Notifications from 'expo-notifications'
 import Toast from 'react-native-toast-message'
-export const startPeriodNotification = async () => {
+// eslint-disable-next-line import/named
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
+export const startPeriodNotification = async (t: TFunction<'translation', undefined>) => {
   const listNotification = await Notifications.getAllScheduledNotificationsAsync()
   if (listNotification.length === 0) {
     if (Platform.OS !== 'web') {
@@ -28,28 +31,27 @@ export const startPeriodNotification = async () => {
         handleNotification: async () => ({
           shouldShowAlert: true,
           shouldPlaySound: true,
-          shouldSetBadge: false
+          shouldSetBadge: true
         })
       })
       void Notifications.scheduleNotificationAsync({
         content: {
-          title: 'Сообщение от DevizCar',
-          body: 'Вам необходимо обновить пробег в программе ',
+          title: t('notification.TITLE'),
+          body: t('notification.NEED_UPDATE_MILEAGE'),
           sound: 'default',
           priority: Notifications.AndroidNotificationPriority.MAX
         },
         trigger: {
-          seconds: 10,
-          repeats: true
-          /* hour: 16,
-              minute: 0,
-              repeats: true,
-              weekday: 3 */
+          /* seconds: 10, */
+          repeats: true,
+          hour: 14,
+          minute: 0,
+          weekday: 1
         }
       }).then(() => {
         Toast.show({
           type: 'success',
-          text1: 'Еженедельные напоминания запущены',
+          text1: t('notification.START_NOTIFICATION'),
           visibilityTime: 2500
           /* text2: 'This is some something 👋' */
         })
@@ -61,19 +63,19 @@ export const startPeriodNotification = async () => {
   } else {
     Toast.show({
       type: 'info',
-      text1: 'Еженедельные напоминания уже запущены',
+      text1: t('notification.ALREADY_START'),
       visibilityTime: 2500
       /* text2: 'This is some something 👋' */
     })
   }
 }
 
-export const cancelNotification = () => {
+export const cancelNotification = (t: TFunction<'translation', undefined>) => {
   Notifications.cancelAllScheduledNotificationsAsync()
     .then(() => {
       Toast.show({
         type: 'error',
-        text1: 'Еженедельные напоминания отключены',
+        text1: t('notification.STOP_NOTIFICATION'),
         visibilityTime: 2500
         /* text2: 'This is some something 👋' */
       })
@@ -83,9 +85,10 @@ export const cancelNotification = () => {
 
 export const NotificationComponent = (): JSX.Element => {
   const setting = useAppSelector(state => state.setting)
+  const { t } = useTranslation()
   useEffect(() => {
-    if (setting.alarmMileagePeriod) void startPeriodNotification()
-    else if (!setting.alarmMileagePeriod) cancelNotification()
+    if (setting.alarmMileagePeriod) void startPeriodNotification(t)
+    else if (!setting.alarmMileagePeriod) cancelNotification(t)
   }, [])
   return (
     <>

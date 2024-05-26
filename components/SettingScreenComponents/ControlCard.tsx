@@ -72,9 +72,9 @@ export const ControlCard = () => {
 
   useEffect(() => {
     if (checkAlarmPeriod === 'checked' && isFirst) {
-      void startPeriodNotification()
+      void startPeriodNotification(t)
     } else if ((checkAlarmPeriod === 'unchecked' && isFirst)) {
-      cancelNotification()
+      cancelNotification(t)
     }
   }, [checkAlarmPeriod])
   // ******************************************************************************************************************

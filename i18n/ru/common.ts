@@ -260,6 +260,13 @@ export default {
     ERROR_DELETE_EVENT: 'Ошибка удаления напоминания',
     ERROR_UPDATE_EVENT: 'Ошибка обновления напоминания',
     NOTE_CALENDAR: 'Срок замены {{titleService}} истекает через 10 дней'
+  },
+  notification: {
+    TITLE: 'Сообщение от DevizCar',
+    NEED_UPDATE_MILEAGE: 'Вам необходимо обновить пробег в программе',
+    START_NOTIFICATION: 'Еженедельные напоминания запущены',
+    ALREADY_START: 'Еженедельные напоминания уже запущены',
+    STOP_NOTIFICATION: 'Еженедельные напоминания отключены'
   }
 
 }

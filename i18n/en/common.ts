@@ -262,6 +262,13 @@ export default {
     ERROR_DELETE_EVENT: 'Error Deleting Reminder',
     ERROR_UPDATE_EVENT: 'Error Updating Reminder',
     NOTE_CALENDAR: 'The {{titleService}} replacement period expires in 10 days'
+  },
+  notification: {
+    TITLE: 'Message from DevizCar',
+    NEED_UPDATE_MILEAGE: 'You need to update your mileage in the program',
+    START_NOTIFICATION: 'Weekly reminders have been launched',
+    ALREADY_START: 'Weekly reminders are already running',
+    STOP_NOTIFICATION: 'Weekly reminders are turned off'
   }
 
 }
