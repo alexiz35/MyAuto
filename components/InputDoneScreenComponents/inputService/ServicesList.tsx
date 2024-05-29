@@ -1,5 +1,5 @@
 import { FlatList } from 'react-native'
-import { getIndexCar, StateService } from '../../../type'
+import { getIndexCar, StateOther, StatePart, StateService } from '../../../type'
 import { JSX, useEffect, useState } from 'react'
 import { useAppSelector } from '../../Redux/hook'
 import { BusyIndicator } from '../../useIsReadyHook'
@@ -13,8 +13,8 @@ interface handleProp {
 
 export const ServicesList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
   const listServices = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].services)
-  const [isSortServices, setIsSortServices] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
+  const [stateServices, setStateServices] = useState<StateService[]>(listServices)
 
   /* useEffect(() => {
     if (listServices.length > 1) {
@@ -29,13 +29,24 @@ export const ServicesList = ({ handlePress, filterList = 'last' }: handleProp): 
   useEffect(() => {
     setTimeout(() => { setIsLoad(false) }, 10)
     setIsLoad(true)
-  }, [filterList])
+    setStateServices(filter())
+  }, [filterList, listServices])
+
+  const sort = (array: StateService[]) => {
+    if (array.length > 1) {
+      return array.slice().sort(function (a, b) {
+        // @ts-expect-error date
+        return Date.parse(new Date(b.startDate)) - Date.parse(new Date(a.startDate))
+      })
+    }
+    return array
+  }
 
   const filter = (): StateService[] => {
     switch (filterList) {
-      case 'last': return listServices.slice(0, 3)
-      case 'ten': return listServices.slice(0, 10)
-      default: return listServices
+      case 'last': return sort(listServices).slice(0, 3)
+      case 'ten': return sort(listServices).slice(0, 10)
+      default: return sort(listServices)
     }
   }
 
@@ -45,8 +56,8 @@ export const ServicesList = ({ handlePress, filterList = 'last' }: handleProp): 
     { isLoad
       ? <BusyIndicator />
       : <FlatList
-        data={filter()}
-        extraData={isSortServices}
+        data={stateServices}
+        /* extraData={isSortServices} */
         renderItem={({ item }) => <RenderRowService handlePress={handlePress} item={item}/>}
         keyExtractor={(item, index) => index.toString()}
         getItemLayout={(data, index) => (

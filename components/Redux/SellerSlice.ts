@@ -5,12 +5,12 @@ import { Seller } from '../../type'
 const initialState: Seller[] =
   [{
     id: 1,
-    name: 'maks',
+    name: 'Продавец',
     phone: '100',
     specialism: 'renault'
   }, {
     id: 2,
-    name: 'максим',
+    name: 'Сервис',
     phone: '200',
     specialism: 'renault'
   }]

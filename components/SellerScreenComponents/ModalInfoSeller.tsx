@@ -19,7 +19,7 @@ export const ModalInfoSeller = ({ item, visible, close }: PropsModalSeller): JSX
       if (!item.web.startsWith('http://') && !item.web.startsWith('https://')) {
         setLink(linkStart + item.web)
       } else setLink(item.web)
-    } else setLink('')
+    } else setLink(linkStart + '')
   }, [item])
   return (
     <Dialog visible={visible}>

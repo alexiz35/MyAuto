@@ -12,29 +12,30 @@ interface handleProp {
 
 export const OthersList = ({ handlePress, filterList = 'last' }: handleProp): JSX.Element => {
   const listOthers = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].others)
-  const [isSortOthers, setIsSortOthers] = useState(false)
   const [isLoad, setIsLoad] = useState(true)
-
-  /* useEffect(() => {
-    if (listOthers.length > 1) {
-      listOthers.sort(function (a, b) {
-        // @ts-expect-error date
-        return Date.parse(a.dateBuy) - Date.parse(b.dateBuy)
-      })
-      setIsSortOthers(!isSortOthers)
-    }
-  }, [listOthers]) */
+  const [stateOthers, setStateOthers] = useState<StateOther[]>(listOthers)
 
   useEffect(() => {
     setTimeout(() => { setIsLoad(false) }, 10)
     setIsLoad(true)
-  }, [filterList])
+    setStateOthers(filter())
+  }, [filterList, listOthers])
+
+  const sort = (array: StateOther[]) => {
+    if (array.length > 1) {
+      return array.slice().sort(function (a, b) {
+        // @ts-expect-error date
+        return Date.parse(new Date(b.dateBuy)) - Date.parse(new Date(a.dateBuy))
+      })
+    }
+    return array
+  }
 
   const filter = (): StateOther[] => {
     switch (filterList) {
-      case 'last': return listOthers.slice(0, 3)
-      case 'ten': return listOthers.slice(0, 10)
-      default: return listOthers
+      case 'last': return sort(listOthers).slice(0, 3)
+      case 'ten': return sort(listOthers).slice(0, 10)
+      default: return sort(listOthers)
     }
   }
 
@@ -44,8 +45,8 @@ export const OthersList = ({ handlePress, filterList = 'last' }: handleProp): JS
       {isLoad
         ? <BusyIndicator />
         : <FlatList
-          data={filter()}
-          extraData={isSortOthers}
+          data={stateOthers}
+          /* extraData={isSortOthers} */
           renderItem={({ item }) =>
             <RenderRowOther handlePress={handlePress} item={item}/>}
           keyExtractor={(item, index) => index.toString()}
