@@ -322,7 +322,7 @@ export const GoogleCard = (): JSX.Element => {
 
   useEffect(() => {
     if (checkGoogle === 'checked') {
-      isSignedIn()
+      void isSignedIn()
         .then(result => {
           /* if (result) void getCurrentUserInfo() */
           if (result) {

@@ -43,7 +43,7 @@ export const BackUpCard = (): JSX.Element => {
       })
       Alert.alert(t('setting.ALERT_BACKUP_SUCCES'))
     } catch (error) {
-      Alert.alert(t('setting.ALERT_BACKUP_ERROR') + error)
+      Alert.alert(t('setting.ALERT_BACKUP_ERROR') + String(error))
     }
   }
   // ******************************************************************************
@@ -60,12 +60,12 @@ export const BackUpCard = (): JSX.Element => {
       /* dispatch(updateState(getFile)) */
       Alert.alert(t('setting.ALERT_IMPORT_SUCCES'))
     } catch (error) {
-      Alert.alert(t('setting.ALERT_IMPORT_ERROR') + error)
+      Alert.alert(t('setting.ALERT_IMPORT_ERROR') + String(error))
     }
   }
   // ******************** handler Press LogIn Button ****************************
   useEffect(() => {
-    FileSystem.getInfoAsync(FileSystem.documentDirectory + NAME_FILE)
+    void FileSystem.getInfoAsync(FileSystem.documentDirectory + NAME_FILE)
       .then(value => { setFileExist(value.exists) })
   }, [])
   // -------------------------- get USER INFO -------------------------------------------
