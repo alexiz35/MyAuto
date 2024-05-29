@@ -71,7 +71,12 @@ export default {
     EXPORT_DATA: 'Export Data',
     TITLE_BACKUP: 'Data Backup',
     SAVE_DATA: 'Save data for Backup',
-    RECOVERY_DATA: 'Data recovery from Backup'
+    RECOVERY_DATA: 'Data recovery from Backup',
+    ALERT_BACKUP_SUCCES: 'Backup Successfully',
+    ALERT_BACKUP_ERROR: 'Backup Error',
+    ALERT_IMPORT_ERROR: 'Error Import',
+    ALERT_IMPORT_SUCCES: 'Import Successfully',
+    ALERT_ERROR_AUTH: 'Authorization Required'
   },
   homeScreen: {
     mainCard: {

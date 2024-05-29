@@ -70,7 +70,12 @@ export default {
     EXPORT_DATA: 'Экспорт данных',
     TITLE_BACKUP: 'Backup данных',
     SAVE_DATA: 'Сохранитиь данные',
-    RECOVERY_DATA: 'Восстановить данные из Backup'
+    RECOVERY_DATA: 'Восстановить данные из Backup',
+    ALERT_BACKUP_SUCCES: 'Backup выполнен успешно',
+    ALERT_BACKUP_ERROR: 'Ошибка создания Backup',
+    ALERT_IMPORT_ERROR: 'Ошибка при загрузке Backup',
+    ALERT_IMPORT_SUCCES: 'Backup загружен успешно',
+    ALERT_ERROR_AUTH: 'Требуется авторизация'
   },
   homeScreen: {
     mainCard: {

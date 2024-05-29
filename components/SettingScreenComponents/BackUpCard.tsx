@@ -41,9 +41,9 @@ export const BackUpCard = (): JSX.Element => {
       await FileSystem.writeAsStringAsync(fileUri, jsonState, {
         encoding: FileSystem.EncodingType.UTF8
       })
-      Alert.alert('Состояние сохранено')
+      Alert.alert(t('setting.ALERT_BACKUP_SUCCES'))
     } catch (error) {
-      Alert.alert('Ошибка при сохранении состояния:' + error)
+      Alert.alert(t('setting.ALERT_BACKUP_ERROR') + error)
     }
   }
   // ******************************************************************************
@@ -58,9 +58,9 @@ export const BackUpCard = (): JSX.Element => {
       dispatch(changedNumberCar(state.numberCar))
       dispatch(updatedAllSeller(state.sellerList))
       /* dispatch(updateState(getFile)) */
-      Alert.alert('Import Successfully')
+      Alert.alert(t('setting.ALERT_IMPORT_SUCCES'))
     } catch (error) {
-      Alert.alert('Ошибка при загрузке состояния:' + error)
+      Alert.alert(t('setting.ALERT_IMPORT_ERROR') + error)
     }
   }
   // ******************** handler Press LogIn Button ****************************

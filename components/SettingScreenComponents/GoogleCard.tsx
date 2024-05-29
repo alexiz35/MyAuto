@@ -172,9 +172,9 @@ export const GoogleCard = (): JSX.Element => {
                   findFile.files[0].id,
                   token
                 )
-                Alert.alert('Backup Successfully')
+                Alert.alert(t('setting.ALERT_BACKUP_SUCCES'))
               } catch (error) {
-                Alert.alert('Error Backup')
+                Alert.alert(t('setting.ALERT_BACKUP_ERROR'))
               }
             } else {
               // if the file isn't found then create new file
@@ -187,9 +187,9 @@ export const GoogleCard = (): JSX.Element => {
                   findFolders.files[0].id,
                   token
                 )
-                Alert.alert('Backup Successfully')
+                Alert.alert(t('setting.ALERT_BACKUP_SUCCES'))
               } catch (error) {
-                Alert.alert('Error Backup')
+                Alert.alert(t('setting.ALERT_BACKUP_ERROR'))
               }
             }
           })
@@ -199,16 +199,15 @@ export const GoogleCard = (): JSX.Element => {
             void GDCreateFolder('myAuto', token).then((response) => {
               setIdParent(response.id)
               void GDCreateFileJson(state, 'myAuto', response.id, token)
-              Alert.alert('Backup Successfully')
+              Alert.alert(t('setting.ALERT_BACKUP_SUCCES'))
             })
           } catch (error) {
-            Alert.alert('Error Backup')
+            Alert.alert(t('setting.ALERT_BACKUP_ERROR'))
           }
         }
       })
     } else {
-      Alert.alert('Нужна авторизация')
-      console.log('Нужна авторизация')
+      Alert.alert(t('setting.ALERT_ERROR_AUTH'))
     }
   }
   // ******************** handler Press Import Button ***************************
@@ -239,11 +238,11 @@ export const GoogleCard = (): JSX.Element => {
                     dispatch(changedNumberCar(getFile.numberCar))
                     dispatch(updatedAllSeller(getFile.sellerList))
                     /* dispatch(updateState(getFile)) */
-                    Alert.alert('Import Successfully')
+                    Alert.alert(t('setting.ALERT_IMPORT_SUCCES'))
                   }
                 })
               } catch (error) {
-                Alert.alert('Error Import')
+                Alert.alert(t('setting.ALERT_IMPORT_ERROR'))
               }
             } else {
               // if the file isn't found then create new file
@@ -256,7 +255,7 @@ export const GoogleCard = (): JSX.Element => {
         }
       })
     } else {
-      Alert.alert('Нужна авторизация')
+      Alert.alert(t('setting.ALERT_ERROR_AUTH'))
     }
   }
   // ****************************************************************************
