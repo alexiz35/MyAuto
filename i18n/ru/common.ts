@@ -67,7 +67,10 @@ export default {
     TITLE_GOOGLE_CARD: 'Использовать Google Drive для бэкапа',
     LOGIN_GOOGLE: 'Войти с Google',
     IMPORT_DATA: 'Импорт данных',
-    EXPORT_DATA: 'Экспорт данных'
+    EXPORT_DATA: 'Экспорт данных',
+    TITLE_BACKUP: 'Backup данных',
+    SAVE_DATA: 'Сохранитиь данные',
+    RECOVERY_DATA: 'Восстановить данные из Backup'
   },
   homeScreen: {
     mainCard: {
