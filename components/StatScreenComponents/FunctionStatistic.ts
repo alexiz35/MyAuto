@@ -13,7 +13,6 @@ export const maxMiles = (arr: number[]): number => Math.max(...arr)
 
 const calcSumCostPartsInService = (targetArray: StateService[]): number => {
   return targetArray.reduce((accumulator, currentValue) => {
-    console.log('calcSumCostPartsInService', currentValue)
     if (currentValue.sumCostParts !== undefined) {
       return accumulator + currentValue.sumCostParts
     }
@@ -274,7 +273,7 @@ export const averageFuel = (selectDate: TypePickedDate, dataState: StateCar): nu
       filteredArrayByDate = dataState.fuel.filter((value) => new Date(value.dateFuel).getFullYear() === Number(selectDate.valueYear))
     }
   }
-  if (filteredArrayByDate.length === 0) return 0
+  if (filteredArrayByDate.length < 2) return 0
   // array is sorted by ascending order
   filteredArrayByDate.sort((a, b) => a.mileageFuel - b.mileageFuel)
   let mileage: number
@@ -283,6 +282,7 @@ export const averageFuel = (selectDate: TypePickedDate, dataState: StateCar): nu
   } else {
     mileage = filteredArrayByDate[filteredArrayByDate.length - 1].mileageFuel - filteredArrayByDate[0].mileageFuel
   }
+
   // mileage - difference between last and first mileageFuel
 
   const remainderStart = filteredArrayByDate[0].restFuel
