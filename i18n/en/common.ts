@@ -11,6 +11,7 @@ export default {
   CUSTOM: 'Custom',
   KM: 'km',
   L: 'l',
+  CURRENCY_L: '$/l',
   CONSUMPTION: 'l/100km',
   FUEL_TANK: 'Fuel Tank',
   PART: 'Part',

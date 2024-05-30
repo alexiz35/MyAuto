@@ -54,8 +54,8 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
         <Card.Title
           style={{ flex: 2.3 }}
 
-          title={String(item.volumeFuel) + ' л'}
-          subtitle = {String(item.CostFuel) + ' грн/л'}
+          title={`${String(item.volumeFuel)} ${t('L')}`}
+          subtitle = {`${String(item.CostFuel)} ${t('CURRENCY_L')}`}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}
@@ -64,7 +64,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
 
         <Card.Title
           style={{ flex: 2.2 }}
-          title={String(item.AmountFuel) + ' грн'}
+          title={`${String(item.AmountFuel)} ${t('CURRENCY')}`}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}

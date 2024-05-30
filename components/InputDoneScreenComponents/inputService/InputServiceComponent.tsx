@@ -274,7 +274,6 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       amount = amount + part.quantityPart
       sum = sum + (part.costPart * part.quantityPart)
     })
-    console.log(amount, sum)
     setSumCost(sum)
     setAmountPart(amount)
   }
@@ -314,7 +313,6 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
         ...formToData(dataForm),
         calendarEventId: idEvent
       }
-      console.log('tempData', tempData)
       isOk(tempData)
     }
 

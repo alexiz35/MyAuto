@@ -2,7 +2,7 @@ import { Dimensions, ScrollView, StyleSheet, View } from 'react-native'
 import { Divider, Text, Icon, SegmentedButtons, Surface, Button, Portal, Dialog } from 'react-native-paper'
 
 import { useAppSelector } from '../components/Redux/hook'
-import { JSX, useEffect, useState } from 'react'
+import { JSX, useCallback, useEffect, useState } from 'react'
 import { SelectDateModal } from '../components/StatScreenComponents/SelectDateModal'
 import {
   averageFuel, DataMilesChart,
@@ -22,6 +22,7 @@ import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftCha
 import { getIndexCar } from '../type'
 import { NAME_MONTH_EN, NAME_MONTH_RU, TypePickedDate } from '../components/StatScreenComponents/TypeStat'
 import { useTranslation } from 'react-i18next'
+import { useFocusEffect } from '@react-navigation/native'
 
 export const initialDate: TypePickedDate = {
   type: 'year',
@@ -115,14 +116,15 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
   useEffect(() => {
     selectTypeDate(selectedDate)
     if (typeChart === 'bar') setDataBarChart(yearDataAllChart(Number(selectedDate.valueYear), state))
-  }, [selectedDate])
+  }, [selectedDate, state])
 
   useEffect(() => {
     if (typeChart === 'bar' && textButtonDate !== undefined) setDataBarChart(yearDataAllChart(Number(selectedDate.valueYear), state))
   }, [typeChart])
 
-  /*   useFocusEffect(
+  /* useFocusEffect(
     useCallback(() => {
+      setTypeChart('pie')
     }, [])) */
 
   return (

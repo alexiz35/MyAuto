@@ -106,26 +106,28 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         {
 /* ----------------------- Top String --------------------------------------- */
         }
+        {isList &&
+
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontStyle: 'italic' }}>
                {`${t('fuelScreen.TITLE_SUM_FUEL')}${sumFuel} ${t('L')}` }
             </Text>
-            <IconButton icon={'calendar-month'} onPress={() => {
+            <IconButton icon={'finance'} onPress={() => {
               // @ts-expect-error temp error navigate props
               navigation.navigate('StatScreen')
             }} />
         </View>
+        }
         {
 /* ----------------------- Form Accordion ----------------------------------- */
         }
-        <View style={{ flex: 1 }}>
-        <KeyboardAvoidingView >
+        <KeyboardAvoidingView>
         <ScrollView style={{ marginTop: 5 }}>
             <List.Accordion
               title={isEditFuel ? t('fuelScreen.TITLE_ACCORDION_EDIT') : t('fuelScreen.TITLE_ACCORDION_ADD') }
               /* description={ state.info.fuel }
               descriptionStyle={{ fontSize: 10 }} */
-              style={{ backgroundColor: colors.secondaryContainer }}
+              style={{ backgroundColor: colors.secondaryContainer, flex: 1 }}
               expanded={openAccordion}
               onPress={handleOnPress}
             >
@@ -135,7 +137,6 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
             </List.Accordion>
         </ScrollView>
         </KeyboardAvoidingView>
-        </View>
         {
 /* ----------------------- List Fuel ---------------------------------------- */
         }
@@ -154,6 +155,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
 
           </View>
         }
+
         {
 /* -------------------------------------------------------------------------- */
         }
@@ -177,7 +179,8 @@ const styles = StyleSheet.create({
   },
   flatList: {
     marginTop: 15,
-    height: 420
+    flex: 1
+    /* height: 400 */
   },
   inputText: {
     textAlign: 'center',

@@ -205,7 +205,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
   }
 
   return (
-    <View style={{ backgroundColor: colors.background, rowGap: 5 }}>
+    <View style={{ /* backgroundColor: colors.background, */ rowGap: 5 }}>
 
       {
         /* ----------------------- Date and Miles ----------------------------------- */
@@ -476,18 +476,18 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
       <View style={styles.viewButton}>
         <Button
           style={styles.buttonStyle}
-          mode={'elevated'}
-          buttonColor={colors.secondaryContainer}
-          textColor={colors.primary}
+          /* mode={'elevated'} */
+          buttonColor={colors.error}
+          textColor={'white'}
           onPress={() => { handleCancel() } }
         >
           Cancel
         </Button>
         <Button
           style={styles.buttonStyle}
-          mode={'elevated'}
-          buttonColor={colors.secondaryContainer}
-          textColor={colors.primary}
+          /* mode={'elevated'} */
+          buttonColor={colors.tertiary}
+          textColor={'white'}
           /* eslint-disable-next-line */
           onPress={handleSubmit(handleOk) }
         >
@@ -547,8 +547,7 @@ const styles = StyleSheet.create({
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 5,
-    marginBottom: 20
+    marginVertical: 10
   },
   buttonStyle: {
     width: '40%',

@@ -282,7 +282,7 @@ export const averageFuel = (selectDate: TypePickedDate, dataState: StateCar): nu
   } else {
     mileage = filteredArrayByDate[filteredArrayByDate.length - 1].mileageFuel - filteredArrayByDate[0].mileageFuel
   }
-
+  if (mileage === 0) return 0
   // mileage - difference between last and first mileageFuel
 
   const remainderStart = filteredArrayByDate[0].restFuel
