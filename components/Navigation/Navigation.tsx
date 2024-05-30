@@ -165,11 +165,11 @@ export const Navigation = (): JSX.Element => {
             headerTitle: () => (
                     <LogoTitle/>
             ),
-            headerLeft: () => (
+            /* headerLeft: () => (
                   <View>
-                    <Text >Today: {/* {Math.trunc(distance)} */} m</Text>
+                    <Text >Today: {/!* {Math.trunc(distance)} *!/} m</Text>
                   </View>
-            ),
+            ), */
             headerRight: () => (
                 <IconButton
                   style={{ borderRadius: 5 }}

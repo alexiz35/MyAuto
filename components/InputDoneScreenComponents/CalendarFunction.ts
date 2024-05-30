@@ -10,7 +10,7 @@ export const calendarId = async () => {
     if (calendar === undefined) {
       newCalendarID = await Calendar.createCalendarAsync({
         title: 'DevizCar Calendar',
-        /* color: theme.colors.primary, */
+        color: '#3a3477',
         entityType: Calendar.EntityTypes.EVENT,
         /* sourceId: { isLocalAccount: true, name: 'Expo Calendar' }, */ /* for IOS */
         source: { isLocalAccount: true, name: 'DevizCarCalendar', type: 'LOCAL' },
