@@ -240,7 +240,7 @@ export const Navigation = (): JSX.Element => {
           component={FuelScreen}
           options={({ navigation }) => ({
             headerStyle: { backgroundColor: theme.colors.background },
-            title: `${t('navi.FUEL_TITLE')}`,
+            title: `${t('navi.FUEL_TITLE')} `,
             headerTintColor: theme.colors.onBackground,
             headerRight: () => (
               <IconButton

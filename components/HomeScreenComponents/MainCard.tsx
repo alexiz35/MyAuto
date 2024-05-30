@@ -5,7 +5,6 @@ import {
   initialStateInfo,
   initialTire,
   StateCar,
-  StateFuel,
   StateInfo,
   StateTire
 } from '../../type'
@@ -31,8 +30,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TireInput } from './TireInput'
 import { useTranslation } from 'react-i18next'
-import { averageFuel } from '../StatScreenComponents/FunctionStatistic'
-import wheelPickerSelectDate from '../StatScreenComponents/WheelPickerSelectDate'
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
 RootStackParamList,
@@ -241,12 +238,14 @@ export const MainCard = (): JSX.Element => {
 
           <Button
                   icon={require('../../assets/wheel.png') }
+                  contentStyle={{ alignSelf: 'flex-start' }}
                   textColor={colors.onBackground} labelStyle={{ fontSize: 16 }} rippleColor={colors.primary}
                   onPress={toggleTireDialog}
           >
             {tire.valueTire}
           </Button>
           <Button icon={({ size }) => (<Icon name='gas-station' size={20} color={colors.onBackground}/>)}
+                  contentStyle={{ alignSelf: 'flex-start' }}
                   textColor={colors.onBackground} labelStyle={{ fontSize: 16 }} rippleColor={colors.primary}
                   onPress={() => { navStack.navigate('FuelScreen') }}>
             {sumFuel + ' ' + t('L') }

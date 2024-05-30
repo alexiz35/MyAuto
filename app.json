@@ -14,7 +14,6 @@
         {
           "photosPermission": "The app accesses your photos to set on icon App."
         }
-
       ],
       [
         "expo-calendar",
@@ -54,7 +53,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.READ_EXTERNAL_STORAGE"
       ],
-      "versionCode": 8
+      "versionCode": 11
     },
     "web": {
       "favicon": "./assets/favicon.png"

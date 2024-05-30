@@ -61,6 +61,8 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   useFocusEffect(
     useCallback(() => {
       volumeFuel()
+      // @ts-expect-error temp error navigate props
+      navigation.setOptions({ title: `${t('navi.FUEL_TITLE')} (${state.info.fuel})` })
     }, [state.fuel])
   )
 
@@ -116,11 +118,13 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         {
 /* ----------------------- Form Accordion ----------------------------------- */
         }
-        <KeyboardAvoidingView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
+        <KeyboardAvoidingView >
         <ScrollView style={{ marginTop: 5 }}>
             <List.Accordion
-              title={isEditFuel ? t('fuelScreen.TITLE_ACCORDION_EDIT') : t('fuelScreen.TITLE_ACCORDION_ADD')}
-              description={ state.info.fuel }
+              title={isEditFuel ? t('fuelScreen.TITLE_ACCORDION_EDIT') : t('fuelScreen.TITLE_ACCORDION_ADD') }
+              /* description={ state.info.fuel }
+              descriptionStyle={{ fontSize: 10 }} */
               style={{ backgroundColor: colors.secondaryContainer }}
               expanded={openAccordion}
               onPress={handleOnPress}
@@ -131,6 +135,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
             </List.Accordion>
         </ScrollView>
         </KeyboardAvoidingView>
+        </View>
         {
 /* ----------------------- List Fuel ---------------------------------------- */
         }

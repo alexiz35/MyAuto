@@ -69,7 +69,7 @@ export default {
     IMPORT_DATA: 'Импорт данных',
     EXPORT_DATA: 'Экспорт данных',
     TITLE_BACKUP: 'Backup данных',
-    SAVE_DATA: 'Сохранитиь данные',
+    SAVE_DATA: 'Сохранить данные',
     RECOVERY_DATA: 'Восстановить данные из Backup',
     ALERT_BACKUP_SUCCES: 'Backup выполнен успешно',
     ALERT_BACKUP_ERROR: 'Ошибка создания Backup',
