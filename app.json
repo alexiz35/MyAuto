@@ -44,16 +44,16 @@
         "backgroundColor": "#000001"
       },
       "googleServicesFile": "./google-services.json",
-      "icon": "./assets/icon1.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon_adapt.png"
+        "foregroundImage": "./assets/icon1.png",
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.deviz.devizcar",
       "permissions": [
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.READ_EXTERNAL_STORAGE"
       ],
-      "versionCode": 12
+      "versionCode": 16
     },
     "web": {
       "favicon": "./assets/favicon.png"

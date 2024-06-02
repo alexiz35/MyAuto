@@ -15,8 +15,9 @@ import { useTranslation } from 'react-i18next'
 import { langChanged } from './components/Redux/SettingSlice'
 import { getLocales } from 'expo-localization'
 
-void SplashScreen.preventAutoHideAsync()
-setTimeout(SplashScreen.hideAsync, 2000)
+SplashScreen.preventAutoHideAsync().catch(() => {
+  /* reloading the app might trigger some race conditions, ignore them */
+})
 export default function App (): JSX.Element {
   /*   const theme = createTheme({
     mode: 'dark',
@@ -37,6 +38,10 @@ export default function App (): JSX.Element {
   // Ignore all log notifications
   LogBox.ignoreAllLogs() */
 
+  const splashHide = () => {
+    setTimeout(SplashScreen.hideAsync, 2000)
+  }
+
   useEffect(() => {
     const subscription = AppState.addEventListener('change',
       (nextAppState) => { CloseFunction(nextAppState) }
@@ -47,7 +52,7 @@ export default function App (): JSX.Element {
   }, [])
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider onLayout={splashHide}>
     <Provider store={store}>
 
       <PersistGate persistor={persistor} loading={null}>

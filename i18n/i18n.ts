@@ -2,6 +2,7 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import commonRu from './ru/common'
 import commonEn from './en/common'
+import commonUk from './uk/common'
 const { languageDetectorPlugin } = require('./languageDetectorPlugin')
 
 export const resources = { // list of languages
@@ -10,6 +11,9 @@ export const resources = { // list of languages
   },
   en: {
     translation: commonEn
+  },
+  uk: {
+    translation: commonUk
   }
 } as const
 
@@ -19,7 +23,7 @@ void i18n
   .init({
     compatibilityJSON: 'v3', // To make it work for Android devices, add this line.
     resources,
-    fallbackLng: 'ru',
+    fallbackLng: 'en',
     interpolation: {
       escapeValue: false
     }
