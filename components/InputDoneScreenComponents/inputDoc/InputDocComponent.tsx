@@ -7,7 +7,7 @@ import {
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { type Seller, type StateOther } from '../../../type'
+import { getIndexCar, type Seller, type StateOther } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useTheme, Surface, TextInput, Button, Portal, Dialog } from 'react-native-paper'
@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native'
 import { type StackNavigationProp } from '@react-navigation/stack'
 import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { useTranslation } from 'react-i18next'
+import { useAppSelector } from '../../Redux/hook'
 
 interface InputDocProps {
   isCancel: () => void
@@ -41,6 +42,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
   const theme = useTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
   const { t } = useTranslation()
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
 
   const tempNullOther: FormOther = {
     nameOther: '',
@@ -288,6 +290,8 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
                               value={value}
                               keyboardType={'numeric'}
                               onBlur={onBlur}
+                              right={<TextInput.Affix textStyle={{ fontSize: 12 }} text={state.info.currency}/>}
+
                               /* onSubmitEditing={() => setFocus('numberPart')} */
                             />
                           )}

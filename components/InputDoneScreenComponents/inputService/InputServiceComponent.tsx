@@ -635,6 +635,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                                 label={t('inputService.COST_SERVICE')}
                                 keyboardType={'numeric'}
                                 onChangeText={(value) => { onChange(value) }}
+                                right={<TextInput.Affix textStyle={{ fontSize: 12 }} text={state.info.currency}/>}
                                 value={value}
                                 onBlur={onBlur}
                                 error={(error != null) && true}

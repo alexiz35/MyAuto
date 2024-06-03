@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import { JSX, useState } from 'react'
 /* import { useAppDispatch, useAppSelector } from '../components/Redux/hook' */
-import { type Seller, type StatePart } from '../../../type'
+import { getIndexCar, type Seller, type StatePart } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
@@ -16,6 +16,7 @@ import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { useTranslation } from 'react-i18next'
+import { useAppSelector } from '../../Redux/hook'
 
 interface InputPartProps {
   isCancel: () => void
@@ -42,6 +43,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
   const theme = useAppTheme()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
   const { t } = useTranslation()
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
 
   // ---------------------- handle ModalPickSeller -----------------------------
   const [visibleSeller, setVisibleSeller] = useState(false)
@@ -268,6 +270,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                       keyboardType={'numeric'}
                                       onBlur={onBlur}
                                       onSubmitEditing={() => { setFocus('quantityPart') }}
+                                      right={<TextInput.Affix textStyle={{ fontSize: 12 }} text={state.info.currency}/>}
                                     />
                                   )}
                       />
@@ -301,6 +304,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
                                       value={value}
                                       keyboardType={'numeric'}
                                       onBlur={handleOnSubmitAmount}
+                                      right={<TextInput.Affix textStyle={{ fontSize: 12 }} text={state.info.currency}/>}
                                       /* onSubmitEditing={() => setFocus('numberPart')} */
                                     />
                                   )}
