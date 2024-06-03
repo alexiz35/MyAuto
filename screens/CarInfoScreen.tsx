@@ -727,7 +727,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                 <RadioButton.Item label="UAH - ₴" value="₴" />
                 <RadioButton.Item label="EUR - €" value="€" />
                 <RadioButton.Item label="RUB - ₽" value="₽" />
-                <RadioButton.Item label="PLN - Zł" value="Zł" />
+                <RadioButton.Item label="PLN - Zł" value="Zł"/>
               </RadioButton.Group>
             </Dialog.Content>
 
