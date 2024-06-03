@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next'
 import commonRu from './ru/common'
 import commonEn from './en/common'
 import commonUk from './uk/common'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { languageDetectorPlugin } = require('./languageDetectorPlugin')
 
 export const resources = { // list of languages

@@ -57,6 +57,8 @@ export const LangCard = (): JSX.Element => {
               <RadioButton.Item value={'ru'} label={'Русский'} mode={'ios'} color={colors.tertiary}/>
               <Divider horizontalInset bold/>
               <RadioButton.Item value={'en'} label={'English'} mode={'ios'} color={colors.tertiary}/>
+              <Divider horizontalInset bold/>
+              <RadioButton.Item value={'uk'} label={'Українська'} mode={'ios'} color={colors.tertiary}/>
             </RadioButton.Group>
           </Dialog.Content>
         </Dialog>

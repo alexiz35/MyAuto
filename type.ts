@@ -175,8 +175,9 @@ export interface StateInfo {
   dateBuy: Date
   buyMileage: number
   regMaintenance: ListService[]
+  currency: string
 }
-export const initialStateInfo = {
+export const initialStateInfo: StateInfo = {
   nameCar: '',
   brand: '',
   model: '',
@@ -190,7 +191,8 @@ export const initialStateInfo = {
   vin: '',
   dateBuy: new Date(),
   buyMileage: 0,
-  regMaintenance: listServiceRu
+  regMaintenance: listServiceRu,
+  currency: '$'
 }
 
 /* export interface StateServiceTask {

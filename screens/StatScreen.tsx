@@ -186,7 +186,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
               {t('statScreen.FUEL_BUY', { fuel: volumeFuel })}
             </Text>
             <Text style={styles.textKm}>
-              {t('statScreen.FUEL_COST', { fuel_cost: sumFuel })}
+              {t('statScreen.FUEL_COST', { fuel_cost: sumFuel, currency: state.info.currency })}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -197,19 +197,19 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>
-              {t('statScreen.PARTS_COSTS')}
+              {t('statScreen.PARTS_COSTS', { currency: state.info.currency })}
             </Text>
             <Text style={styles.textKm}>{sumParts}</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>
-              {t('statScreen.SERVICE_COSTS')}
+              {t('statScreen.SERVICE_COSTS', { currency: state.info.currency })}
             </Text>
             <Text style={styles.textKm}>{sumServices}</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textKm}>
-              {t('statScreen.OTHER_COSTS')}
+              {t('statScreen.OTHER_COSTS', { currency: state.info.currency })}
             </Text>
             <Text style={styles.textKm}>{sumOther}</Text>
           </View>

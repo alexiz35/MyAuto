@@ -663,7 +663,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
                   <>
                   <Text style={{ fontWeight: 'bold' }}>{t('inputService.ADD_PARTS')}</Text>
                   {/* <Text >{`Добавлено: ${amountPart} шт на сумму ${sumCost} грн`}</Text> */}
-                  <Text >{t('inputService.ADD_SUM', { amountPart, sumCost })}</Text>
+                  <Text >{t('inputService.ADD_SUM', { amountPart, sumCost, currency: state.info.currency })}</Text>
                   </>
                 </TouchableRipple>
               </Surface>

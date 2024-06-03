@@ -15,7 +15,8 @@ import {
   Portal,
   Modal,
   Dialog,
-  IconButton, Surface
+  IconButton, Surface,
+  RadioButton
 } from 'react-native-paper'
 import { useAppTheme } from '../CommonComponents/Theme'
 import { listServiceEn, listServiceRu } from '../components/InputDoneScreenComponents/inputService/ListServices'
@@ -45,6 +46,7 @@ interface FormCarInfo {
   vin?: string
   dateBuy: Date
   buyMileage: string
+  currency: string
 }
 interface TypeValueDrop {
   _index: number
@@ -63,7 +65,8 @@ const tempNullCarInfo: FormCarInfo = {
   gear: '',
   vin: '',
   dateBuy: new Date(),
-  buyMileage: ''
+  buyMileage: '',
+  currency: '$'
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CarInfoScreen'>
@@ -93,7 +96,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       vin: item.vin,
       dateBuy: item.dateBuy,
       buyMileage: Number(item.buyMileage),
-      regMaintenance
+      regMaintenance,
+      currency: item.currency
     }
   }
   const dataToForm = (item: StateInfo): FormCarInfo => {
@@ -108,7 +112,8 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       gear: item.gear,
       vin: item.vin,
       dateBuy: item.dateBuy,
-      buyMileage: item.buyMileage === 0 ? '' : String(item.buyMileage)
+      buyMileage: item.buyMileage === 0 ? '' : String(item.buyMileage),
+      currency: item.currency
     }
   }
   const [itemCarInfo, setItemCarInfo] = useState<StateInfo>(
@@ -122,6 +127,9 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       ? i18n.language === 'ru' ? listServiceRu : listServiceEn
       : car[indexCar].info.regMaintenance
   )
+
+  // --------------------------- Modal Currency --------------------------------
+  const [visibleCurrency, setVisibleCurrency] = useState(false)
 
   // ------------------ Dialog Input NameCar -----------------------------------
   const [visibleNameCar, setVisibleNameCar] = useState(false)
@@ -165,7 +173,12 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
   }
 
   // ------------------------- Controller Form-----------------------------------
-  const { control, handleSubmit, setValue, getValues } = useForm<FormCarInfo>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    getValues
+  } = useForm<FormCarInfo>({
     mode: 'onChange',
     defaultValues: tempNullCarInfo,
     values: dataToForm(itemCarInfo)
@@ -214,12 +227,14 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
       navigation.setOptions({
         title: valueNameCar,
         headerRight: () => (
+
           <IconButton
             icon={'car-info'}
             mode={'outlined'}
             style={{ borderRadius: 10 }}
             onPress={() => { setVisibleNameCar(true) }}
           />
+
         )
       })
       const temp = car[indexCar].info
@@ -584,7 +599,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             >
               {t('carInfo.BUTTON_TO')}
             </Button>
-            <Button
+            {/* <Button
               icon={'restore'}
               mode={'elevated'}
               elevation={5}
@@ -598,6 +613,21 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               onPress={() => { setRegMaintenance(i18n.language === 'ru' ? listServiceRu : listServiceEn) }}
             >
               {t('carInfo.RESET_TO')}
+            </Button> */}
+            <Button
+              /* icon={'restore'} */
+              mode={'elevated'}
+              elevation={5}
+              style={{
+                justifyContent: 'center',
+                borderRadius: 5,
+                height: 45,
+                marginRight: 2,
+                flex: 5
+              }}
+              onPress={() => { setVisibleCurrency(true) }}
+            >
+              { t('carInfo.BUTTON_CURRENCY', { currency: getValues('currency') }) }
             </Button>
           </View>
           <Divider
@@ -669,6 +699,42 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
             <ModalPickNameCar mode={'editCar'} handlePressOk={okDialogNameCar} handlePressCancel={cancelDialogNameCar}/>
           </Dialog>
         </Portal>
+        {
+          // -------------------------- Modal for Currency ---------------------------
+        }
+        <Controller
+          name={'currency'}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+        <Portal>
+          <Dialog
+            visible={visibleCurrency}
+            dismissableBackButton
+            onDismiss={() => { setVisibleCurrency(false) }}
+          >
+            <Dialog.Title>
+              Выберите валюту
+            </Dialog.Title>
+            <Dialog.Content>
+              <RadioButton.Group
+                onValueChange={value => {
+                  onChange(value)
+                  setVisibleCurrency(false)
+                }}
+                value ={value}
+              >
+                <RadioButton.Item label="USD - $" value="$" />
+                <RadioButton.Item label="UAH - ₴" value="₴" />
+                <RadioButton.Item label="EUR - €" value="€" />
+                <RadioButton.Item label="RUB - ₽" value="₽" />
+                <RadioButton.Item label="PLN - Zł" value="Zł" />
+              </RadioButton.Group>
+            </Dialog.Content>
+
+          </Dialog>
+        </Portal>
+          )}
+            />
         {
           // -------------------------------------------------------------------------------------------
         }
