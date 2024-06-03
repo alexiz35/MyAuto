@@ -275,7 +275,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
                           value={value}
                           onSubmitEditing={() => { setFocus('AmountFuel') }/* handleOnSubmitCost() */}
                           onBlur={() => { handleOnSubmitCost() }}
-                          right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('CURRENCY')}/>}
+                          right={<TextInput.Affix textStyle={{ fontSize: 12 }} text={state.info.currency}/>}
                         />
                       )}
           />
@@ -294,7 +294,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
                           value={value}
                           onSubmitEditing={() => { setFocus('StationFuel') }/* handleOnSubmitAmount() */}
                           onBlur={() => { handleOnSubmitAmount() }}
-                          right={<TextInput.Affix textStyle={{ fontSize: 10 }} text={t('CURRENCY')}/>}
+                          right={<TextInput.Affix textStyle={{ fontSize: 12 }} text={state.info.currency}/>}
                         />
                       )}
           />

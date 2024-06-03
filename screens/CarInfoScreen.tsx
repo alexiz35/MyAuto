@@ -641,20 +641,21 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
           <View style={styles.viewButton}>
             <Button
               icon={'close-thick'}
+              labelStyle={{ color: 'white' }}
               onPress={handleClose}
-              mode="outlined"
               rippleColor={colors.error}
-              textColor={colors.error}
               style={styles.buttonStyle}
+              buttonColor={colors.error}
+
             >
               Cancel
             </Button>
             <Button
               icon={'check-bold'}
+              labelStyle={{ color: 'white' }}
               style={styles.buttonStyle}
-              textColor={colors.tertiary}
+              buttonColor={colors.tertiary}
               rippleColor={colors.tertiary}
-              mode={'outlined'}
               onPress={handleSubmit(handleOkCarInfo)}
             >
               Ok
@@ -774,6 +775,7 @@ const styles = StyleSheet.create({
     columnGap: 25
   },
   buttonStyle: {
-    flex: 1
+    flex: 1,
+    borderRadius: 5
   }
 })

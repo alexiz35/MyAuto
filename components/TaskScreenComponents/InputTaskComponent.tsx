@@ -408,6 +408,7 @@ const InputTaskComponent = ({ isCancel, isOk, task = null, isEdit }: InputTaskPr
                                 keyboardType={'numeric'}
                                 onBlur={onBlur}
                                 onSubmitEditing={() => { setFocus('quantity') }}
+
                               />
                             )}
                 />
