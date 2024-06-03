@@ -2,16 +2,24 @@ import { useAppSelector } from '../Redux/hook'
 import { JSX, useEffect, useState } from 'react'
 import * as FileSystem from 'expo-file-system'
 import * as ImagePicker from 'expo-image-picker'
-import { Surface, TouchableRipple } from 'react-native-paper'
+import { Surface, TouchableRipple, Text } from 'react-native-paper'
 import { Image } from 'expo-image'
 
 export const LogoTitle = (): JSX.Element => {
   const numberCar = useAppSelector(state => state.numberCar)
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const [image, setImage] = useState(require('../../assets/renaultLogo.png'))
+  const [image, setImage] = useState(require('../../assets/logoStart.png'))
   useEffect(() => {
-    setImage(FileSystem.documentDirectory + String(numberCar) + '.jpeg')
+    void FileSystem.getInfoAsync(FileSystem.documentDirectory + String(numberCar) + '.jpeg')
+      .then(value => {
+        if (value.exists) setImage(FileSystem.documentDirectory + String(numberCar) + '.jpeg')
+        else setImage(require('../../assets/logoStart.png'))
+      })
+      .catch((reason) => {
+        console.log('ERROR', reason)
+      })
+    /* setImage(FileSystem.documentDirectory + String(numberCar) + '.jpeg') */
   }, [numberCar])
 
   const pickImage = async () => {
@@ -42,6 +50,7 @@ export const LogoTitle = (): JSX.Element => {
   return (
 
     <Surface elevation={5} style={{ borderRadius: 5 }} >
+
       <TouchableRipple onPress={async () => { await pickImage() }}>
       <Image
         style={{
