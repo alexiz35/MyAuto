@@ -40,7 +40,8 @@ export default {
     SELLER_TITLE: 'Список поставщиков',
     MILEAGE_TITLE: 'Список точек пробега',
     FUEL_TITLE: 'Заправки',
-    SETTING_TITLE: 'Настройки'
+    SETTING_TITLE: 'Настройки',
+    PREMIUM_TITLE: 'Премиум доступ'
   },
   setting: {
     CHANGE_THEME: 'Переключение темы',
@@ -277,6 +278,9 @@ export default {
     START_NOTIFICATION: 'Еженедельные напоминания запущены',
     ALREADY_START: 'Еженедельные напоминания уже запущены',
     STOP_NOTIFICATION: 'Еженедельные напоминания отключены'
+  },
+  premium: {
+    TITLE: 'Полный доступ'
   }
 
 }

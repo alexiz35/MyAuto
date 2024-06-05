@@ -28,6 +28,7 @@ import { JSX } from 'react'
 import MileageScreen from '../../screens/MileageScreen'
 import { LogoTitle } from './LogoTitle'
 import { useTranslation } from 'react-i18next'
+import PremiumScreen from '../../screens/PremiumScreen'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const Tab = createBottomTabNavigator<RootTabParamList>()
@@ -195,6 +196,17 @@ export const Navigation = (): JSX.Element => {
           options={{
             headerStyle: { backgroundColor: theme.colors.background },
             title: `${t('navi.CAR_INFO_TITLE')}`,
+            headerTintColor: theme.colors.onBackground
+          }} />
+        {
+// ------------------------------PremiumScreen----------------------------------
+        }
+        <Stack.Screen
+          name='PremiumScreen'
+          component={PremiumScreen}
+          options={{
+            headerStyle: { backgroundColor: theme.colors.background },
+            title: `${t('navi.PREMIUM_TITLE')}`,
             headerTintColor: theme.colors.onBackground
           }} />
         {

@@ -41,7 +41,9 @@ export default {
     SELLER_TITLE: 'List of Seller',
     MILEAGE_TITLE: 'Mileage List',
     FUEL_TITLE: 'Fuel',
-    SETTING_TITLE: 'Setting'
+    SETTING_TITLE: 'Setting',
+    PREMIUM_TITLE: 'Premium Version'
+
   },
   setting: {
     CHANGE_THEME: 'Switching Theme',
@@ -279,6 +281,9 @@ export default {
     START_NOTIFICATION: 'Weekly reminders have been launched',
     ALREADY_START: 'Weekly reminders are already running',
     STOP_NOTIFICATION: 'Weekly reminders are turned off'
+  },
+  premium: {
+    TITLE: 'Full Access'
   }
 
 }

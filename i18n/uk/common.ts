@@ -40,7 +40,8 @@ export default {
     SELLER_TITLE: 'Список постачальників',
     MILEAGE_TITLE: 'Список точок пробігу',
     FUEL_TITLE: 'Заправки',
-    SETTING_TITLE: 'Налаштування'
+    SETTING_TITLE: 'Налаштування',
+    PREMIUM_TITLE: 'Преміум доступ'
   },
   setting: {
     CHANGE_THEME: 'Зміна теми',

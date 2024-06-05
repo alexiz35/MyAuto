@@ -20,6 +20,7 @@ import { ControlCard } from '../components/SettingScreenComponents/ControlCard'
 import { MileageCard } from '../components/SettingScreenComponents/MileageCard'
 import { LangCard } from '../components/SettingScreenComponents/LangCard'
 import { BackUpCard } from '../components/SettingScreenComponents/BackUpCard'
+import { PremiumCard } from '../components/SettingScreenComponents/PremiumCard'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 
@@ -32,7 +33,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         nestedScrollEnabled={true}
         style={{ paddingHorizontal: 10, height: '100%' }}
       >
-
+          <PremiumCard/>
           <ThemeCard/>
         <LangCard/>
 

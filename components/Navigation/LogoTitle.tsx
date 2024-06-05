@@ -14,6 +14,7 @@ export const LogoTitle = (): JSX.Element => {
     void FileSystem.getInfoAsync(FileSystem.documentDirectory + String(numberCar) + '.jpeg')
       .then(value => {
         if (value.exists) setImage(FileSystem.documentDirectory + String(numberCar) + '.jpeg')
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         else setImage(require('../../assets/logoStart.png'))
       })
       .catch((reason) => {
