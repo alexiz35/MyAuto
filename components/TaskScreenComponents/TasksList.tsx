@@ -75,7 +75,7 @@ export const TasksList = ({ handlePress, filterList = 'last', checkedFilter = 'u
   useEffect(() => {
     setTimeout(() => { setIsLoad(false) }, 10)
     setIsLoad(true)
-  }, [filterList, checkedFilter, typeSort])
+  }, [filterList, checkedFilter, typeSort, listTasks])
 
   const filter = (): StateTask[] => {
     switch (filterList) {
