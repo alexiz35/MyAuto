@@ -2,9 +2,10 @@ import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { type RootStackParamList } from '../components/Navigation/TypeNavigation'
 import {
   TouchableHighlight,
-  ScrollView
+  ScrollView, Alert
 } from 'react-native'
 import {
+  Button, Icon,
   Text
 } from 'react-native-paper'
 import { type JSX } from 'react'
@@ -21,12 +22,25 @@ import { MileageCard } from '../components/SettingScreenComponents/MileageCard'
 import { LangCard } from '../components/SettingScreenComponents/LangCard'
 import { BackUpCard } from '../components/SettingScreenComponents/BackUpCard'
 import { PremiumCard } from '../components/SettingScreenComponents/PremiumCard'
+import { useTranslation } from 'react-i18next'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 
 // -------------------------------------------------------------------------------------------
 
 const SettingScreen = ({ navigation }: Props): JSX.Element => {
+  const { t } = useTranslation()
+  const pressReset = () => {
+    Alert.alert(t('setting.alertReset.TITLE'), t('setting.alertReset.MESSAGE'),
+      [{
+        text: t('button.CANCEL')
+      }, {
+        text: t('button.OK'),
+        onPress: async () => {
+          await AsyncStorage.clear()
+        }
+      }])
+  }
   return (
     <BackgroundView>
       <ScrollView
@@ -35,26 +49,19 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
       >
           <PremiumCard/>
           <ThemeCard/>
-        <LangCard/>
-
+          <LangCard/>
           <SellersCard/>
-
-            <MileageCard/>
-
+          <MileageCard/>
           <CarsCard/>
           <BackUpCard/>
-
           <GoogleCard/>
-
           <ControlCard/>
-
-          <TouchableHighlight
-              onPress={async () => {
-                await AsyncStorage.clear()
-              }}
+          <Button
+              onPress={pressReset}
+              icon={() => <Icon source={'reload-alert'} size={25} color={'red'}/> }
             >
-              <Text style={{ padding: 10, textAlign: 'center' }}>Сброс Redux</Text>
-            </TouchableHighlight>
+            RESET
+            </Button>
       </ScrollView>
     </BackgroundView>
   )

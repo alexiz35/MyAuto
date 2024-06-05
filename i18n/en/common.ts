@@ -64,6 +64,10 @@ export default {
       TITLE: 'Are you sure?',
       MESSAGE: 'Mileage List will be deleted!'
     },
+    alertReset: {
+      TITLE: 'Are you sure?',
+      MESSAGE: 'This operation will completely reset the program. All data and settings will be deleted.'
+    },
     TITLE_CONTROL_CARD: 'Mileage Control',
     NOTIFICATION_START: 'Notification when starting App',
     NOTIFICATION_PERIOD: 'Periodic Notification in the Background',
