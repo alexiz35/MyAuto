@@ -49,9 +49,10 @@
       "package": "com.deviz.devizcar",
       "permissions": [
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.READ_EXTERNAL_STORAGE"
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "com.android.vending.BILLING"
       ],
-      "versionCode": 16
+      "versionCode": 18
     },
     "web": {
       "favicon": "./assets/favicon.png"
