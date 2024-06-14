@@ -1,38 +1,43 @@
-import { JSX } from 'react'
+import { JSX, useCallback, useEffect, useState } from 'react'
 import { Button, Card, Icon, IconButton } from 'react-native-paper'
-import { Alert, View } from 'react-native'
+import { ActivityIndicator, Alert, View } from 'react-native'
 import { deletedAllSeller } from '../Redux/SellerSlice'
 import { useAppDispatch } from '../Redux/hook'
 // eslint-disable-next-line import/named
-import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from './StyleSettingScreen'
 import { useTranslation } from 'react-i18next'
+import Purchases from 'react-native-purchases'
+import { checkLevelAccess, TypeLevelAccess } from '../PurchaseComponents/PurchaseFunctions'
 
 export const PremiumCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
   const { colors } = useAppTheme()
   const { t } = useTranslation()
+  const [checkLevel, setCheckLevel] = useState<TypeLevelAccess>('Free')
+  const [isReadyLevelAccess, setIsReadyLevelAccess] = useState(false)
 
-  const pressResetSellers = () => {
-    Alert.alert(t('setting.alertSellerCard.TITLE'), t('setting.alertSellerCard.MESSAGE'), [
-      {
-        text: 'Cancel',
-        // ***
-        /* onPress: () => console.log('Cancel Pressed'), */
-        style: 'cancel'
-      },
-      {
-        text: 'OK',
-        onPress: () => { dispatch(deletedAllSeller()) }
-      }
-    ])
+  const pressButton = () => {
+    if (checkLevel !== 'Pro') navigation.navigate('PremiumScreen')
   }
 
+  useFocusEffect(useCallback(() => {
+    checkLevelAccess()
+      .then(levelAccess => {
+        setCheckLevel(levelAccess)
+        setIsReadyLevelAccess(true)
+        console.log('LEVEL', levelAccess)
+      })
+      .catch(e => { console.log(e) })
+  }, []))
+
   return (
-    <Card style={{ marginVertical: 5 }} mode={'outlined'} onPress={() => { navigation.navigate('PremiumScreen') }}>
+    <Card style={{ marginVertical: 5 }} mode={'outlined'} disabled={checkLevel === 'Pro'}
+          onPress={pressButton}
+    >
       <View
         style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
       >
@@ -40,14 +45,25 @@ export const PremiumCard = (): JSX.Element => {
           <Icon source={'circle'} color={colors.tertiary} size={10} />
           <Button
             style={stylesSettingScreen.text}
-            onPress={() => { navigation.navigate('PremiumScreen') }}
+            onPress={pressButton}
           >
-            {t('premium.TITLE')}
+            {/* {t('premium.TITLE')} */}
+            {checkLevel === 'Pro' ? 'У вас максимальный уровень' : 'Получить полный доступ'}
           </Button>
         </View>
 
         <View style={{ paddingRight: 5 }}>
-            <IconButton icon={require('../../assets/iconPremium.png') } size={36} iconColor={colors.tertiary} />
+          {/* <IconButton icon={require('../../assets/IconPro.png') } size={36} iconColor={colors.tertiary} /> */}
+          {/* <Icon size={50} source={require('../../assets/IconPro.png')}/> */}
+          {isReadyLevelAccess
+            ? <Button labelStyle={{
+              fontWeight: '400',
+              fontSize: 16,
+              color: checkLevel === 'Pro' ? colors.tertiary : colors.primary
+            }}
+            >{checkLevel}</Button>
+            : <ActivityIndicator style={{ paddingRight: 15 }}/>
+          }
         </View>
       </View>
     </Card>

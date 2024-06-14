@@ -10,6 +10,14 @@
     "plugins": [
       "@react-native-google-signin/google-signin",
       [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 24
+          }
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to set on icon App."
@@ -21,7 +29,8 @@
           "calendarPermission": "The app needs to access your calendar."
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-secure-store"
     ],
     "splash": {
       "image": "./assets/mySplash.png",

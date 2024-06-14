@@ -205,6 +205,7 @@ export const Navigation = (): JSX.Element => {
           name='PremiumScreen'
           component={PremiumScreen}
           options={{
+            headerShown: false,
             headerStyle: { backgroundColor: theme.colors.background },
             title: `${t('navi.PREMIUM_TITLE')}`,
             headerTintColor: theme.colors.onBackground
