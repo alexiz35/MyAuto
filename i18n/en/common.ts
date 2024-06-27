@@ -287,7 +287,24 @@ export default {
     STOP_NOTIFICATION: 'Weekly reminders are turned off'
   },
   premium: {
-    TITLE: 'Full Access'
+    TITLE: 'Full Access',
+    ALERT_TITLE: 'Additional functionality in the advanced version',
+    ALERT_MESSAGE: 'The DevizCar program is currently in an active debugging phase, so for now the full functionality' +
+      ' is available to all users, without exception. You can help the project with your active testing,' +
+      ' suggestions and feedback.' +
+      'The most active test participants will be rewarded with free access to premium features of the program.' +
+      '\n And, of course, you can support the project with a cup of coffee for our developers.' +
+      'By supporting us now, you will automatically receive full access to all program features.' +
+      '\n Best regards, DevizCar Team',
+    ALERT_BUTTON_REVIEW: 'Feedback',
+    ALERT_BUTTON_CANCEL: 'Cancel',
+    ALERT_BUTTON_DONAT: 'Donate',
+    CARD_TITLE: 'Get access to unique DevizCar features',
+    LIST_FUNCTION_1: 'Accounting for 2 or more cars',
+    LIST_FUNCTION_2: 'Detailed Statistics',
+    LIST_FUNCTION_3: 'Output the report to PDF',
+    LIST_FUNCTION_4: 'Uploading photos of receipts and documents',
+    BUTTON_DONAT: 'Donate'
   }
 
 }

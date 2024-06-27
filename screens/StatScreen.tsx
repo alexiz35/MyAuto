@@ -1,4 +1,4 @@
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native'
+import { Alert, Dimensions, ScrollView, StyleSheet, View } from 'react-native'
 import { Divider, Text, Icon, SegmentedButtons, Surface, Button, Portal, Dialog } from 'react-native-paper'
 
 import { useAppSelector } from '../components/Redux/hook'
@@ -22,7 +22,10 @@ import BarGiftChartComponent from '../components/StatScreenComponents/BarGiftCha
 import { getIndexCar } from '../type'
 import { NAME_MONTH_EN, NAME_MONTH_RU, TypePickedDate } from '../components/StatScreenComponents/TypeStat'
 import { useTranslation } from 'react-i18next'
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { getLevelAccessDataSecurely } from '../components/PurchaseComponents/PurchaseFunctions'
+import { RootTabParamList } from '../components/Navigation/TypeNavigation'
+import { LEVEL_STAT } from '../components/PurchaseComponents/TypesPurchases'
 
 export const initialDate: TypePickedDate = {
   type: 'year',
@@ -59,6 +62,7 @@ const StatScreen = (): JSX.Element => {
 
   const [typeChart, setTypeChart] = useState('pie')
   const { t, i18n } = useTranslation()
+  const navigate = useNavigation()
   const [NAME_MONTH, SET_NAME_MONTH] = useState(i18n.language === 'en' ? NAME_MONTH_EN : NAME_MONTH_RU)
 
   /*   const calcSum = (targetArray: number[]): number => {
@@ -122,10 +126,28 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
     if (typeChart === 'bar' && textButtonDate !== undefined) setDataBarChart(yearDataAllChart(Number(selectedDate.valueYear), state))
   }, [typeChart])
 
-  /* useFocusEffect(
+  useFocusEffect(
     useCallback(() => {
-      setTypeChart('pie')
-    }, [])) */
+      void (async () => {
+        const levelAccess = await getLevelAccessDataSecurely()
+        if (!LEVEL_STAT.includes(levelAccess)) {
+          Alert.alert(
+            'Функция доступна при уровне доступа Plus',
+            'Хотите приобрести доступ?',
+            [
+              { text: 'Cancel', onPress: () => { navigate.goBack() } },
+              {
+                text: 'Получить доступ',
+                onPress: () => {
+                // @ts-expect-error props for navigation
+                  navigate.navigate('PremiumScreen')
+                }
+              }
+            ]
+          )
+        }
+      })()
+    }, []))
 
   return (
     <ScrollView>

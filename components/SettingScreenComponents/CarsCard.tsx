@@ -1,4 +1,4 @@
-import { JSX, useState } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { Button, Card, Dialog, Divider, Icon, Portal, Text } from 'react-native-paper'
 import { CarsList } from './CarsList'
@@ -12,6 +12,12 @@ import { useAppTheme } from '../../CommonComponents/Theme'
 import { ModalPickNameCar } from '../CarInfoScreenComponents/ModalPickNameCar'
 import { stylesSettingScreen } from './StyleSettingScreen'
 import { useTranslation } from 'react-i18next'
+import {
+  getLevelAccessDataSecurely, getLevelAccessSecure,
+  TypeLevelAccess
+} from '../PurchaseComponents/PurchaseFunctions'
+import { log } from 'expo/build/devtools/logger'
+import { LEVEL_CARS } from '../PurchaseComponents/TypesPurchases'
 
 export const CarsCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -23,8 +29,11 @@ export const CarsCard = (): JSX.Element => {
   const { t } = useTranslation()
 
   // ****************************** ADD NEW CAR *********************************
-  const addNewCar = () => {
-    setVisibleNameCar(true)
+  const addNewCar = async () => {
+    const levelAccess = await getLevelAccessDataSecurely()
+
+    console.log('acc', levelAccess)
+    setVisibleNameCar(LEVEL_CARS.includes(levelAccess))
   }
 
   const cancelDialogNameCar = () => {
@@ -51,7 +60,7 @@ export const CarsCard = (): JSX.Element => {
 
       <CarsList />
       <Divider horizontalInset />
-      <Button onPress={() => { addNewCar() }}>{t('setting.ADD_CAR')}</Button>
+      <Button onPress={() => { void addNewCar() }}>{t('setting.ADD_CAR')}</Button>
     </Card>
       <Portal>
         <Dialog

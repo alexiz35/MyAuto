@@ -1,49 +1,28 @@
-import { Alert, FlatList, KeyboardAvoidingView, Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native'
-import { SellerList } from '../components/SellerScreenComponents/SellerList'
-import { useAppDispatch } from '../components/Redux/hook'
+import { Alert, FlatList, Linking, ScrollView, StyleSheet } from 'react-native'
 import { useAppTheme } from '../CommonComponents/Theme'
-import { Seller } from '../type'
-import { Dispatch, JSX, SetStateAction, useCallback, useEffect, useState } from 'react'
+import { JSX, useCallback, useEffect, useState } from 'react'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import {
-  Button, Card, Text,
-  HelperText,
+  Button, Card,
   List,
   Portal,
-  RadioButton,
-  Surface,
-  TextInput,
-  ToggleButton, IconButton,
-  Icon, Avatar, Checkbox, FAB
+  IconButton,
+  Icon, FAB
 } from 'react-native-paper'
-import { ModalInfoSeller } from '../components/SellerScreenComponents/ModalInfoSeller'
 import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 // eslint-disable-next-line import/named
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { addedSeller, editedSeller } from '../components/Redux/SellerSlice'
-import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import Purchases, { PurchasesError, PurchasesPackage } from 'react-native-purchases'
+import Purchases, { PurchasesPackage } from 'react-native-purchases'
 import { PackageItem } from '../components/PurchaseComponents/PackageItem'
-import * as SecureStore from 'expo-secure-store'
 import { checkLevelAccess, getPackages, TypeLevelAccess } from '../components/PurchaseComponents/PurchaseFunctions'
-
-interface FormSeller {
-  name: string
-  phone: string
-  web: string
-  type: string
-  specialism: string
-}
 
 type Props = StackScreenProps<RootStackParamList, 'PremiumScreen'>
 
-const PremiumScreen = ({ route }: Props): JSX.Element => {
-  const dispatch = useAppDispatch()
+const PremiumScreen = ({ route, navigation }: Props): JSX.Element => {
   const { colors } = useAppTheme()
   const { t } = useTranslation()
-  const navigate = useNavigation()
 
   // - State for all available package
   const [packages, setPackages] = useState<PurchasesPackage[]>([])
@@ -54,11 +33,11 @@ const PremiumScreen = ({ route }: Props): JSX.Element => {
   const [checkLevel, setCheckLevel] = useState<TypeLevelAccess>('Free')
   const [selectedItem, setSelectedItem] = useState<PurchasesPackage | null>(null)
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     checkLevelAccess()
       .then(levelAccess => { setCheckLevel(levelAccess) })
       .catch(e => { console.log(e) })
-  }, [])
+  }, []))
 
   const pressPay = async () => {
     setIsPurchasing(true)
@@ -68,7 +47,9 @@ const PremiumScreen = ({ route }: Props): JSX.Element => {
         const purchasedAccess = await checkLevelAccess(customerInfo)
         setCheckLevel(purchasedAccess)
       } catch (e) {
+        // @ts-expect-error e type
         if (e.code === 1) {
+          // @ts-expect-error e type
           Alert.alert('Error purchasing package', e.message)
         }
       } finally {
@@ -90,29 +71,30 @@ const PremiumScreen = ({ route }: Props): JSX.Element => {
         setPackages([])
       })
 
-    /* setTimeout(() => {
+    setTimeout(() => {
       Alert.alert(
-        'Дополнительный функционал в расширенной версии',
-        'Программа DevizCar на данный момент находится в активной фазе отладки, поэтому пока полный функционал доступен всем пользователям, без исключения.' +
-      ' Вы можете поддержать проект своим активным тестированием, предложениями и отзывами.' +
-      ' Самые активные участники тестирования будут вознаграждены в дальнейшем бесплатным доступом к премиум функциям программы.' +
-      '\n И, конечно, вы можете поддержать проект чашкой кофе для наших разработчиков.' +
-      ' Поддержав нас сейчас, вы автоматически получите полный доступ ко всем функциям программы.' +
-      '\n С наилучшими пожеланиями, команда DevizCar',
+        t('premium.ALERT_TITLE'),
+        t('premium.ALERT_MESSAGE'),
         [{
-          text: 'Отзыв',
-          onPress: () => async () => await Linking.openURL('mailto:' + 'devizcar.sup@gmail.com')
+          text: t('premium.ALERT_BUTTON_REVIEW'),
+          onPress: () => {
+            void Linking.openURL('mailto:' + 'devizcar.sup@gmail.com')
+            navigation.goBack()
+          }
         }, {
-          text: 'Cancel',
-          /!* onPress: navigate.goBack, *!/
+          text: t('premium.ALERT_BUTTON_CANCEL'),
+          onPress: navigation.goBack,
           style: 'cancel'
         }, {
-          text: 'Поддержать',
-          onPress: async () => await Linking.openURL('https://www.buymeacoffee.com/devizcarsub')
+          text: t('premium.ALERT_BUTTON_DONAT'),
+          onPress: () => {
+            void Linking.openURL('https://www.buymeacoffee.com/devizcarsub')
+            navigation.goBack()
+          }
         }]
 
       )
-    }, 3000) */
+    }, 3000)
   }, [checkLevel])
 
   return (

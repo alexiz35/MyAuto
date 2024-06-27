@@ -32,10 +32,6 @@
       "expo-localization",
       "expo-secure-store"
     ],
-    "splash": {
-      "image": "./assets/mySplash.png",
-      "resizeMode": "cover"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -46,10 +42,6 @@
       "supportsTablet": true
     },
     "android": {
-      "splash": {
-        "image": "./assets/mySplash.png",
-        "resizeMode": "cover"
-      },
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon1.png",
@@ -61,7 +53,7 @@
         "android.permission.READ_EXTERNAL_STORAGE",
         "com.android.vending.BILLING"
       ],
-      "versionCode": 18
+      "versionCode": 20
     },
     "web": {
       "favicon": "./assets/favicon.png"

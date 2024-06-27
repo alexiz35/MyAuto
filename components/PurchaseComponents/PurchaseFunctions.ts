@@ -1,5 +1,6 @@
 import Purchases, { CustomerInfo } from 'react-native-purchases'
 import * as SecureStore from 'expo-secure-store'
+import { useEffect, useState } from 'react'
 
 export type TypeLevelAccess = 'Free' | 'Lite' | 'Plus' | 'Pro'
 export const checkLevelAccess = async (info?: CustomerInfo): Promise<TypeLevelAccess> => {
@@ -19,6 +20,7 @@ export const checkLevelAccess = async (info?: CustomerInfo): Promise<TypeLevelAc
       return 'Lite'
     } else {
       // No entitlements active logic
+      void saveLevelAccessDataSecurely('Free')
       return 'Free'
     }
 
@@ -67,4 +69,26 @@ const saveLevelAccessDataSecurely = async (levelAccess: string) => {
     // Обработка ошибок при сохранении данных
     console.error('Ошибка при безопасном сохранении данных о подписке', error)
   }
+}
+
+export const getLevelAccessSecure = () => {
+  let levelAccess: TypeLevelAccess | null = 'Free'
+  SecureStore.getItemAsync('levelAccess')
+    .then(result => {
+      if (result != null) {
+        console.log('UseGet', result)
+        levelAccess = result
+        return levelAccess
+      } else {
+        console.log('Нет значений, сохраненных под этим ключом.')
+        levelAccess = 'Free'
+        return levelAccess
+      }
+    }
+    )
+    .catch(e => {
+      console.log(e)
+      levelAccess = 'Free'
+      return levelAccess
+    })
 }

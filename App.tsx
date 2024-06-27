@@ -11,47 +11,28 @@ import { CloseFunction } from './components/CloseFunction'
 import Toast from 'react-native-toast-message'
 import * as SplashScreen from 'expo-splash-screen'
 import './i18n/i18n'
-import { useTranslation } from 'react-i18next'
-import { langChanged } from './components/Redux/SettingSlice'
-import { getLocales } from 'expo-localization'
 import Purchases, { LOG_LEVEL } from 'react-native-purchases'
 
-SplashScreen.preventAutoHideAsync().catch(() => {
-  /* reloading the app might trigger some race conditions, ignore them */
-})
+/* SplashScreen.preventAutoHideAsync().catch(() => {
+  /!* reloading the app might trigger some race conditions, ignore them *!/
+}) */
 export default function App (): JSX.Element {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const revenuecat_project_google_api_key: string = 'goog_ZeDFVcLugenOdHpKWqYIeATkGpP'
-  /*   const theme = createTheme({
-    mode: 'dark',
-    darkColors:
-      { success: COLOR_GREEN },
-    lightColors:
-      { },
-    components: {
-      Button: {
-        buttonStyle: {
-          /!* borderColor: 'blue' *!/
-        }
-      }
-    }
-  }) */
-  /* // Ignore log notification by message
-  LogBox.ignoreLogs(['Warning: Selector unknown returned the root state when called.'])
-  // Ignore all log notifications
-  LogBox.ignoreAllLogs() */
 
-  const splashHide = () => {
+  /* const splashHide = () => {
     setTimeout(SplashScreen.hideAsync, 2000)
   }
-
+ */
   useEffect(() => {
-    Purchases.setLogLevel(LOG_LEVEL.VERBOSE)
+    void Purchases.setLogLevel(LOG_LEVEL.VERBOSE)
 
     if (Platform.OS === 'ios') {
       /* Purchases.configure(
         {apiKey: <revenuecat_project_apple_api_key>}) */
     } else if (Platform.OS === 'android') {
-      Purchases.configure({ apiKey: revenuecat_project_google_api_key })
+      Purchases.configure(
+        { apiKey: revenuecat_project_google_api_key })
     }
   }, [])
 
@@ -65,7 +46,7 @@ export default function App (): JSX.Element {
   }, [])
 
   return (
-    <SafeAreaProvider onLayout={splashHide}>
+    <SafeAreaProvider /* onLayout={splashHide} */>
     <Provider store={store}>
 
       <PersistGate persistor={persistor} loading={null}>
