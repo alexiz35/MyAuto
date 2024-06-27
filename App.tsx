@@ -13,19 +13,28 @@ import * as SplashScreen from 'expo-splash-screen'
 import './i18n/i18n'
 import Purchases, { LOG_LEVEL } from 'react-native-purchases'
 
-/* SplashScreen.preventAutoHideAsync().catch(() => {
-  /!* reloading the app might trigger some race conditions, ignore them *!/
-}) */
+SplashScreen.preventAutoHideAsync().catch((e) => {
+  console.log('ErrorSplash', e)
+  /* reloading the app might trigger some race conditions, ignore them */
+})
 export default function App (): JSX.Element {
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change',
+      (nextAppState) => { CloseFunction(nextAppState) }
+    )
+    return () => {
+      subscription.remove()
+    }
+  }, [])
+
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const revenuecat_project_google_api_key: string = 'goog_ZeDFVcLugenOdHpKWqYIeATkGpP'
 
-  /* const splashHide = () => {
-    setTimeout(SplashScreen.hideAsync, 2000)
+  const splashHide = () => {
+    setTimeout(SplashScreen.hideAsync, 1000)
   }
- */
   useEffect(() => {
-    void Purchases.setLogLevel(LOG_LEVEL.VERBOSE)
+    void Purchases.setLogLevel(LOG_LEVEL.ERROR)
 
     if (Platform.OS === 'ios') {
       /* Purchases.configure(
@@ -36,27 +45,15 @@ export default function App (): JSX.Element {
     }
   }, [])
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change',
-      (nextAppState) => { CloseFunction(nextAppState) }
-    )
-    return () => {
-      subscription.remove()
-    }
-  }, [])
-
   return (
-    <SafeAreaProvider /* onLayout={splashHide} */>
+    <SafeAreaProvider onLayout={splashHide}>
     <Provider store={store}>
-
       <PersistGate persistor={persistor} loading={null}>
-        {/* <ThemeProvider theme={theme}> */}
         <Navigation />
 
         <Toast/>
         <NotificationComponent/>
 
-        {/* </ThemeProvider> */}
       </PersistGate>
     </Provider>
     </SafeAreaProvider>

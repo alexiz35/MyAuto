@@ -7,6 +7,10 @@
     "userInterfaceStyle": "dark",
     "scheme": "devizcar",
     "jsEngine": "hermes",
+    "splash": {
+      "backgroundColor": "#000000",
+      "image": "./assets/mySplash.png"
+    },
     "plugins": [
       "@react-native-google-signin/google-signin",
       [
@@ -53,7 +57,7 @@
         "android.permission.READ_EXTERNAL_STORAGE",
         "com.android.vending.BILLING"
       ],
-      "versionCode": 20
+      "versionCode": 21
     },
     "web": {
       "favicon": "./assets/favicon.png"
