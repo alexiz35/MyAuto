@@ -12,6 +12,7 @@ export type RootStackParamList = {
   SellerScreen: undefined | { item: Seller }
   MileageScreen: undefined
   PremiumScreen: undefined
+  ReportScreen: { uri: string }
 }
 export type RootTabParamList = {
   Home: undefined

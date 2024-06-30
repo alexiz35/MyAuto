@@ -1,6 +1,7 @@
-import { StateService } from '../../type'
+import { StateInfo, StateService } from '../../type'
 
-export const InfoTaskHTML = (task: StateService): string => `
+export const InfoTaskHTML = (info: StateInfo): string => {
+  return `
     <!doctype html>
     <html class="no-js" lang="">
     
@@ -42,7 +43,7 @@ export const InfoTaskHTML = (task: StateService): string => `
         </thead>
         <tbody>
         <tr>
-          <td>${task.id}</td>
+          <td>${info.nameCar}</td>
           
         </tr>
         </tbody>
@@ -52,3 +53,4 @@ export const InfoTaskHTML = (task: StateService): string => `
     
     </html>
 `
+}

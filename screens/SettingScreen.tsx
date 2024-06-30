@@ -23,6 +23,7 @@ import { LangCard } from '../components/SettingScreenComponents/LangCard'
 import { BackUpCard } from '../components/SettingScreenComponents/BackUpCard'
 import { PremiumCard } from '../components/SettingScreenComponents/PremiumCard'
 import { useTranslation } from 'react-i18next'
+import { PDFCard } from '../components/SettingScreenComponents/PDFCard'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SettingScreen'>
 
@@ -41,6 +42,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         }
       }])
   }
+
   return (
     <BackgroundView>
       <ScrollView
@@ -50,6 +52,7 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
           <PremiumCard/>
           <ThemeCard/>
           <LangCard/>
+        <PDFCard/>
           <SellersCard/>
           <MileageCard/>
           <CarsCard/>
