@@ -16,18 +16,19 @@ const ReportScreen = ({ route }: Props): JSX.Element => {
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
   const { t } = useTranslation()
-  const uriState = route.params.uri
+  /* const uriState = route.params.uri */
+  const [uri, setUri] = useState(undefined)
 
   // -------- navigation by another screen with item param ---------------------
   useFocusEffect(
     useCallback(() => {
-
+      setUri(route.params.uri)
     }, [])
   )
 
   return (
     <BackgroundView props={{ flex: 1 }}>
-      <Pdf source={{ uri: uriState, cache: false }}
+      <Pdf source={{ uri: route.params.uri, cache: false }}
            onError={(error) => { console.log(error) }}
            style={{
              flex: 1,
