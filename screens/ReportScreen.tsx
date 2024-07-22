@@ -17,7 +17,7 @@ const ReportScreen = ({ route }: Props): JSX.Element => {
   const { colors } = useAppTheme()
   const { t } = useTranslation()
   /* const uriState = route.params.uri */
-  const [uri, setUri] = useState(undefined)
+  const [uri, setUri] = useState<string | undefined>(undefined)
 
   // -------- navigation by another screen with item param ---------------------
   useFocusEffect(
