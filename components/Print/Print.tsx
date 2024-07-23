@@ -2,11 +2,11 @@ import * as Print from 'expo-print'
 import { Alert } from 'react-native'
 import { shareAsync } from 'expo-sharing'
 import { StateCar, StateInfo } from '../../type'
-import { InfoTaskHTML } from './InfoTaskHTML'
+import { FormHTML, TypeReport } from './FormHTML'
 
-export const printToFile = async (state: StateCar): Promise<string | undefined> => {
+export const printToFile = async (state: StateCar, selectReport: TypeReport): Promise<string | undefined> => {
   // On iOS/android prints the given html. On web prints the HTML from the current page.
-  const html = InfoTaskHTML(state)
+  const html = FormHTML({ stateCar: state, selectReport })
   try {
     const { uri } = await Print.printToFileAsync({ html })
     /* Alert.alert('file has created') */

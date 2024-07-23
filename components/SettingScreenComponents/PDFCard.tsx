@@ -14,6 +14,7 @@ import { getIndexCar, initialStateInfo, StateInfo } from '../../type'
 import { SelectDateModal } from '../StatScreenComponents/SelectDateModal'
 import { TypePickedDate } from '../StatScreenComponents/TypeStat'
 import { initialDate } from '../../screens/StatScreen'
+import { TypeReport } from '../Print/FormHTML'
 
 export const PDFCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -38,15 +39,20 @@ export const PDFCard = (): JSX.Element => {
 
   // -------------------------------------------------------------------------------------
   const [visiblePickDateModal, setVisiblePickDateModal] = useState(false)
+  const toggleVisibleCheckReport = () => {
+    setVisibleCheckReport(!visibleCheckReport)
+  }
+  // -------------------  date select handlers ---------------------------------------
   const dateOk = (date: TypePickedDate) => {
     setVisiblePickDateModal(false)
     setDateReport(date)
+    console.log('date', date)
   }
   const dateCancel = () => {
     setVisiblePickDateModal(false)
     setDateReport(undefined)
   }
-
+  // -------------------------------------------------------------------------------------
   const resetSettingReport = () => {
     setDateReport(undefined)
     setServiceReport(false)
@@ -57,14 +63,10 @@ export const PDFCard = (): JSX.Element => {
   }
   const cancelSettingReport = () => {
     resetSettingReport()
-    setVisibleCheckReport()
+    setVisibleCheckReport(false)
   }
-
   // -------------------------------------------------------------------------------------
 
-  const toggleVisibleCheckReport = () => {
-    setVisibleCheckReport(!visibleCheckReport)
-  }
   const toggleFullReport = () => {
     if (fullReport) {
       setServiceReport(false)
@@ -87,9 +89,19 @@ export const PDFCard = (): JSX.Element => {
         break
     }
   }
-
+  // ------------------------------------------------------------------------
+  const formSelectReport = (): TypeReport => {
+    return {
+      all: fullReport,
+      service: serviceReport,
+      part: partReport,
+      other: otherReport,
+      fuel: fuelReport,
+      date: dateReport
+    }
+  }
   const pressCreatePdf = async () => {
-    const uri = await printToFile(state)
+    const uri = await printToFile(state, formSelectReport())
     if (uri !== undefined) navigation.navigate('ReportScreen', { uri })
   }
 

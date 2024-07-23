@@ -1,7 +1,21 @@
 import { StateCar, StateInfo, StateService } from '../../type'
 import { tableService } from './TableService'
+import { TypePickedDate } from '../StatScreenComponents/TypeStat'
 
-export const InfoTaskHTML = (stateCar: StateCar): string => {
+export interface TypeReport {
+  all: boolean
+  service: boolean
+  part: boolean
+  other: boolean
+  fuel: boolean
+  date: undefined | TypePickedDate
+}
+interface PropsHTML {
+  stateCar: StateCar
+  selectReport: TypeReport
+}
+export const FormHTML = ({ stateCar, selectReport }: PropsHTML): string => {
+  console.log('HTML', selectReport, stateCar.info.currency)
   return `
     <!DOCTYPE html>
 <html class="no-js" lang="">
@@ -53,33 +67,33 @@ export const InfoTaskHTML = (stateCar: StateCar): string => {
     <!-- Add your site or application content here -->
     <h5>Отчет DevizCar по автомобилю ${stateCar.info.nameCar}</h5>
     <h2>${stateCar.info.brand} ${stateCar.info.model}</h2>
-    <h3>VIN: ${stateCar.info.vin}</h3>
+    <h3>VIN: ${stateCar.info.vin}</h3> 
     <div class="info-columns" >
         <div>
             <p>Кузов: ${stateCar.info.body}</p>
-            <p>Год выпуска: ${stateCar.info.currency}</p>
+            <p>Год выпуска: ${stateCar.info.year}</p>
             <p>Пробег при покупке: ${stateCar.info.buyMileage}</p>
-            <p>Текущий пробег: ${stateCar.info.year}</p>
+            <p>Текущий пробег: ${stateCar.currentMiles.currentMileage}</p>
         </div>
         <div>
-            <p>Топливо: ${stateCar.info}</p>
-            <p>Объем бака: ${stateCar.info}</p>
-            <p>Двигатель: ${stateCar.info}</p>
-            <p>Трансмиссия: ${stateCar.info}</p>
+            <p>Топливо: ${stateCar.info.fuel}</p>
+            <p>Объем бака: ${stateCar.info.fuelTank}</p>
+            <p>Двигатель: ${stateCar.info.engine}</p>
+            <p>Трансмиссия: ${stateCar.info.gear}</p>
         </div>
     </div>
     <hr>
     <h3>Выполнено работ на сумму </h3>
-    ${tableService(stateCar.services)}
+    ${selectReport.service ? tableService(stateCar.services) : ''}
     <hr>
     <h3>Куплено запчастей на сумму</h3>
-    ${tableService(stateCar.services)}
+    ${selectReport.part ? tableService(stateCar.services) : ''}
     <hr>
     <h3>Другие затраты на сумму</h3>
-    ${tableService(stateCar.services)}
+    ${selectReport.other ? tableService(stateCar.services) : ''}
     <hr>
     <h3>Заправлено топлива л на сумму</h3>
-    ${tableService(stateCar.services)}
+    ${selectReport.fuel ? tableService(stateCar.services) : ''}
     
            
      
