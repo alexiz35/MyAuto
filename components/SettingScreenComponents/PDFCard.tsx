@@ -1,7 +1,17 @@
-import { JSX, useEffect, useState } from 'react'
-import { Button, Card, Checkbox, Dialog, Divider, Icon, IconButton, Modal, Portal } from 'react-native-paper'
-import { Alert, Dimensions, GestureResponderEvent, Platform, View } from 'react-native'
-import { deletedAllSeller } from '../Redux/SellerSlice'
+import { JSX, useState } from 'react'
+import {
+  Button,
+  Card,
+  Checkbox,
+  Dialog,
+  Divider,
+  Icon,
+  IconButton,
+  Portal,
+  Text,
+  TouchableRipple
+} from 'react-native-paper'
+import { View } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
 // eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'
@@ -11,7 +21,7 @@ import { stylesSettingScreen } from './StyleSettingScreen'
 import { useTranslation } from 'react-i18next'
 import { printToFile } from '../Print/Print'
 import { getIndexCar, initialStateInfo, StateInfo } from '../../type'
-import { SelectDateModal } from '../StatScreenComponents/SelectDateModal'
+import { SelectDateModal, selectTextDate } from '../StatScreenComponents/SelectDateModal'
 import { TypePickedDate } from '../StatScreenComponents/TypeStat'
 import { initialDate } from '../../screens/StatScreen'
 import { TypeReport } from '../Print/FormHTML'
@@ -27,7 +37,7 @@ export const PDFCard = (): JSX.Element => {
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
 
   const { colors } = useAppTheme()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const [visibleCheckReport, setVisibleCheckReport] = useState(false)
   const [fullReport, setFullReport] = useState(false)
@@ -101,7 +111,7 @@ export const PDFCard = (): JSX.Element => {
     }
   }
   const pressCreatePdf = async () => {
-    const uri = await printToFile(state, formSelectReport())
+    const uri = await printToFile(state, formSelectReport(), t)
     if (uri !== undefined) navigation.navigate('ReportScreen', { uri })
   }
 
@@ -113,11 +123,8 @@ export const PDFCard = (): JSX.Element => {
       >
         <View style={stylesSettingScreen.iconText}>
           <Icon source={'circle'} color={colors.tertiary} size={10} />
-          <Button
-            style={stylesSettingScreen.text}
-            onPress={ pressCreatePdf}
-          >
-            Вывод отчета в PDF
+          <Button style={stylesSettingScreen.text} onPress={pressCreatePdf}>
+            {t('pdfCard.CREATE_PDF')}
           </Button>
         </View>
 
@@ -127,22 +134,24 @@ export const PDFCard = (): JSX.Element => {
         <Portal>
           <Dialog visible={visibleCheckReport} onDismiss={toggleVisibleCheckReport} dismissable>
             <Dialog.Title>
-              Вывод отчета по авто в PDF
+              {t('pdfCard.CREATE_PDF')}
             </Dialog.Title>
             <Dialog.Content>
-              <Checkbox.Item status={fullReport ? 'checked' : 'unchecked'} label={'Подробный отчет'} onPress={toggleFullReport} />
-              <Checkbox.Item status={serviceReport ? 'checked' : 'unchecked'} label={'Выполненные работы'} disabled={!fullReport}
+              <Checkbox.Item status={fullReport ? 'checked' : 'unchecked'} label={t('pdfCard.DETAILED_REPORT')} onPress={toggleFullReport} />
+              <Checkbox.Item status={serviceReport ? 'checked' : 'unchecked'} label={t('pdfCard.SERVICE')} disabled={!fullReport}
                              onPress={() => { toggleCheckbox('service') }}/>
-              <Checkbox.Item status={partReport ? 'checked' : 'unchecked'} label={'Покупка запчастей'} disabled={!fullReport}
+              <Checkbox.Item status={partReport ? 'checked' : 'unchecked'} label={t('pdfCard.PART')} disabled={!fullReport}
                              onPress={() => { toggleCheckbox('part') }}/>
-              <Checkbox.Item status={otherReport ? 'checked' : 'unchecked'} label={'Другие затраты'} disabled={!fullReport}
+              <Checkbox.Item status={otherReport ? 'checked' : 'unchecked'} label={t('pdfCard.OTHER')} disabled={!fullReport}
                              onPress={() => { toggleCheckbox('other') }}/>
-              <Checkbox.Item status={fuelReport ? 'checked' : 'unchecked'} label={'Заправки'} disabled={!fullReport}
+              <Checkbox.Item status={fuelReport ? 'checked' : 'unchecked'} label={t('pdfCard.FUEL')} disabled={!fullReport}
                              onPress={() => { toggleCheckbox('fuel') }}/>
               <Divider bold/>
-              <Button mode={'text'} onPress={() => { setVisiblePickDateModal(true) }}>
-                {dateReport === undefined ? 'Весь период' : String(dateReport.valueYear)}
-              </Button>
+              <TouchableRipple onPress={() => { setVisiblePickDateModal(true) }}>
+                <Text style={{ paddingVertical: 9, textAlign: 'center', color: colors.primary }}>
+                  {dateReport === undefined ? t('pdfCard.ALL_PERIOD') : String(selectTextDate(dateReport, i18n))}
+                </Text>
+              </TouchableRipple>
               <Portal>
                 <Dialog visible={visiblePickDateModal} dismissable onDismiss={() => { setVisiblePickDateModal(false) }}>
                   <SelectDateModal handleOk={dateOk} handleCancel={dateCancel} selectedDate={initialDate}/>
@@ -152,10 +161,10 @@ export const PDFCard = (): JSX.Element => {
 
             </Dialog.Content>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 20 }}>
-              <Button onPress={resetSettingReport}>Reset</Button>
+              <Button onPress={resetSettingReport}>{t('button.RESET')}</Button>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Button onPress={cancelSettingReport}>Cancel</Button>
-              <Button onPress={toggleVisibleCheckReport}>Ok</Button>
+              <Button onPress={cancelSettingReport}>{t('button.CANCEL')}</Button>
+              <Button onPress={toggleVisibleCheckReport}>{t('button.OK')}</Button>
               </View>
             </View>
           </Dialog>

@@ -1,24 +1,21 @@
-import {
-  View,
-  StyleSheet
-} from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { JSX, useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import {
-  StateService,
-  ModalPart, ListService, Seller, getIndexCar
-} from '../../../type'
+import { getIndexCar, ListService, ModalPart, Seller, StateService } from '../../../type'
 import { AddPartModal } from './AddPartModal'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
-  Modal,
-  Text,
-  Portal,
   Button,
+  Card,
+  Checkbox,
+  Dialog,
+  Modal,
+  Portal,
+  SegmentedButtons,
   Surface,
+  Text,
   TextInput,
-  TouchableRipple,
-  Checkbox, Dialog, Card, SegmentedButtons
+  TouchableRipple
 } from 'react-native-paper'
 import { PickService } from './PickService'
 import { Controller, useForm, useWatch } from 'react-hook-form'
@@ -34,6 +31,7 @@ import { useTranslation } from 'react-i18next'
 import * as Calendar from 'expo-calendar'
 import { addEvent, deleteEvent, updateEvent } from '../CalendarFunction'
 import Toast from 'react-native-toast-message'
+
 interface InputServiceProps {
   isCancel: () => void
   isOk: (serviceResult: StateService) => void
@@ -106,6 +104,14 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   }
 
   const formToData = (data: FormService): StateService => {
+    const createDateForModalParts = (): ModalPart[] => {
+      if (addModalParts !== undefined) {
+        return addModalParts?.map(item => ({
+          ...item,
+          dateBuy: data.startDate
+        }))
+      } else return []
+    }
     return {
       id: isEdit ? itemService?.id : Date.now(),
       // @ts-expect-error -typeService may be undefined-
@@ -118,7 +124,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       sumCostService: Number(data.sumCostService),
       sumCostParts: sumCost,
       addition: {
-        parts: addModalParts,
+        parts: createDateForModalParts(),
         services: {
           name: data.sellerName,
           phone: data.sellerPhone,
@@ -143,7 +149,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   })
   const [typeWork, setTypeWork] = useState<'mt' | 'repair' | string>('mt')
   const [typeService, setTypeService] = useState < ListService | undefined>(isEdit ? service?.typeService : undefined)
-  const [addModalParts, setAddModalParts] = useState<[ModalPart] | undefined>(isEdit ? service?.addition?.parts : undefined)
+  const [addModalParts, setAddModalParts] = useState<ModalPart[] | undefined>(isEdit ? service?.addition?.parts : undefined)
 
   const [visibleModalService, setVisibleModalService] = useState(false)
   const [visibleModalAddParts, setVisibleModalAddParts] = useState(false)

@@ -6,13 +6,32 @@ import WheelPickerSelectDouble, { TypeResultPicker } from './WheelPickerSelectDo
 import { Dialog, Divider, Button, RadioButton, Portal, Modal } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { getIndexCar } from '../../type'
-import { NAME_MONTH_RU, NAME_MONTH_EN, TypePickedDate } from './TypeStat'
+import { NAME_MONTH_RU, NAME_MONTH_EN, TypePickedDate, NAME_MONTH_UK } from './TypeStat'
 import { useTranslation } from 'react-i18next'
+// eslint-disable-next-line import/named
+import { i18n, TFunction } from 'i18next'
 
 interface Props {
   handleOk: (selectModal: TypePickedDate) => void
   handleCancel: () => void
   selectedDate: TypePickedDate
+}
+
+export const selectArrayMonth = (lang: i18n) => {
+  switch (lang.language) {
+    case 'en': return NAME_MONTH_EN
+    case 'ru': return NAME_MONTH_RU
+    case 'uk': return NAME_MONTH_UK
+    default: return NAME_MONTH_EN
+  }
+}
+export const selectTextDate = (date: TypePickedDate, lang: i18n) => {
+  switch (date.type) {
+    case 'year': return date.valueYear
+    case 'month': return `${String(selectArrayMonth(lang)[date.valueMonth])} ${String(date.valueMonthYear)}`
+    case 'period': return `${String(selectArrayMonth(lang)[date.period?.valueStartMonth])} ${String(date.period?.valueStartYear)} -
+- ${String(selectArrayMonth(lang)[date.period?.valueEndMonth])} ${String(date.period?.valueEndYear)}`
+  }
 }
 
 export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props): JSX.Element => {
@@ -25,7 +44,7 @@ export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props)
   const [visibleMonth, setVisibleMonth] = useState(false)
   const [visibleStartDate, setVisibleStartDate] = useState(false)
   const [visibleEndDate, setVisibleEndDate] = useState(false)
-  const [NAME_MONTH, SET_NAME_MONTH] = useState(i18n.language === 'en' ? NAME_MONTH_EN : NAME_MONTH_RU)
+  const [NAME_MONTH, SET_NAME_MONTH] = useState(selectArrayMonth(i18n))
 
   const [pickedYear, setPickedYear] = useState<string>(selectedDate.valueYear === undefined
     ? String(new Date().getFullYear())
@@ -197,39 +216,12 @@ export const SelectDateModal = ({ handleOk, handleCancel, selectedDate }: Props)
           // -----------------------------------------------------------------------------------------------------------}
         }
         <Dialog.Actions>
-          <Button
-            textColor={colors.error}
-            onPress={() => {
-              handleCancel()
-            }}
-          >CANCEL</Button>
-          <Button
-            /* title="CONFIRM" */
-            onPress={() => {
-              handleOk(pressConfirm())
-              /*   switch (checked) {
-                  case 'year': handleOk({ type: checked, valueYear: pickedYear })
-                    break
-                  case 'month': handleOk({ type: checked, valueYear: pickedMonthYear, valueMonth: NAME_MONTH.indexOf(pickedMonth) })
-                    break
-                  case 'period': handleOk({
-                    type: checked,
-                    period: {
-                      valueStartMonth: NAME_MONTH.indexOf(pickedStartMonth),
-                      valueStartYear: pickedStartYear,
-                      valueEndMonth: NAME_MONTH.indexOf(pickedEndMonth),
-                      valueEndYear: pickedEndYear
-                    }
-                  })
-                    break
-                  default: break
-                }
-              } */
-            }}
-            textColor={colors.tertiary}
-
-          >CONFIRM</Button>
-
+          <Button textColor={colors.error} onPress={() => { handleCancel() }}>
+            {t('button.CANCEL')}
+          </Button>
+          <Button textColor={colors.tertiary} onPress={() => { handleOk(pressConfirm()) }}>
+            {t('button.OK')}
+          </Button>
         </Dialog.Actions>
     </View>
   )

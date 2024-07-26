@@ -30,7 +30,8 @@ export default {
   button: {
     CANCEL: 'Cancel',
     OK: 'Ok',
-    CREATE: 'Create'
+    CREATE: 'Create',
+    RESET: 'Reset'
   },
   navi: {
     HOME: 'Home',
@@ -244,7 +245,8 @@ export default {
       TITLE: 'Add the parts you used',
       SEARCH: 'Search in stock',
       ADD: 'Add this part'
-    }
+    },
+    COST_PARTS: 'Cost Parts'
   },
   inputOther: {
     TITLE_ACCORDION_ADD: 'Add Other Costs',
@@ -305,6 +307,16 @@ export default {
     LIST_FUNCTION_3: 'Output the report to PDF',
     LIST_FUNCTION_4: 'Uploading photos of receipts and documents',
     BUTTON_DONAT: 'Donate'
+  },
+  pdfCard: {
+    CREATE_PDF: 'Output Report to PDF',
+    DETAILED_REPORT: 'Detailed Report',
+    SERVICE: 'Services',
+    PART: 'Purchasing Parts',
+    OTHER: 'Other Costs',
+    FUEL: 'Refueling',
+    ALL_PERIOD: 'All Period',
+    TITLE_REPORT: 'Report by DevizCar on car - '
   }
 
 }

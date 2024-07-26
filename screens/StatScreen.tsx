@@ -78,9 +78,9 @@ const StatScreen = (): JSX.Element => {
         setSumFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).amountFuel)
         setVolumeFuel(yearDataFuelChart(Number(selectedDate.valueYear), state).volumeFuel)
         setSumMileage(DataMilesChart(selectModal, state))
-        setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state))
-        setSumServices(yearDataServiceChart(Number(selectedDate.valueYear), state))
-        setSumOther(yearDataOtherChart(Number(selectedDate.valueYear), state))
+        setSumParts(yearDataPartsChart(Number(selectedDate.valueYear), state).sumCostPart)
+        setSumServices(yearDataServiceChart(Number(selectedDate.valueYear), state).sumCostService)
+        setSumOther(yearDataOtherChart(Number(selectedDate.valueYear), state).sumCostOther)
         break
       case 'month':
         if (selectModal.valueMonth !== undefined) {
@@ -88,9 +88,9 @@ const StatScreen = (): JSX.Element => {
           setSumFuel(monthDataFuelChart(selectedDate, state).amountFuel)
           setVolumeFuel(monthDataFuelChart(selectedDate, state).volumeFuel)
           setSumMileage(DataMilesChart(selectModal, state))
-          setSumParts(monthDataPartsChart(selectedDate, state))
-          setSumServices(monthDataServicesChart(selectedDate, state))
-          setSumOther(monthDataOtherChart(selectedDate, state))
+          setSumParts(monthDataPartsChart(selectedDate, state).sumCostPartMonth)
+          setSumServices(monthDataServicesChart(selectedDate, state).sumCostServiceMonth)
+          setSumOther(monthDataOtherChart(selectedDate, state).sumCostOtherMonth)
         }
         break
       case 'period':
@@ -100,9 +100,9 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
           setSumFuel(periodDataFuelChart(selectedDate, state).amountFuel)
           setVolumeFuel(periodDataFuelChart(selectedDate, state).volumeFuel)
           setSumMileage(DataMilesChart(selectedDate, state))
-          setSumParts(periodDataPartsChart(selectedDate, state))
-          setSumServices(periodDataServicesChart(selectedDate, state))
-          setSumOther(periodDataOtherChart(selectedDate, state))
+          setSumParts(periodDataPartsChart(selectedDate, state).sumCostPartPeriod)
+          setSumServices(periodDataServicesChart(selectedDate, state).sumCostServicePeriod)
+          setSumOther(periodDataOtherChart(selectedDate, state).sumCostOtherPeriod)
         }
         break
       default: break

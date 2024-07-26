@@ -1,12 +1,12 @@
 import * as Print from 'expo-print'
-import { Alert } from 'react-native'
-import { shareAsync } from 'expo-sharing'
-import { StateCar, StateInfo } from '../../type'
+import { StateCar } from '../../type'
 import { FormHTML, TypeReport } from './FormHTML'
+// eslint-disable-next-line import/named
+import { TFunction } from 'i18next'
 
-export const printToFile = async (state: StateCar, selectReport: TypeReport): Promise<string | undefined> => {
+export const printToFile = async (state: StateCar, selectReport: TypeReport, t: TFunction<'translation', undefined>): Promise<string | undefined> => {
   // On iOS/android prints the given html. On web prints the HTML from the current page.
-  const html = FormHTML({ stateCar: state, selectReport })
+  const html = FormHTML({ stateCar: state, selectReport, t })
   try {
     const { uri } = await Print.printToFileAsync({ html })
     /* Alert.alert('file has created') */

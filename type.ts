@@ -218,7 +218,7 @@ export interface StateService {
   sumCostService?: number
   addition?:
   {
-    parts?: [ModalPart]
+    parts?: ModalPart[]
     services?: Seller
   }
 }
@@ -555,6 +555,7 @@ export interface ModalPart {
   quantityPart: number
   numberPart: string
   seller?: Seller
+  dateBuy?: Date
 }
 
 export interface ModalAddPartsProps {

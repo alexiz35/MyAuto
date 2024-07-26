@@ -29,7 +29,8 @@ export default {
   button: {
     CANCEL: 'Відміна',
     OK: 'Ok',
-    CREATE: 'Створити'
+    CREATE: 'Створити',
+    RESET: 'Скид'
   },
   navi: {
     HOME: 'Головна',
@@ -247,7 +248,8 @@ export default {
       TITLE: 'Додайте запчастини, які використовували',
       SEARCH: 'Пошук на складі',
       ADD: 'Додайте цю запчастину до списку'
-    }
+    },
+    COST_PARTS: 'Ціна запчастин'
   },
   inputOther: {
     TITLE_ACCORDION_ADD: 'Додайте інші витрати',
@@ -309,6 +311,16 @@ export default {
     LIST_FUNCTION_3: 'Виведення звіту у PDF',
     LIST_FUNCTION_4: 'Завантаження фото чеків та документів',
     BUTTON_DONAT: 'Підтримати проект'
+  },
+  pdfCard: {
+    CREATE_PDF: 'Виведення звіту у PDF',
+    DETAILED_REPORT: 'Детальний звіт',
+    SERVICE: 'Виконані роботи',
+    PART: 'Купівля запчастин',
+    OTHER: 'Інші витрати',
+    FUEL: 'Заправки',
+    ALL_PERIOD: 'Весь період',
+    TITLE_REPORT: 'Звіт DevizCar по автомобілю - '
   }
 
 }

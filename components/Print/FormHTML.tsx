@@ -1,6 +1,10 @@
 import { StateCar, StateInfo, StateService } from '../../type'
 import { tableService } from './TableService'
 import { TypePickedDate } from '../StatScreenComponents/TypeStat'
+import { tableOther } from './TableOther'
+import { tableFuel } from './TableFuel'
+import { tablePart } from './TablePart'
+import { TFunction } from 'i18next'
 
 export interface TypeReport {
   all: boolean
@@ -13,8 +17,9 @@ export interface TypeReport {
 interface PropsHTML {
   stateCar: StateCar
   selectReport: TypeReport
+  t: TFunction<'translation', undefined>
 }
-export const FormHTML = ({ stateCar, selectReport }: PropsHTML): string => {
+export const FormHTML = ({ stateCar, selectReport, t }: PropsHTML): string => {
   console.log('HTML', selectReport, stateCar.info.currency)
   return `
     <!DOCTYPE html>
@@ -28,6 +33,9 @@ export const FormHTML = ({ stateCar, selectReport }: PropsHTML): string => {
 
     <style type="text/css">
         h2,h3 {
+            text-align: center;
+        }
+        h4 {
             text-align: center;
         }
         .info-columns {
@@ -59,44 +67,38 @@ export const FormHTML = ({ stateCar, selectReport }: PropsHTML): string => {
         TH {
             padding: 3px;
             /* Поля вокруг текста */
+        },
+        .title-table {
+            font-weight: bold;
+            margin-bottom: 50px;
         }
     </style>
 </head>
 
 <body>
     <!-- Add your site or application content here -->
-    <h5>Отчет DevizCar по автомобилю ${stateCar.info.nameCar}</h5>
+    <h5>${t('pdfCard.TITLE_REPORT')} ${stateCar.info.nameCar}</h5>
     <h2>${stateCar.info.brand} ${stateCar.info.model}</h2>
-    <h3>VIN: ${stateCar.info.vin}</h3> 
+    <h3>${t('carInfo.VIN')}: ${stateCar.info.vin}</h3> 
     <div class="info-columns" >
         <div>
-            <p>Кузов: ${stateCar.info.body}</p>
-            <p>Год выпуска: ${stateCar.info.year}</p>
-            <p>Пробег при покупке: ${stateCar.info.buyMileage}</p>
-            <p>Текущий пробег: ${stateCar.currentMiles.currentMileage}</p>
+            <p>${t('carInfo.BODY')}: ${stateCar.info.body}</p>
+            <p>${t('carInfo.Year')}: ${stateCar.info.year}</p>
+            <p>${t('carInfo.MILEAGE_BUY')}: ${stateCar.info.buyMileage}</p>
+            <p>${t('homeScreen.mainCard.CURRENT_MILEAGE')}: ${stateCar.currentMiles.currentMileage}</p>
         </div>
         <div>
-            <p>Топливо: ${stateCar.info.fuel}</p>
-            <p>Объем бака: ${stateCar.info.fuelTank}</p>
-            <p>Двигатель: ${stateCar.info.engine}</p>
-            <p>Трансмиссия: ${stateCar.info.gear}</p>
+            <p>${t('carInfo.FUEL')}: ${stateCar.info.fuel}</p>
+            <p>${t('FUEL_TANK')}: ${stateCar.info.fuelTank}</p>
+            <p>${t('carInfo.ENGINE')}: ${stateCar.info.engine}</p> 
+            <p>${t('carInfo.GEAR')}: ${stateCar.info.gear}</p>
         </div>
     </div>
     <hr>
-    <h3>Выполнено работ на сумму </h3>
-    ${selectReport.service ? tableService(stateCar.services) : ''}
-    <hr>
-    <h3>Куплено запчастей на сумму</h3>
-    ${selectReport.part ? tableService(stateCar.services) : ''}
-    <hr>
-    <h3>Другие затраты на сумму</h3>
-    ${selectReport.other ? tableService(stateCar.services) : ''}
-    <hr>
-    <h3>Заправлено топлива л на сумму</h3>
-    ${selectReport.fuel ? tableService(stateCar.services) : ''}
-    
-           
-     
+    ${selectReport.service ? tableService(stateCar, selectReport, t) : ''}
+    ${selectReport.part ? tablePart(stateCar, selectReport, t) : ''}
+    ${selectReport.other ? tableOther(stateCar, selectReport, t) : ''}
+    ${selectReport.fuel ? tableFuel(stateCar, selectReport, t) : ''}
 </body>
 
 </html>
