@@ -50,12 +50,12 @@ const SettingScreen = ({ navigation }: Props): JSX.Element => {
         style={{ paddingHorizontal: 10, height: '100%' }}
       >
           <PremiumCard/>
+          <SellersCard/>
+          <CarsCard/>
+          <PDFCard/>
           <ThemeCard/>
           <LangCard/>
-        <PDFCard/>
-          <SellersCard/>
           <MileageCard/>
-          <CarsCard/>
           <BackUpCard/>
           <GoogleCard/>
           <ControlCard/>

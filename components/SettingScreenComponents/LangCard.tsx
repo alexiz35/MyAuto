@@ -40,7 +40,6 @@ export const LangCard = (): JSX.Element => {
         </View>
         <View style={{ paddingRight: 10 }}>
           <Button
-
             icon={'translate'}
             /* size={18} */
             mode={'text'}
