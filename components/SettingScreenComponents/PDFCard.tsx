@@ -12,7 +12,7 @@ import {
   TouchableRipple
 } from 'react-native-paper'
 import { View } from 'react-native'
-import { useAppDispatch, useAppSelector } from '../Redux/hook'
+import { useAppSelector } from '../Redux/hook'
 // eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
@@ -20,7 +20,7 @@ import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from './StyleSettingScreen'
 import { useTranslation } from 'react-i18next'
 import { printToFile } from '../Print/Print'
-import { getIndexCar, initialStateInfo, StateInfo } from '../../type'
+import { getIndexCar } from '../../type'
 import { SelectDateModal, selectTextDate } from '../StatScreenComponents/SelectDateModal'
 import { TypePickedDate } from '../StatScreenComponents/TypeStat'
 import { initialDate } from '../../screens/StatScreen'
@@ -28,13 +28,8 @@ import { TypeReport } from '../Print/FormHTML'
 import Toast from 'react-native-toast-message'
 
 export const PDFCard = (): JSX.Element => {
-  const dispatch = useAppDispatch()
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
-  const infoCar: StateInfo = useAppSelector(state => (
-    state.cars[getIndexCar(state.cars, state.numberCar)].info === undefined
-      ? initialStateInfo
-      : state.cars[getIndexCar(state.cars, state.numberCar)].info
-  ))
+
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
 
   const { colors } = useAppTheme()
@@ -57,7 +52,6 @@ export const PDFCard = (): JSX.Element => {
   const dateOk = (date: TypePickedDate) => {
     setVisiblePickDateModal(false)
     setDateReport(date)
-    console.log('date', date)
   }
   const dateCancel = () => {
     setVisiblePickDateModal(false)

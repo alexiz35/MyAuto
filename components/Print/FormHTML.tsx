@@ -1,4 +1,4 @@
-import { StateCar, StateInfo, StateService } from '../../type'
+import { StateCar } from '../../type'
 import { tableService } from './TableService'
 import { TypePickedDate } from '../StatScreenComponents/TypeStat'
 import { tableOther } from './TableOther'
@@ -20,7 +20,6 @@ interface PropsHTML {
   t: TFunction<'translation', undefined>
 }
 export const FormHTML = ({ stateCar, selectReport, t }: PropsHTML): string => {
-  console.log('HTML', selectReport, stateCar.info.currency)
   return `
     <!DOCTYPE html>
 <html class="no-js" lang="">
