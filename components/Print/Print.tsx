@@ -9,10 +9,7 @@ export const printToFile = async (state: StateCar, selectReport: TypeReport, t: 
   const html = FormHTML({ stateCar: state, selectReport, t })
   try {
     const { uri } = await Print.printToFileAsync({ html })
-    /* Alert.alert('file has created') */
     return uri
-    // sending file somewhere
-    /* await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' }) */
   } catch (err) {
     console.log('ErrorPrintPDF')
     return undefined

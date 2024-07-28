@@ -88,7 +88,8 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "@config-plugins/react-native-pdf": "7.0.0",
-    "@config-plugins/react-native-blob-util": "7.0.0"
+    "@config-plugins/react-native-blob-util": "7.0.0",
+    "expo-document-picker": "~11.10.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",

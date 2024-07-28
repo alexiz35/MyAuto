@@ -24,7 +24,6 @@ import { NAME_MONTH_EN, NAME_MONTH_RU, TypePickedDate } from '../components/Stat
 import { useTranslation } from 'react-i18next'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { getLevelAccessDataSecurely } from '../components/PurchaseComponents/PurchaseFunctions'
-import { RootTabParamList } from '../components/Navigation/TypeNavigation'
 import { LEVEL_STAT } from '../components/PurchaseComponents/TypesPurchases'
 
 export const initialDate: TypePickedDate = {
@@ -64,12 +63,6 @@ const StatScreen = (): JSX.Element => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigation()
   const [NAME_MONTH, SET_NAME_MONTH] = useState(i18n.language === 'en' ? NAME_MONTH_EN : NAME_MONTH_RU)
-
-  /*   const calcSum = (targetArray: number[]): number => {
-    if (targetArray.length !== 0) {
-      return targetArray.reduce((accumulator, currentValue) => accumulator + currentValue)
-    } else { return 0 }
-  } */
 
   const selectTypeDate = (selectModal: TypePickedDate): void => {
     switch (selectModal.type) {
@@ -132,12 +125,12 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
         const levelAccess = await getLevelAccessDataSecurely()
         if (!LEVEL_STAT.includes(levelAccess)) {
           Alert.alert(
-            'Функция доступна при уровне доступа Plus',
-            'Хотите приобрести доступ?',
+            t('premium.alertAccess.TITLE'),
+            t('premium.alertAccess.MESSAGE'),
             [
-              { text: 'Cancel', onPress: () => { navigate.goBack() } },
+              { text: t('button.CANCEL'), onPress: () => { navigate.goBack() } },
               {
-                text: 'Получить доступ',
+                text: t('premium.alertAccess.TEXT'),
                 onPress: () => {
                 // @ts-expect-error props for navigation
                   navigate.navigate('PremiumScreen')

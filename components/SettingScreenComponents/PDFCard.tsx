@@ -25,6 +25,7 @@ import { SelectDateModal, selectTextDate } from '../StatScreenComponents/SelectD
 import { TypePickedDate } from '../StatScreenComponents/TypeStat'
 import { initialDate } from '../../screens/StatScreen'
 import { TypeReport } from '../Print/FormHTML'
+import Toast from 'react-native-toast-message'
 
 export const PDFCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -113,6 +114,15 @@ export const PDFCard = (): JSX.Element => {
   const pressCreatePdf = async () => {
     const uri = await printToFile(state, formSelectReport(), t)
     if (uri !== undefined) navigation.navigate('ReportScreen', { uri })
+    else {
+      Toast.show({
+        type: 'error',
+        text1: t('pdfCard.ERROR_CREATE_PDF'),
+        visibilityTime: 3000,
+        text2: t('pdfCard.ERROR_CREATE_PDF2'),
+        text2Style: { fontSize: 11, fontWeight: 'bold', color: colors.text }
+      })
+    }
   }
 
   return (

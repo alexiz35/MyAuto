@@ -13,8 +13,7 @@ import { ModalPickNameCar } from '../CarInfoScreenComponents/ModalPickNameCar'
 import { stylesSettingScreen } from './StyleSettingScreen'
 import { useTranslation } from 'react-i18next'
 import {
-  getLevelAccessDataSecurely, getLevelAccessSecure,
-  TypeLevelAccess
+  getLevelAccessDataSecurely
 } from '../PurchaseComponents/PurchaseFunctions'
 import { log } from 'expo/build/devtools/logger'
 import { LEVEL_CARS } from '../PurchaseComponents/TypesPurchases'

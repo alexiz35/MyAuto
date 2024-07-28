@@ -414,9 +414,9 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     setVisibleModalAddParts(false)
     Toast.show({
       type: 'info',
-      text1: 'Не забудьте отметить на складе ',
+      text1: t('inputService.TOAST_TEXT1'),
       visibilityTime: 3000,
-      text2: 'установку/снятие деталей после сохранения 👋',
+      text2: `${t('inputService.TOAST_TEXT2')} 👋`,
       text2Style: { fontSize: 11, fontWeight: 'bold', color: theme.colors.text }
     })
   }

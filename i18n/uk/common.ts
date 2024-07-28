@@ -249,7 +249,9 @@ export default {
       SEARCH: 'Пошук на складі',
       ADD: 'Додайте цю запчастину до списку'
     },
-    COST_PARTS: 'Ціна запчастин'
+    COST_PARTS: 'Ціна запчастин',
+    TOAST_TEXT1: 'Не забудьте відзначити на складі ',
+    TOAST_TEXT2: 'встановлення/зняття запчастин після збереження'
   },
   inputOther: {
     TITLE_ACCORDION_ADD: 'Додайте інші витрати',
@@ -310,7 +312,12 @@ export default {
     LIST_FUNCTION_2: 'Детальна статистика',
     LIST_FUNCTION_3: 'Виведення звіту у PDF',
     LIST_FUNCTION_4: 'Завантаження фото чеків та документів',
-    BUTTON_DONAT: 'Підтримати проект'
+    BUTTON_DONAT: 'Підтримати проект',
+    alertAccess: {
+      TITLE: 'Функція доступна за умови рівня доступу - ',
+      MESSAGE: 'Бажаєте придбати доступ?',
+      TEXT: 'Отримати доступ'
+    }
   },
   pdfCard: {
     CREATE_PDF: 'Виведення звіту у PDF',
@@ -320,7 +327,13 @@ export default {
     OTHER: 'Інші витрати',
     FUEL: 'Заправки',
     ALL_PERIOD: 'Весь період',
-    TITLE_REPORT: 'Звіт DevizCar по автомобілю - '
+    TITLE_REPORT: 'Звіт DevizCar по автомобілю - ',
+    SAVE: 'Зберегти',
+    SEND: 'Відправити',
+    ERROR_CREATE_PDF: 'Звіт не створено',
+    ERROR_CREATE_PDF2: 'Спробуйте створити його ще раз',
+    FILE_SAVED: 'Файл успішно збережено',
+    FILE_SAVED_ERROR: 'Помилка при збереженні файлу'
   }
 
 }

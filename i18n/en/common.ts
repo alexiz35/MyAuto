@@ -246,7 +246,9 @@ export default {
       SEARCH: 'Search in stock',
       ADD: 'Add this part'
     },
-    COST_PARTS: 'Cost Parts'
+    COST_PARTS: 'Cost Parts',
+    TOAST_TEXT1: 'Don\'t forget to mark in stock ',
+    TOAST_TEXT2: 'installing/removing parts after saving'
   },
   inputOther: {
     TITLE_ACCORDION_ADD: 'Add Other Costs',
@@ -306,7 +308,12 @@ export default {
     LIST_FUNCTION_2: 'Detailed Statistics',
     LIST_FUNCTION_3: 'Output the report to PDF',
     LIST_FUNCTION_4: 'Uploading photos of receipts and documents',
-    BUTTON_DONAT: 'Donate'
+    BUTTON_DONAT: 'Donate',
+    alertAccess: {
+      TITLE: 'The function is available with access level - ',
+      MESSAGE: 'Would you like to purchase access?',
+      TEXT: 'Get access'
+    }
   },
   pdfCard: {
     CREATE_PDF: 'Output Report to PDF',
@@ -316,7 +323,14 @@ export default {
     OTHER: 'Other Costs',
     FUEL: 'Refueling',
     ALL_PERIOD: 'All Period',
-    TITLE_REPORT: 'Report by DevizCar on car - '
+    TITLE_REPORT: 'Report by DevizCar on car - ',
+    SAVE: 'Save',
+    SEND: 'Send',
+    ERROR_CREATE_PDF: 'The report doesn\'t created',
+    ERROR_CREATE_PDF2: 'Try to create it again',
+    FILE_SAVED: 'The File was successfully saved ',
+    FILE_SAVED_ERROR: 'File saving error'
+
   }
 
 }

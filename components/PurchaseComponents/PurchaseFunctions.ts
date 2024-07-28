@@ -71,7 +71,7 @@ const saveLevelAccessDataSecurely = async (levelAccess: string) => {
   }
 }
 
-export const getLevelAccessSecure = () => {
+/* export const getLevelAccessSecure = () => {
   let levelAccess: TypeLevelAccess | null = 'Free'
   SecureStore.getItemAsync('levelAccess')
     .then(result => {
@@ -91,4 +91,4 @@ export const getLevelAccessSecure = () => {
       levelAccess = 'Free'
       return levelAccess
     })
-}
+} */

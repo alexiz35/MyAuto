@@ -1,4 +1,6 @@
 import * as FileSystem from 'expo-file-system'
+import * as DocumentPicker from 'expo-document-picker'
+import Toast from 'react-native-toast-message'
 const { StorageAccessFramework } = FileSystem
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -34,8 +36,8 @@ export const writeFile = (filename: string, data: object) => {
   console.log('path', path)
 
   FileSystem.writeAsStringAsync(path, JSON.stringify(data))
-    .then((FileInfo) => console.log('FILE WRITTEN!', FileInfo))
-    .catch((err) => console.log('errSave', err.message))
+    .then((FileInfo) => { console.log('FILE WRITTEN!', FileInfo) })
+    .catch((err) => { console.log('errSave', err.message) })
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -57,4 +59,31 @@ export function isFile (filename: string): boolean {
       console.log('errInfo', errInfo)
       return false
     })
+}
+// ********************************************************************************************
+// Функция для копирования PDF-файла
+export const savePDFFile = async (uriPDF: string) => {
+  const fileName = 'ReportCar ' + new Date().toLocaleDateString()
+  const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync()
+  // Check if permission granted
+  if (permissions.granted) {
+    // Get the directory uri that was approved
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    const directoryUri = permissions.directoryUri
+    try {
+      const dataPDF = await StorageAccessFramework.readAsStringAsync(uriPDF, { encoding: 'base64' })
+      await StorageAccessFramework.createFileAsync(directoryUri, fileName, 'application/pdf')
+        .then(async (fileUri) => {
+          // Save data to newly created file
+          await FileSystem.writeAsStringAsync(fileUri, dataPDF, { encoding: FileSystem.EncodingType.Base64 })
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    } catch (e) {
+      console.log('ERR_SavePdfFile', e)
+    }
+  } else {
+    alert('You must allow permission to save.')
+  }
 }
