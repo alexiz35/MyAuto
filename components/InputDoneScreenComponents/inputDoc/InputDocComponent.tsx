@@ -18,6 +18,7 @@ import { type StackNavigationProp } from '@react-navigation/stack'
 import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../Redux/hook'
+import { DocsPanel } from '../../docsPanel/DocsPanel'
 
 interface InputDocProps {
   isCancel: () => void
@@ -130,7 +131,9 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
 
   return (
     <View>
-
+<Portal>
+  <DocsPanel/>
+</Portal>
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
         <View>
           <View style={styles.viewAllInput}>

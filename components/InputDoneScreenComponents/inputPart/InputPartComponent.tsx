@@ -17,6 +17,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../Redux/hook'
+import { DocsPanel } from '../../docsPanel/DocsPanel'
 
 interface InputPartProps {
   isCancel: () => void
@@ -177,7 +178,9 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
   return (
     <View >
       {/* {isOpenAccordion ? <ActivityIndicator/> : null} */}
-
+      <Portal>
+        <DocsPanel/>
+      </Portal>
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }} >
 
             <View>
