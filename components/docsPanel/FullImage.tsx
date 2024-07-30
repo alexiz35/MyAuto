@@ -11,7 +11,7 @@ interface PropsFullImage {
 export const FullImage = ({ uri, closeImage }: PropsFullImage): React.JSX.Element => {
   return (
     <>
-      <Image source={uri} style={{ flex: 1, width: '100%' }} contentFit={'none'}/>
+      <Image source={uri} style={{ flex: 1, width: '100%' }} contentFit={'contain'}/>
       <IconButton icon={'close'} style={styles.close} size={18} mode={'contained'} onPress={closeImage}/>
       <FAB icon={'share-variant'} style={styles.fab}
            onPress={async () => {
