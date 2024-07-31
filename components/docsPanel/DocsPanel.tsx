@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   StyleSheet, Modal, Dimensions, FlatList, Alert
 } from 'react-native'
-import { Card, FAB, IconButton, Portal, Surface } from 'react-native-paper'
+import { Card, FAB, IconButton, Portal } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { RenderImages } from './RenderImages'
 import { FullImage } from './FullImage'
 import * as ImagePicker from 'expo-image-picker'
-import * as FileSystem from 'expo-file-system'
 import { useTranslation } from 'react-i18next'
 
 export interface TypeImages {
@@ -16,7 +15,7 @@ export interface TypeImages {
 }
 interface PropsDocsPanel {
   images: TypeImages[] | undefined
-  setImages: React.Dispatch<React.SetStateAction<TypeImages[]>>
+  setImages: React.Dispatch<React.SetStateAction<TypeImages[] | undefined>>
 }
 export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Element => {
   const { colors } = useAppTheme()
@@ -45,18 +44,6 @@ export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Elem
   }
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    /* void FileSystem.getInfoAsync(FileSystem.documentDirectory + '/photoDocs')
-      .then(value => {
-        if (!value.exists) {
-          void FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + '/photoDocs')
-          console.log('MakeDir')
-        }
-      })
-      .catch((reason) => {
-        console.log('ERROR', reason)
-      }) */
-
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       /* allowsEditing: true, */
@@ -75,18 +62,6 @@ export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Elem
           uri: result.assets[0].uri
         }])
       }
-      // копируем файл из временного кэша ImagePicker в папку программы
-      /* await FileSystem.copyAsync({
-        from: result.assets[0].uri,
-        to: FileSystem.documentDirectory + '/photoDocs/' + result.assets[0].fileName
-      })
-        .then(() => {
-          console.log('Pick', result.assets[0].exif, result)
-          setImages([...images, { name: result.assets[0].fileName, uri: FileSystem.documentDirectory + '/photoDocs/' + result.assets[0].fileName }])
-        })
-        .catch((reason) => {
-          console.log('ERROR', reason)
-        }) */
     }
   }
 
@@ -98,14 +73,9 @@ export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Elem
       {
         text: t('button.OK'),
         onPress: () => {
-          setImages(images.filter((item) => item.uri !== uri))
-          /* try {
-            await FileSystem.deleteAsync(uri, { idempotent: true })
-            const tempImagesAfterDel = images.filter((item) => item.uri !== uri)
-            setImages(tempImagesAfterDel)
-          } catch (e) {
-            console.log(e)
-          } */
+          if (images !== undefined) {
+            setImages(images.filter((item) => item.uri !== uri))
+          }
         }
       }
     ])

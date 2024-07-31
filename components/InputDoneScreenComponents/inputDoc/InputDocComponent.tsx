@@ -1,16 +1,10 @@
-import {
-  View,
-  StyleSheet
-} from 'react-native'
-import {
-  JSX, useEffect,
-  useState
-} from 'react'
+import { StyleSheet, View } from 'react-native'
+import { JSX, useEffect, useState } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { getIndexCar, type Seller, type StateOther } from '../../../type'
 import Accordion from '../../Accordion'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { useTheme, Surface, TextInput, Button, Portal, Dialog } from 'react-native-paper'
+import { Button, Dialog, Portal, Surface, TextInput, useTheme } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
 import { useNavigation } from '@react-navigation/native'
@@ -135,12 +129,8 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
   const handleOk = async (dataForm: FormOther) => {
     const temp = formToData(dataForm)
     if (images !== undefined) {
-      console.log('OkBeforeTemp', images)
-      const tempSave = await saveImages('Other/', images, temp.id)
-      console.log('OkTempSave', tempSave, images)
-      temp.images = tempSave
+      temp.images = await saveImages('Other/', images, temp.id)
     }
-    console.log('OK', temp)
     isOk(temp)
   }
 

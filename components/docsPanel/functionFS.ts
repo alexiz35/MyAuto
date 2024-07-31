@@ -1,9 +1,11 @@
 import * as FileSystem from 'expo-file-system'
 import { TypeImages } from './DocsPanel'
 
+export const DIRECTORY_PARENT = 'photoDocs/'
+
 export const saveImages = async (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Service/', images: TypeImages[] = [], id: number) => {
   let savedImages: TypeImages[] = []
-  const DIRECTORY_PARENT = 'photoDocs/'
+
   const idDirectory = `${id}/`
   const fullPath = FileSystem.documentDirectory + DIRECTORY_PARENT + directory + idDirectory
   // ----------------------- check directory and create it -------------------------------------------------------------
@@ -12,10 +14,8 @@ export const saveImages = async (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Serv
       if (value.exists) {
         void FileSystem.getInfoAsync(FileSystem.documentDirectory + DIRECTORY_PARENT + directory)
           .then(result => {
-            console.log('isParent?')
             if (!result.exists) {
               void FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + DIRECTORY_PARENT + directory)
-              console.log('MakeParent')
             }
           }
           )
@@ -23,9 +23,7 @@ export const saveImages = async (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Serv
             console.log('ERROR', reason)
           })
       } else {
-        console.log('NoParent')
         void FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + DIRECTORY_PARENT + directory)
-        console.log('NoParents-MakeParent')
       }
     })
     .catch((reason) => {
@@ -35,7 +33,6 @@ export const saveImages = async (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Serv
     .then(async value => {
       if (value.exists) {
         savedImages = images.slice()
-        console.log('IsFULLPATH', savedImages)
         try {
           // Получаем список файлов в директории
           const filesInDirectory = await FileSystem.readDirectoryAsync(fullPath)
@@ -46,14 +43,12 @@ export const saveImages = async (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Serv
           // Удаляем файлы, которых нет в новом массиве
           for (const fileName of filesInDirectory) {
             if (!newFileNames.has(fileName)) {
-              console.log('Delete', fileName)
               await FileSystem.deleteAsync(fullPath + fileName)
             }
           }
           // Добавляем новые файлы, которых нет в директории
           for (const newFile of images) {
             if (!filesInDirectorySet.has(newFile.name)) {
-              console.log('ADDFile, Images : ', images)
               // копируем файл из временного кэша ImagePicker в папку программы
               await FileSystem.copyAsync({
                 from: newFile.uri,
@@ -64,7 +59,6 @@ export const saveImages = async (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Serv
                     if (image.name === newFile.name) {
                       image.uri = fullPath + newFile.name
                     }
-                    console.log('ADDFor', savedImages)
                   })
                 })
                 .catch((reason) => {
@@ -77,7 +71,6 @@ export const saveImages = async (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Serv
           console.error('Ошибка при обновлении файлов:', error)
         }
       } else {
-        console.log('NoFullPath')
         await FileSystem.makeDirectoryAsync(fullPath)
         for (const image of images) {
           // копируем файл из временного кэша ImagePicker в папку программы
@@ -98,6 +91,13 @@ export const saveImages = async (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Serv
         console.log('Файлы успешно созданы')
       }
     })
-  console.log('RETURNALL:', savedImages)
   return savedImages
+}
+
+export const deleteDirectory = (directory: 'Fuel/' | 'Other/' | 'Part/' | 'Service/', id: number) => {
+  try {
+    void FileSystem.deleteAsync(FileSystem.documentDirectory + DIRECTORY_PARENT + directory + String(id))
+  } catch (e) {
+    console.log('Error delete directory', e)
+  }
 }

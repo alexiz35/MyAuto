@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { delStateCarReducer } from '../../Redux/CarsSlice'
 import { useTranslation } from 'react-i18next'
+import { deleteDirectory } from '../../docsPanel/functionFS'
 
 interface propsRowPart {
   handlePress: (item: StateOther) => void
@@ -117,6 +118,7 @@ export const RenderRowOther = ({ item, handlePress }: propsRowPart): JSX.Element
                        leadingIcon={'delete'}
                        onPress={() => {
                          dispatch(delStateCarReducer({ type: 'others', numberCar: carId, id: item.id }))
+                         deleteDirectory('Other/', item.id)
                          closeMenu()
                        }}
             />
