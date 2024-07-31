@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StyleSheet, Modal, Dimensions, FlatList, Alert
 } from 'react-native'
@@ -10,18 +10,24 @@ import * as ImagePicker from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system'
 import { useTranslation } from 'react-i18next'
 
-interface TypeImages {
+export interface TypeImages {
   name: string
   uri: string
 }
 interface PropsDocsPanel {
-  images: TypeImages[]
+  images: TypeImages[] | undefined
   setImages: React.Dispatch<React.SetStateAction<TypeImages[]>>
 }
-export const DocsPanel = (): React.JSX.Element => {
+export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Element => {
   const { colors } = useAppTheme()
   const { t } = useTranslation()
-  /* const [images, setImages] = useState<TypeImages[]>([]) */
+  // *******************************************************************************************************************
+  /* const [images, setImages] = useState<TypeImages[] | undefined>(propsImages) */
+  /* useEffect(() => {
+    setImages(propsImages)
+  }, [propsImages]) */
+  // *******************************************************************************************************************
+
   const [openFab, setOpenFab] = useState({ open: false })
   const toggleFab = ({ open }: { open: boolean }) => {
     setOpenFab({ open })
@@ -40,16 +46,16 @@ export const DocsPanel = (): React.JSX.Element => {
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    void FileSystem.getInfoAsync(FileSystem.documentDirectory + '/photoDocs')
+    /* void FileSystem.getInfoAsync(FileSystem.documentDirectory + '/photoDocs')
       .then(value => {
         if (!value.exists) {
-          FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + '/photoDocs')
+          void FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + '/photoDocs')
           console.log('MakeDir')
         }
       })
       .catch((reason) => {
         console.log('ERROR', reason)
-      })
+      }) */
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -58,8 +64,19 @@ export const DocsPanel = (): React.JSX.Element => {
       quality: 1
     })
     if (!result.canceled) {
+      if (images !== undefined) {
+        setImages([...images, {
+          name: String(Date.now()),
+          uri: result.assets[0].uri
+        }])
+      } else {
+        setImages([{
+          name: String(Date.now()),
+          uri: result.assets[0].uri
+        }])
+      }
       // копируем файл из временного кэша ImagePicker в папку программы
-      await FileSystem.copyAsync({
+      /* await FileSystem.copyAsync({
         from: result.assets[0].uri,
         to: FileSystem.documentDirectory + '/photoDocs/' + result.assets[0].fileName
       })
@@ -69,43 +86,31 @@ export const DocsPanel = (): React.JSX.Element => {
         })
         .catch((reason) => {
           console.log('ERROR', reason)
-        })
+        }) */
     }
   }
 
-  const dalImage = (uri: string) => {
+  const delImage = (uri: string) => {
     Alert.alert(t('docsPanel.DEL_TITLE'), '', [
       {
         text: t('button.CANCEL')
       },
       {
         text: t('button.OK'),
-        onPress: async () => {
-          try {
+        onPress: () => {
+          setImages(images.filter((item) => item.uri !== uri))
+          /* try {
             await FileSystem.deleteAsync(uri, { idempotent: true })
             const tempImagesAfterDel = images.filter((item) => item.uri !== uri)
             setImages(tempImagesAfterDel)
           } catch (e) {
             console.log(e)
-          }
+          } */
         }
       }
     ])
   }
 
-  const tempImage = [
-    { id: 1, uri: require('../../assets/icon1.png') },
-    { id: 2, uri: require('../../assets/icon1.png') },
-    { id: 3, uri: '' },
-    { id: 4, uri: require('../../assets/icon1.png') },
-    { id: 5, uri: require('../../assets/icon1.png') },
-    { id: 6, uri: require('../../assets/icon1.png') },
-    { id: 7, uri: require('../../assets/icon1.png') },
-    { id: 8, uri: require('../../assets/icon1.png') },
-    { id: 9, uri: require('../../assets/icon1.png') },
-    { id: 10, uri: require('../../assets/icon1.png') },
-    { id: 11, uri: require('../../assets/icon1.png') }
-  ]
   const numColumns = Math.floor(Dimensions.get('screen').width / 100)
   return (
     <>
@@ -119,7 +124,7 @@ export const DocsPanel = (): React.JSX.Element => {
             <FlatList
               data={images}
               renderItem={({ item }) => (
-                <RenderImages uri={item.uri} delImage={dalImage} pressImage={pressImage}/>
+                <RenderImages uri={item.uri} delImage={delImage} pressImage={pressImage}/>
               )}
               keyExtractor={item => String(item.name)}
               numColumns={numColumns}
@@ -137,7 +142,7 @@ export const DocsPanel = (): React.JSX.Element => {
                 icon: 'file-image-plus',
                 /* label: t('pdfCard.SEND'), */
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onPress: () => { pickImage() }
+                onPress: () => { void pickImage() }
               },
               {
                 icon: 'camera',

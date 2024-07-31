@@ -3,7 +3,7 @@ import {
   StyleSheet
 } from 'react-native'
 import {
-  JSX,
+  JSX, useEffect,
   useState
 } from 'react'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
@@ -18,7 +18,8 @@ import { type StackNavigationProp } from '@react-navigation/stack'
 import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../Redux/hook'
-import { DocsPanel } from '../../docsPanel/DocsPanel'
+import { DocsPanel, TypeImages } from '../../docsPanel/DocsPanel'
+import { saveImages } from '../../docsPanel/functionFS'
 
 interface InputDocProps {
   isCancel: () => void
@@ -87,7 +88,13 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
   }
 
   const [itemOther, setItemOther] = useState<StateOther>((other !== undefined) ? other : formToData(tempNullOther))
+  //* ********************************************
+  const [images, setImages] = useState<TypeImages[] | undefined>(itemOther.images)
 
+  useEffect(() => {
+    console.log('UpdateImages', images)
+  }, [images])
+  //* *********************************************
   const {
     control,
     handleSubmit,
@@ -125,14 +132,22 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
   const handleCancel = (): void => {
     isCancel()
   }
-  const handleOk = (dataForm: FormOther): void => {
-    isOk(formToData(dataForm))
+  const handleOk = async (dataForm: FormOther) => {
+    const temp = formToData(dataForm)
+    if (images !== undefined) {
+      console.log('OkBeforeTemp', images)
+      const tempSave = await saveImages('Other/', images, temp.id)
+      console.log('OkTempSave', tempSave, images)
+      temp.images = tempSave
+    }
+    console.log('OK', temp)
+    isOk(temp)
   }
 
   return (
     <View>
 <Portal>
-  <DocsPanel/>
+  <DocsPanel images={images} setImages={setImages}/>
 </Portal>
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
         <View>

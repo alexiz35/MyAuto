@@ -2,6 +2,7 @@
 
 import { listServiceRu } from './components/InputDoneScreenComponents/inputService/ListServices'
 import { cars } from './cars.json'
+import { TypeImages } from './components/docsPanel/DocsPanel'
 
 export const BACKGROUND = '#13171A'
 /* export const BACK_OPACITY = 'rgba(0,0,0,0)' */
@@ -251,6 +252,7 @@ export interface StateOther {
   amountCostOther: number
   numberPart: string
   seller?: Seller
+  images?: TypeImages[]
 }
 
 export interface StateTask {
