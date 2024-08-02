@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { dateInstallPart, delStateCarReducer, installPart } from '../../Redux/CarsSlice'
 import { useTranslation } from 'react-i18next'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import { deleteDirectory } from '../../docsPanel/functionFS'
 
 interface propsRowPart {
   handlePress: (item: StatePart) => void
@@ -131,6 +132,7 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
                        leadingIcon={'delete'}
                        onPress={() => {
                          dispatch(delStateCarReducer({ type: 'parts', numberCar: carId, id: item.id }))
+                         deleteDirectory('Part/', item.id)
                          closeMenu()
                        }}
             />

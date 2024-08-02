@@ -17,7 +17,8 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useAppTheme } from '../../../CommonComponents/Theme'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../Redux/hook'
-import { DocsPanel } from '../../docsPanel/DocsPanel'
+import { DocsPanel, TypeImages } from '../../docsPanel/DocsPanel'
+import { saveImages } from '../../docsPanel/functionFS'
 
 interface InputPartProps {
   isCancel: () => void
@@ -113,6 +114,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
     }
   }
   const [itemPart, setItemPart] = useState<StatePart>((part !== undefined) ? part : formToData(tempNullPart))
+  const [images, setImages] = useState<TypeImages[] | undefined>(itemPart.images)
 
   const {
     control,
@@ -171,15 +173,19 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
   const handleCancel = (): void => {
     isCancel()
   }
-  const handleOk = (dataForm: FormPart): void => {
-    isOk(formToData(dataForm))
+  const handleOk = async (dataForm: FormPart) => {
+    const temp = formToData(dataForm)
+    if (images !== undefined) {
+      temp.images = await saveImages('Part/', images, temp.id)
+    }
+    isOk(temp)
   }
 
   return (
     <View >
       {/* {isOpenAccordion ? <ActivityIndicator/> : null} */}
       <Portal>
-        <DocsPanel/>
+        <DocsPanel images={images} setImages={setImages}/>
       </Portal>
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }} >
 
