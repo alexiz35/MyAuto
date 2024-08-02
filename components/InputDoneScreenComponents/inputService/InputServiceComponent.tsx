@@ -31,6 +31,8 @@ import { useTranslation } from 'react-i18next'
 import * as Calendar from 'expo-calendar'
 import { addEvent, deleteEvent, updateEvent } from '../CalendarFunction'
 import Toast from 'react-native-toast-message'
+import { DocsPanel, TypeImages } from '../../docsPanel/DocsPanel'
+import { saveImages } from '../../docsPanel/functionFS'
 
 interface InputServiceProps {
   isCancel: () => void
@@ -135,6 +137,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   }
 
   const [itemService, setItemService] = useState<StateService>(service !== undefined ? service : formToData(tempNullService))
+  const [images, setImages] = useState<TypeImages[] | undefined>(itemService.images)
 
   const {
     control,
@@ -291,7 +294,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
 
   // ----------------------------------------------------------------------------
 
-  const handleOk = (dataForm: FormService): void => {
+  const handleOk = async (dataForm: FormService) => {
     if (typeWork === 'mt') {
       if (typeService?.nameService === undefined) {
         setRequireService(true)
@@ -314,20 +317,25 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       location: dataForm.sellerName
     }
 
-    const finish = (idEvent: string) => {
+    const finish = async (idEvent: string) => {
       const tempData: StateService = {
         ...formToData(dataForm),
         calendarEventId: idEvent
       }
-      isOk(tempData)
+
+      const temp = tempData
+      if (images !== undefined) {
+        temp.images = await saveImages('Service/', images, temp.id)
+      }
+      isOk(temp)
     }
 
     if (checkNotification === 'checked') {
       if (service?.calendarEventId === '' || service?.calendarEventId === undefined) {
         // create event
         addEvent(tempDate)
-          .then(value => {
-            finish(value)
+          .then(async value => {
+            await finish(value)
             Toast.show({
               type: 'success',
               text1: t('calendar.CREATE_EVENT'),
@@ -347,7 +355,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
       } else {
         // update event
         updateEvent(service?.calendarEventId, tempDate)
-          .then(value => { finish(value) })
+          .then(async value => { await finish(value) })
           .catch(reason => {
             Toast.show({
               type: 'error',
@@ -360,12 +368,12 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
     } else if (checkNotification === 'unchecked') {
       if (service?.calendarEventId === '' || service?.calendarEventId === undefined) {
         // nothing
-        finish('')
+        await finish('')
       } else {
         // delete event
         deleteEvent(service?.calendarEventId)
-          .then(value => {
-            finish('')
+          .then(async value => {
+            await finish('')
             Toast.show({
               type: 'info',
               text1: t('calendar.DELETE_EVENT'),
@@ -424,6 +432,9 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
 
   return (
   <View>
+    <Portal>
+      <DocsPanel images={images} setImages={setImages}/>
+    </Portal>
     {
       // -------------------------- Modal for selecting type of service ---------------------------
     }

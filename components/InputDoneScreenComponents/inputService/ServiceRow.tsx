@@ -8,6 +8,7 @@ import { delStateCarReducer } from '../../Redux/CarsSlice'
 import { useTranslation } from 'react-i18next'
 import { deleteEvent } from '../CalendarFunction'
 import Toast from 'react-native-toast-message'
+import { deleteDirectory } from '../../docsPanel/functionFS'
 
 interface propsRowService {
   handlePress: (item: StateService) => void
@@ -204,6 +205,7 @@ export const RenderRowService = ({ item, handlePress }: propsRowService): JSX.El
                        onPress={() => {
                          deleteEventWithService()
                          dispatch(delStateCarReducer({ type: 'services', numberCar: carId, id: item.id }))
+                         deleteDirectory('Service/', item.id)
                          closeMenu()
                        }}
             />

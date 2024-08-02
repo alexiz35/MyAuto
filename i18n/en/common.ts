@@ -332,7 +332,7 @@ export default {
     FILE_SAVED_ERROR: 'File saving error'
   },
   docsPanel: {
-    TITLE: 'Add photos of documents for this purchase',
+    TITLE: 'Add photos of documents',
     DEL_TITLE: 'Delete the file?'
   }
 
