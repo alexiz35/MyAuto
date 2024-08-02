@@ -1,4 +1,6 @@
 import { cars } from '../../cars.json'
+import { TFunction } from 'i18next'
+import { DropdownProps } from 'react-native-element-dropdown/lib/typescript/components/Dropdown/model'
 
 export interface ListCar {
   label: string
@@ -15,7 +17,7 @@ const listBrand = (): ListCar[] => {
   )
   return tempList
 }
-export const listModel = (brand:string): ListCar[] => {
+export const listModel = (brand: string): ListCar[] => {
   let i = 0
   const tempList: ListCar[] = []
   if (brand !== '') {
@@ -35,7 +37,7 @@ const listYear = (): ListCar[] => {
   const tempList: ListCar[] = []
   const endYear = new Date().getFullYear()
   let index = 0
-  for (let i = 1990; i < endYear+1; i++) {
+  for (let i = 1990; i < endYear + 1; i++) {
     tempList[index] = {
       label: String(i),
       value: String(i)
@@ -48,26 +50,30 @@ const listYear = (): ListCar[] => {
 export const brand = listBrand()
 export const year = listYear()
 
-export const itemsFuel = [
+export interface TypeDropDown {
+  label: string
+  value: string
+}
+export const itemsFuel = (t: TFunction<'translation', undefined>): TypeDropDown[] => [
   {
-    label: 'Дизель',
-    value: 'Дизель'
+    label: t('itemsFuel.DIESEL'),
+    value: t('itemsFuel.DIESEL')
   },
   {
-    label: 'Бензин',
-    value: 'Бензин'
+    label: t('itemsFuel.PETROL'),
+    value: t('itemsFuel.PETROL')
   },
   {
-    label: 'Газ',
-    value: 'Газ'
+    label: t('itemsFuel.GAS'),
+    value: t('itemsFuel.GAS')
   },
   {
-    label: 'Электро',
-    value: 'Электро'
+    label: t('itemsFuel.ELECTRO'),
+    value: t('itemsFuel.ELECTRO')
   },
   {
-    label: 'Газ-бензин',
-    value: 'Газ-бензин'
+    label: t('itemsFuel.GAS') + '-' + t('itemsFuel.PETROL'),
+    value: t('itemsFuel.GAS') + '-' + t('itemsFuel.PETROL')
   }
 ]
 export const itemsBody = [
@@ -92,4 +98,3 @@ export const itemsBody = [
     value: 'Universal'
   }
 ]
-

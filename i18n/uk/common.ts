@@ -338,6 +338,12 @@ export default {
   docsPanel: {
     TITLE: 'Додайте фото документів',
     DEL_TITLE: 'Видалити файл?'
+  },
+  itemsFuel: {
+    DIESEL: 'Дизель',
+    GAS: 'Газ',
+    PETROL: 'Бензин',
+    ELECTRO: 'Електро'
   }
 
 }

@@ -434,7 +434,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
                       color: colors.onSurfaceVariant
                     }}
                     containerStyle={{ backgroundColor: colors.surface }}
-                    data={itemsFuel}
+                    data={itemsFuel(t)}
                     labelField={'label'}
                     valueField={'value'}
                     placeholder={t('carInfo.FUEL')}
@@ -648,7 +648,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               buttonColor={colors.error}
 
             >
-              Cancel
+              {t('button.CANCEL')}
             </Button>
             <Button
               icon={'check-bold'}
@@ -658,7 +658,7 @@ const CarInfoScreen = ({ navigation }: Props): JSX.Element => {
               rippleColor={colors.tertiary}
               onPress={handleSubmit(handleOkCarInfo)}
             >
-              Ok
+              {t('button.OK')}
             </Button>
           </View>
         </ScrollView>

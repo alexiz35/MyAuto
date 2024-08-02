@@ -23,7 +23,7 @@ export const LangCard = (): JSX.Element => {
 
   useEffect(() => {
     try {
-      i18n.changeLanguage(checkedLang)
+      void i18n.changeLanguage(checkedLang)
     } catch (e) {
       console.log(e)
     }

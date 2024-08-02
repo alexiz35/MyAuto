@@ -334,6 +334,12 @@ export default {
   docsPanel: {
     TITLE: 'Add photos of documents',
     DEL_TITLE: 'Delete the file?'
+  },
+  itemsFuel: {
+    DIESEL: 'DIESEL',
+    GAS: 'LPG',
+    PETROL: 'PETROL',
+    ELECTRO: 'ELECTRICITY'
   }
 
 }
