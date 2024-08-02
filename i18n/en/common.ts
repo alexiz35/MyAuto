@@ -329,7 +329,7 @@ export default {
     ERROR_CREATE_PDF: 'The report doesn\'t created',
     ERROR_CREATE_PDF2: 'Try to create it again',
     FILE_SAVED: 'The File was successfully saved ',
-    FILE_SAVED_ERROR: 'File saving error'
+    FILE_SAVED_ERROR: 'The file was not saved'
   },
   docsPanel: {
     TITLE: 'Add photos of documents',

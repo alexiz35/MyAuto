@@ -1,11 +1,12 @@
 import {
+  BackHandler,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   View
 } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../components/Redux/hook'
-import { JSX, useCallback, useState } from 'react'
+import { JSX, useCallback, useEffect, useState } from 'react'
 import { getIndexCar, type StateFuel } from '../type'
 import { type RootStackParamList, type RootTabParamList } from '../components/Navigation/TypeNavigation'
 import { type BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -72,6 +73,19 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   }
 
   // ------------------------- control according -------------------------------
+  useEffect(() => {
+    const onBackPress = () => {
+      if (openAccordion) {
+        handleOnPress()
+        return true // Перехватываем событие "назад"
+      }
+      return false // Позволяем событию "назад" выполняться по умолчанию
+    }
+
+    BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+    return () => { BackHandler.removeEventListener('hardwareBackPress', onBackPress) }
+  }, [openAccordion])
   const handleOpen = (item: StateFuel): void => {
     setIsList(false)
     setOpenAccordion(true)

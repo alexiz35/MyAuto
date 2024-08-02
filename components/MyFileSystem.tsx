@@ -68,6 +68,7 @@ export const savePDFFile = async (uriPDF: string) => {
   // Check if permission granted
   if (permissions.granted) {
     // Get the directory uri that was approved
+
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const directoryUri = permissions.directoryUri
     try {
@@ -84,6 +85,6 @@ export const savePDFFile = async (uriPDF: string) => {
       console.log('ERR_SavePdfFile', e)
     }
   } else {
-    alert('You must allow permission to save.')
+    throw new Error()
   }
 }

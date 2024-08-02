@@ -85,9 +85,6 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
   //* ********************************************
   const [images, setImages] = useState<TypeImages[] | undefined>(itemOther.images)
 
-  useEffect(() => {
-    console.log('UpdateImages', images)
-  }, [images])
   //* *********************************************
   const {
     control,

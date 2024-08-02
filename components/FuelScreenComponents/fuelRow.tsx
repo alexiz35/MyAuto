@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import { StateFuel } from '../../type'
+import { getIndexCar, StateFuel } from '../../type'
 import { Card, IconButton, Menu } from 'react-native-paper'
 import { JSX, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../Redux/hook'
@@ -17,7 +17,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const carId = useAppSelector(state => state.numberCar)
-
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, carId)])
   const [visibleMenu, setVisibleMenu] = useState(false)
   const { colors } = useAppTheme()
 
@@ -56,7 +56,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
           style={{ flex: 2.3 }}
 
           title={`${String(item.volumeFuel)} ${t('L')}`}
-          subtitle = {`${String(item.CostFuel)} ${t('CURRENCY_L')}`}
+          subtitle = {`${String(item.CostFuel)} ${t('CURRENCY_L', { currency: state.info.currency })}`}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}
@@ -65,7 +65,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
 
         <Card.Title
           style={{ flex: 2.2 }}
-          title={`${String(item.AmountFuel)} ${t('CURRENCY')}`}
+          title={`${String(item.AmountFuel)} ${state.info.currency}`}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}

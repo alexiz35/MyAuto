@@ -48,6 +48,7 @@ export const Navigation = (): JSX.Element => {
     return (
       <Tab.Navigator
         initialRouteName={'Home'}
+        detachInactiveScreens={true}
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: theme.colors.primary,

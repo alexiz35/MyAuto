@@ -327,7 +327,7 @@ export default {
     ERROR_CREATE_PDF: 'Отчет не создан',
     ERROR_CREATE_PDF2: 'Попробуйте создать его еще раз',
     FILE_SAVED: 'Файл успешно сохранен',
-    FILE_SAVED_ERROR: 'Ошибка при сохранении файла'
+    FILE_SAVED_ERROR: 'Файл не сохранен'
   },
   docsPanel: {
     TITLE: 'Добавьте фото документов',

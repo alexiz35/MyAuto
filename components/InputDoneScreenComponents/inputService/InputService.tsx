@@ -1,6 +1,6 @@
 import {
   View,
-  StyleSheet, KeyboardAvoidingView, ScrollView
+  StyleSheet, KeyboardAvoidingView, ScrollView, BackHandler
 } from 'react-native'
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
@@ -41,6 +41,19 @@ const InputService = (): JSX.Element => {
   }, [openAccordion])
 
   // ------------------------- control according -------------------------------
+  useEffect(() => {
+    const onBackPress = () => {
+      if (openAccordion) {
+        handleOnPress()
+        return true // Перехватываем событие "назад"
+      }
+      return false // Позволяем событию "назад" выполняться по умолчанию
+    }
+
+    BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+    return () => { BackHandler.removeEventListener('hardwareBackPress', onBackPress) }
+  }, [openAccordion])
   const handleOpen = (item: StateService): void => {
     setIsList(false)
     setOpenAccordion(true)

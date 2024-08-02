@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
+import { BackHandler, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native'
 import { StateTask } from '../type'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import { RootTabParamList } from '../components/Navigation/TypeNavigation'
@@ -69,6 +69,19 @@ const TaskScreen = ({ navigation, route }: Props): JSX.Element => {
   }, [openAccordion])
 
   // ------------------------- control according -------------------------------
+  useEffect(() => {
+    const onBackPress = () => {
+      if (openAccordion) {
+        handleOnPress()
+        return true // Перехватываем событие "назад"
+      }
+      return false // Позволяем событию "назад" выполняться по умолчанию
+    }
+
+    BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+    return () => { BackHandler.removeEventListener('hardwareBackPress', onBackPress) }
+  }, [openAccordion])
   const handleOpen = (item: StateTask): void => {
     setIsList(false)
     setOpenAccordion(true)

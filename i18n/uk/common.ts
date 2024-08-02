@@ -333,7 +333,7 @@ export default {
     ERROR_CREATE_PDF: 'Звіт не створено',
     ERROR_CREATE_PDF2: 'Спробуйте створити його ще раз',
     FILE_SAVED: 'Файл успішно збережено',
-    FILE_SAVED_ERROR: 'Помилка при збереженні файлу'
+    FILE_SAVED_ERROR: 'Файл не збережено'
   },
   docsPanel: {
     TITLE: 'Додайте фото документів',

@@ -44,7 +44,7 @@ export const tableService = (state: StateCar, selectReport: TypeReport, t: TFunc
   const arrayTableService = arrayService.map((service, index) => `
             <tr>
                 <td>${String(index + 1)}</td>
-                <td>${service.typeService.nameService}</td>
+                <td>${service.typeService !== undefined ? service.typeService.nameService : service.title}</td>
                 <td>${new Date(service.startDate).toLocaleDateString()}</td>
                 <td>${service.startKm}</td>
                 <td>${service.sumCostService}</td>

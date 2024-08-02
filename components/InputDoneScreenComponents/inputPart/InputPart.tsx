@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
@@ -58,6 +59,19 @@ const InputPart = (): JSX.Element => {
     else nav.setOptions({ tabBarStyle: { display: 'flex', backgroundColor: colors.background } })
   }, [openAccordion])
   // ------------------------- control according -------------------------------
+  useEffect(() => {
+    const onBackPress = () => {
+      if (openAccordion) {
+        handleOnPress()
+        return true // Перехватываем событие "назад"
+      }
+      return false // Позволяем событию "назад" выполняться по умолчанию
+    }
+
+    BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+    return () => { BackHandler.removeEventListener('hardwareBackPress', onBackPress) }
+  }, [openAccordion])
   const handleOpen = (item: StatePart): void => {
     setIsList(false)
     setOpenAccordion(true)

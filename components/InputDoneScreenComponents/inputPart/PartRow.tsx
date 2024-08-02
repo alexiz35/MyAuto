@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
-import { StatePart } from '../../../type'
-import { Card, Checkbox, IconButton, Menu, Surface, Text, TextInput, useTheme } from 'react-native-paper'
-import { JSX, useEffect, useState } from 'react'
+import { getIndexCar, StatePart } from '../../../type'
+import { Card, IconButton, Menu, Text, useTheme } from 'react-native-paper'
+import { JSX, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
 import { dateInstallPart, delStateCarReducer, installPart } from '../../Redux/CarsSlice'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +16,7 @@ interface propsRowPart {
 export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element => {
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, carId)])
   const { t } = useTranslation()
 
   const [visibleMenu, setVisibleMenu] = useState(false)
@@ -112,7 +113,7 @@ export const RenderRowPart = ({ item, handlePress }: propsRowPart): JSX.Element 
         <Card.Title
           style={{ flex: 2.2 }}
           title={`${item.quantityPart} ${t('PCS')} х `}
-          subtitle={`${item.costPart} ${t('CURRENCY')}`}
+          subtitle={`${item.costPart} ${state.info.currency}`}
           titleVariant={'bodyMedium'}
           subtitleVariant={'bodyMedium'}
           titleStyle={{ paddingRight: 2 }}

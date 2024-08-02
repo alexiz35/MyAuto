@@ -1,7 +1,7 @@
 import {
   View,
   StyleSheet,
-  KeyboardAvoidingView, ScrollView
+  KeyboardAvoidingView, ScrollView, BackHandler
 } from 'react-native'
 import { JSX, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../Redux/hook'
@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 
 /* type Props = NativeStackScreenProps<RootStackParamList, 'InputDoneScreen'> */
 const InputDoc = (): JSX.Element => {
+  const navigation = useNavigation()
   const dispatch = useAppDispatch()
   const carId = useAppSelector(state => state.numberCar)
 
@@ -42,6 +43,21 @@ const InputDoc = (): JSX.Element => {
     else nav.setOptions({ tabBarStyle: { display: 'flex', backgroundColor: colors.background } })
   }, [openAccordion])
   // ------------------------- control according -------------------------------
+
+  useEffect(() => {
+    const onBackPress = () => {
+      if (openAccordion) {
+        handleOnPress()
+        return true // Перехватываем событие "назад"
+      }
+      return false // Позволяем событию "назад" выполняться по умолчанию
+    }
+
+    BackHandler.addEventListener('hardwareBackPress', onBackPress)
+
+    return () => { BackHandler.removeEventListener('hardwareBackPress', onBackPress) }
+  }, [openAccordion])
+
   const handleOpen = (item: StateOther): void => {
     setIsList(false)
     setOpenAccordion(true)

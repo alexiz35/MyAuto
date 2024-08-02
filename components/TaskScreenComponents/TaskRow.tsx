@@ -22,6 +22,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
   const { colors } = useAppTheme()
   const { t } = useTranslation()
   const carId = useAppSelector(state => state.numberCar)
+  const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, carId)])
   const currentMileage = useAppSelector(state => state.cars[getIndexCar(state.cars, state.numberCar)].currentMiles)
   const [visibleMenu, setVisibleMenu] = useState(false)
 
@@ -201,7 +202,7 @@ export const RenderRowTask = ({ item, handlePress }: propsRowTask): JSX.Element 
           descriptionStyle={{ fontSize: 12 }}
         />
         </View>
-        <List.Item title={`${t('TOTAL_COST')}: ${String(item.amount)} ${t('CURRENCY')}`} titleStyle={{ fontSize: 13 }} style={{ paddingTop: 0, paddingBottom: 5 }}/>
+        <List.Item title={`${t('TOTAL_COST')}: ${String(item.amount)} ${state.info.currency}`} titleStyle={{ fontSize: 13 }} style={{ paddingTop: 0, paddingBottom: 5 }}/>
 
       </Card>
 
