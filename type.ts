@@ -159,6 +159,7 @@ export interface StateFuel {
   typeFuel?: string
   restFuel: number
   isFullFuel: boolean
+  images?: TypeImages[]
 }
 
 export interface StateInfo {
@@ -222,6 +223,8 @@ export interface StateService {
     parts?: ModalPart[]
     services?: Seller
   }
+  images?: TypeImages[]
+
 }
 
 export interface ListService {
@@ -244,6 +247,8 @@ export interface StatePart {
   numberPart2?: string
   seller?: Seller
   isInstall: boolean
+  images?: TypeImages[]
+
 }
 export interface StateOther {
   id: number

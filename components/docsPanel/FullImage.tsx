@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image } from 'expo-image'
-import { FAB, IconButton, Portal } from 'react-native-paper'
+import { FAB, IconButton } from 'react-native-paper'
 import { StyleSheet } from 'react-native'
 import { shareAsync } from 'expo-sharing'
 

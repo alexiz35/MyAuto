@@ -9,6 +9,38 @@ import { FullImage } from './FullImage'
 import * as ImagePicker from 'expo-image-picker'
 import { useTranslation } from 'react-i18next'
 
+// ***************************** Using DocsPanel *******************************************************
+// **************************** In parent Component
+//  const [images, setImages] = useState<TypeImages[] | undefined>(itemOther.images)
+
+//  const handleOk = async (dataForm: FormOther) => {
+//  const temp = formToData(dataForm)
+//  if (images !== undefined) {
+//    temp.images = await saveImages('Other/', images, temp.id)
+//    }
+//  isOk(temp)
+//  }
+//
+//  return (
+//    <View>
+//    <Portal>
+//      <DocsPanel images={images} setImages={setImages}/>
+//    </Portal>
+//    **********
+//    </View>
+//  )
+// ****************************** In Row Render *********************************************************
+//  <Menu.Item title={t('menu.DELETE')}
+//                        dense
+//                        leadingIcon={'delete'}
+//                        onPress={() => {
+//                          dispatch(delStateCarReducer({ type: 'others', numberCar: carId, id: item.id }))
+//     ******>>                     deleteDirectory('Other/', item.id)
+//                          closeMenu()
+//                        }}
+//  />
+//* *****************************************************************************************************
+
 export interface TypeImages {
   name: string
   uri: string
@@ -20,12 +52,6 @@ interface PropsDocsPanel {
 export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Element => {
   const { colors } = useAppTheme()
   const { t } = useTranslation()
-  // *******************************************************************************************************************
-  /* const [images, setImages] = useState<TypeImages[] | undefined>(propsImages) */
-  /* useEffect(() => {
-    setImages(propsImages)
-  }, [propsImages]) */
-  // *******************************************************************************************************************
 
   const [openFab, setOpenFab] = useState({ open: false })
   const toggleFab = ({ open }: { open: boolean }) => {

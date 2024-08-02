@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { delStateCarReducer } from '../Redux/CarsSlice'
 import { useTranslation } from 'react-i18next'
+import { deleteDirectory } from '../docsPanel/functionFS'
 
 interface propsRowFuel {
   handlePress: (item: StateFuel) => void
@@ -84,6 +85,7 @@ export const RenderRowFuel = ({ item, handlePress }: propsRowFuel): JSX.Element 
                        leadingIcon={'delete'}
                        onPress={() => {
                          dispatch(delStateCarReducer({ type: 'fuel', numberCar: carId, id: item.id }))
+                         deleteDirectory('Fuel/', item.id)
                          closeMenu()
                        }}
             />

@@ -18,6 +18,8 @@ import { useAppDispatch, useAppSelector } from '../Redux/hook'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useTranslation } from 'react-i18next'
 import { editedCarInfo, setConsumption } from '../Redux/CarsSlice'
+import { DocsPanel, TypeImages } from '../docsPanel/DocsPanel'
+import { saveImages } from '../docsPanel/functionFS'
 
 interface InputFuelProps {
   isCancel: () => void
@@ -122,6 +124,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
   const [itemFuel, setItemFuel] = useState<StateFuel>(
     fuel !== null ? fuel : formToData(tempNullFuel)
   )
+  const [images, setImages] = useState<TypeImages[] | undefined>(itemFuel.images)
 
   // ------------------------- Controller Form-----------------------------------
   const {
@@ -162,11 +165,12 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
     isCancel()
   }
 
-  const handleOk = (dataForm: FormFuel): void => {
-    /*  if (createPurchase) {
-      nav.navigate('InputDoneScreen', { editable: true, taskId: itemTask.id, typeTask: 'service' })
-    } */
-    isOk(formToData(dataForm))
+  const handleOk = async (dataForm: FormFuel) => {
+    const temp = formToData(dataForm)
+    if (images !== undefined) {
+      temp.images = await saveImages('Fuel/', images, temp.id)
+    }
+    isOk(temp)
   }
   // -------------------------- consumption ------------------------------------
   const [isConsumption, setIsConsumption] = useState<'checked' | 'unchecked'>(state.isConsumption ? 'checked' : 'unchecked')
@@ -206,7 +210,9 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
 
   return (
     <View style={{ /* backgroundColor: colors.background, */ rowGap: 5 }}>
-
+      <Portal>
+        <DocsPanel images={images} setImages={setImages}/>
+      </Portal>
       {
         /* ----------------------- Date and Miles ----------------------------------- */
       }
