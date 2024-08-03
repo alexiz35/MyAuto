@@ -5,7 +5,7 @@ import InputService from '../components/InputDoneScreenComponents/inputService/I
 import InputPart from '../components/InputDoneScreenComponents/inputPart/InputPart'
 import BackgroundView from '../CommonComponents/BackgroundView'
 import InputDoc from '../components/InputDoneScreenComponents/inputDoc/InputDoc'
-import { SegmentedButtons } from 'react-native-paper'
+import { SegmentedButtons, Portal } from 'react-native-paper'
 // eslint-disable-next-line import/named
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { useFocusEffect } from '@react-navigation/native'
@@ -26,6 +26,7 @@ const InputDoneScreen = ({ route }: Props): JSX.Element => {
     }, [route.params])
   )
   return (
+    <Portal.Host>
     <BackgroundView props={{ flex: 1, paddingTop: 10 }}>
 
       <SegmentedButtons
@@ -54,7 +55,7 @@ const InputDoneScreen = ({ route }: Props): JSX.Element => {
       </View>
 
 </BackgroundView>
-
+    </Portal.Host>
   )
 }
 
