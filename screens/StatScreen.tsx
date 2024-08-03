@@ -125,7 +125,7 @@ ${String(NAME_MONTH[selectModal.period?.valueEndMonth])} ${String(selectModal.pe
         const levelAccess = await getLevelAccessDataSecurely()
         if (!LEVEL_STAT.includes(levelAccess)) {
           Alert.alert(
-            t('premium.alertAccess.TITLE'),
+            t('premium.alertAccess.TITLE', { levelAccess: 'PLUS, PRO' }),
             t('premium.alertAccess.MESSAGE'),
             [
               { text: t('button.CANCEL'), onPress: () => { navigate.goBack() } },

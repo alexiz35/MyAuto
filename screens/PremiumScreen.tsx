@@ -64,14 +64,13 @@ const PremiumScreen = ({ route, navigation }: Props): JSX.Element => {
       .then(result => {
         if (checkLevel === 'Plus') setPackages(result.filter(value => value.identifier !== 'Lite'))
         else setPackages(result)
-        console.log('111', checkLevel, packages)
       })
       .catch(e => {
         console.log('Error list packages', e)
         setPackages([])
       })
 
-    setTimeout(() => {
+    /* setTimeout(() => {
       Alert.alert(
         t('premium.ALERT_TITLE'),
         t('premium.ALERT_MESSAGE'),
@@ -94,7 +93,7 @@ const PremiumScreen = ({ route, navigation }: Props): JSX.Element => {
         }]
 
       )
-    }, 3000)
+    }, 3000) */
   }, [checkLevel])
 
   return (

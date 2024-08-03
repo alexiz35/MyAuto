@@ -16,7 +16,8 @@ import {
   Text,
   List,
   IconButton,
-  ToggleButton
+  ToggleButton,
+  Portal
 } from 'react-native-paper'
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { type CompositeScreenProps, useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -64,6 +65,10 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
       volumeFuel()
       // @ts-expect-error temp error navigate props
       navigation.setOptions({ title: `${t('navi.FUEL_TITLE')} (${state.info.fuel})` })
+      return () => {
+        if (openAccordion) handleOnPress()
+        console.log('LEAVESCREEN')
+      }
     }, [state.fuel])
   )
 
@@ -114,6 +119,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
   }
 
   return (
+    <Portal.Host>
     <BackgroundView props={{ flex: 1 }}>
 
       <View style={{ flex: 1 }} >
@@ -175,6 +181,7 @@ export const FuelScreen = (/* { navigation, route }: Props */): JSX.Element => {
         }
       </View>
     </BackgroundView>
+    </Portal.Host>
   )
 }
 

@@ -433,7 +433,7 @@ const InputService = ({ isCancel, isOk, service = undefined, isEdit }: InputServ
   return (
   <View>
     <Portal>
-      <DocsPanel images={images} setImages={setImages}/>
+      <DocsPanel images={images} setImages={setImages} navigation={navigation}/>
     </Portal>
     {
       // -------------------------- Modal for selecting type of service ---------------------------

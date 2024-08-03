@@ -7,7 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Button, Dialog, Portal, Surface, TextInput, useTheme } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
-import { useNavigation } from '@react-navigation/native'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { type StackNavigationProp } from '@react-navigation/stack'
 import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { useTranslation } from 'react-i18next'
@@ -36,9 +36,9 @@ interface FormOther {
 
 const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JSX.Element => {
   const theme = useTheme()
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
   const { t } = useTranslation()
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
   const tempNullOther: FormOther = {
     nameOther: '',
@@ -134,7 +134,7 @@ const InputDocComponent = ({ isCancel, isOk, other, isEdit }: InputDocProps): JS
   return (
     <View>
 <Portal>
-  <DocsPanel images={images} setImages={setImages}/>
+  <DocsPanel images={images} setImages={setImages} navigation={navigation}/>
 </Portal>
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }}>
         <View>

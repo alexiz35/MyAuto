@@ -310,7 +310,7 @@ export default {
     LIST_FUNCTION_4: 'Uploading photos of receipts and documents',
     BUTTON_DONAT: 'Donate',
     alertAccess: {
-      TITLE: 'The function is available with access level - ',
+      TITLE: 'The function is available with access level - {{levelAccess}}',
       MESSAGE: 'Would you like to purchase access?',
       TEXT: 'Get access'
     }

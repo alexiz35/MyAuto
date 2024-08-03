@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  StyleSheet, Modal, Dimensions, FlatList, Alert
+  StyleSheet, Modal, Dimensions, FlatList, Alert, View
 } from 'react-native'
 import { Card, FAB, IconButton, Portal } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
@@ -8,6 +8,11 @@ import { RenderImages } from './RenderImages'
 import { FullImage } from './FullImage'
 import * as ImagePicker from 'expo-image-picker'
 import { useTranslation } from 'react-i18next'
+import { getLevelAccessDataSecurely } from '../PurchaseComponents/PurchaseFunctions'
+import { LEVEL_DOCS, LEVEL_REPORT } from '../PurchaseComponents/TypesPurchases'
+// eslint-disable-next-line import/named
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { RootStackParamList } from '../Navigation/TypeNavigation'
 
 // ***************************** Using DocsPanel *******************************************************
 // **************************** In parent Component
@@ -48,8 +53,9 @@ export interface TypeImages {
 interface PropsDocsPanel {
   images: TypeImages[] | undefined
   setImages: React.Dispatch<React.SetStateAction<TypeImages[] | undefined>>
+  navigation: NavigationProp<RootStackParamList>
 }
-export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Element => {
+export const DocsPanel = ({ images, setImages, navigation }: PropsDocsPanel): React.JSX.Element => {
   const { colors } = useAppTheme()
   const { t } = useTranslation()
 
@@ -67,6 +73,30 @@ export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Elem
   }
   const closeFullImage = () => {
     setVisibleFullImage(false)
+  }
+
+  const openPanel = async () => {
+    const levelAccess = await getLevelAccessDataSecurely()
+    console.log('Press')
+    if (!LEVEL_DOCS.includes(levelAccess)) {
+      Alert.alert(
+        t('premium.alertAccess.TITLE', { levelAccess: 'PRO' }),
+        t('premium.alertAccess.MESSAGE'),
+        [
+          { text: t('button.CANCEL'), onPress: () => {} },
+          {
+            text: t('premium.alertAccess.TEXT'),
+            onPress: () => {
+              navigation.navigate('PremiumScreen')
+            }
+          }
+        ]
+      )
+      console.log('Alert')
+    } else {
+      setVisiblePanel(true)
+      console.log('Visible')
+    }
   }
 
   const pickImage = async () => {
@@ -114,62 +144,64 @@ export const DocsPanel = ({ images, setImages }: PropsDocsPanel): React.JSX.Elem
       animationType={'slide'} transparent={true}
       >
         <>
-        <Card mode={'elevated'} style={{ position: 'absolute', paddingHorizontal: 10, bottom: 0, height: 500, width: '100%' }}>
-        <Card.Title title={t('docsPanel.TITLE')} right={() => <IconButton icon={'close'} onPress={() => { setVisiblePanel(false) }} /> }/>
-          <Card.Content >
-            <FlatList
-              data={images}
-              renderItem={({ item }) => (
-                <RenderImages uri={item.uri} delImage={delImage} pressImage={pressImage}/>
-              )}
-              keyExtractor={item => String(item.name)}
-              numColumns={numColumns}
-              columnWrapperStyle={styles.row}
-            />
-          </Card.Content>
-        </Card>
-          <FAB.Group
-            open={open}
-            visible
-            icon={open ? 'close' : 'plus'}
-            backdropColor={colors.backdrop}
-            actions={[
-              {
-                icon: 'file-image-plus',
-                /* label: t('pdfCard.SEND'), */
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onPress: () => { void pickImage() }
-              },
-              {
-                icon: 'camera',
-                /* label: t('pdfCard.SAVE'), */
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onPress: () => {}
-              }
-            ]}
-            onStateChange={toggleFab}
-            onPress={() => {
-              if (open) {
+            <Card mode={'elevated'} style={{ position: 'absolute', paddingHorizontal: 10, bottom: 0, height: 500, width: '100%' }}>
+            <Card.Title title={t('docsPanel.TITLE')} right={() => <IconButton icon={'close'} onPress={() => { setVisiblePanel(false) }} /> }/>
+              <Card.Content >
+                <FlatList
+                  data={images}
+                  renderItem={({ item }) => (
+                    <RenderImages uri={item.uri} delImage={delImage} pressImage={pressImage}/>
+                  )}
+                  keyExtractor={item => String(item.name)}
+                  numColumns={numColumns}
+                  columnWrapperStyle={styles.row}
+                />
+              </Card.Content>
+            </Card>
+              <FAB.Group
+                open={open}
+                visible
+                icon={open ? 'close' : 'plus'}
+                backdropColor={colors.backdrop}
+                actions={[
+                  {
+                    icon: 'file-image-plus',
+                    /* label: t('pdfCard.SEND'), */
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onPress: () => { void pickImage() }
+                  },
+                  {
+                    icon: 'camera',
+                    /* label: t('pdfCard.SAVE'), */
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onPress: () => {}
+                  }
+                ]}
+                onStateChange={toggleFab}
+                onPress={() => {
+                  if (open) {
 
-                // do something if the speed dial is open
-              }
-            }}
-          />
-</>
+                    // do something if the speed dial is open
+                  }
+                }}
+              />
+        </>
       </Modal>
+      <Portal>
       <FAB
+        variant={'surface'}
         icon="file-image"
         style={styles.fab}
-        onPress={() => { setVisiblePanel(true) }}
+        onPress={ openPanel}
       />
+      </Portal>
       <Portal>
-        <Modal visible={visibleFullImage} onRequestClose={() => { setVisibleFullImage(false) }}
+      <Modal visible={visibleFullImage} onRequestClose={() => { setVisibleFullImage(false) }}
                animationType={'slide'}
         >
           <FullImage uri={selectUri} closeImage={closeFullImage}/>
         </Modal>
       </Portal>
-
     </>
   )
 }

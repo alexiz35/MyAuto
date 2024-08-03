@@ -11,7 +11,7 @@ import {
   Text,
   TouchableRipple
 } from 'react-native-paper'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { useAppSelector } from '../Redux/hook'
 // eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'
@@ -26,6 +26,8 @@ import { TypePickedDate } from '../StatScreenComponents/TypeStat'
 import { initialDate } from '../../screens/StatScreen'
 import { TypeReport } from '../Print/FormHTML'
 import Toast from 'react-native-toast-message'
+import { getLevelAccessDataSecurely } from '../PurchaseComponents/PurchaseFunctions'
+import { LEVEL_CARS, LEVEL_REPORT } from '../PurchaseComponents/TypesPurchases'
 
 export const PDFCard = (): JSX.Element => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>()
@@ -106,6 +108,23 @@ export const PDFCard = (): JSX.Element => {
     }
   }
   const pressCreatePdf = async () => {
+    const levelAccess = await getLevelAccessDataSecurely()
+    if (!LEVEL_REPORT.includes(levelAccess)) {
+      Alert.alert(
+        t('premium.alertAccess.TITLE', { levelAccess: 'PRO' }),
+        t('premium.alertAccess.MESSAGE'),
+        [
+          { text: t('button.CANCEL'), onPress: () => {} },
+          {
+            text: t('premium.alertAccess.TEXT'),
+            onPress: () => {
+              navigation.navigate('PremiumScreen')
+            }
+          }
+        ]
+      )
+      return
+    }
     const uri = await printToFile(state, formSelectReport(), t)
     if (uri !== undefined) navigation.navigate('ReportScreen', { uri })
     else {

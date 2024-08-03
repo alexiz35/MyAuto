@@ -185,7 +185,7 @@ const InputPartComponent = ({ isCancel, isOk, part, isEdit }: InputPartProps): J
     <View >
       {/* {isOpenAccordion ? <ActivityIndicator/> : null} */}
       <Portal>
-        <DocsPanel images={images} setImages={setImages}/>
+        <DocsPanel images={images} setImages={setImages} navigation={navigation}/>
       </Portal>
       <KeyboardAwareScrollView nestedScrollEnabled={true} style={{ marginTop: 10 }} >
 

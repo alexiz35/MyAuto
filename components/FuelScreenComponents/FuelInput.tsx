@@ -5,10 +5,11 @@ import {
   Checkbox, Dialog,
   HelperText,
   Icon,
-  IconButton, Portal,
+  IconButton,
   Surface,
   Text,
-  TextInput
+  TextInput,
+  Portal
 } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { useAppTheme } from '../../CommonComponents/Theme'
@@ -20,6 +21,9 @@ import { useTranslation } from 'react-i18next'
 import { editedCarInfo, setConsumption } from '../Redux/CarsSlice'
 import { DocsPanel, TypeImages } from '../docsPanel/DocsPanel'
 import { saveImages } from '../docsPanel/functionFS'
+// eslint-disable-next-line import/named
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { RootStackParamList } from '../Navigation/TypeNavigation'
 
 interface InputFuelProps {
   isCancel: () => void
@@ -43,6 +47,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
   const state = useAppSelector((state) => state.cars[getIndexCar(state.cars, state.numberCar)])
   const carId = useAppSelector(state => state.numberCar)
   const dispatch = useAppDispatch()
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
   const [visibleToolTip, setVisibleToolTip] = useState<boolean>(false)
   const [isFullFuel, setIsFullFuel] = useState<boolean>(fuel === null ? false : fuel?.isFullFuel)
@@ -211,7 +216,7 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
   return (
     <View style={{ /* backgroundColor: colors.background, */ rowGap: 5 }}>
       <Portal>
-        <DocsPanel images={images} setImages={setImages}/>
+      <DocsPanel images={images} setImages={setImages} navigation={navigation}/>
       </Portal>
       {
         /* ----------------------- Date and Miles ----------------------------------- */
@@ -518,7 +523,6 @@ export const FuelInput = ({ isCancel, isOk, fuel = null, isEdit }: InputFuelProp
         </Dialog>
       </Portal>
     </View>
-
   )
 }
 const styles = StyleSheet.create({

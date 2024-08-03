@@ -1,5 +1,5 @@
 import { JSX, useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { Button, Card, Dialog, Divider, Icon, Portal, Text } from 'react-native-paper'
 import { CarsList } from './CarsList'
 import { addedCar, initialStateCar } from '../Redux/CarsSlice'
@@ -16,7 +16,7 @@ import {
   getLevelAccessDataSecurely
 } from '../PurchaseComponents/PurchaseFunctions'
 import { log } from 'expo/build/devtools/logger'
-import { LEVEL_CARS } from '../PurchaseComponents/TypesPurchases'
+import { LEVEL_CARS, LEVEL_STAT } from '../PurchaseComponents/TypesPurchases'
 
 export const CarsCard = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -30,9 +30,23 @@ export const CarsCard = (): JSX.Element => {
   // ****************************** ADD NEW CAR *********************************
   const addNewCar = async () => {
     const levelAccess = await getLevelAccessDataSecurely()
-
-    console.log('acc', levelAccess)
-    setVisibleNameCar(LEVEL_CARS.includes(levelAccess))
+    if (!LEVEL_CARS.includes(levelAccess)) {
+      Alert.alert(
+        t('premium.alertAccess.TITLE', { levelAccess: 'LITE, PLUS, PRO' }),
+        t('premium.alertAccess.MESSAGE'),
+        [
+          { text: t('button.CANCEL'), onPress: () => { } },
+          {
+            text: t('premium.alertAccess.TEXT'),
+            onPress: () => {
+              navigation.navigate('PremiumScreen')
+            }
+          }
+        ]
+      )
+    } else setVisibleNameCar(true)
+    /* console.log('acc', levelAccess)
+    setVisibleNameCar(LEVEL_CARS.includes(levelAccess)) */
   }
 
   const cancelDialogNameCar = () => {
