@@ -1,7 +1,6 @@
-import { JSX, useCallback, useEffect, useState } from 'react'
-import { Button, Card, Icon, IconButton } from 'react-native-paper'
-import { ActivityIndicator, Alert, View } from 'react-native'
-import { deletedAllSeller } from '../Redux/SellerSlice'
+import { JSX, useCallback, useState } from 'react'
+import { Button, Card, Icon } from 'react-native-paper'
+import { ActivityIndicator, View } from 'react-native'
 import { useAppDispatch } from '../Redux/hook'
 // eslint-disable-next-line import/named
 import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -9,7 +8,6 @@ import { RootStackParamList } from '../Navigation/TypeNavigation'
 import { useAppTheme } from '../../CommonComponents/Theme'
 import { stylesSettingScreen } from './StyleSettingScreen'
 import { useTranslation } from 'react-i18next'
-import Purchases from 'react-native-purchases'
 import { checkLevelAccess, TypeLevelAccess } from '../PurchaseComponents/PurchaseFunctions'
 
 export const PremiumCard = (): JSX.Element => {

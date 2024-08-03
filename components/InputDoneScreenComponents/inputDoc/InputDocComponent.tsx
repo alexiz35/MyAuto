@@ -7,8 +7,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Button, Dialog, Portal, Surface, TextInput, useTheme } from 'react-native-paper'
 import { Controller, useForm } from 'react-hook-form'
 import { ModalPickSeller } from '../../SellerScreenComponents/ModalPickSeller'
+// eslint-disable-next-line import/named
 import { NavigationProp, useNavigation } from '@react-navigation/native'
-import { type StackNavigationProp } from '@react-navigation/stack'
 import { type RootStackParamList } from '../../Navigation/TypeNavigation'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '../../Redux/hook'

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  StyleSheet, Modal, Dimensions, FlatList, Alert, View
+  StyleSheet, Modal, Dimensions, FlatList, Alert
 } from 'react-native'
 import { Card, FAB, IconButton, Portal } from 'react-native-paper'
 import { useAppTheme } from '../../CommonComponents/Theme'
@@ -9,9 +9,9 @@ import { FullImage } from './FullImage'
 import * as ImagePicker from 'expo-image-picker'
 import { useTranslation } from 'react-i18next'
 import { getLevelAccessDataSecurely } from '../PurchaseComponents/PurchaseFunctions'
-import { LEVEL_DOCS, LEVEL_REPORT } from '../PurchaseComponents/TypesPurchases'
+import { LEVEL_DOCS } from '../PurchaseComponents/TypesPurchases'
 // eslint-disable-next-line import/named
-import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { NavigationProp } from '@react-navigation/native'
 import { RootStackParamList } from '../Navigation/TypeNavigation'
 
 // ***************************** Using DocsPanel *******************************************************
@@ -77,7 +77,6 @@ export const DocsPanel = ({ images, setImages, navigation }: PropsDocsPanel): Re
 
   const openPanel = async () => {
     const levelAccess = await getLevelAccessDataSecurely()
-    console.log('Press')
     if (!LEVEL_DOCS.includes(levelAccess)) {
       Alert.alert(
         t('premium.alertAccess.TITLE', { levelAccess: 'PRO' }),
@@ -92,10 +91,8 @@ export const DocsPanel = ({ images, setImages, navigation }: PropsDocsPanel): Re
           }
         ]
       )
-      console.log('Alert')
     } else {
       setVisiblePanel(true)
-      console.log('Visible')
     }
   }
 

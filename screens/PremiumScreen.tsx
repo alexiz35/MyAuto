@@ -12,7 +12,7 @@ import {
 import { RootStackParamList } from '../components/Navigation/TypeNavigation'
 // eslint-disable-next-line import/named
 import { StackScreenProps } from '@react-navigation/stack'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import Purchases, { PurchasesPackage } from 'react-native-purchases'
 import { PackageItem } from '../components/PurchaseComponents/PackageItem'
